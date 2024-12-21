@@ -1,0 +1,142 @@
+=== Metadata ===
+{
+    "file_name": "Lecture 6 Motion (Tracking) Control.pptx",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Lecture 6 Motion (Tracking) Control.pptx",
+    "status": "Processed"
+}
+
+=== Content ===
+Motion Control in Intelligent Vehicles
+1
+Vehicle’s Manipulation Intelligence
+Motion Control
+Saber Fallah (ENGM298)
+2
+Introduction
+Sensing
+
+Motion Control
+Saber Fallah (ENGM298)
+3
+Introduction
+
+
+
+
+Motion control, also known as tracking control, refers to the fact that a control system should be able to track the desired reference trajectory produced by the motion planning module. 
+Motion Control
+Saber Fallah (ENGM298)
+4
+Introduction
+Model-free controllers:
+do not use any mathematical model of the vehicle
+tend to take “corrective” action based on the “error” between setpoint and current state. 
+are quite easy to implement 
+are difficult to tune 
+do not guarantee optimal performance
+perform satisfactorily under limited operating conditions. 
+
+
+Motion (trajectory tacking) control methods:
+Model-based controllers:
+use mathematical models of the vehicle
+provide optimal actions
+are easy to tune 
+are easy to implement 
+are sensitive to parameter variations 
+are sensitive to model accuracy. 
+
+
+Motion Control
+Saber Fallah (ENGM298)
+5
+Introduction
+Kinematic controllers:
+use simplified motion models of the system 
+are based on the geometry and kinematics of the system
+offer an advantage of low computational complexity  
+are restricted to low-speed applications 
+
+Dynamic controllers:
+use detailed motion models of the vehicle and are based on system dynamics 
+consider forces and torques acting on the system as well as any disturbances 
+suffer computational complexity 
+
+
+Model-based controller methods:
+Motion Control
+Saber Fallah (ENGM298)
+6
+The need of motion control
+Reference Trajectory
+Cross Track Error 
+✓
+
+Motion Control
+Saber Fallah (ENGM298)
+7
+Proportional control
+P = “PROPORTIONAL”
+✓
+
+Marginally stable
+Motion Control
+Saber Fallah (ENGM298)
+8
+PD control
+PD = “Proportional- Differential”
+Motion Control
+Saber Fallah (ENGM298)
+9
+PID control
+An optimiser algorithm (such as twiddle, gradient descent, etc.) can then be adopted to fine-tune the gains through recursive updates. 
+Motion Control
+Saber Fallah (ENGM298)
+10
+Stanley control
+Motion Control
+Saber Fallah (ENGM298)
+11
+Stanley control 
+Heading Error Correction: 
+Cross-track Error Correction: 
+Clipping Control Action: 
+Motion Control
+Saber Fallah (ENGM298)
+12
+Calculation of erros
+Motion Control
+Saber Fallah (ENGM298)
+13
+Kinematic model
+Kinematics is the study of motion of a system disregarding the forces and torques that govern it. 
+Kinematic models can be employed in situations wherein kinematic relations are able to sufficiently approximate the actual system dynamics 
+The vehicle bicycle model performs well at capturing the actual vehicle dynamics under nominal driving conditions. 
+Motion Control
+Saber Fallah (ENGM298)
+14
+Vehicle bicycle model 
+
+
+Y
+X
+Motion Control
+Saber Fallah (ENGM298)
+15
+Vehicle bicycle kinematic control 
+Linearised model: 
+
+Motion Control
+Saber Fallah (ENGM298)
+16
+Vehicle bicycle kinematic control 
+
+
+Motion Control
+Saber Fallah (ENGM298)
+17
+Vehicle bicycle kinematic control 
+Motion Control
+Saber Fallah (ENGM298)
+18
+Model predictive control (MPC)

@@ -1,0 +1,887 @@
+=== Metadata ===
+{
+    "file_name": "On_a_Fully_Self-Organizing_Vehicle_Platooning_Supported_by_Cloud_Computing.pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/On_a_Fully_Self-Organizing_Vehicle_Platooning_Supported_by_Cloud_Computing.pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+On a fully self-organizing vehicle platooning 
+supported by cloud computing
+Umberto Montanaro1, Saber Fallah1, Mehrdad Dianati2, David Oxtoby3, Tom Mizutani3, Alexandros Mouzakitis3
+1Connected and Autonomous Vehicle Lab Department of Mechanical Engineering University of Surrey
+Guildford, UK, GU2 7XH
+Email: s.fallah@surrey.ac.uk
+2WMG, International Manufacturing Centre University of Warwick
+Coventry, UK, CV4 7AL
+3Jaguar Land Rover Limited Coventry, UK, CV3 4LF
+Abstract —Vehicle platooning is a promising cooperative driv-
+ing vision to mitigate issues in road transportation and it lever-
+ages on the use of distributed control systems to precisely control
+each vehicle in the ﬂeet. This paper investigates a fully adaptive
+platoon control solution made possible by the advent of more
+reliable communication channels and off-board cloud computing
+systems. The components of the platoon control system, i.e.,
+the platoon network topology and the distributed controllers,
+adapt based on the relative motion of the vehicles in the
+ﬂeet, thus allowing the platoon to self-organise the interactions
+among the platoon members and the control gains to create
+and maintain the cooperative platoon motion. Furthermore, the
+adaptive mechanism to adjust the control gains is equipped with a
+-modiﬁcation strategy to keep the control gains bounded in any
+working condition. Numerical results show the effectiveness of
+control method to make a heterogeneous platoon a self-organising
+network of intelligent vehicles, while also reducing the number
+of the communication links required to establish the cooperative
+motion.
+I. I NTRODUCTION
+A vehicle platoon is a group of two or more consecutive
+Connected Autonomous Vehicles (CA Vs) travelling at the
+same velocity of the platoon leader (usually the ﬁrst vehicle in
+the ﬂeet) with a short inter-vehicular distance. Platooning of
+vehicles can offer beneﬁts such as safety, efﬁcient road usage,
+reduction of the fuel consumption for the platoon followers
+(vehicles in the platoon other than the leader) and passenger
+comfort [1]. To guarantee the cooperative platoon motion,
+cooperative adaptive cruise control (CACC) algorithms based
+on the use of Vehicle-to-Vehicle (V2V) communication sys-
+tems are commonly exploited [2]. The effectiveness of CACC
+solutions to maintain platoon formation depends on (i)the
+distributed controller which deﬁnes how each vehicle uses
+the information gathered through the communication chan-
+nels for computing the control action and (ii)the platoon
+network topology, that deﬁnes the pattern in which vehicles
+are connected via wireless communications [2]. It is noted
+that the technical literature provides several examples showing
+that platoon topologies which allow vehicles to obtain and
+use information from a multitude of vehicles in the ﬂeet
+can considerably improve the performance of CACC systems.
+For instance, by augmenting the information available toeach follower with the information of the leader and/or with
+information of a subset of followers beyond the line-of-sight
+of the onboard sensors, it is possible to (i)attenuate the effect
+of disturbances on the platoon when propagated downstream
+(string stability) despite the presence of communication la-
+tencies [3]; (ii)increase the platoon length (i.e., number of
+followers in the platoon) while preventing and unbounded drift
+of the closed-loop settling time [4] and (iii)adjust the speed of
+the platoon to the vehicle with a limited velocity capability [5].
+The importance of the topology for the design of the control
+gains to achieve closed-loop stability and the cooperative
+platoon motion has been recently pointed out also in [5],
+[6], [7]. Furthermore, in accordance with [7], it is beneﬁcial
+to increase the connectivity among the platoon vehicles as
+the communication among the followers help to regulate the
+local behaviour, thus increasing safety, while communication
+between followers and the leader is used to give a preview
+information of reference trajectory to the followers (the desired
+platoon behaviour), thus improving the establishment of the
+cooperative motion.
+Usually, platoon control solutions available in the literature
+leverage on the use of V2V environments based on the
+IEEE 802.11p protocol and for the platoon control design the
+topology is assumed to be ﬁxed. The robustness of the closed-
+loop system is then studied with respect to communication
+imperfections such as latency [3], packet-losses [8] or commu-
+nication loss [9]. It is noted that some network communication
+failures and recoveries can be modelled as instantaneous and
+uncontrolled switches among platoon topologies, thus switch-
+ing topologies are considered in the current platoon literature
+as disturbances for the platoon control system which should
+remain stable with respect to these sudden and undesired
+changes in the topology [10], [11].
+With the performance improvements promised by the 5th
+generation cellular networks (5G) [12], [13], it is expected that
+a notable reduction in the communication latency and network
+failures will beneﬁt CA Vs applications and vehicle platoons.
+Hence, several advanced platoon strategies based on an ideal
+network have been recently presented (see for instance [4],
+[6], [14]). In conjunction with a more reliable communication
+2018 Fifth International Conference on Internet of Things: Systems, Management and Security (IoTSMS)
+978-1-5386-9585-2/18/$31.00 ©2018 IEEE
+295
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:34:29 UTC from IEEE Xplore.  Restrictions apply. 
+network, CA Vs can beneﬁt from Mobile Edge Computing
+(MEC) platforms [15]. MEC servers can be installed at Road
+Side Units (RSUs) or cell sites for reducing round-trip-time
+and they can be used to (i)collect data from vehicles and the
+roadside sensors, and (ii)analyse and process the collected
+data and then propagate the results as latency-sensitive mes-
+sages to CA Vs in the covered areas by leveraging on 5G’s
+low-latency communications [16]. These messages can then
+be used by onboard vehicle systems for implementing CA Vs
+functionalities, such as vehicle platooning. The possibility
+of using 5G communication together with MEC systems is
+currently investigated for instance within the CARMA (Cloud-
+Assisted Real-time Methods for Autonomy) project [17]. The
+joint use of 5G together with MEC servers might provide a
+solution that can open the way to novel approaches for con-
+trolling platoons where also the network topology is a control
+parameter which can be adjusted or better adapted in real-time
+with respect to the dynamics of the vehicle in the platoon, thus
+allowing the platoon to self-organise the interactions among
+its members to achieve the common motion. However, to
+the best of the authors’ knowledge, the use of an evolving
+network topology for controlling vehicle platoon has only
+been marginally investigated in the platoon literature. Thus,
+this paper proposes the use of a platoon control with adaptive
+topology and discuss how the CARMA framework can support
+platoons with evolving topologies. It is noted that when the
+platoon topology is an additional parameter for the control
+design, new challenges arise. These challenges include (i)the
+selection of control gains to guarantee the cooperative platoon
+motion and (ii)the need to maintain the platoon operation
+while reducing the number of links of the topology with the
+aim to reduce the communication network load. As proven in
+[4], the topology affects the range of control gains that guar-
+antee closed-loop platoon stability. Hence, when the topology
+is an additional degree of freedom, the design of its dynamics
+must be carried out jointly with the gains of the distributed
+controller. Moreover, even though MEC servers installed at
+RSUs have the potential to support platoons operated with
+the all-to-all topology (i.e., the topology where each follower
+obtains information from all the followers and the platoon
+leader), there is the need to reduce the network load with
+the aim of avoiding network congestion and reduction of the
+network performance (reduction of the throughput, an increase
+in the latency, etc.). The reduction of network load is especially
+needed when the number of CA Vs that require services in the
+coverage area increases [18]. Hence, topologies with a reduced
+number of arcs are preferable.
+In this paper, the control of platoons with network topolo-
+gies adapted online based on the states of the platoon vehicles
+and the current driving condition is investigated. Furthermore,
+the control strategy is completed with an adaptive mechanism
+to adjust also the gains of a distributed linear controller as
+a function of the mismatches among the state of the platoon
+members, thus making the platoon system able to self-organise
+jointly the network topology and the control gains (i.e., fully
+adaptive platoon solution). To this aim, the platoon problemis recast as a synchronisation problem of a network of agents
+as in [4], and the theory of self-organising complex networks
+presented in [19] is used for the control design. It is noted that
+the use of adaptive networks can also add robustness to the
+closed-loop system with respect to parameter mismatches and
+unmodeled dynamics. However, as the coupling strengths for
+the diffusive network protocol in [19] are adapted based on the
+integral of positive functions of the errors among the coupled
+nodes, they might diverge in the case perfect synchronisation
+is not achieved (e.g., due to unknown dynamics and persistent
+external disturbances, such as nonlinear aerodynamic forces
+and variations in the road-slope and road conditions) as there
+is not a mechanism to prevent their unbounded growth. In
+this paper, the growth of the adaptive gains is bounded by
+equipping the adaptive law with -modiﬁcation strategies
+similar to that exploited in [20] to bound the gains of the
+adaptive solution in [21] for not-networked systems. To the
+best of the authors’ knowledge, -modiﬁcation techniques
+have been yet used neither for the adaptive control of complex
+networks nor for platoon control.
+The paper is organised as follows. Section II presents
+the platoon control problem and its modelling as a network
+synchronisation. Section III describes in detail the platoon
+control action while in Section IV it is discussed how the
+CARMA framework and the platoon architecture recently
+published in [22] can support this control solution. The ability
+of a set of vehicles with different parameters (heterogeneous
+platoon) to self-organise to form and maintain the cooperative
+platoon motion is shown in Section V. Finally, conclusions
+are drawn in Section VI.
+II. P LATOON MODELLING AND CONTROL OBJECTIVE
+The control of a platoon of vehicles can be considered as a
+synchronization problem of a network of dynamical systems
+with a pinner node [2], [4], i.e., a set of multi-agent systems
+interacting over a network structure and controlled such that
+the dynamics of the nodes converge towards the trajectory
+of the pinner node (i.e., the leader dynamics for the platoon
+[23]). The key components of networked dynamical systems
+are(i)the individual dynamics of the node, which describe the
+evolution of each node when not coupled with the network; (ii)
+the network topology for describing the interconnection among
+the nodes; and (iii) the coupling protocol, i.e., the control
+action for each node to steer the node dynamics towards the
+pinner’s trajectory. This section is devoted to formulating the
+platoon control objectives and to model the network topology
+as in [4] and the vehicle dynamics which represent the node
+dynamics. The control action, i.e., the network protocol, is
+described in detail in Section III.
+A. Modelling of the platoon network topology
+The network topology for Nfollowers is represented by
+a graph described as a pair GN= (VN;EN)whereVN=
+f1;2;:::Ngis the set of nodes or vertices of the network and
+ENVNVNis the set of edges or arcs of the network.
+It is noted that when the pair (j;i)2EN, theni-th vehicle
+2018 Fifth International Conference on Internet of Things: Systems, Management and Security (IoTSMS)
+296
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:34:29 UTC from IEEE Xplore.  Restrictions apply. 
+receives information from the j-th vehicle. Based on EN, it
+is possible to deﬁne the adjacency matrix AN2RNN,
+such that its generic entry eaij= 1,(j;i)2ENotherwise
+eaij= 0, or equivalently, eaij= 1 wheni-th vehicle receives
+information from the j-th vehicle. It is assumed that eaii= 0
+(i.e., self-edges are not allowed). To consider communications
+also with the leader, the graph GNis augmented with the node
+zero which also represents the pinner of the network and the
+leader of the platoon, thus obtaining GN+1= (VN+1;EN+1),
+whereVN+1=f0;1;2;:::;NgandEN+1VN+1VN+1.
+The corresponding adjacency matrix AN+12RN+1N+1is
+such thatea0j= 0,j= 0; 1;2;:::;N (i.e., it is assumed
+that followers do not send information to the leader). It is
+noted thateai0= 1,i = 1;:::;N , if thei-th follower receives
+information from the leader, zero otherwise. For the node i,
+i= 1;:::;N ,Nidenotes its neighbour set in GN+1(i.e.,
+Ni=fj2f0;1:::Ng:eaij= 1g).
+B. Longitudinal vehicle dynamics
+For vehicle platooning only the longitudinal vehicle dynam-
+ics are often considered and a satisfactory trade-off between
+model accuracy and simplicity is provided by third-order linear
+models [2]. Hence, the model for the i-th vehicle is
+_si=vi;_vi=ai;_ai= 1
+iai+1
+iui; (1)
+wheresi,vi,ai,uiandiare the position, velocity, accelera-
+tion, control action (the desired vehicle acceleration), and the
+time-lag, respectively, where i= 0 denotes the platoon leader
+whilei= 1:::N denotes the i-th follower. Furthermore,
+the time-lag iin (1) is used to systematically consider the
+time-lag in the powertrain. Notice that, as noted in [24], this
+parameter is affected by large uncertainties. Hence, in this
+paper, it is assumed that iis unknown and different for each
+vehicle (i.e., heterogeneous platoons are considered).
+C. Platoon control Objectives
+The platoon control objective is twofold: (i)impose the
+velocity of the platoon leader to all followers and (ii)regulate
+the inter-vehicular distance between two consecutive vehicles
+in accordance with a given spacing policy [4]. By denoting
+di 1;ias the desired inter-vehicular distance between the i-th
+vehicle and its predecessor, the platoon control aim is to ﬁnd
+uiin (1),i= 1;2;:::N , such that
+lim
+t!+1kvi v0k= 0 (2a)
+lim
+t!+1ksi 1 si di 1;ik= 0; i = 1;2;:::N; (2b)
+when the platoon leader is traveling in its steady-state condi-
+tions with a constant speed (i.e., a0= 0 )[4].
+By deﬁning dias the desired distance between the platoon
+leader and the i-th follower, i.e., di=iP
+k=1dk 1;k, the ob-
+jective (2b) can be recast as lim
+t!+1ks0 si dik= 0 which
+together (2a) represent a synchronisation problem of the N+1
+nodes where the leader is the pinner providing the reference
+trajectory [23].III. F ULLY SELF -ORGANISING PLATOON CONTROL
+The idea behind the fully adaptive platoon control is to
+use the theory of the adaptive networks to make not only
+the control gains but also the entries of the adjacency matrix
+AN+1ofGN+1(or equivalently the arcs of the topology)
+adaptive based on the mismatches among the dynamics of
+the platoon members. Given a platoon of N+ 1 vehicles
+(Nfollowers and one leader) modelled as in (1), the state
+mismatch or error between two platoon vehicles is deﬁned as
+eT
+ij=h
+e(s)
+ije(v)
+ije(a)
+iji
+; (3)
+withi= 1;2;:::;N ,j= 0;1;:::;N and
+e(s)
+ij=si sj dij; e(v)
+ij=vi vj; e(a)
+ij=ai aj;(4)
+wheredijis the required inter-vehicular distance between the
+j-th vehicle with respect to i-th vehicle.
+Based on the information from its neighbors, the i-th
+follower computes the control action in a distributed way as
+ui= X
+j:j2Nieaij(t)KT
+ij(t)eij; (5)
+whereKT
+ij(t) = [K(s)
+ij(t)K(v)
+ij(t)K(a)
+ij(t)]andeaij(t), with
+(j;i)2EN+1, are the adaptive gains and the coefﬁcients of
+the adjacency matrix AN+1ofGN+1, respectively.
+In accordance with the theory of adaptive evolving networks
+[19], eacheaij(t)is the output of a second order system with
+state
+ ij_ ij
+evolving in a potential ﬁeld. Hence,
+ ij+ij_ ij+dUij
+d ij( ij) =F(keijkQij); (6a)
+~aij(t) = 2
+ij(t); (j;i)2EN+1; (6b)
+whereFis a smooth K1scalar function, ijare positive
+constants andkeijkQij=q
+eT
+ijQijeij, withQij2RNN
+being a positive deﬁnite diagonal matrix, and Uij( ij)is the
+potential function
+Uij( ij) = 16Bij 2
+ij( ij 1)2;(j;i)2EN+1;(7)
+withBijbeing positive constants.
+Notice that, the potential function Uij( ij)in (7) has two
+global minima (or stable equilibria) in 0and1, respectively,
+where the potential is zero, while Bijis the height of
+the potential barrier separating the two stable equilibria and
+Uij(0:5) =Bij.
+The adaptive mechanism for the control gains is chosen as
+_Kij=ij (eij) ij(Kij)Kij;(j;i)2EN+1;(8)
+whereij=diag((s)
+ij;(v)
+ij;(a)
+ij)2R33andij=
+diag((s)
+ij;(v)
+ij;(a)
+ij)2R33are diagonal matrixes with
+()
+ijand()
+ij,2 fs;v;ag, being positive coefﬁcients,
+ (eij) = [(e(s)
+ij)(e(v)
+ij)(e(a)
+ij)]T2R3where(e()
+ij),
+2fs;v;agare sufﬁciently smooth positive scalar functions,
+while (Kij) = diag((s)
+ij(K(s)
+ij);(v)
+ij(K(v)
+ij);(a)
+ij(K(a)
+ij))2
+R33, where()
+ij(K()
+ij),2fs;v;ag, is the-modiﬁcation
+2018 Fifth International Conference on Internet of Things: Systems, Management and Security (IoTSMS)
+297
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:34:29 UTC from IEEE Xplore.  Restrictions apply. 
+function to limit the growth of the corresponding adaptive
+control gain. In this paper the -function is selected as
+(e()
+ij) =e()
+ijq
+()
+ij+()
+ije()
+ijq;(j;i)2EN+1; 2fs;v;ag;(9)
+with()
+ijand()
+ijbeing positive constants, 0<q2, while
+the-modiﬁcation functions, ()
+ij(K()
+ij), are inspired by those
+presented in [20] and are computed as
+()
+ij(K()
+ij) =8
+>>>><
+>>>>:0; ifK()
+ijM()
+ij  
+K()
+ij
+M()
+ij 1!
+ifM()
+ijK()
+ij2M()
+ij
+1; ifK()
+ijM()
+ij(10)
+whereM()
+ij>0constants, (j;i)2EN+1and2fs;v;ag.
+Remarks.
+The dynamics of each entry eaij(t)in (6) is equivalent to
+the nonlinear output of a unitary mass system evolving in the
+potential ﬁeld (7) and subjected to a linear damping and an
+external force as suggested in [19]. In this paper, the forcing
+function has been selected as F(keijkQij) =eT
+ijQijeij.
+According to [19], the potential ﬁeld (7) imposes two
+stable equilibria to each point-mass system in (6), 0and
+1, respectively. Consequently, the evolution of each entry
+eaij(t)will eventually converge either to 1or0. When an
+entryeaijconverges to 0the corresponding arc in GN+1can
+be removed from the platoon network topology and the i-
+th vehicle will continue to compute the control action (5)
+without using the information from the j-th vehicle. On
+the contrary, if eaijconverges to 1, the corresponding arc
+is kept and the i-th vehicle will continue to compute the
+control action (5) by using the information from the j-th
+vehicle. Furthermore, in steady-state a new topology, known
+as emerging topology, is obtained [19]. The emerging pla-
+toon topology is denoted as G(1)
+N+1= (VN+1;E(1)
+N+1), where
+E(1)
+N+1=f(j;i )2EN+1jlim
+t!+1eaij(t) = 1g.
+The control action (5) includes the platoon control ap-
+proaches presented in [4], [6], [25] as particular cases. Indeed,
+when both the platoon topology and control gains are ﬁxed
+the control action (5) reduces to that presented in [4], [6].
+Moreover, when the platoon network topology is not adapted
+and the adaptive mechanism for the control gains in (9) is
+replaced with (e()
+ij) = (e()
+ij)2(i.e.,q= 2,()
+ij= 1 and
+()
+ij= 0 in (9)) but without the use of the -modiﬁcation
+functions (i.e., in the case (Kij) = 02R3in (8)), the
+control action (5) reduces to that presented in [25] assuming
+also that the network latency is negligible. However, different
+from [25], the adaptive law (9) with ()
+ij>0and()
+ij>0
+guarantees that the derivative of the adaptive gains is bounded
+also in the presence of large errors among platoon members.
+It is noted that, also the magnitude of the adaptive control
+gains is kept bounded despite possible external disturbances
+and unmodelled dynamics as the adaptive mechanism (8) has
+been equipped with the -modiﬁcation strategy (10), which
+also allows the adaptive control gains to decrease.The adaptive mechanisms (9) is inspired by the adaptive
+approach for the synchronisation of dynamic networks in [19],
+[26]. However, in [19], [26] for each arc of the network, the
+corresponding adaptive control gain was a scalar (the coupling
+strength) and not a vector and it was computed based on
+the norm of the difference between the states of the vertices
+of the arc. Furthermore in [19], [26], the coupling among
+connected nodes was supposed to be available at each equation
+of the node model (i.e., the control was available at each
+equation of the node model) and the individual dynamics of
+the nodes were supposed to be identical. In the case of the
+platoon problem, the coupling between two nodes is possible
+only on the third state variable where the control action is
+available, and the vehicle dynamics (node dynamics) are not
+identical (heterogeneous platoon, see Section II-B). Moreover,
+each entry of the adaptive control gain in (8) depends only on
+the corresponding entry of the error vector in (3),(4).
+In [26], [19], [25], the adaptive control gains are computed
+as the integral of a positive function of the difference between
+the dynamics of the coupled nodes. Consequently, the adaptive
+control gains can only increase and eventually converge to
+some constant values in the case of perfect synchronisation.
+However, if perfect synchronisation cannot be achieved, for in-
+stance, because of persistent external disturbances (e.g., in the
+case of vehicle platooning, because of nonlinear aerodynamic
+drag force, rolling resistance and variation of the road slope),
+the residual synchronisation error might result in diverging
+control gains. To prevent a possible unbounded drift of the
+control gains, in this paper the -modiﬁcation strategy (10) is
+used which also allow the control gains (8) to decrease.
+IV. P LATOON CONTROL SUPPORTED BY THE CARMA
+FRAMEWORK
+The proposed platoon control system leverages on the cloud
+computing platform under development within the CARMA
+project. The CARMA project aims to develop and test co-
+operative automated driving technology, which is enabled by
+an ultra-low latency and highly reliable cloud-based infras-
+tructure accessed through 5G. The CARMA approach is that
+of a distributed control system in which the executions of
+autonomous functions are distributed between the on-board
+system and a cloud-based high performance shared back-
+end system. The CARMA architecture is logically divided
+into three layers, i.e. the CARMA Vehicle, the CARMA
+Edge and the CARMA Core [17]. The CARMA Vehicle
+connects various on-board sensors, infotainment equipment,
+on-board embedded processors, HMI equipment, and actuators
+to apply control commands. The on-board control components
+operate in cooperation with the CARMA Edge while assuring
+fault-tolerance of the system in cases when the connection
+is disrupted. Further, since vehicle safety is of paramount
+importance, on-board controllers are also responsible to assess
+and potentially override the remotely computed instructions
+(from cloud/edge) to ensure the safety of the vehicle.
+The CARMA Edge hosts off-board processes and infor-
+mation that require tight access (low latency) with the vehi-
+2018 Fifth International Conference on Internet of Things: Systems, Management and Security (IoTSMS)
+298
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:34:29 UTC from IEEE Xplore.  Restrictions apply. 
+Fig. 1. Architecture for the platoon control and management [22].
+Fig. 2. Platoon framework. Cj,j= 1:::N , is the on-board adaptive
+controller described in Section III; the wide arrows represent the information
+that each follower receives through the CARMA platform about the state of
+the other platoon vehicles. For the i-th follower, the structure of the controller
+and the information received from the CARMA platform are expanded.
+cles. This will include information collected from around the
+vehicle and processes that require cooperation with roadside
+equipment and other vehicles. This concept is borrowed from
+ETSI Mobile Edge Computing (MEC) framework, where
+MEC servers can be installed at Road Side Units or cell
+sites. It is noted that edge servers would provide key 5G
+communication and networking services to enable low-latency
+and highly reliable communication from the vehicle to the
+CARMA Edge and vice versa. It also enables V2V commu-
+nications, as all data trafﬁc is routed locally through the edge
+of the network (Vehicle-to-Cloud-to-Vehicle). The CARMA
+Core is a cloud-based back-end system, based on commercially
+available public cloud resources. This also provides interfaces
+for a variety of stakeholders that provide or use information
+from CARMA vehicles.
+Figure 1 shows the functional architecture for the platooning
+control and management proposed within the CARMA project
+and recently published in [22]. The ﬁrst two levels (i.e., Trip
+Planner andRoad Section Manager ) of the functional archi-
+tecture are devoted to promoting platoon formation of CA Vs
+in mixed trafﬁc scenarios while optimising platoon velocity
+and inter-vehicular distances on the platoon journey. In the
+lowest level of the architecture, i.e., Coordination Control,
+there are controllers for planning and executing cooperative
+platoon manoeuvres, such as the CACC method in Section III,
+and controllers for planning/executing merging and leaving a
+platoon.
+Figure 2 shows schematically the working principle of the
+control algorithm presented in Section III supported by the
+CARMA framework. Each platoon vehicle is connected to
+the CARMA platform and through the CARMA Edges the
+platoon vehicles share the information for implementing theAlgorithm 1 Fully adaptive platoon control (i -th Follower)
+1:initialise:
+2: Request to the CARMA Edge the parameter vector $i
+3: when$iis available, then shift to CACC mode
+4:procedure FULLADAPTIVE CACC
+5: while i-th vehicle is in the CACC mode do
+6: Receive zj,j2Ni, from the CARMA Edge
+7: Compute eij,j2Ni, by using (3)
+8: Update eaij,j2Ni, by using (6)
+9: Update Kij,j2Ni, by using (8)
+10: Compute uiby using (5)
+11:J? 
+j?2Nijeaij?is in steady-state and eaij?= 0	
+12:ri fRemove zj?,j?2J?from the CARMA Edge payloadg
+13:Ni Ni J?
+14:end
+control action (5), i.e., zi= [siviai]T. Each vehicle sends
+to the CARMA Edge its state ziwhich is stored and made
+available to other vehicles [22]. The platoon leader receives
+from the CARMA Edge the platoon reference velocity that
+optimises the consumption of the entire ﬂeet [22]. The generic
+i-th follower receives from the CARMA Edge the states of the
+other platoon members and a set of parameters (denoted as $i
+in Figure 2), and it can send requests to the CARMA platform
+(denoted as riin Figure 2). The vector of the parameter is
+sent to the i-th follower when it joins the platoon and it
+contains the initial set Ni, the required inter-vehicular distance
+that optimises fuel consumptions [22], and the parameters
+for implementing (6)-(10). After the join operation, the i-th
+vehicle periodically receives from the CARMA Edge the states
+zjwithj2Ni. Based on this information the i-th follower
+computes the entry of the adjacency matrix of GN+1as in
+(6), the adaptive gains as in (8)-(10), and the control action
+in (5). The on-board system of the i-th follower also monitors
+the evolution of eaij,j2Ni, and detect the indexes j?such
+that the corresponding eaij?is in steady-state and the steady-
+state value is 0. Finally, the i-th follower removes each j?
+fromNiand requires to the CARMA Edge to not receive
+the information from the j?-th platoon vehicle any longer,
+thus reducing the overall network load. The steps executed
+by thei-th vehicle after the join operation while driving in
+CACC mode are brieﬂy summarised in Algorithm 1. Notice
+that the while-loop in Algorithm 1 is executed as far as
+the follower is operated in CACC mode, i.e., as far as an
+exit platoon operation or a dissolve platoon operation is not
+required [22]. Furthermore, with the request riin Step 12the
+i-th vehicle requests to the CARMA Edge to not send the
+information of the vehicles j?2J?for future transmissions
+as they have adaptively excluded from the computation of
+the control action. Additional details about how some steps
+in Algorithm 1 are carried out are not given for the sake of
+brevity. Furthermore, the closed-loop analysis for the control
+algorithm in Section III which includes the -modiﬁcation
+strategy will be presented elsewhere.
+V. N UMERICAL RESULTS
+The effectiveness of the control action (5) to achieve the
+cooperative platoon motion is numerically conﬁrmed for a
+2018 Fifth International Conference on Internet of Things: Systems, Management and Security (IoTSMS)
+299
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:34:29 UTC from IEEE Xplore.  Restrictions apply. 
+(a)
+ (b)
+Fig. 3. Time-varying smooth speed leader reference proﬁle.
+heterogeneous platoon composed of 10followers. For this
+case study a constant spacing policy with di 1;i= 5 m,
+i= 1;:::;N is used. The initial vehicle states are randomly
+chosen but such that there are no collisions at initial time
+instant t = 0. Similarly, also the time constant of each vehicle
+in (1) is uniformly randomly chosen within the range 2
+[0:1;0:8] s [27]. The adaptive weights are selected as a trade-
+off between convergence time of the inter-vehicular distance
+errors to zero and reactivity of the control actions. The initial
+platoon topology is an all-to-all topology, but other choices
+(e.g., those discussed in [2]) are possible. Furthermore, the
+potential barriers and the adaptive weights with respect to the
+followers’ information are chosen symmetric (i.e., Bij=Bji,
+ij=ji,ij=ji,ij=ji,()
+ij=()
+ji,()
+ij=()
+ji,
+M()
+ij=M()
+ji,2 fs;v;ag,i;j= 1; 2;:::N ,i6=j),
+thus assuring that the topology among followers (i.e., GN) is
+always undirected1as in [6], [19] to achieve synchronisation.
+The leader’s speed manoeuvre is composed by three sub-
+manoeuvres: (a)an initial constant velocity set to 72km/h
+up tot= 30 s;(b)a trapezoidal shape with an increase of the
+leader’s speed from 72km/h to 90km/h in 5s and back (see
+also Figure 3a); and (c)a sinusoidal wave starting at t= 90 s,
+with period 15s, amplitude 16:5 km/h and bias 88:5 km/h
+(see also Figure 3b). Furthermore, to show that the followers
+well synchronise their velocities, the relative velocities among
+the followers are quantitatively measured with the use of the
+following performance indexes
+
+v= max
+t2T 0fv(t)g; Ev=mean
+t2T 0fv(t)g;v= var
+t2T 0fv(t)g;(11)
+whereTOis the time range of interest and v(t)is the
+maximum percentage velocity variation among the followers
+with respect to the mean followers speed at the time instant t,
+thus it is computed as
+v(t) =100
+1
+NNP
+i=1vi(t)max
+i;j=1:::Njvi(t) vj(t)j: (12)
+The ability of the control approach to meet the platoon
+control objectives is shown in Figure 4. At the time instant
+t= 0, there are mismatches among follower states, e.g.,
+there are inter-vehicular distance errors up to 2m among
+consecutive platoon members and large variations among the
+1The topologyGNis undirected, if (j;i)2ENthen(i;j)2EN
+(a)
+ (b)
+(c)
+Fig. 4. Platoon control performance at the control activation: (a) inter-
+vehicular distance error; (b) vehicle velocities and (c) vehicle accelerations
+(the velocity and acceleration of the leader are in black-dashed line).
+velocities of the followers. However, when the distributed
+platoon controllers are activated (t 0), vehicle dynamics are
+steered towards the desired behaviour (i.e., zero inter-vehicular
+distance errors, zero accelerations, and matching of the leader
+velocity) and the convergence time is less than 4s.
+When the cooperative platoon motion is established, the
+control algorithm is able to maintain the cooperative driving
+for time-varying speed proﬁles of the leader with small resid-
+ual errors. The robustness of the control solution with respect
+to smooth variations of leader’s velocity is shown in Figure 5
+which depicts the inter-vehicular distance error (e(s)
+i 1;i) and the
+velocity and acceleration errors of the followers with respect to
+the leader, i.e., e(v)
+i0ande(a)
+i0,i= 1;2;:::N , respectively. Fig-
+ure 5a and Figure 5b conﬁrm that the inter-vehicular distance
+errors for the trapezoidal and sinusoidal shapes never exceed
+6cm and 10cm, respectively. Moreover, Figure 5 also shows
+that the order of magnitude of the velocity and acceleration
+errors of the followers with respect to the leader does not
+strongly depend on the position of the follower in the ﬂeet (i.e.,
+there is an overlapping of all followers velocity/acceleration
+errors), thus followers well synchronise their motion also when
+there exist errors between the followers and the leader. This
+is also conﬁrmed in Figure 6 where it is shown that the
+relative velocity between any pair of followers is in the range
+[ 0:3; 0:3] km/h for both sub-manoeuvres. It is noted that
+such errors are negligible when compared to the magnitude
+of the followers’ speed over the sub-manoeuvres. Indeed, it
+was noted that (
+v; Ev;v) = (0:35; 0:12; 0:012)% and
+(
+v; Ev;v) = (0:39; 0:2; 0:010)% for the manoeuvres
+in Figure 3a and Figure 3b, respectively. Hence, for both sub-
+manoeuvres, the maximum percentage variation of the relative
+velocity among the followers is always below 0:4%, while the
+2018 Fifth International Conference on Internet of Things: Systems, Management and Security (IoTSMS)
+300
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:34:29 UTC from IEEE Xplore.  Restrictions apply. 
+(a)
+ (b)
+(c)
+ (d)
+(e)
+ (f)
+Fig. 5. Inter-vehicular distance error (a), velocity error (c) and acceleration
+error (e) for the leader-speed proﬁle in Figure 3a. Inter-vehicular distance error
+(b), velocity error (d) and acceleration error (f) for the leader-speed proﬁle in
+Figure 3b.
+(a)
+ (b)
+Fig. 6. Relative velocity between any pair of followers (i.e., e(v)
+ij,i;j=
+1;2;:::N ,i6=j) when the leader speed proﬁle is (a) trapezoidal (Figure
+3a) and (b) sinusoidal (Figure 3b).
+mean relative speed variations are about 0:12% and0:2%, for
+the trapezoidal shape and sinusoidal wave, respectively, with
+a variance of about 0:01 for both sub-manoeuvres.
+The use of the -modiﬁcation functions in (10) limit the
+growth of the adaptive gains (8) and allow them to decrease
+when they exceed the corresponding threshold, i.e., M()
+ij,
+2fs;v;ag. This is shown in Figure 7a-Figure 7c where
+the transient of the adaptive control gains is depicted. It is
+(a)
+ (b)
+(c)
+ (d)
+Fig. 7. (a)K(s)
+ij; (b)K(v)
+ij; (c)K(a)
+ijand (d) entries of the AN+1-matrix.
+(a)
+ (b)
+Fig. 8. Platoon network topology, leader (green circle), follower (blue circles),
+directed arcs from the Leader to the Followers (red lines), undirected arcs
+among Followers (black line) (a) initial all-to-all topology and (b) ﬁnal
+emerging topology. Notice that the networks in the picture represent only
+how vehicles exchange information and not their positions on the road.
+noted that all the control gains are bounded and converging
+to constant values. Moreover, for some control gains, the -
+modiﬁcation term in (8) becomes active thus inverting the
+increasing trend of the corresponding control gain. It is noted
+that, to the best of the authors’ knowledge, this kind of
+dynamics of the adaptive gains cannot be obtained neither with
+the adaptive networked control systems nor with the network-
+based adaptive platoon solutions available in the literature.
+Moreover, as the vehicles states and the control gains are
+bounded (see Figures 4, 5, 6, 7), the control actions (5) are
+bounded, but they are not shown for the sake of brevity.
+As discussed in Section III, the potential ﬁeld (7) imposes
+two stable equilibria, i.e., 0and1, to the second order systems
+in (6) that model the dynamics of the entries of the adjacency
+matrixAN+1ofGN+1. This is conﬁrmed in Figure 7d where
+the entries ofAN+1are depicted. The arcs corresponding to
+the entries ofAN+1that converge to zero are removed from
+the initial all-to-all topology as described in Section IV, thus
+2018 Fifth International Conference on Internet of Things: Systems, Management and Security (IoTSMS)
+301
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:34:29 UTC from IEEE Xplore.  Restrictions apply. 
+Fig. 9. Percentage reduction of the arcs in the emerging platoon network
+topology with respect to the number of followers N.
+a new platoon topology in steady-state emerges. The all-to-
+all topology and the emerging topology are both depicted
+in Figure 8. The all-to-all in Figure 8a has 100 arcs while
+the emerging topology in Figure 8b has 38arcs, thus the
+adaptive algorithm has reduced the amount of the data on the
+network of 62%. Under the same working conditions, a similar
+percentage arc reduction in the topology has been noted also
+for platoons with a larger number of followers. Figure 9 shows
+this percentage reduction with respect to the number of the
+followers. It is noted that the achieved reduction is always
+above 60% (except when N= 13, where a reduction of about
+57:5% was noted).
+VI. C ONCLUSION
+This paper has investigated a fully self-organising platoon
+control system supported by cloud-computing where both the
+platoon network topology the control gains adapt based on the
+dynamics of the vehicles involved in the cooperative driving.
+To limit the growth of the adaptive gains, the adaptive law has
+been equipped with sigma-modiﬁcation functions. Numerical
+results have conﬁrmed the effectiveness of the control method
+to create and maintain platoons of vehicles despite a time-
+varying velocity of the platoon leader as well as the ability of
+the platoon to adaptively select its network topology.
+ACKNOWLEDGMENT
+This work was supported by Jaguar Land Rover and
+the UK-EPSRC grant EP/N01300X/1 as part of the jointly
+funded Towards Autonomy: Smart and Connected Control
+(TASCC) Programme and is subject to UK patent under
+UKIPO GB1810437:2 (under review).
+REFERENCES
+[1] U. Montanaro, S. Dixit, S. Fallah, M. Dianati, A. Stevens, D. Oxtoby,
+and A. Mouzakitis, “Towards connected autonomous driving: review of
+use-cases,” Vehicle System Dynamics, 2018.
+[2] S. E. Li, Y . Zheng, K. Li, and L. Wang, “An Overview of Vehicular
+Platoon Control under the Four-Component Framework,” in IEEE Intel-
+ligent Vehicles Symposium, 2015, pp. 286–291.
+[3] J. Ploeg, N. Van De Wouw, and H. Nijmeijer, “Fault tolerance of
+cooperative vehicle platoons subject to communication delay,” in IFAC
+Workshop on Time Delay Systems, 2015, pp. 352–357.
+[4] Y . Zheng, S. E. Li, J. Wang, D. Cao, and K. Li, “Stability and scalability
+of homogeneous vehicular platoon: Study on the inﬂuence of informa-
+tion ﬂow topologies,” IEEE Transactions on Intelligent Transportation
+Systems, vol. 17, no. 1, pp. 14–26, 2016.
+[5] J. C. Zegers, E. Semsar-Kazerooni, J. Ploeg, N. van de Wouw, and
+H. Nijmeijer, “Consensus control for vehicular platooning with velocity
+constraints,” IEEE Transactions on Control System Technology, 2017.[6] Y . Zheng, S. E. Li, K. Li, and L.-Y . Wang, “Stability margin im-
+provement of vehicular platoon considering undirected topology and
+asymmetric control,” IEEE Transactions on Control Systems Technology,
+vol. 24, no. 4, pp. 1253–1265, 2016.
+[7] S. E. Li, X. Qin, K. Li, J. Wang, and B. Xie, “Robustness analysis and
+controller synthesis of homogeneous vehicular platoons with bounded
+parameter uncertainty,” IEEE/ASME Transactions on Mechatronics,
+vol. 22, no. 2, pp. 101–1025, 2017.
+[8] C. L. E. M.Van Eenennaam, W. K. W. K. Wolterink, G. Karagiannis,
+G. Heijenk, and J. Ploeg, “Impact of packet loss on cacc string stability
+performance,” in 11th International Conference on ITS Telecommunica-
+tions.
+[9] Y . A. Harfouch, S. Yuan, and S. Baldi, “An adaptive switched control
+approach to heterogeneous platooning with inter-vehicle communication
+losses,” IEEE Transactions on Control of Network Systems, in press.
+[10] J. P. Maschuw and D. Abel, “Longitudinal vehicle guidance in networks
+with changing communication topology,” in 6th IFAC Symposium Ad-
+vances in Automotive Control.
+[11] U. Montanaro, G. Fiengo, A. Tufano, and S. Santini, “On the ef-
+fectiveness of the extended cooperative adaptive control for vehicles
+platooning,” in European Control Conference, 2016, pp. 2453–2458.
+[12] Opportunities in 5G Networks: A Research and Development Perspec-
+tive. CRC Press, 2016.
+[13] H. Cao, S. Gangakhedkar, A. R. Ali, M. Gharba, and J. Eichinger, “A
+5g v2x testbed for cooperative automated driving,” in IEEE Vehicular
+Networking Conference, 2017.
+[14] Y . Zheng, S. E. Li, K. Li, and W. Ren, “Platooning of connected
+vehicles with undirected topologies: Robustness analysis and distributed
+h-inﬁnity controller synthesis,” IEEE Transactions on Intelligent Trans-
+portation Systems, vol. 19, no. 5, pp. 1353 – 1364, 2018.
+[15] I. A. Ridhawi, M. Aloqaily, Y . Kotb, Y . A. Ridhawi, and Y . Jararweh, “A
+collaborative mobile edge computing and user solutionfor service com-
+position in 5g systems,” Transactions on Emerging Telecommunications
+Technologies, 2018.
+[16] I. Parvez, A. Rahmati, I. Guvenc, A. I. Sarwat, and H. Dai, “A survey
+on low latency towards 5g: Ran, core network and caching solutions,”
+IEEE Communications Surveys and Tutorials, 2018.
+[17] A. Stevens, M. Dianati, K. Katsaros, C. Han, S. Fallah, C. Maple,
+F. McCullough, and A. Mouzakitis, “Cooperative automation through
+the cloud: The CARMA project,” in ITS European Congress, 2017.
+[18] Z. H. Mir and F. Filali, “Lte and ieee 802.11p for vehicular networking:a
+performance evaluation,” EURASIP Journal on Wireless Communica-
+tions and Networking, 2014.
+[19] P. de Lellis, M. di Bernardo, and M. Porﬁri, “Pinning control of complex
+networks via edge snapping,” Chaos, vol. 21, no. 3, 2011.
+[20] U. Montanaro and J. M. Olm, “Integral mrac with minimal controller
+synthesis and bounded adaptive gains: The continuous-time case,” Jour-
+nal of the Franklin Institute, vol. 353, no. 18, pp. 5040–5067, 2016.
+[21] M. di Bernardo, A. di Gaeta, U. Montanaro, and S. Santini, “Synthesis
+and experimental validation of the novel lq-nemcsi adaptive strategy
+on an electronic throttle valve,” IEEE Transactions on Control Systems
+Technology, vol. 18, no. 6, pp. 1325 – 1337, 2010.
+[22] U. Montanaro, S. Fallah, M. Dianati, D. Oxtoby, and T. M. A. Mouzaki-
+tis, “Cloud-assisted distributed control system architecture for platoon-
+ing,” in IEEE International Conference on Intelligent Transportation
+Systems, 2018, accepted for publication.
+[23] X. Wang and H. Su, “Pinning control of complex networked systems:
+A decade after and beyond,” Annual Reviews in Control, vol. 38, no. 1,
+pp. 103–111, 2014.
+[24] S. Li, F. Gao, D. Cao, and K. Li, “Multiple model switching control
+of vehicle longitudinal dynamics for platoon level automation,” IEEE
+Transactions on Vehicular Technology, vol. 65, no. 6, pp. 4480–4492,
+2016.
+[25] A. Petrillo, A. Salvi, S. Santini, and A. S. Valente, “Adaptive multi-
+agents synchronization for collaborative driving of autonomous vehicles
+with multiple communication delays,” Transportation Research Part C:
+Emerging, vol. 86, pp. 372–392, 2018.
+[26] P. de Lellis, M. di Bernardo, and F. Garofalo, “Novel decentralized
+adaptive strategies for the synchronization of complex networks,” Auto-
+matica, vol. 45, no. 5, pp. 1312–1318, 2009.
+[27] A. M. H. Al-Jhayyish and K. W. Schmidt, “Feedforward strategies for
+cooperative adaptive cruise control in heterogeneous vehicle strings,”
+IEEE Transactions on Intelligent Transportation Systems, vol. 19, no. 1,
+pp. 113–122, 2018.
+2018 Fifth International Conference on Internet of Things: Systems, Management and Security (IoTSMS)
+302
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:34:29 UTC from IEEE Xplore.  Restrictions apply. 

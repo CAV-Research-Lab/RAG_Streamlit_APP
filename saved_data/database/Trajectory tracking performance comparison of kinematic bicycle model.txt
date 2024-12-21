@@ -1,0 +1,891 @@
+=== Metadata ===
+{
+    "file_name": "Trajectory tracking performance comparison of kinematic bicycle model.pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Trajectory tracking performance comparison of kinematic bicycle model.pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+* İlgili yaza r/Corresponding author: halitege.ceyhun @ogr.deu .edu.tr  International Journal of Technological Sciences, 14(3), 1 53-162, 2022          DOI: 10.55974/utbd.1130198  
+ Uluslararası Teknolojik Bilimler Dergisi  
+ 
+International Journal of Technological Sciences  
+ 
+Research Article /Orijinal Makale   
+Trajectory tracking performance comparison of kinematic bicycle model with LQR and Lyapunov -
+based  controllers on a circular trajectory  
+ 
+Halit Ege Ceyhun*1, Aytaç Gören1 
+ 
+1Dokuz Eylül University , Graduate School of Natural and Applied Sciences , Mechatronics Engineering, Izmir , Turkey  
+ 
+ 
+Keywords  
+Wheeled mobile robot  
+LQR  
+Lyapunov  
+Kinematic bicycle model  
+Trajectory tracking  
+ 
+Article history:  
+Received: 13.06.2022 
+Accepted: 31.12.2022 
+ Abstract: This paper focuses on comparative results of two different controllers applied to 
+kinematic bicycle model with rear wheel contact point to the ground as the reference point. 
+The wide range of representation of different types of robots and vehicles of kinematic bicycle 
+model is  the main reason for this model selection. This paper has three main sections. The first 
+section of the paper is mathematical modeling of the model. The second section is describing 
+the utilized control techniques. The last section shares results of the si mulations. The 
+simulations have been carried out with pure feedback signals in absence of noise. The 
+compared two controllers are an (Linear Quadratic Regulator)LQR controller and a Lyapunov 
+based controller. The objective in the simulations is to track an d complete a given constant 
+radius trajectory. Last section includes comparison of results by analyzing statistical values of 
+a defined error signal.  
+ 
+To Cite /Atıf için : Ceyhun HE.  Gören A. Trajectory tracking performance comparison of kinematic bicycle model 
+with LQR and Lyapunov -based  controllers on a circular trajectory . International Journal of 
+Technological Sciences , 14(3), 153 -162 , 2022 . 
+  
+  
+LQR ve Lyapunov temelli iki kontrolcünün kinematik bisiklet tipi model için güzergah izleme 
+performansı nın dairesel bir güzergahta  karşılaştırması  
+ 
+ 
+Anahtar Kelimeler  
+Mobil robot  
+LQR  
+Lyapunov  
+Kinematik bisiklet modeli  
+Güzergah takibi  
+ 
+Makale geçmişi:  
+Geliş Tarihi: 13.06.2022 
+Kabul Tarihi: 31.12.2022 
+ 
+ Öz: Bu makale farklı kontrol tekniklerinin arka tekerleğinin yere temas noktasını referans alan 
+kinematik bisiklet tipi robot üzerine uygulamasının karşılaştırmalı sonuçlarına odaklanmıştır. 
+Kinematik bisiklet tipi modelin seçilmesinin ardında yatan asıl sebep, bu modelin günümüzde 
+kullanılan birçok robot modelini ve aracı temsil edebilmesidir. Çalışma üç ana bölümden 
+oluşmaktadır. İlk bölüm robotun modellenmesini içermekte. İkinci bölüm uygulanan kontrol 
+teknikleri ile ilgi li çalışmaları barındırmakta. Son bölüm ise simülasyon sonuçlarını 
+paylaşmaktadır. Kullanılan sinyaller gürültüsüz ortamda bir geribesleme sinyali için 
+oluşturulmuştur. Karşılaştırılan kontrolcüler (Linear Quadratic Regulator)LQR ve bir 
+Lyapunov temelli ko ntrolcülerdir. Simülasyonların ana amacı modelin verilen sabit yarıçaplı 
+güzergahı takip ederek tamamlamasıdır. Son bölüm içerisinde tanımlanan hata sinyalinin 
+istatistiksel olarak değerlendirmesini içerir.  
+  
+ 
+1. Introduction  
+ 
+Nowadays, the achievements in mobile robotics a llow  
+advanced applications in real life. One of the popular 
+tasks for autonomous and mobile robots is trajectory 
+tracking. This task requires mathematical model of the 
+mobile robot and a proper control approach to 
+minimize the total deviation from a desired tr ajectory.   
+In this research, the main aspect is to investigate the 
+control performances of two different controllers which 
+have been designed for a kinematic bicycle type 
+wheeled mobile robot (WMR). The rear tire contact 
+point assumed as a reference to acc omplish trajectory 
+tracking task. Linear Quadratic Regulator (LQR) and 
+Lyapunov based controllers are the applied control  
+
+Halit Ege CEYHUN , Aytaç GÖREN , Trajectory tracking performance comparison of kinematic bicycle model with LQR and Lyapunov -based controllers on a 
+circular trajectory  
+154 
+International Journal of Technological Sciences                                                                                                                                                                e-ISSN 1309 -1220  
+approaches in this paper. MATLAB/Simulink 
+environment has been used to simulate the trajectory 
+tracking performances of the WMR.  
+Rob otic motion, kinematic models and well -known 
+control techniques are presented in many references. 
+While [1 -3], [6] and [16] are covering most of these 
+topics, other references such as [5] is concentrated on 
+nonlinear control techniques and [4] is scoping 
+Lyapunov stability and regulation problem.  
+ 
+We can see that, using a linear controller is a practical 
+approach to the problem as stated in [7]. This paper 
+uses a differential drive type robot. Then subjects it to a 
+coordinate transformation by using referen ce frames 
+and input transformation. PI tuning with LQR is realized 
+in 3 -dimensional state space system. In [8] a dynamic 
+model of bicycle type robot is used together with its 
+kinematic model. By this manner, a Lyapunov function 
+is used for control. Stabili ty through Barbalat condition 
+is studied.  
+ 
+The kinematic model and linearization through input 
+transformation is validated and a control scheme 
+shown in [9]. This paper also uses a differential drive 
+robot in 3 -dimensional error system linearized around 
+origin. Linear feedback control is proposed with pole 
+placement approach to regulate the  desired  
+polynom ials. 
+ 
+In [10] a 3 -dimensional state space system is 
+considered under Lyapunov conditions. Dynamic model 
+is utilized for the related study. [11] follows a  similar 
+approach for a welding application combined with a 
+wheeled mobile robot control.  
+ 
+In [12] a differential drive model is the subject of 
+feedback linearizing control to accomplish “Follow the 
+Carrot” algorithm by replacing system nonlinearities 
+with  desired dynamics. Position and orientation error 
+form the error system. [17] and [18] are detailed and 
+explanatory sources for optimal control theory.  
+ 
+An inclusive reference for path tracking methods of 
+autonomously steering vehicles is [13] . Dynamic and  
+kinematic models are shown together with geometric 
+tracking algorithms such as Pure Pursuit and Stanley 
+Control. Kinematic and optimal control including LQR 
+form are also investigated deeply.  
+ 
+[14] considers center of wheelbase as the reference 
+point of t he kinematic model. Therefore, another 3 -
+dimensional approach is made by LQR -LMI tuning for a 
+Lyapunov based controller.  
+ 
+[15] Both forward and backward motions are 
+considered for tractor trailer wheeled robot. Lyapunov   
+based approach is stated for diffe rent types of 
+trajectories. Slip condition is also considered.  
+ 
+Instead of taking statically balanced models [19] takes 
+an e -scooter model and investigates a higher 
+dimensional state space system. This new system also 
+takes self -stabilization as an additio nal task other than 
+motion control.  
+ 
+[20] takes even larger state space system with 12 
+degrees of freedom. Tracking problem simulations are 
+done for PD and H ∞ controllers then tested for PD 
+controller.  
+ 
+A time -varying LQR control is applied in [22] for 
+tracking task. This paper uses a 4 -dimensional state 
+space system as in our study.  
+ 
+Contributions to WMR studies in “Automatic Control 
+and Robotics Laboratory” of Dokuz Eylül University 
+focus on linear and non -linear controller design, 
+navigation, sensor f usion and implementations on 
+experimental models. [23] realizes a path following task 
+for autonomous vehicles by GPS measurement. [24] 
+considers relative positioning of a robot together with 
+trajectory tracking and obstacle avoidance task. 
+Sensory measurem ent and indoor mapping by a LIDAR 
+are researched deeply in order to ensure autonomous 
+navigation in [25]. Alongside traditional approaches, a 
+neural network -based control approach is applied to a 
+non-holonomic model using multiple sensors in [26].  
+ 
+As another perspective, [27] takes the standard form of 
+a PI controller and combine it with a nonlinear gain and 
+control a second order system. Stability analysis is done 
+for different criteria. Then all these considerations are 
+subjected to a higher order  system which is the active 
+suspension system. Reference tracking performances 
+are evaluated for different system parameter settings. 
+On the other hand [2 8] suggests a hybrid control 
+approach by including a neural network to the tuning 
+part. Then tracking performances are evaluated and 
+compared for regular PD, Anfis and a hybrid controller 
+constructed by both.  
+ 
+1.1. Problem Definition  
+ 
+Our work, unlike many applications, takes a four -
+dimensional state space for kinematic bicycle model. 
+Considered model uses  reference as rear wheel center. 
+Reference inputs are longitudinal velocity and rate of 
+change in steering angle. This consideration allows us 
+to model many of the real -life robots and vehicles.  
+Therefore, this paper can be considered as a case study 
+for a  wide range autonomous wheeled mobile robots 
+and a large class of vehicle family. Cars, busses,  
+Halit Ege CEYHUN , Aytaç GÖREN , Trajectory tracking performance comparison of kinematic bicycle model with LQR and Lyapunov -based controllers on a 
+circular trajectory  
+155 
+International Journal of Technological Sciences                                                                                                                                                                e-ISSN 1309 -1220  
+motorcycles, scooters can be given as examples of this 
+model.  
+ 
+Moreover, the problem of tracking for this type of model 
+is taken as the studied topic  to test the tracking 
+controller performances . As stated above, the model is 
+a representative of frequently encountered vehicle 
+families and therefore tracking control for these types 
+of vehicles becomes vital for the futuristic autonomous 
+driving scenarios. This paper searches the less 
+deviating tracking control for that matter.  
+ 
+2.  Mathematical Modeling   
+ 
+The rear wheel reference kinematic bicycle model is a 
+very common model for a family of wheeled mobile 
+robots. Equation 1 show the states for t his type of model. 
+First two states x and y are taken as planar position 
+information. Next states are orientation angle of the 
+robot/vehicle and steering angle. They are shown with 
+θ and φ respectively.  As a result,  a 4-dimensional  state 
+vector is created.  
+ 
+𝑝=(𝑥
+𝑦
+𝜃
+𝜑) (1) 
+ 
+The main principle is to apply a non -holonomic 
+constraint for two wheels. The wheels are assumed not 
+sliding sideways and motion is obtained only by rolling. 
+This assumption results two constraints for two wheels.  
+ 
+In Figure 1, coordinates of the robot can be seen as a 
+vector of rear wheel cartesian coordinates, front wheel 
+cartesian coordinates, orientation angle of whole body 
+and steering angle. This is a redundant representation 
+of this robot. Because with a const ant wheelbase “L” it 
+is possible to rewrite one wheel’s coordinates by using 
+the other one as in Equation 2 and 3. 
+ 
+𝑥𝑓𝑟𝑜𝑛𝑡=𝑥𝑟𝑒𝑎𝑟+𝐿cos(𝜃) (2) 
+𝑦𝑓𝑟𝑜𝑛𝑡=𝑦𝑟𝑒𝑎𝑟+𝐿sin(𝜃) (3) 
+ 
+As can be seen in Equation 4 and 5, by derivation of 
+these equations with respect to time, evolutions of 
+states in time are obtained.  
+ 
+𝑥̇𝑓𝑟𝑜𝑛𝑡=𝑥̇𝑟𝑒𝑎𝑟−𝜃̇𝐿sin(𝜃) (4) 
+𝑦̇𝑓𝑟𝑜𝑛𝑡=𝑦̇𝑟𝑒𝑎𝑟+𝜃̇𝐿cos(𝜃) (5) 
+  
+Figure 1. Kinematic Rear Wheel Reference Bicycle 
+Model  
+ 
+ 
+If this new representation is used for writing the wheel 
+constraints equation, the input vector fields can be 
+obtained by Equation 6 and 7. 
+ 
+𝑥̇𝑟𝑒𝑎𝑟sin(𝜃)−𝑦̇𝑟𝑒𝑎𝑟cos(𝜃)=0  (6) 
+𝑥̇𝑓𝑟𝑜𝑛𝑡sin(𝜃+𝜑)−𝑦̇𝑓𝑟𝑜𝑛𝑡cos(𝜃+𝜑)=0 (7) 
+ 
+It is possible to rewrite this in matrix form. Integrability 
+of the input vector fields will be guaranteed by this way. 
+For simplicity of notation, rear subindices are dropped. 
+Hence, coordinates are changed to a vector containing 
+only one pair of cartesia n coordinates of rear wheel and 
+two angular coordinates with orientation angle of the 
+body and steering angle. Matrix form of the constraints 
+on the wheels can be seen in Equation 8. 
+ 
+[sin(𝜃)−cos(𝜃)0              0
+sin(𝜃+𝜑)−cos(𝜃+𝜑)−𝐿cos(𝜑)0](𝑥̇
+𝑦̇
+𝜃̇
+𝜑̇)=0  (8) 
+ 
+The vector fields which satisfy these constraints are 
+found and can be used for determination of input vector 
+fields. Non -holonomy condition is satisfied for this 
+model by a null space solution . 
+ 
+Obtained vectors can be seen below in mathematically 
+defined rear wheel kinematic bicycle model. By this 
+knowledge it is possible to write the rear wheel 
+reference kinematic bicycle model in state space form 
+as in Equation 9. 
+ 
+𝑝̇=(𝑥̇
+𝑦̇
+𝜃̇
+φ̇)=(𝑐𝑜𝑠(𝜃)
+𝑠𝑖𝑛(𝜃)
+𝑡𝑎𝑛(φ)/𝐿
+0)𝑢1+(0
+0
+0
+1)𝑢2 (9) 
+
+Halit Ege CEYHUN , Aytaç GÖREN , Trajectory tracking performance comparison of kinematic bicycle model with LQR and Lyapunov -based controllers on a 
+circular trajectory  
+156 
+International Journal of Technological Sciences                                                                                                                                                                e-ISSN 1309 -1220  
+Inputs are chosen to be linear velocity of body and 
+angular velocity ( 10) as rate of change of steering angle 
+(11) and can be written as:  
+ 
+𝑣=√𝑥̇2+𝑦̇2 (10) 
+𝑤=𝜑̇ (11) 
+ 
+However, the resulting model is highly nonlinear and a 
+direct linearization by derivation gives a set of 
+equations which do not represent the robot motion. 
+Therefore, a feedback linearization through coordinate 
+transformation is done. Then control approaches are 
+applied for this new system repr esentation. To get this 
+new system, a reference state vector must be defined as 
+in Equation 1 2. Ref subindices  represent reference.  
+ 
+𝑝𝑟𝑒𝑓=(𝑥𝑟𝑒𝑓
+𝑦𝑟𝑒𝑓
+𝜃𝑟𝑒𝑓
+𝜑𝑟𝑒𝑓)  (12) 
+ 
+By the measured states, the error vector is obtained and 
+represented in a rotated coordinate system attached to 
+the rear wheel of the kinematic bicycle type model. Full 
+state measurement is assumed to be available. Error 
+system can be defined as in Equation 1 3. 
+ 
+(𝑒1
+𝑒2𝑒3
+𝑒4)=[cos(𝜃)sin(𝜃)00
+−sin(𝜃)cos(𝜃)00
+0
+00
+01
+00
+1](𝑥𝑟𝑒𝑓−𝑥
+𝑦𝑟𝑒𝑓−𝑦
+𝜃𝑟𝑒𝑓−𝜃
+φ𝑟𝑒𝑓−φ)  (13) 
+ 
+The transformation matrix in Equation 1 3 has the form 
+of a planar rotation by the orientation angle of the 
+model. This rotation is applied to x and y coordinates of 
+model. However, angular states are expressed in their 
+natural form. Followed procedure is allowing a 
+definition of an error system which is described on 
+longitudinal and lateral dynamics of the model. By 
+rewriting the reference states like the model’s 
+kinematic equations, the error system is rewritten 
+clearly. Equations 1 4, 15, 16 and 1 7 show time 
+derivatives  of the reference states.  
+ 
+𝑥̇𝑟𝑒𝑓=𝑣𝑟𝑒𝑓cos(𝜃𝑟𝑒𝑓) (14) 
+𝑦̇𝑟𝑒𝑓=𝑣𝑟𝑒𝑓𝑠𝑖𝑛(𝜃𝑟𝑒𝑓)   (15) 
+𝜃̇𝑟𝑒𝑓=𝑣𝑟𝑒𝑓𝑡𝑎𝑛(𝜑𝑟𝑒𝑓)
+𝐿 (16) 
+𝜑̇𝑟𝑒𝑓=𝑤𝑟𝑒𝑓 (17) 
+ 
+Thanks to the differential flatness and constant 
+parameters of the model, it is possible to obtain these 
+reference states of the system. However, an additional 
+calculation is necessary to express the curvature of 
+desired trajectory. By this way it is possi ble to represent  
+  
+reference steering angle change rate and therefore rate 
+of change of steering angle.  
+ 
+Reference orientation of the trajectory is calculated in 
+Equation 1 8. 
+ 
+𝜃𝑟𝑒𝑓=tan−1(𝑦̇𝑟𝑒𝑓
+𝑥̇𝑟𝑒𝑓) (18) 
+ 
+Reference linear velocity of the trajectory is calculated 
+in Equation 1 8. 
+ 
+𝑣𝑟𝑒𝑓=√𝑥̇𝑟𝑒𝑓2+𝑦̇𝑟𝑒𝑓2 (19) 
+ 
+Reference curvature and instantaneous center of 
+rotation of the trajectory are calculated in Equation 20 
+and 2 1. 
+ 
+𝜅𝑟𝑒𝑓=𝑦̈𝑟𝑒𝑓𝑥̇𝑟𝑒𝑓−𝑥̈𝑟𝑒𝑓𝑦̇𝑟𝑒𝑓
+(𝑥̇𝑟𝑒𝑓2+𝑦̇𝑟𝑒𝑓2)32⁄ (20) 
+𝑅𝑟𝑒𝑓=1
+𝜅𝑟𝑒𝑓 (21) 
+ 
+Reference steering angle and its rate of change can be 
+directly found by derivation of Equation 2 2. 
+ 
+𝜑𝑟𝑒𝑓=tan−1(𝐿
+𝑅𝑟𝑒𝑓) (22) 
+ 
+Where, R ref is the distance between instantaneous 
+center of rotation and rear wheel. L is the wheelbase of 
+the robot. By this way, the rotated error equations are 
+derived for cartesian coordinates. Then, reference 
+expressions are used. Note that angular states are ke pt 
+the same for error system generation.  
+ 
+Evolution of error states with respect to time can be 
+seen in Equation 2 3, 24, 25 and 2 6. This procedure is 
+done by calculating Equation 13 with the terms 
+calculated in Equations 14, 15, 16, 17, 18, 19, 20, 21 and 
+22. 
+ 
+𝑒̇1=𝑣𝑟𝑒𝑓𝑐𝑜𝑠(𝑒3)−𝑣+𝑣tan(𝜑)
+𝐿𝑒2 (23) 
+𝑒̇2=𝑣𝑟𝑒𝑓𝑠𝑖𝑛(𝑒3)−𝑣tan(𝜑)
+𝐿𝑒1  (24) 
+𝑒̇3=𝑣𝑟𝑒𝑓𝑡𝑎𝑛(𝜑𝑟𝑒𝑓)
+𝐿−𝑣tan(𝜑)
+𝐿 (25) 
+𝑒̇4=𝜑̇𝑟𝑒𝑓−φ̇ (26) 
+ 
+This form still has a highly nonlinear relation. Small 
+angle assumption is made and artificial inputs are 
+introduced by redefining  original inputs . Redefined 
+inputs are given in Equation 2 7, 28 and 2 9. 
+Halit Ege CEYHUN , Aytaç GÖREN , Trajectory tracking performance comparison of kinematic bicycle model with LQR and Lyapunov -based controllers on a 
+circular trajectory  
+157 
+International Journal of Technological Sciences                                                                                                                                                                e-ISSN 1309 -1220  
+𝑢1=𝑣𝑟𝑒𝑓𝑐𝑜𝑠(𝑒3)−𝑣 (27) 
+𝑢2=𝑒̇3 (28) 
+𝑢3=𝑒̇4 (29) 
+ 
+New error system can be represented in linear time -
+invariant form if and only if reference linear speed and 
+reference steering angle are constants. This is shown  in 
+Equation 30.  
+ 
+[𝑒̇1
+𝑒̇2
+𝑒̇3
+𝑒̇4]=
+[     0𝑣𝑟𝑒𝑓𝑡𝑎𝑛(𝜑𝑟𝑒𝑓)
+𝐿00
+−𝑣𝑟𝑒𝑓𝑡𝑎𝑛(𝜑𝑟𝑒𝑓)
+𝐿0 𝑣𝑟𝑒𝑓0
+0 0 00
+0 0 00]     
+[𝑒1
+𝑒2𝑒3
+𝑒4]+[100
+000
+0
+01
+00
+1][𝑢1
+𝑢2
+𝑢3] (30) 
+ 
+To avoid dynamic effects which can occur on tires and 
+therefore on lateral motion, motion of the model  has 
+been investigated using relatively smaller velocities. In 
+this work a constant radius circul ar path is considered 
+and details are presented in next sections.  
+ 
+3. Control Methods  
+ 
+In this study two control approaches are applied and 
+simulation results are compared. These are Linear 
+Quadratic Regulator and a Lyapunov based controller.  
+ 
+3.1. Linear Quadratic Regulator ( LQR)  
+ 
+In LQR design, linear quadratic cost function is used and 
+shown in Equation 3 1. 
+ 
+𝐽=∫(𝑥𝑇𝑄𝑥+𝑢𝑇𝑅𝑢)𝑑𝑡 (31) 
+ 
+Where Q and R matrices are diagonal weights matrices 
+for the states and inputs. In this case, states corres pond 
+to errors and inputs are the artificial ones  shown in 
+Equations 27, 28 and 29.  The feedback is obtained in a 
+static manner. Thus, standard form can be rewritten as 
+in Equation 3 2. 
+ 
+𝐽=∫(𝑒𝑇𝑄𝑒+𝑢𝑇𝑅𝑢)𝑑𝑡 (32) 
+ 
+In this research, the inputs are not penalized but states 
+are weighted differently. State and input weights are 
+expressed in Equation 3 3 and 3 4. The selection of 
+weights are done by inspecting the Equations 27, 28, 29 
+and 30. Since e 3 and e 4 represent the  error on  angular 
+states in the or iginal system and the rotation is done by 
+the orientation angle itself, more weights are given to 
+those states. Another supporting observation can be 
+pointed out  by the fact that e 1 and e 2 are highly 
+dependent on both angular error states. Input 
+weighting is not done and all virtual inputs are taken 
+with the same weights. Therefore, Equations 32 and 33 
+would be a viable selection for weights matrices.   
+𝑄=[1000       0
+0100       0
+0
+00
+010000
+     01000] (33) 
+𝑅=[100
+010
+001] (34) 
+ 
+Free system has two eigenvalues at origin and two 
+complex eigenvalues at 0±0.6283i. LQR strategy places 
+the eigenvalues to -31.6228, -31.6212, -2.9531, -0.7670. 
+Corresponding gain matrix can be seen in Equation 3 5. 
+ 
+𝐾=[3.5604−2.1689−0.2213          0
+−0.22131.603231.7809           0
+0 00           31.6228] (35) 
+ 
+3.2. Lyapunov Based Controller  
+ 
+Lyapunov functions are widely used in many fields of 
+nonlinear control application. This paper follows a 
+control approach with a storage function which is semi -
+positive definite for any time while its derivative is 
+negative semi -definite for any time insta nt. At the origin 
+the storage function is equal to zero. Considered storage 
+function is constructed by quadratic terms and a 
+trigonometric term. Main reason behind this selection 
+of structure is to stress out the property of boundaries 
+of each function typ e. While quadratic functions have a 
+lower bound at zero, trigonometric functions are 
+defined in the range of ±1. Storage function and its 
+derivative can be found in Equation 3 6 and 3 7. 
+ 
+𝑉=1
+2(𝑒12+𝑒22+𝑒42)+1−𝑐𝑜𝑠(𝑒3)
+𝑘2 (36) 
+𝑉̇=𝑒1𝑒̇1+𝑒2𝑒̇2+𝑒4𝑒̇4+𝑠𝑖𝑛(𝑒3)
+𝑘2𝑒̇3 (37) 
+ 
+For this approach, error system can be rewritten by 
+releasing the small angle approximation and keeping 
+the input transformation the same. A non -linear system 
+is defined in Equation 3 8, 39, 40 and 4 1. 
+ 
+𝑒̇1=𝑢1+(𝑣𝑟𝑒𝑓𝑡𝑎𝑛(𝜑𝑑)
+𝑙−𝑢2)𝑒2 (38) 
+𝑒̇2=𝑣𝑟𝑒𝑓𝑠𝑖𝑛(𝑒3)−(𝑣𝑟𝑒𝑓𝑡𝑎𝑛(𝜑𝑑)
+𝑙−𝑢2)𝑒1 (39) 
+𝑒̇3=𝑢2 (40) 
+𝑒̇4=𝑢3 (41) 
+ 
+Finally, the Lyapunov criteria are checked and the 
+controller performance is simulated. In order to have a 
+negative semi -definite derivativ e for storage function, 
+following feedback terms in Equation 4 2, 43 and 4 4 are 
+used.  
+ 
+Halit Ege CEYHUN , Aytaç GÖREN , Trajectory tracking performance comparison of kinematic bicycle model with LQR and Lyapunov -based controllers on a 
+circular trajectory  
+158 
+International Journal of Technological Sciences                                                                                                                                                                e-ISSN 1309 -1220  
+𝑢1=−𝑘1𝑒1 (42) 
+𝑢2=−𝑘2𝑣𝑟𝑒𝑓𝑒2 (43) 
+𝑢3=−𝑘3𝑒4 (44) 
+ 
+After adding the error system and feedback terms  
+together , the resultant derivative function became 
+negative semi -definite for all values of states. This 
+operation is shown in Equation 4 5 and its simplified 
+version in 4 6. 
+ 
+𝑉̇=−𝑘1𝑒12+𝑒2𝑣𝑟𝑒𝑓𝑠𝑖𝑛(𝑒3)+𝑠𝑖𝑛(𝑒3)
+𝑘2(−𝑘2𝑣𝑟𝑒𝑓𝑒2)−𝑘3𝑒42 (45) 
+𝑉̇=−𝑘1𝑒12−𝑘3𝑒42 (46) 
+ 
+Controller gains are selected as follows in Equation 4 7, 
+48 and 4 9. 
+ 
+𝑘1=40 (47) 
+𝑘2=40 (48) 
+𝑘3=50 (49) 
+ 
+Note that any positive value of Lyapunov gains will 
+result a satisfactory result for Lyapunov Stability 
+Theorem.  Controller gains are selected by trial and 
+error. Starting from a small positive value and slowly 
+increasing each value resulted these gains. Greater 
+values would result more aggressive results.  
+ 
+ 
+ 4. Simulation Results and Discussion  
+ 
+MATLAB /Simulink  environment is utilized to simulate 
+the trajectory and the motion of the WMR. The selected 
+task is to follow a circular reference trajectory with a 
+diameter of 10 meters in 10 seconds. Therefore, the 
+reference linear and angular speed inputs are co nstant 
+π m/s and 0.2π rad/s. Necessary references can be 
+obtained directly. These references are expressed in 
+Equation 50 and 5 1. 
+ 
+𝑥(𝑡)=5cos(𝜋
+5𝑡) (50) 
+𝑦(𝑡)=5sin(𝜋
+5𝑡) (51) 
+ 
+The single important parameter of bicycle is its 
+wheelbase of 1.5 meters. This parameter selected by 
+considering an average bicycle/scooter. Steering angle 
+is saturated in ±1.07 radians.  
+ 
+Initial conditions are picked the same for both cases as 
+shown in Equation 5 2. Which is the starting point on the 
+trajectory. The goal is to follow the exact trajectory.  
+ 
+𝑝𝑖𝑛𝑖𝑡𝑖𝑎𝑙=[50 𝜋 
+20]𝑇
+ (52) 
+ 
+ 
+  
+ 
+Figure  2. LQR Control Scheme  
+
+Halit Ege CEYHUN , Aytaç GÖREN , Trajectory tracking performance comparison of kinematic bicycle model with LQR and Lyapunov -based controllers on a 
+circular trajectory  
+159 
+International Journal of Technological Sciences                                                                                                                                                                e-ISSN 1309 -1220  
+Figure 3. Lyapunov Control Scheme  
+ 
+Figure 2 shows the Simulink scheme of kinematic 
+bicycle model controlled via LQR technique.  A similar 
+block scheme is created for Lyapunov based control 
+technique in Simulink environment and can be seen in 
+Figure 3.   
+Simulations are  done for 10 seconds with fixed step of 
+0.001 seconds. Solver selection is ODE4(Runge -Kutta).  
+Results are plotted together with the reference 
+trajectory and can be seen in Figure 4.  
+ 
+ 
+Figure 4 . Tracking Comparison of Two Controllers  
+ 
+
+Halit Ege CEYHUN , Aytaç GÖREN , Trajectory tracking performance comparison of kinematic bicycle model with LQR and Lyapunov -based controllers on a 
+circular trajectory  
+160 
+International Journal of Technological Sciences                                                                                                                                                                e-ISSN 1309 -1220 Tabl e 1. Performance Comparison Through Indicators  
+Indicator  Lyapunov Based 
+Controller  Linear Quadratic 
+Regulator ( LQR)  
+Cumulative Deviation  4.5506 m  9.0552 m  
+Mean Deviation on x -axis  -3.0346 ×10-4 m -0.0378 m  
+Mean Deviation on y -axis  -0.0322 m  -0.0570 m  
+Variance of Deviation on x -axis  5.1747 ×10-4 m 0.0017 m  
+Variance of Deviation on y -axis  5.1758 ×10-4 m 0.0018 m  
+From first inspection of Figure 4 it is hard to evaluate 
+performance of both control approaches. Therefore, a 
+deviation metric is defined and considered as 
+performance indicator. This deviation metric is 
+measuring distance between reference trajectory poin t 
+and kinematic bicycle model’s rear wheel contact point 
+to the ground and the performances of both controllers 
+can be seen in Table 1. Deviation metric is expressed in 
+Equation 5 3. 
+ 
+𝑑=√(𝑥𝑟−𝑥)2+(𝑦𝑟−𝑦)2 (53) 
+ 
+For evaluation of performance, deviation from 
+trajectory on each time step is collected. Then, 
+cumulative deviation from reference trajectory is 
+calculated together with mean and variance on x and y 
+axes. These values are shared to the reader in previous 
+table. Evolution of deviations i n both axes for each 
+control strategy can be seen in Figure 5.  
+ 
+Table 1 and Figure 5 give the meaningful performance 
+differences. Importance of every single indicator can be clarified. First indicator is the cumulative deviation. 
+Since Equation 5 3 collects  the deviation value from 
+reference trajectory for every time step, summed 
+deviation is the most important indicator of the 
+tracking performance. As this indicator goes to zero, 
+performance is to be said get better. However, this 
+indicator is not the singl e performance indicator 
+because of time dependency of this deviation. As shown 
+in Figure 5, the deviation from reference trajectory 
+changes over time along both axes of the cartesian 
+coordinate system. Minimized variation around zero 
+deviation from referen ce trajectory is the best 
+expression of the performance analysis. Therefore, 
+minimum deviation from reference trajectory can be 
+defined statistically.  
+ 
+Both control techniques have very small mean 
+deviations on both cartesian coordi nate axes. However, 
+variances around this mean value separates two 
+scenarios. In Figure 5 this consideration becomes more 
+visible. While oscillations around zero are similar in 
+terms of frequency, their amplitude show how 
+cumulative error gets greater for LQR control approach.
+ 
+Figure 5. Tracking Deviations on Each Axis for Both Controllers
+  
+
+Halit Ege CEYHUN , Aytaç GÖREN , Trajectory tracking performance comparison of kinematic bicycle model with LQR and Lyapunov -based controllers on a 
+circular trajectory  
+161 
+International Journal of Technological Sciences                                                                                                                                                                e-ISSN 1309 -1220 Another perspective which is compared in this paper is 
+the performance difference of a linear and a nonlinear 
+controller approach on kinematic bicycle model. Both 
+techniques are well known and widely used approaches. 
+Lyapunov based controller action needs an additional 
+term other than the states of the system which is the 
+reference speed input. However, LQR only utilizes a 
+predefined ga in matrix for a simpler feedback action. 
+This situation gives another conclusion for the 
+compared control approaches. Since Lyapunov based 
+control action utilizes reference linear velocity in its 
+feedback calculation, it is possible to define a time - 
+varyi ng positive term and apply this controller for time 
+dependent cases. To be more clear, this controller 
+would be able to track varying radius trajectories. On 
+the other hand, LQR control strategy would not be able 
+to calculate such a feedback matrix because  of variable 
+system matrix entities.  
+ 
+4. Conclusion  
+ 
+In this research two different types of control strategies 
+are derived and applied to kinematic bicycle model. 
+Control strategies rely on Linear Quadratic Regulator 
+and Lyapunov Stability Theorem. For both control 
+strategies, stability is searched and guar anteed by 
+designed feedback actions. Reference trajectory was a 
+circle with radius of 5 meters, which had to be 
+completed in 10 seconds. Reference speed inputs were 
+decided to be constants. Kinematic bicycle model was 
+able to follow the reference trajector y with small 
+deviations for suggested control settings. Performance 
+comparison is made and seen that Lyapunov based 
+control strategy performed a better tracking result. 
+Future work can be done for obstacle avoidance and 
+globally asymptotically controllers.  As a future work, 
+for testing the performance of the developed controller 
+in real environment, an experimental study on a 
+wheeled robot model is planned. Noise cancellation , 
+sensor measurement and data filtering would be 
+another challenging task for reali zation.  
+ 
+It is evident that Lyapunov based control strategy 
+performed better than LQR approach. Both techniques 
+have at least a mean deviation of order  10-2 from 
+reference trajectory. Hence, both strategies are 
+resulting reliably good performance. Moreover, LQR 
+strategy should have a better performance under noisy 
+measurement  application  or uncertainties  due to its 
+lower dependency on variables. Future studie s can be 
+constructed under this idea.  
+ 
+However, both techniques need to be applied around 
+reference trajectory and a preliminary system matrix 
+analysis and design is necessary. Moreover, an obstacle 
+avoidance strategy and a global planner must be added before deploying such controller. By this way it would 
+be possible to get a global control approach.  
+ 
+References  
+ 
+[1] Siegwart RI, Nourbakhsh R, Scaramuzza D. 
+Introduction to Autonomous Mobile Robots, Second 
+Edition . vol. 23 , 2011.  
+[2] Choset H , Lynch  KM, Hutchinson S, Kantor GA, 
+Burgard W.  Principles of Robot Motion, 2005.  
+[3] Siciliano B, Sciavicco L, Villani L, Oriolo G. Robotics: 
+Modelling, planning and control . no. 
+9781846286414. doi: 10.5860/choice.46 -6226 , 
+2009 . 
+[4] Dixon W, Dawson DM, Zergeroglu E, Behal A. 
+Nonlinear Control of Wheeled Mobile Robots. 
+Lecture Notes in Control and Information Sciences, 
+vol. 262 , 2020.  
+[5] Isidori A. Nonlinear Control Systems: An 
+Introduction . 3rd ed. Berlin, Germany: Springer -
+Verlag , 1995.  
+[6] Siciliano B, Khatib O. Springer handbook o f robotics. 
+doi: 10.1007/978 -3-319 -32552 -1, 2016 . 
+[7] Forte MDN, Correia WB, Nogueira FG, Torrico BC. 
+Reference Tracking of a Nonholonomic Mobile 
+Robot using Sensor Fusion Techniques and Linear 
+Control . IFAC -Papers  OnLine, vol. 51, no. 4. doi: 
+10.1016/j.ifacol.2018.06.092 , 2018 . 
+[8] Fareh R, Saad M, Khadraoui S, Rabie T. Lyapunov -
+Based Tracking Control for Nonholonomic Wheeled 
+Mobile Robot . International Journal of Electrical, 
+Computer, Energetic, Electronic and 
+Communication Engineering, vol. 10, n o. 8, pp. 
+1042 –1047 , 2018 . 
+[9] Nurmaini S, Dewi K, Tutuko B. Differential -drive 
+mobile robot control design based -on linear 
+feedback control law . International Conference on 
+Electrical Engineering, Computer Science and 
+Informatics (EECSI), vol. 3. doi: 10.1088 /1757 -
+899X/190/1/012001 , 2016 . 
+[10] Zidani G, Drid S Larbi , CA, Arar D, Bussy P. Robust 
+nonlinear control of a mobile robot . Journal of 
+Electrical Engineering and Technology, vol. 11, no. 4, 
+doi: 10.5370/JEET.2016.11.4.1014 , 2016 . 
+[11] Bui TH, Nguyen TT, Chung TL, Kim SB. A simple 
+nonlinear control of a two -wheeled welding mobile 
+robot . Int J Control Autom Syst, vol. 1, no. 1, 2003.  
+[12] Serralheiro W, Maruyama  N, Tannuri EA. Motion 
+Control of an Underactuated Wheeled Mobile Robot: 
+A Kinematic Input -Output Linearization Approach . 
+Proceedings of the 23rd ABCM International 
+Congress of Mechanical Engineering. doi: 
+10.20906/cps/cob -2015 -1291 , 2015 . 
+[13] Snider JM. Automatic Steering M ethods for 
+Autonomous Automobile Path Tracking . Work, no.   
+February, 2009.  
+Halit Ege CEYHUN , Aytaç GÖREN , Trajectory tracking performance comparison of kinematic bicycle model with LQR and Lyapunov -based controllers on a 
+circular trajectory  
+162 
+International Journal of Technological Sciences                                                                                                                                                                e-ISSN 1309 -1220 [14] Alcala E, Puig V, Quevedo J, Escobet T, Comasolivas 
+R. Autonomous vehicle control using a kinematic 
+Lyapunov -based technique with LQR -LMI tuning . 
+Control Eng Pract, vol. 73, doi: 
+10.1016/j.conengprac.2017.12.004 , 2018 . 
+[15] Khalaji AK, Jalalnezhad M. Robust 
+forward \backward control of wheeled mobile 
+robots . ISA Trans, vol. 115, doi: 
+10.1016/j.isatra.2021.01.016 , 2021 . 
+[16] Muir PF, Neuman CP. Kinematic modeling of 
+wheeled mobile robots . J Robot Syst, vol. 4, no. 2, doi: 
+10.1002/rob.4620040209 , 198 7. 
+[17] Kirk DE. Optimal control theory: An introduction . 
+IEEE Trans Automat Contr, vol. 1, 2004.  
+[18] Gamkrelidze RV. Principles of Optimal Control 
+Theory. doi: 10.1007/978 -1-4684 -7398 -8, 1978 . 
+[19] Soloperto  R, Wenzelburger P, Meister D, Scheuble 
+D, Breidohr VSM, Allgöwer F. A control framework 
+for autonomous e -scooters . IFAC -PapersOnLine, vol. 
+54, no. 2. doi: 10.1016/j.ifacol.2021.06.030 , 2021 . 
+[20] Jiang J, Evangelou SA, Torquil MR, Astolfi A. Robust 
+H Control for Autonomous Scooters . IFAC -
+PapersOnLine, vol. 50, no. 1. doi: 
+10.1016/j.ifacol.2017.08.049 , 2017 . 
+[21] Corke P. Robotics, Vision and Control - 
+Fundamental Algorithms . MATLAB®  Second, 
+Completely Revised, Extended And Updated Edition, 
+vol. 75, no. 1 –2, 2017.  
+[22] Divelbiss AW, Wen JT. Trajectory tracking control 
+of a car -trailer system . IEEE Transactions on Control 
+Systems Technology, vol. 5, no. 3, doi: 
+10.1109/87.572125 , 1997 . 
+[23] Uyar E, Çetin L, Gören A. Navigation and GPS based 
+path control of an autonomous vehicle . Lecture 
+Notes in Computer Science (including subseries 
+Lecture Notes in Artificial Intelligence and Lecture 
+Notes in Bioinformatics), vol. 3949 LNAI. doi: 
+10.1007/11803089_3 , 2006 . 
+[24] Uyar E, Çetin L, Gören A, Ensoner S. Vision based 
+track ing control and obstacle avoidence of a mobile 
+vehicle . IFAC Proceedings Volumes (IFAC -
+PapersOnline), vol. 37, no. 8 , 2004 . 
+[25] Yıldız B. Object detection and mapping using 
+LIDAR for a mobile robot . M.S. thesis, Dokuz Eyl ül 
+University , 2016.  
+[26] Gören A. Controlli ng a non -holonomic vehicle via 
+artificial neural networks . Ph.D. dissertation, Dokuz 
+Eylul University , 2007.  
+[27] Ergenc AF, Nak H, Akkaya Ş. Design , Analysis and 
+Experimental Verification of a Novel Nonlinear Pi 
+Controller . Anadolu University Journal of Scienc e 
+and Technology  A - Applied Sciences and 
+Engineering, vol. 18, no. 4,  doi: 
+10.18038/aubtda.340651 , 2017 . 
+[28] Ortatepe Z, Parlaktuna O. Two Dof Robot Control 
+With Fuzzy Based Neural Networks . Anadolu 
+University Journal Of  Science And Technology A - Applied Sciences and Engineering, vol. 18, no. 4,  doi: 
+10.18038/aubtda.340002 , 2017 . 

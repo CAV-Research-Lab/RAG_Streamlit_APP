@@ -1,0 +1,91 @@
+=== Metadata ===
+{
+    "file_name": "Behavioural Planning .pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Behavioural Planning .pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+Behavioural Planning in Intelligent Vehicles
+1From Static to Dynamic using Finite State Machines
+Behavioural Planning
+Saber Fallah (ENGM298)2Introduction
+Sensing
+Localisation
+Perception
+Prediction
+Mission Planning
+Behavioural Planning
+Motion Planning
+Control
+
+Behavioural Planning
+Saber Fallah (ENGM298)3
+Get in the left lanePass this carGet back in the left laneTurn leftGet in the right laneSlow downWe’re here
+How it works?
+Behavioural Planning
+Responsibilities:Suggest “states” / manoeuvres which are: -Feasible-Safe-Legal-EfficientSaber Fallah (ENGM298)4OverviewBehavioural planner 
+Map
+Route
+Predictions
+Suggested Manoeuvrer Non-responsibilities:-Execution details-Collision avoidance
+Behavioural Planning
+Saber Fallah (ENGM298)5Finite State Machine
+s0
+s3
+s1
+s4
+s2
+Accepting States: no transitions to other statesTransition Function: uses input to decide what transition to make Input
+
+Behavioural Planning
+Saber Fallah (ENGM298)6Formalising Finite State Machine
+5p10pEverything costs 20p
+50p1p20p2p
+5p10p0p
+5p coin10p coin
+5p coin15p20p
+5p coin10p coin10p coin?5p coin5p coinSTRENGHTRS:qEasy to reason about  Logical state à Physical stateqMaintainable - (for small state space)WeaknessqEasily abusedq“…I hadn’t considered that… let’s add another state”
+FINITE STATE MACHINES IN AN INTELLIGENT VEHICLE                                                    
+Behavioural Planning
+Saber Fallah (ENGM298)7State for intelligent vehicles
+AccelerateStopKeep target speedKeep laneSlow downPrep lane change leftPrep lane change rightChange lane rightFollow vehicleChange lanePass vehicleChange lane left
+ADDITIONAL STATES
+
+Behavioural Planning
+Saber Fallah (ENGM298)8State for intelligent vehicles
+ReadyLane keepLane change leftLane change right
+Lane Keep: §d - stay near centre line for lane§s - drive at target speed when feasible, otherwise …od – stay near canter line for laneLane change left/right: §d - move left or right§s -  same rules as keep lane (for initial lane)  Prepare lane change left/right: §d - stay near centre line for current lane§s - attempt to match position and speed of ”gap” in lane  
+
+Behavioural Planning
+Saber Fallah (ENGM298)9Transition function inputsPredictions
+Map
+Localisation data
+Speed limit
+Current state
+Previous state
+What data will we need to pass to our transition functions as inputs
+
+Behavioural Planning
+Saber Fallah (ENGM298)10Create a cost function
+Cost
+VelocitySPEED COST
+1
+Speed limit
+Stop Cost
+BUFFER_Vif v > speed_limit: cost = 1target_speed = speed_limit – BUFFER_Vif v < target_speed: cost = STOP_COST * ( (target_speed – v) )/ target_speedif v > target_speed and v < speed_limit: cost = (v – target_speed)/ BUFFER_V
+Behavioural Planning
+Saber Fallah (ENGM298)11Example cost function - lane change penalty
+𝛥𝑠=𝑠!−𝑠: : how much distance the vehicle will have before it has to get into the goal lane. 𝛥𝑑=𝑑!−𝑑"#/%": the lateral distance between the goal lane and the options being considered. 
+Behavioural Planning
+Saber Fallah (ENGM298)12Example cost function - lane change penalty
+Would we prefer the absolute value ofdelta dto bebigorsmall?Should costs associated with lane change be more important when we arefarfrom the goal (in s coordinate) orcloseto the goal? 𝐶𝑜𝑠𝑡=1−𝑒&∆(∆)	
+Behavioural Planning
+Saber Fallah (ENGM298)13Cost function designDIFFICULTIES:§Solving new problems without “not solving” old problems•Regression testing!§Balancing costs of drastically different magnitudes •Feasibility, safety, legality, comfort, efficiency•Weights can change depending on situation§Reasoning about individual cost functions •Specificity of cost function responsibility•Binary vs discrete vs continuous cost functions•All cost functions output between -1 and 1•Parametrisation (when possible)•Thinking  terms of vehicle state (position, velocity, acceleration) 
+Behavioural Planning
+Saber Fallah (ENGM298)14Cost function design - example
+ClassFeasibilityLegalitySafetyComfortEfficiencyPositionVelocityAccelerationSpeed < speed limit?Speed ~= speed limit?
+SLSpeedCost1Speed ~= traffic  speedAvoid collision?Buffer distanceStays on road?Near centre of current laneStays on road?Acceleration is feasible for car?Low change in accelerationObey traffic rule
+
+Behavioural Planning
+Saber Fallah (ENGM298)15Summary§A finite state machine is a computational model used to design sequences of operations in response to certain inputs. §Finite state machines are invaluable for behavioural decision-making. §Finite state machines offer a structured way for vehicles to make safe and logical decisions based on their surroundings and objectives.§Finite state machines generally do well for small state spaces, like when you're on a highway, for example. For more complex scenarios like urban driving, other approaches might be more suitable.

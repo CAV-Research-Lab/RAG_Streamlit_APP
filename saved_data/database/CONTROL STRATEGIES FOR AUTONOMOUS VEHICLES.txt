@@ -1,0 +1,1739 @@
+=== Metadata ===
+{
+    "file_name": "CONTROL STRATEGIES FOR AUTONOMOUS VEHICLES.pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/CONTROL STRATEGIES FOR AUTONOMOUS VEHICLES.pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+C H A P T E R
+CONTROL STRATEGIES FOR
+AUTONOMOUS VEHICLES
+Chinmay Samak Tanmay Samak Sivanathan Kandhasamy
+Autonomous Systems Laboratory
+Department of Mechatronics Engineering
+SRM Institute of Science and Technology
+fcv4703, tv4813, sivanatk g@srmist.edu.in
+CONTENTS
+1.1 Introduction .............................................................. 1
+1.1.1 The Autonomous Driving Technology ........................... 1
+1.1.2 Signiﬁcance of Control System ................................... 2
+1.1.3 Control System Architecture for Autonomous Vehicles ......... 3
+1.2 Mathematical Modeling .................................................. 3
+1.2.1 Kinematic Model ................................................. 5
+1.2.2 Dynamic Model .................................................. 8
+1.2.2.1 Longitudinal Vehicle Dynamics ..................... 8
+1.2.2.2 Lateral Vehicle Dynamics ........................... 10
+1.2.2.3 Consolidated Dynamic Model ....................... 11
+1.3 Control Strategies ........................................................ 12
+1.3.1 Control Schemes ................................................. 12
+1.3.1.1 Coupled Control ..................................... 12
+1.3.1.2 De-Coupled Control ................................. 13
+1.3.2 Traditional Control .............................................. 13
+1.3.2.1 Bang-Bang Control .................................. 15
+1.3.2.2 PID Control ......................................... 17
+1.3.2.3 Geometric Control ................................... 20
+1.3.2.4 Model Predictive Control ............................ 28
+1.3.3 Learning Based Control .......................................... 35
+1.3.3.1 Imitation Learning Based Control .................. 36
+1.3.3.2 Reinforcement Learning Based Control ............. 41
+1.4 Our Research at Autonomous Systems Lab (SRMIST) ................. 45
+1.5 Closing Remarks ......................................................... 45arXiv:2011.08729v3  [cs.RO]  10 Sep 2021
+Control Strategies for Autonomous Vehicles 1
+THIS CHAPTER shall focus on the self-driving technology from a control per-
+spective and investigate the control strategies used in autonomous vehicles and
+advanced driver-assistance systems (ADAS) from both theoretical and practical view-
+points.
+First, we shall introduce the self-driving technology as a whole, including per-
+ception, planning and control techniques required for accomplishing the challenging
+task of autonomous driving. We shall then dwell upon each of these operations to ex-
+plain their role in the autonomous system architecture, with a prime focus on control
+strategies.
+The core portion of this chapter shall commence with detailed mathematical
+modeling of autonomous vehicles followed by a comprehensive discussion on control
+strategies. The chapter shall cover longitudinal as well as lateral control strategies
+for autonomous vehicles with coupled and de-coupled control schemes. We shall as
+well discuss some of the machine learning techniques applied to autonomous vehicle
+control task.
+Finally, there shall be a brief summary of some of the research works that our
+team has carried out at the Autonomous Systems Lab (SRMIST) and the chapter
+shall conclude with some thoughtful closing remarks.
+1.1 INTRODUCTION
+Autonomous vehicles, or self-driving cars as they are publicly referred to, have been
+the dream of mankind for decades. This is a rather complex problem statement to
+address and it requires inter-disciplinary expertise, especially considering the safety,
+comfort and convenience of the passengers along with the variable environmental
+factors and highly stochastic fellow agents such as other vehicles, pedestrians, etc.
+The complete realization of this technology shall, therefore, mark a signiﬁcant step
+in the ﬁeld of engineering.
+1.1.1 The Autonomous Driving Technology
+Autonomous vehicles perceive the environment using a comprehensive sensor suite
+and process the raw data from the sensors in order to make informed decisions. The
+vehicle then plans the trajectory and executes controlled maneuver in order to track
+the trajectory autonomously. This process is elucidated below.
+The system architecture of an autonomous vehicle is fundamentally laid out as a
+stack that constitutes of 3 sub-systems as shown in ﬁgure 1.1.
+1.Perception: Autonomous vehicles employ various types of sensors such as cam-
+eras, LIDARs, RADARs, SONARs, IMU, GNSS, etc. in order to perceive the
+environment (object and event detection and tracking) and monitor their own
+physical parameters (localization and state estimation) for making informed
+decisions. Suitable sensor fusion and ﬁltering algorithms including simpler ones
+such as complementary ﬁlter, moving average ﬁlter, etc. and advanced ones
+such as Kalman ﬁlter (and its variants), particle ﬁlter, etc. are adopted in order
+2Control Strategies for Autonomous Vehicles
+Figure 1.1 System Architecture of an Autonomous Vehicle
+to reduce measurement uncertainty due to noisy sensor data. In a nutshell, this
+sub-system is responsible for providing both intrinsic and extrinsic knowledge
+to the ego vehicle using various sensing modalities.
+2.Planning: Using the data obtained from the perception sub-system, the ego
+vehicle performs behavior planning wherein the most optimal behavior to be
+adopted by the ego vehicle needs to be decided by predicting states of the ego
+vehicle as well as other dynamic objects in the environment into the future by
+certain prediction horizon. Based on the planned behavior, the motion planning
+module generates an optimal trajectory, considering the global plan, passenger
+safety, comfort as well as hard and soft motion constraints. This entire process is
+termed as motion planning . Note that there is a subtle diﬀerence between path
+planning and motion planning in that the prior is responsible only for planning
+the reference “path” to a goal location (ultimate or intermediate goal) whereas
+the later is responsible for planning the reference “trajectory” to a goal location
+(i.e. considers not just the pose, but also its higher derivatives such as velocity,
+acceleration and jerk, thereby assigning a temporal component to the reference
+path).
+3.Control: Finally, the control sub-system is responsible for accurately tracking
+the trajectory provided by the planning sub-system. It does so by appropriately
+adjusting the ﬁnal control elements (throttle, brake and steering) of the vehicle.
+1.1.2 Signiﬁcance of Control System
+A control system is responsible for regulating or maintaining the process conditions of
+a plant at their respective desired values by manipulating certain process variable(s)
+to adjust the variable(s) of interest, which is/are generally the output variable(s).
+If we are to look from the perspective of autonomous vehicles, the control system
+is dedicated to generate appropriate commands for throttle, brake and steering (input
+variables) so that the vehicle (plant) tracks a prescribed trajectory by executing a
+Control Strategies for Autonomous Vehicles 3
+controlled motion (where motion parameters such as position, orientation, velocity,
+acceleration, jerk, etc. are the output variables). It is to be noted that the input
+and output variables (a.k.a. manipulated/process variables and controlled variables,
+respectively) are designated so with respect to the plant and not the controller, which
+is a common source of confusion.
+Control system plays a very crucial role in the entire architecture of an au-
+tonomous vehicle and being the last member of the pipeline, it is responsible for
+actually “driving” the vehicle. It is this sub-system, which ultimately decides how
+the ego vehicle will behave and interact with the environment.
+Although the control sub-system cannot function independently without the per-
+ception and planning sub-systems, it is also a valid argument that the perception and
+planning sub-systems are rendered useless if the controller is not able to track the
+prescribed trajectory accurately.
+1.1.3 Control System Architecture for Autonomous Vehicles
+The entire control system of an autonomous vehicle is fundamentally broken down
+into the following two components:
+•Longitudinal Control: This component controls the longitudinal motion of
+the ego vehicle, considering its longitudinal dynamics. The controlled variables
+in this case are throttle and brake inputs to the ego vehicle, which govern its
+motion (velocity, acceleration, jerk and higher derivatives) in the longitudinal
+direction.
+•Lateral Control: This component controls the lateral motion of the ego vehi-
+cle, considering its lateral dynamics. The controlled variable in this case is the
+steering input to the ego vehicle, which governs its steering angle and heading.
+Note that steering angle and heading are two diﬀerent terminologies. While
+steering angle describes the orientation of the steerable wheels and hence the
+direction of motion of the ego vehicle, heading is concerned with the orientation
+of the ego vehicle.
+1.2 MATHEMATICAL MODELING
+Mathematical modeling of a system refers to the notion of describing the response of
+a system to the control inputs while accounting the state of the system using math-
+ematical equations. The following analogy of an autonomous vehicle better explains
+this notion.
+When control inputs are applied to an autonomous vehicle, it moves in a very
+speciﬁc way depending upon the control inputs. For example, throttle increases the
+acceleration, brake reduces it, while steering alters the heading of the vehicle by
+certain amount. A mathematical model of such an autonomous vehicle will represent
+the exact amount of linear and/or angular displacement, velocity, acceleration, etc.
+of the vehicle depending upon the amount of applied throttle, brake and/or steering
+input(s).
+4Control Strategies for Autonomous Vehicles
+In order to actually develop a mathematical model of autonomous vehicle (or any
+system for that matter), there are two methods widely used in industry and academia.
+1.First Principles Modeling: This approach is concerned with applying the
+fundamental principles and constituent laws to derive the system models. It is
+a theoretical way of dealing with mathematical modeling, which does not nec-
+essarily require access to the actual system and is mostly adopted for deducing
+generalized mathematical models of the concerned system. We will be using
+this approach in the upcoming section to formulate the kinematic and dynamic
+models of a front wheel steered non-holonomic (autonomous) vehicle.
+2.Modeling by System Identiﬁcation: This approach is concerned with ap-
+plying known inputs to the system, recording it’s responses to those inputs and
+statistically analyzing the input-output relations to deduce the system mod-
+els. This approach is a practical way of dealing with mathematical modeling,
+which requires access to the actual system and is mostly adopted for modeling
+complex systems, especially where realistic system parameters are to be cap-
+tured. It is to be noted that this approach is often helpful to estimate system
+parameters even though the models are derived using ﬁrst principles approach.
+System models can vary from very simplistic linear models to highly detailed and
+complex, non-linear models. The complexity of model being adopted depends on the
+problem at hand.
+There is always a trade-oﬀ between model accuracy and the computational com-
+plexity that comes with it. Owing to their accuracy, complex motion models may seem
+attractive at the ﬁrst glance; however, they may consume a considerable amount of
+time for computation, making them not so “real-time” executable. When it comes to
+safety-critical systems like autonomous vehicles, latency is to be considered seriously
+as failing to perform actions in real-time may lead to catastrophic consequences. Thus
+in practice, for systems like autonomous vehicles, often approximate motion models
+are used to represent the system dynamics. Again, the level of approximation de-
+pends on factors like driving speed, computational capacity, quality of sensors and
+actuators, etc.
+It is to be noted here that the models describing vehicle motion are not only useful
+in control system design, but are also a very important tool for predicting future states
+of ego vehicle or other objects in the scene (with associated uncertainty), which is
+extremely useful in the perception and planning phases of autonomous vehicles.
+We make the following assumptions and consider the following motion constraints
+for modeling the vehicle.
+Assumptions:
+1. The road surface is perfectly planar, any elevations or depressions are disre-
+garded. This is known as the planar assumption .
+2. Front and rear wheels are connected by a rigid link of ﬁxed length.
+Control Strategies for Autonomous Vehicles 5
+3. Front wheels are steerable and act together, and can be eﬀectively represented
+as a single wheel.
+4. Rear wheels act together and can be eﬀectively represented as a single wheel.
+5. The vehicle is actually controllable like a bicycle.
+Motion Constraints:
+1.Pure Rolling Constraint: This constraint implies the fact that each wheel
+follows a pure rolling motion w.r.t. ground; there is no slipping or skidding of
+the wheels.
+2.Non-Holonomic Constraint: This constraint implies that the vehicle can
+move only along the direction of heading and cannot arbitrarily slide along the
+lateral direction.
+1.2.1 Kinematic Model
+Kinematics is the study of motion of a system disregarding the forces and torques
+that govern it. Kinematic models can be employed in situations wherein kinematic
+relations are able to suﬃciently approximate the actual system dynamics. It is im-
+portant to note, however, that this approximation holds true only for systems that
+perform non-aggressive maneuvers at lower speeds. To quote an example, kinematic
+models can nearly-accurately represent a vehicle driving slowly and making smooth
+turns. However, if we consider something like a racing car, it is very likely that the
+kinematic model would fail to capture the actual system dynamics.
+In this section, we present one of the most widely used kinematic model for
+autonomous vehicles, the kinematic bicycle model . This model performs well at cap-
+turing the actual vehicle dynamics under nominal driving conditions. In practice, this
+model tends to strike a good balance between simplicity and accuracy and is therefore
+widely adopted. That being said, one can always develop more detailed and complex
+models depending upon the requirement.
+The idea is to deﬁne the vehicle state and see how it evolves over time based on
+the previous state and current control inputs given to the vehicle.
+Let the vehicle state constitute xandycomponents of position, heading angle or
+orientation θand velocity (in the direction of heading) v. Summarizing, ego vehicle
+state vector qis deﬁned as follows.
+q= [x,y,θ,v ]T(1.1)
+For control inputs, we need to consider both longitudinal (throttle and brake)
+and lateral (steering) commands. The brake and throttle commands contribute to
+longitudinal accelerations in range of [ −a/prime
+max,amax] where negative values represent
+deceleration due to braking and positive values represent acceleration due to throttle
+(forward or reverse depending upon the transmission state). Note that the limits
+6Control Strategies for Autonomous Vehicles
+Figure 1.2 Vehicle Kinematics
+a/prime
+maxandamaxare intentionally denoted so as to distinctly illustrate the diﬀerence
+between the physical limits of acceleration due to throttle and deceleration due to
+braking. The steering command alters the steering angle δof the vehicle, where
+δ∈[−δmax,δmax] such that negative steering angles dictate left turns and positive
+steering angles otherwise. Note that generally, the control inputs are clamped in the
+range of [−1,1] based on the actuators for proper scaling of control commands in
+terms of actuation limits. Summarizing, ego vehicle control vector uis deﬁned as
+follows.
+u= [a,δ]T(1.2)
+We will now derive the kinematic model of the ego vehicle. As shown in ﬁgure
+1.2, the local reference frame is located at the center of gravity of the ego vehicle.
+Using the distance between rear wheel axle and vehicle’s center of gravity, we can
+compute the slip angle βas follows.
+tan(β) =lr
+S=lr/parenleftBig
+L
+tan(δ)/parenrightBig=lr
+L∗tan(δ)
+)β=tan−1/parenleftbigglr
+L∗tan(δ)/parenrightbigg
+(1.3)
+Control Strategies for Autonomous Vehicles 7
+Ideally,lr=L/2⇒β=tan−1/parenleftbiggtan(δ)
+2/parenrightbigg
+Resolving the velocity vector vintoxandycomponents using the laws of
+trigonometry we get,
+˙x=v∗cos(θ+β) (1.4)
+˙y=v∗sin(θ+β) (1.5)
+In order to compute ˙θ, we ﬁrst need to calculate Susing the following relation.
+S=L
+tan(δ)(1.6)
+UsingSobtained from equation 1.6, we can compute Ras given below.
+R=S
+cos(β)=L
+(tan(δ)∗cos(β))(1.7)
+UsingRobtained from equation 1.7, we can deduce ˙θas follows.
+˙θ=v
+R=v∗tan(δ)∗cos(β)
+L(1.8)
+Finally, we can compute ˙ vusing the rudimentary diﬀerential relation.
+˙v=a (1.9)
+Using equations 1.4, 1.5, 1.8 and 1.9, we can formulate the continuous-time kine-
+matic model of autonomous vehicle.
+˙q=
+˙x
+˙y
+˙θ
+˙v
+=
+v∗cos(θ+β)
+v∗sin(θ+β)
+v∗tan(δ)∗cos(β)
+L
+a
+(1.10)
+Based on the formulation in equation 1.10, we can formulate the discrete-time
+model of autonomous vehicle.
+
+
+xt+1=xt+ ˙xt∗∆t
+yt+1=yt+ ˙yt∗∆t
+θt+1=θt+˙θt∗∆t
+vt+1=vt+ ˙vt∗∆t(1.11)
+Note that the equation 1.11 is known as the state transition equation (generally
+represented as qt+1=qt+ ˙qt∗∆t) wheretin the subscript denotes current time
+instant and t+ 1 in the subscript denotes next time instant.
+8Control Strategies for Autonomous Vehicles
+1.2.2 Dynamic Model
+Dynamics is the study of motion of a system with regard to the forces and torques
+that govern it. In other words, dynamic models are motion models of a system that
+closely resemble the actual system dynamics. Such models tend to be more complex
+and ineﬃcient to solve in real-time (depends on computational hardware) but are
+much of a requirement for high-performance scenarios such as racing, where driving
+at high speeds and with aggressive maneuvers is common.
+There are two popular methodologies for formulating dynamic model of systems
+viz. Newton-Euler method and Lagrange method. In Newton-Euler approach, one has
+to consider all the forces and torques acting on the system, whereas in the Lagrange
+approach, the forces and torques are represented in terms of potential and kinetic
+energies of the system. It is to be noted that both approaches are equally correct and
+result in equivalent formulation of dynamic models. In this section, we will present
+longitudinal and lateral dynamic models of an autonomous vehicle using Newton-
+Euler approach.
+1.2.2.1 Longitudinal Vehicle Dynamics
+The free-body diagram of an autonomous vehicle along the longitudinal direction
+(denoted as x) is depicted in ﬁgure 1.3. The longitudinal forces considered include
+vehicle inertial term m∗¨x, front and rear tire forces FxfandFxr, aerodynamic
+resistanceFaero, front and rear rolling resistance RxfandRxr, andxcomponent of
+the gravitational force m∗g∗sin(α) (sinceycomponent of the gravitational force
+m∗g∗cos(α) and normal force FNcancel each other). Note that the tire forces
+assist the vehicle to move forward whereas all other forces resist the forward vehicle
+motion.
+Figure 1.3 Longitudinal Vehicle Dynamics
+Thus, applying Newton’s second law of motion to the free-body diagram we get,
+m∗¨x=Fxf+Fxr−Faero−Rxf−Rxr−m∗g∗sin(α)
+The above dynamic equation can be simpliﬁed as follows. Let front and rear tire
+forces collectively represent traction force Fxand the front and rear rolling resistance
+Control Strategies for Autonomous Vehicles 9
+collectively represent net rolling resistance Rx. Also, making a small angle approxi-
+mation for α, we can say that sin(α)≈α. Therefore we have,
+m∗¨x=Fx−Faero−Rx−m∗g∗α
+)¨x=Fx
+m−Faero
+m−Rx
+m−g∗α (1.12)
+The individual forces can be modeled as follows.
+•Traction force Fxdepends upon vehicle mass m, wheel radius rwheel and
+angular acceleration of the wheel ¨θwheel. SinceF=m∗aanda=r∗¨θ, we
+have,
+Fx=m∗rwheel∗¨θwheel (1.13)
+•Aerodynamic resistance Faerodepends upon air density ρ, frontal surface
+area of the vehicle Aand velocity of the vehicle v. Using proportionality con-
+stantCαwe have,
+Faero=1
+2∗Cα∗ρ∗A∗v2≈Cα∗v2(1.14)
+•Rolling resistance Rxdepends upon tire normal force N, tire pressure Pand
+velocity of the vehicle v. Note that tire pressure is a function of vehicle velocity.
+Rx=N∗P(v)
+Where,P(v) =ˆCr,0+ˆCr,1∗|v|+ˆCr,2∗v2
+)Rx=N∗/parenleftBigˆCr,0+ˆCr,1∗|v|+ˆCr,2∗v2/parenrightBig
+≈ˆCr,1∗|v| (1.15)
+Substituting equations 1.13, 1.14 and 1.15 in equation 1.12 we get,
+¨x=rwheel∗¨θwheel−Cα∗v2
+m−ˆCr,1∗|v|
+m−g∗α (1.16)
+We can represent the second time derivative of velocity as jerk (rate of change of
+acceleration) as follows.
+¨v=j (1.17)
+10Control Strategies for Autonomous Vehicles
+1.2.2.2 Lateral Vehicle Dynamics
+The free-body diagram of an autonomous vehicle along the lateral direction (denoted
+asy) is depicted in ﬁgure 1.4. The lateral forces considered include the inertial term
+m∗ayand the front and rear tire forces FyfandFyr, respectively. The torques
+considered include vehicle torque about instantaneous center of rotation Iz∗¨θ, and
+moments of front and rear tire forces lf∗Fyfandlr∗Fyr, respectively (acting in
+opposite direction). Thus, applying Newton’s second law of motion to the free-body
+diagram we get,
+m∗ay=Fyf+Fyr (1.18)
+Iz∗¨θ=lf∗Fyf−lr∗Fyr (1.19)
+Figure 1.4 Lateral Vehicle Dynamics
+The linear lateral acceleration ¨ yand centripetal acceleration R∗˙θ2collectively
+contribute to the total lateral acceleration ayof the ego vehicle. Hence, we have,
+ay= ¨y+R∗˙θ2= ¨y+v∗˙θ (1.20)
+Control Strategies for Autonomous Vehicles 11
+Substituting equation 1.20 into equation 1.18 we get,
+m∗/parenleftBig
+¨y+v∗˙θ/parenrightBig
+=Fyf+Fyr (1.21)
+The linearized lateral tire forces FyfandFyr, also known as cornering forces, can
+be modeled using front and rear tire slip angles αfandαr, and cornering stiﬀness of
+front and rear tires CfandCras follows.
+
+
+Fyf=Cf∗αf=Cf∗/parenleftBig
+δ−β−lf∗˙θ
+v/parenrightBig
+Fyr=Cr∗αr=Cr∗/parenleftBig
+−β+lr∗˙θ
+v/parenrightBig (1.22)
+Substituting the values of linearized lateral tire forces FyfandFyrfrom equation
+1.22 into equations 1.21 and 1.19 respectively, and rearranging the terms we get,
+¨y=−(Cf+Cr)
+m∗β+/parenleftbiggCr∗lr−Cf∗lf
+m∗v−v/parenrightbigg
+∗˙θ+Cf
+m∗δ (1.23)
+¨θ=Cr∗lr−Cf∗lf
+Iz∗β−Cr∗l2
+r+Cf∗l2
+f
+Iz∗v∗˙θ+Cf∗lf
+Iz∗δ (1.24)
+1.2.2.3 Consolidated Dynamic Model
+Equations 1.16, 1.17, 1.23 and 1.24 represent the dynamic model of an autonomous
+vehicle. The consolidated continuous-time dynamic model of the autonomous vehicle
+can be therefore formulated as follows.
+¨q=
+¨x
+¨y
+¨θ
+¨v
+=
+rwheel∗¨θwheel−Cα∗v2
+m−ˆCr,1∗|v|
+m−g∗α
+−(Cf+Cr)
+m∗β+/parenleftBigCr∗lr−Cf∗lf
+m∗v−v/parenrightBig
+∗˙θ+Cf
+m∗δ
+Cr∗lr−Cf∗lf
+Iz∗β−Cr∗l2
+r+Cf∗l2
+f
+Iz∗v∗˙θ+Cf∗lf
+Iz∗δ
+j
+(1.25)
+Based on the formulation in equations 1.25 and 1.10, we can formulate the
+discrete-time model of autonomous vehicle as follows.
+
+
+xt+1=xt+ ˙xt∗∆t+ ¨xt∗∆t2
+2
+yt+1=yt+ ˙yt∗∆t+ ¨yt∗∆t2
+2
+θt+1=θt+˙θt∗∆t+¨θt∗∆t2
+2
+vt+1=vt+ ˙vt∗∆t+ ¨vt∗∆t2
+2(1.26)
+Note that the equation 1.26 is known as the state transition equation (generally
+represented as qt+1=qt+ ˙qt∗∆t+ ¨qt∗∆t2
+2) wheretin the subscript denotes current
+time instant and t+ 1 in the subscript denotes next time instant.
+12Control Strategies for Autonomous Vehicles
+1.3 CONTROL STRATEGIES
+Thus far, we have discussed in detail, all the background concepts related to control
+strategies for autonomous vehicles (or any other system for that matter).
+In this section we present classical as well as some of the current state-of-the-
+art control strategies for autonomous vehicles. Some of these are pretty easy and
+intuitive, while others are not. We shall begin discussing simpler ones ﬁrst and then
+introduce more complex strategies for vehicle control, but ﬁrst, let us see the diﬀerent
+control schemes.
+1.3.1 Control Schemes
+As stated in section 1.1.3, the control system of an autonomous vehicle is split into
+longitudinal and lateral components. Depending on whether or not these components
+inﬂuence each other, the control schemes can be referred to as coupled orde-coupled
+control.
+1.3.1.1 Coupled Control
+Coupled control refers to a control scheme wherein the lateral and longitudinal con-
+trollers operate synergistically and have some form of inﬂuence over each other. Al-
+though this approach is very much realistic, the major diﬃculty in practical imple-
+mentation lies in accurately determining the “amount” of inﬂuence the controllers are
+supposed to have over one another considering the motion model and the operational
+design domain (ODD) of the ego vehicle.
+In coupled-control scheme, the lateral controller may inﬂuence the longitudinal
+controller or vice-versa, or both may have an inﬂuence over each other. Let us consider
+each case independently with an example.
+Longitudinal Controller Inﬂuencing Lateral Controller
+In this case, the longitudinal controller is dominant or has a higher preference
+over the lateral controller. As a result, the longitudinal control action is computed
+independently, and this inﬂuences the lateral control action with an inverse relation
+(i.e. inverse proportionality). Since it is not a good idea to have a large steering angle
+at high speed, the controller regulates maximum steering limit inversely proportional
+to the vehicle speed.
+Lateral Controller Inﬂuencing Longitudinal Controller
+As opposed to the previous case, in this one, the lateral controller is dominant
+or has a higher preference over the longitudinal controller. As a result, the lateral
+control action is computed independently, and this inﬂuences the longitudinal control
+action with an inverse relation (i.e. inverse proportionality). Since it is a bad idea to
+have high speed with large steering angle, the controller regulates maximum speed
+limit inversely proportional to the steering angle.
+Control Strategies for Autonomous Vehicles 13
+Longitudinal and Lateral Controllers Inﬂuencing Each Other
+In this case, both the controllers tend to inﬂuence each other depending upon
+the operating conditions. If it is more important to maintain high speeds, the longi-
+tudinal controller has a higher (more dominant) inﬂuence over the lateral controller
+and if the maneuver requires cornering at sharp turns, the lateral controller has a
+higher (more dominant) inﬂuence over the longitudinal controller. Generally, the op-
+erating conditions change over the coarse of duration and “weights” need to be shifted
+in order to switch the dominance of lateral and longitudinal controllers.
+1.3.1.2 De-Coupled Control
+De-coupled control refers to a control scheme wherein the lateral and longitudinal
+controllers do not have any inﬂuence on each other, i.e. both the controllers operate
+independently disregarding the control actions generated by other.
+Although this simpliﬁes the control problem to a large extent, this type of control
+scheme does not seem much realistic considering the fact that lateral and longitudinal
+vehicle dynamics inherently aﬀect each other. In other words, this control scheme is
+applicable to highly speciﬁc and uniform driving scenarios (i.e. limited ODD).
+1.3.2 Traditional Control
+Traditional control is one of the most widely used and reliable control strategy, es-
+pecially when it comes to safety-critical systems such as autonomous vehicles.
+There are primarily three objectives of a controller.
+1.Stability: Stability refers to the fact that a system should always produce a
+bounded output (response) when excited with a bounded input signal. This cri-
+terion for stability is popularly known as the BIBO criterion. This is especially
+signiﬁcant for inherently unstable systems.
+2.Tracking: Tracking refers to the fact that a control system should be able to
+track the desired reference value (a.k.a. setpoint). In other words, the system
+response should be as close to the setpoint as possible, with minimal transient
+and/or steady state error (zero in ideal case).
+3.Robustness: Robustness refers to the fact that a control system should be
+able to exhibit stability and tracking despite external disturbances. In other
+words, the system must remain stable (i.e. meet the BIBO criterion) and its
+response should be as close to the setpoint as possible even when it is disturbed
+by external factors.
+Since traditional controllers can be tuned and analyzed to meet the objectives
+stated above, they become the primary choice of control strategies, especially for
+systems such as autonomous robots and vehicles.
+Traditional control systems can either be open loop, which do not use any state
+feedback or closed loop, which do. However, when it comes to motion control of
+14Control Strategies for Autonomous Vehicles
+autonomous vehicles, a control problem where operating conditions are continuously
+changing, open loop control is not a possibility. Thus, for control of autonomous
+vehicles, closed loop control systems are implemented with an assumption that the
+state is directly measurable or can be estimated by implementing state observers. Such
+traditional controllers can be classiﬁed as model-free andmodel-based controllers.
+1.Model-Free Controllers: These type of controllers do not use any mathemat-
+ical model of the system being controlled. They tend to take “corrective” action
+based on the “error” between setpoint and current state. These controllers are
+quite easy to implement since they do not require in-depth knowledge of the
+behavior of the system, however, are diﬃcult to tune, do not guarantee opti-
+mal performance and perform satisfactorily under limited operating conditions.
+Common examples of these type of controllers include bang-bang controllers,
+PID controllers, intelligent PID controllers (iPIDs), etc.
+2.Model-Based Controllers: These type of controllers use some or the other
+type of mathematical model of the system being controlled. Depending upon
+the model complexity and the exact approach followed to generate the control
+commands, these can be further classiﬁed as follows.
+(a)Kinematic Controllers: These type of controllers use simpliﬁed motion
+models of the system and are based on the geometry and kinematics of the
+system (generally employing ﬁrst order approximation). They assume no
+slip, no skip and often ignore internal or external forces acting on the sys-
+tem. Therefore, these type of controllers are often restricted to low-speed
+applications (where system dynamics can be approximated), but oﬀer an
+advantage of low computational complexity (which is extremely signiﬁ-
+cant in real-world implementation as opposed to theoretical formulation
+or simulation).
+(b)Dynamic Controllers: These type of controllers use detailed motion
+models of the system and are based on system dynamics. They consider
+forces and torques acting on the system as well as any disturbances (in-
+corporated in the dynamic model). Therefore, these type of controllers
+have an upper hand when compared to kinematic controllers due to the
+unrestricted ODD, but suﬀer higher computational complexity owing to
+the complex computations involving detailed models at each time step.
+(c)Model Predictive Controllers: These type of controllers use linear or
+non-linear motion models of the system to predict its future states (up
+to a ﬁnite receding horizon) and determine the optimal control action by
+numerically solving a bounded optimization problem at each time step
+(essentially treating the control problem as an optimization problem, a
+strategy known as optimal control). The optimization problem is bounded
+since model predictive controllers explicitly handle motion constraints,
+which is another reason for their popularity. Although this sounds to be
+the perfect control strategy, it is to be noted that since model predictive
+Control Strategies for Autonomous Vehicles 15
+controllers use complex motion models and additionally solve an online
+optimization problem at each time step, they are computationally expen-
+sive and may cause undesirable control latency (sometimes even of the
+order of a few seconds) if not implemented wisely.
+The upcoming sections discuss these traditional control strategies for autonomous
+vehicles in a greater detail.
+1.3.2.1 Bang-Bang Control
+The bang-bang controller is a simple binary controller. It is extremely easy to im-
+plement, which is the most signiﬁcant (and perhaps the only) reason for adopting
+it. The control action uis switched between two states umaxandumin(analogous to
+on/oﬀ, high/low, true/false, set/reset, 1/0, etc.) based on whether the input signal x
+is above or below the reference value xref.
+u=/braceleftBigg
+umax ;x<xref
+umin ;x>xref
+Note that a multi-step controller may be adopted to switch the control action
+based on more than just two cases. For example, a third control action of 0 is also
+possible in case the error becomes exactly zero (i.e. x=xref); however, practically,
+this case will sustain only instantaneously, since even a small error value will overshoot
+the system response.
+The bang-bang controller, in either of its two states, generates the same control
+action regardless of the error value. In other words, it does not account for the
+magnitude of error signal. It is, therefore, termed as “unstable” due to its abrupt
+responses, and is recommended to be applied only to variable structure systems (VSS)
+that allow sliding motion control (SMC) .
+Considering the ﬁnal control elements (throttle, brake and steering) of an au-
+tonomous vehicle, it is safe to say that bang-bang controller may not be applied to
+control the lateral vehicle dynamics; the vehicle would constantly oscillate about the
+mean position, trying to minimize the cross-track error e∆and/or heading error eψby
+completely turning the steering wheel in one direction or the other, which would be
+not only uncomfortable but also dangerous and may even cause a rollover at higher
+velocities. Nonetheless, bang-bang controller may be applied to control the longitudi-
+nal vehicle dynamics by fully actuating the throttle and brakes based on the velocity
+errorevand while this may be safe, it may still result in exceeding the nominal jerk
+values, causing a rather uncomfortable ride. It is important to note at this point that
+abrupt control actions generated by a bang-bang controller can possibly cause lifetime
+reduction, if not immediate breakdown, of actuators, which is highly undesirable.
+Bang-Bang Control Implementation
+Implementation of bang-bang controller for lateral control of a simulated au-
+tonomous vehicle is illustrated in ﬁgure 1.5 (although, we talked about this not being
+16Control Strategies for Autonomous Vehicles
+Figure 1.5 Bang-Bang Control Implementation
+a good idea). In order to have uniformity across all the implementations discussed
+in this chapter, a well-tuned PID controller was employed for longitudinal control of
+the ego vehicle.
+For the purpose of this implementation, the reference trajectory to be followed by
+the ego vehicle (marked green in the trajectory plot) was discretized into waypoints
+to be tracked by the lateral controller, and each waypoint had an associated velocity
+setpoint to be tracked by the longitudinal controller.
+The bang-bang controller response was alleviated by multiplying the control ac-
+tion with a limiting factor of 0 .1, thereby restricting the steering actuation limit
+δ∈[−7◦,7◦]. This allowed the bang-bang controller to track the waypoints at least
+for a while, after which, the ego vehicle went out of control and crashed!
+The steering commands generated by the bang-bang controller are worth noting.
+Control Strategies for Autonomous Vehicles 17
+It can be clearly seen how the controller switches back-and-forth between the two
+extremities, and although it was programmed to produce no control action (i.e. 0)
+when the cross-track error was negligible, such an incident never occurred during the
+course of simulation.
+In reality, it is the abrupt control actions that quickly render the plant uncon-
+trollable, which implies that the controller harms itself. Furthermore, it is to be
+noted that generating such abrupt control actions may not be possible practically,
+since the actuators have a ﬁnitely positive time-constant (especially steering actu-
+ation mechanism), and that doing so may cause serious damage to the actuation
+elements (especially at high frequencies, such as those observed between time-steps
+15-25). This fact further adds to the controlability problem, rendering the bang-bang
+controller close to useless for controlling the lateral vehicle dynamics.
+1.3.2.2 PID Control
+From the previous discussion, it is evident that bang-bang controller is not a very
+promising option for vehicle control (especially lateral control, but also not so good
+for longitudinal control either) and better control strategies are required.
+P Controller
+The most intuitive upgrade from bang-bang controller is the proportional (P) con-
+troller. The P controller generates a control action uproportional to the error signal
+e, and the proportionality constant that scales the control action is called gain of the
+P controller (generally denoted as kP).
+In continuous time, the P controller is represented as follows.
+u(t) =kP∗e(t)
+In discrete time, the above equation takes the following form.
+ut+1=kP∗et
+It is extremely important to tune the gain value so as to obtain a desired system
+response. A low gain value would increase the settling time of the system drastically,
+whereas a high gain value would overshoot the system in the opposite direction.
+A moderate proportional gain would try to minimize the error, however, being an
+error-driven controller, it would still leave behind a signiﬁcantly large steady-state
+error.
+PD Controller
+The PD controller can be thought of as a compound controller constituted of the
+proportional (P) and derivative (D) controllers.
+The P component of the PD controller, as stated earlier, produces a “surrogate”
+18Control Strategies for Autonomous Vehicles
+control action proportional to the error signal e. The proportional gain kPis delib-
+erately set slightly higher so that the system would oscillate about the setpoint. The
+D component of the PD controller damps out the resulting oscillations by observ-
+ing the temporal derivative (rate of change) of error and modiﬁes the control action
+accordingly. The proportionality constant that scales the derivative control action is
+called gain of the D controller and is generally denoted as kD.
+In continuous time, the PD controller is represented as follows.
+u(t) =kP∗e(t) +kD∗d
+dte(t)
+In discrete time, the above equation takes the following form.
+ut+1=kP∗et+kD∗/bracketleftbigget−et−1
+∆t/bracketrightbigg
+The modiﬁed control action soothes the system response and reduces any over-
+shoots. However, the system may still struggle in some cases, where its dynamics are
+disturbed due to physical interactions.
+It is to be noted that the D controller is extremely susceptible to noise; even a
+small noise in the sensor readings can lead to miscalculation of error values resulting
+in larger or smaller derivatives, ultimately leading to instability. The gain kDmust,
+therefore, be tuned wisely. Another remedy to this issue is to use a low-pass ﬁlter
+to reject the high-frequency components of the feedback signal, which are generally
+constituents of noise.
+PI Controller
+The PI controller can be thought of as a compound controller constituted of the
+proportional (P) and integral (I) controllers.
+The P component of the PD controller, as stated earlier, produces a “surrogate”
+control action proportional to the error signal e. The proportional gain kPis set to
+a moderate value so that the system tries really hard to converge to the setpoint.
+The I component of the PI controller modiﬁes the control action based on the error
+accumulated over a certain time interval. The proportionality constant that scales
+the integral control action is called gain of the I controller and is generally denoted
+askI.
+In continuous time, the PI controller is represented as follows.
+u(t) =kP∗e(t) +kI∗/integraldisplayt
+toe(t) dt
+In discrete time, the above equation takes the following form.
+ut+1=kP∗et+kI∗t/summationdisplay
+i=toei
+Here,t−torepresents the temporal size of history buﬀer over which the error is
+integrated.
+Control Strategies for Autonomous Vehicles 19
+The modiﬁed control action forces the overall system response to get much closer
+to the setpoint value as the time proceeds. In other words, it helps the system better
+converge to the desired value. It is also worth mentioning that the I component is
+also eﬀective in dealing with any systematic biases, such as inherent misalignments,
+disturbance forces, etc. However, with a simple PI controller implemented, the system
+may tend to overshoot every time a control action is executed.
+It is to be noted that since the I controller acts on the accumulated error, which
+is a large value, its gain kIis usually set very low.
+PID Controller
+The proportional (P), integral (I) and derivative (D) controllers work in tandem to
+give rise to a much more eﬃcient PID controller. The PID controller takes advantage
+of all the three primary controllers to generate a sophisticated control action that
+proportionally corrects the error, then dampens the resulting overshoots and reduces
+any steady-state error over the time.
+In continuous time, the PID controller is represented as follows.
+u(t) =kP∗e(t) +kI∗/integraldisplayt
+toe(t) dt+kD∗d
+dte(t)
+In discrete time, the above equation takes the following form.
+ut+1=kP∗et+kI∗t/summationdisplay
+i=toei+kD∗/bracketleftbigget−et−1
+∆t/bracketrightbigg
+As stated earlier, t−torepresents the temporal size of history buﬀer over which
+the error is integrated.
+The gains of the designed PID controller need to be tuned manually at ﬁrst. A
+general rule of thumb is to start by initializing the kIandkDvalues to zero and tune
+up thekPvalue until the system starts oscillating about the setpoint. The kDvalue
+is then tuned until the oscillations are damped out in most of the cases. Finally, the
+kIvalue is tuned to reduce any steady-state error. An optimizer algorithm (such as
+twiddle, gradient descent, etc.) can then be adopted to ﬁne-tune the gains through
+recursive updates.
+Characteristics of the controller gains (i.e. eﬀect of gain ampliﬁcation on closed
+loop system response) for the proportional, integral and derivative terms of the PID
+controller have been summarized in table 1.1. This information is extremely useful
+for controller gain tuning in order to achieve the desired system response.
+In general, the P controller can be thought of as correcting the present error by
+generating a control action proportional to it. The I controller can be thought of as
+correcting any past error by generating a control action proportional to the error
+accumulated over time. Finally, the D controller can be thought of as correcting any
+future error by generating a control action proportional to the rate of change of error.
+Note that the integral and derivative controllers cannot be employed alone, they
+can only assist the proportional controller. Same goes with the ID controller.
+20Control Strategies for Autonomous Vehicles
+Table 1.1 Characteristics of PID Controller Gains
+Controller
+Gain
+AmpliﬁcationClosed Loop System Response
+Rise Time
+(tr)Overshoot
+(Mp)Settling Time
+(ts)Steady State Error
+(ess)
+kP Decrease Increase Small Change Decrease
+kI Decrease Increase Increase Eliminate
+kD Small Change Decrease Decrease Small Change
+PID Control Implementation
+Implementation of PID controller for lateral control of a simulated autonomous
+vehicle is illustrated in ﬁgure 1.6.
+The implementation as well employs a secondary PID controller for controlling the
+longitudinal vehicle dynamics. It is to be noted that the two controllers are decoupled
+and perform independently. In order to avoid confusion, the lateral controller shall
+be the point of interest for this topic, unless speciﬁed otherwise.
+For the purpose of this implementation, the reference trajectory to be followed by
+the ego vehicle (marked green in the trajectory plot) was discretized into waypoints
+to be tracked by the lateral controller, and each waypoint had an associated velocity
+setpoint to be tracked by the longitudinal controller.
+The PID controller was tuned in order to obtain best possible results for tracking
+the entire reference trajectory (which included both straight as well as curved seg-
+ments) at varying longitudinal velocities. It is to be noted that although the controller
+does not compromise with comfort or safety, the tracking accuracy is quite limited
+even after recursive gain tuning, especially at higher road curvatures.
+It can be therefore concluded that a standalone PID controller is more of a “sat-
+isfactory” solution to the problem of controlling lateral vehicle dynamics, and that
+advanced strategies (such as gain scheduling) and/or better controllers are a more
+attractive choice for this task.
+1.3.2.3 Geometric Control
+Geometric control refers to the notion of computing the control commands for the ego
+vehicle purely using the “geometry” of the vehicle kinematics and reference trajectory.
+Although this type of control strategy is applicable to both lateral as well as
+longitudinal control, PID controller is a better choice when it comes to longitudinal
+control as compared to geometric controllers since it operates directly on the velocity
+error. For lateral control though, geometric controllers are a great choice since PID
+controller for lateral vehicle control needs to be tuned for speciﬁc velocity ranges,
+beyond which it is either too sluggish or too reactive.
+There are two highly popular geometric path tracking controllers for lateral mo-
+tion control of autonomous vehicles viz. Pure Pursuit and Stanley controllers.
+Control Strategies for Autonomous Vehicles 21
+Figure 1.6 PID Control Implementation
+Pure Pursuit Controller
+Pure Pursuit controller is a geometric trajectory tracking controller that uses a
+look-ahead point on the reference trajectory at a ﬁxed distance ahead of the ego ve-
+hicle in order to determine the cross-track error e∆. The controller then decides the
+steering angle command in order to minimize this cross-track error and ultimately
+try to reach the look-ahead point. However, since the look-ahead point is at a ﬁxed
+distance ahead of the ego vehicle, the vehicle is constantly in pursuit of getting to
+that point and hence this controller is called Pure Pursuit controller.
+If we consider the center of the rear axle of the ego vehicle as the frame of reference,
+we have the geometric relations as shown in ﬁgure 1.7. Here, the ego vehicle wheelbase
+isL, forward velocity of the ego vehicle is vf, steering angle of the ego vehicle is
+22Control Strategies for Autonomous Vehicles
+δ, distance between lookahead point on reference trajectory and the center of the
+rear axle of the ego vehicle is the lookahead distance dl, the angle between vehicle
+heading and the lookahead line is α. Since the vehicle is a rigid body with forward
+steerable wheels, for non-zero vfandδ, the vehicle follows a circular path of radius
+R(corresponding to curvature κ) about the instantaneous center of rotation (ICR).
+Figure 1.7 Pure Pursuit Control
+With reference to ﬁgure 1.7, from the law of sines, we have,
+dl
+sin(2∗α)=R
+sin/parenleftbigπ
+2−α/parenrightbig
+)dl
+2∗sin(α)∗cos(α)=R
+cos(α)
+)dl
+sin(α)= 2∗R
+)κ=1
+R=2∗sin(α)
+dl(1.27)
+*sin(α) =e∆
+dl⇒κ=2
+d2
+l∗e∆⇒κ∝e∆ (1.28)
+Control Strategies for Autonomous Vehicles 23
+It can be seen from equation 1.28 that curvature of the instantaneous trajectory
+κis directly proportional to the cross-track error e∆. Thus, as the cross-track error
+increases, so does the trajectory curvature, thereby bringing the vehicle back towards
+the reference trajectory aggressively. Note that the term2
+d2
+lcan be thought of as a
+proportionality gain, which can be tuned based on the lookahead distance parameter.
+With reference to ﬁgure 1.7, the steering angle command δcan be computed using
+the following relation.
+tan(δ) =L
+R=L∗κ (1.29)
+Substituting the value of κfrom equation 1.27 in equation 1.29 and solving for δ
+we get,
+δ=tan−1/parenleftbigg2∗L∗sin(α)
+dl/parenrightbigg
+(1.30)
+Equation 1.30 presents the de-coupled scheme of Pure Pursuit controller (i.e. the
+steering law is independent of vehicle velocity). As a result, if the controller is tuned
+for low speed, it will be dangerously aggressive at higher speeds while if tuned for
+high speed, the controller will be too sluggish at lower speeds. One potentially simple
+improvement would be to vary the lookahead distance dlproportional to the vehicle
+velocityvfusingkvas the proportionality constant (this constant/gain will act as
+the tuning parameter for Pure Pursuit controller).
+dl=kv∗vf (1.31)
+Substituting the value of dlfrom equation 1.31 in equation 1.30 we get the com-
+plete coupled Pure Pursuit control law formulation as follows.
+δ=tan−1/parenleftBigg
+2∗L∗sin(α)
+kv∗vf/parenrightBigg
+;δ∈[−δmax,δmax] (1.32)
+In summary, it can be seen that Pure Pursuit controller acts as a geometric
+proportional controller of steering angle δoperating on the cross-track error e∆while
+observing the steering actuation limits.
+Pure Pursuit Control Implementation
+Implementation of Pure Pursuit controller for lateral control of a simulated au-
+tonomous vehicle is illustrated in ﬁgure 1.8. The implementation as well employs a
+PID controller for controlling the longitudinal vehicle dynamics. It is to be noted
+that this implementation uses coupled control scheme wherein the steering action is
+inﬂuenced by the vehicle velocity following an inverse relation.
+For the purpose of this implementation, the reference trajectory to be followed by
+the ego vehicle (marked green in the trajectory plot) was discretized into waypoints
+to be tracked by the lateral controller, and each waypoint had an associated velocity
+setpoint to be tracked by the longitudinal controller.
+24Control Strategies for Autonomous Vehicles
+Figure 1.8 Pure Pursuit Control Implementation
+The lateral controller parameter kvwas tuned in order to obtain best possible
+results for tracking the entire reference trajectory (which included both straight as
+well as curved segments) at varying forward velocities. The controller was very well
+able to track the prescribed trajectory with a promising level of precision. Addition-
+ally, the control actions generated during the entire course of simulation lied within
+a short span δ∈[−15◦,15◦], which is an indication of the controller having a good
+command over the system.
+Nonetheless, a green highlight (representing the reference trajectory) can be seen
+in the neighborhood of actual trajectory followed by the ego vehicle, which indicates
+that the tracking was not “perfect” . This may be partially due to the fact that the
+Pure Pursuit control law has a single tunable parameter dlhaving an approximated
+ﬁrst order relation with vf. However, a more convincing reason for potential errors
+Control Strategies for Autonomous Vehicles 25
+in trajectory tracking, when it comes to Pure Pursuit controller, is that it generates
+steering action regardless of heading error of the vehicle, making it diﬃcult to actually
+align the vehicle precisely along the reference trajectory.
+Furthermore, being a kinematic controller, Pure Pursuit controller disregards ac-
+tual system dynamics, and as a result compromises with trajectory tracking accuracy.
+Now, although this may not aﬀect a vehicle driving under nominal conditions, a racing
+vehicle, for example, would experience serious trajectory deviations under rigorous
+driving conditions.
+Pure Pursuit controller also has a pretty non-intuitive issue associated with it,
+which is generally undiscovered during inﬁnitely continuous or looped trajectory
+tracking. Particularly, towards the end of a ﬁnite reference trajectory, the Pure Pur-
+suit controller generates erratic steering actions owing to the fact that the look-ahead
+point it uses in order to deduce the steering control action is no longer available, since
+the further waypoints are not really deﬁned. This may lead to undesired stoppage of
+the ego vehicle or even cause it to wander oﬀ of the trajectory in the ﬁnal few seconds
+of the mission.
+In conclusion, Pure Pursuit controller is really good for regulating the lateral
+dynamics of a vehicle operating under nominal driving conditions, and that there is
+room for further improvement.
+Stanley Controller
+Stanley controller is a geometric trajectory tracking controller developed by Stan-
+ford University’s “Stanford Racing Team” for their autonomous vehicle “Stanley”
+at the DARPA Grand Challenge (2005). As opposed to Pure Pursuit controller (dis-
+cussed earlier), which uses only the cross-track error to determine the steering action,
+Stanley controller uses both heading as well as cross-track errors to determine the
+same. The cross-track error e∆is deﬁned with respect to a closest point on the refer-
+ence trajectory (as opposed to a lookahead point in case of Pure Pursuit controller)
+whereas the heading error eψis deﬁned using the vehicle heading relative to the
+reference trajectory.
+If we consider the center of the front axle of the ego vehicle as the frame of
+reference, we have the geometric relations as shown in ﬁgure 1.9. Here, the ego vehicle
+wheelbase is L, forward velocity of the ego vehicle is vf, and steering angle of the ego
+vehicle isδ.
+Stanley controller uses both heading as well as cross-track errors to determine the
+steering command. Furthermore, the steering angle generated by this (or any other)
+method must observe the steering actuation limits. Stanley control law, therefore, is
+essentially deﬁned to meet the following three requirements.
+1.Heading Error Correction: To correct the heading error eψby producing a
+steering control action δproportional (or equal) to it, such that vehicle heading
+aligns with the desired heading.
+δ=eψ (1.33)
+26Control Strategies for Autonomous Vehicles
+Figure 1.9 Stanley Control
+2.Cross-Track Error Correction: To correct the cross-track error e∆by pro-
+ducing a steering control action δdirectly proportional to it and inversely pro-
+portional to the vehicle velocity vfin order to achieve coupled-control. More-
+over, the eﬀect for large cross-track errors can be limited by using an inverse
+tangent function.
+δ=tan−1/parenleftBigg
+k∆∗e∆
+vf/parenrightBigg
+(1.34)
+It is to be noted that at this stage of the formulation, the inverse relation
+between steering angle and vehicle speed can cause numerical instability in
+control actions.
+At lower speeds, the denominator becomes small, thus causing the steering
+command to shoot to higher values, which is undesirable considering human
+comfort. Hence, an extra softening coeﬃcient ksmay be used in the denomi-
+nator as an additive term in order to keep the steering commands smaller for
+smoother steering actions.
+On the contrary, at higher velocities, the denominator becomes large making the
+Control Strategies for Autonomous Vehicles 27
+steering commands small in order to avoid large lateral accelerations. However,
+even these small steering actions might be high in some cases, causing high
+lateral accelerations. Hence, an extra damping coeﬃcient kdmay be used in
+order to dampen the steering action proportional to vehicle velocity.
+δ=tan−1/parenleftBigg
+k∆∗e∆
+ks+kd∗vf/parenrightBigg
+(1.35)
+3.Clipping Control Action: To continuously observe the steering actuation
+limits [−δmax,δmax] and clip the steering command within these bounds.
+δ∈[−δmax,δmax] (1.36)
+Using equations 1.33, 1.35 and 1.36 we can formulate the complete Stanley control
+law as follows.
+δ=eψ+tan−1/parenleftBigg
+k∆∗e∆
+ks+kd∗vf/parenrightBigg
+;δ∈[−δmax,δmax] (1.37)
+In summary, it can be seen that Stanley controller acts as a geometric proportional
+controller of steering angle δoperating on the heading error eψas well as the cross-
+track error e∆, while observing the steering actuation limits.
+Stanley Control Implementation
+Implementation of Stanley controller for lateral control of a simulated autonomous
+vehicle is illustrated in ﬁgure 1.10. The implementation as well employs a PID con-
+troller for controlling the longitudinal vehicle dynamics. It is to be noted that this
+implementation uses coupled control scheme wherein the steering action is inﬂuenced
+by the vehicle velocity following an inverse relation.
+For the purpose of this implementation, the reference trajectory to be followed by
+the ego vehicle (marked green in the trajectory plot) was discretized into waypoints
+to be tracked by the lateral controller, and each waypoint had an associated velocity
+setpoint to be tracked by the longitudinal controller.
+The lateral controller parameters k∆,ksandkdwere tuned in order to obtain
+best possible results for tracking the entire reference trajectory (which included both
+straight as well as curved segments) at varying forward velocities. The controller was
+able to track the prescribed trajectory with a promising level of precision.
+Nonetheless, a slight green highlight (representing the reference trajectory) can
+be occasionally spotted in the neighborhood of actual trajectory followed by the ego
+vehicle, which indicates that the tracking was sub-optimal or near-perfect. This may
+be due to the ﬁrst order approximations involved in the formulation. Furthermore,
+being a kinematic geometric controller, Stanley controller disregards actual system
+dynamics, and as a result compromises with trajectory tracking accuracy, especially
+under rigorous driving conditions.
+28Control Strategies for Autonomous Vehicles
+Figure 1.10 Stanley Control Implementation
+Stanley controller uses the closest waypoint to compute the cross-track error,
+owing to which, it may become highly reactive at times. Since this implementation
+assumed static waypoints deﬁned along a racetrack (i.e. in the global frame), and
+the ego vehicle was spawned towards one side of the track, the initial cross-track
+error was quite high. This made the controller react erratically, thereby generating
+steering commands of over 50◦in either direction. However, this is not a signiﬁcant
+problem practically, since the local trajectory is recursively planned as a ﬁnite set of
+waypoints originating from the vehicle coordinate system, thereby ensuring that the
+immediately next waypoint is not too far from the vehicle.
+In conclusion, Stanley controller is one of the best for regulating lateral dynamics
+of a vehicle operating under nominal driving conditions, especially considering the
+computational complexity at which it oﬀers such accuracy and robustness.
+Control Strategies for Autonomous Vehicles 29
+1.3.2.4 Model Predictive Control
+Model predictive control (MPC) is a type of optimal control strategy that basically
+treats the control task as a constrained or bounded optimization problem. Model pre-
+dictive controller predicts the future states of the system (ego vehicle) up to a certain
+prediction horizon using the motion model and then solves an online optimization
+problem considering the constraints (or control bounds) in order to select the optimal
+set of control inputs by minimizing a cost function such that the future state(s) of
+the ego vehicle closely align with the goal state (as required for trajectory tracking).
+Figure 1.11 Model Predictive Control Architecture
+In other words, given the current state and the reference trajectory to follow, MPC
+involves simulating diﬀerent control inputs (without actually applying them to the
+system), predicting the resulting future states (in form of a predicted trajectory) using
+motion model up to a certain prediction horizon, selecting the optimal set of control
+inputs corresponding to minimal cost trajectory (considering constraints) at each
+step in time, and applying the very ﬁrst set of optimal control inputs (up to a certain
+control horizon) to the ego vehicle, discarding the rest. With the updated state, we
+again repeat the same algorithm to compute a new optimal predicted trajectory up
+to the prediction horizon. In that sense, we are computing optimal control inputs
+over a constantly moving prediction horizon. Thus, this approach is also known as
+receding horizon control .
+There are two main reasons for following the receding horizon approach in model
+predictive control.
+1. The motion model is only an approximate representation of the actual vehicle
+dynamics and despite our best eﬀorts, it won’t match the real world exactly.
+Hence, once we apply the optimal control input to the ego vehicle, our actual
+trajectory may not be exactly same as the trajectory we predicted. It is therefore
+30Control Strategies for Autonomous Vehicles
+extremely crucial that we constantly re-evaluate our optimal control actions in
+a receding horizon manner so that we do not build up a large error between the
+predicted and actual vehicle state.
+2. Beyond a speciﬁc prediction horizon, the environment will change enough that
+it won’t make sense to predict any further into the future. It is therefore a
+better idea to restrict the prediction horizon to a ﬁnite value and follow the
+receding horizon approach to predict using the updated vehicle state at each
+time interval.
+Model predictive control is extremely popular in autonomous vehicles for the
+following reasons.
+•It can handle multi-input multi-output (MIMO) systems that have cross-
+interactions between the inputs and outputs, which very well suits for the
+vehicle control problem.
+•It can consider constraints or bounds to compute optimal control actions. The
+constraints are often imposed due to actuation limits, comfort bounds and
+safety considerations, violating which may potentially lead to uncontrollable,
+uncomfortable or unsafe scenarios, respectively.
+•It has a future preview capability similar to feedforward control (i.e. it can
+incorporate future reference information into the control problem to improve
+controller performance for smoother state transitioning).
+•It can handle control latency. Since MPC uses system model for making an
+informed prediction, we can incorporate any control latency (time diﬀerence
+between application of control input and actual actuation) into the system
+model thereby enabling the controller to adopt to the latency.
+Following are some of the practical considerations for implementing MPC for
+motion control of autonomous vehicles.
+•Motion Model: For predicting the future states of the ego vehicle, we can
+use kinematic or dynamic motion models as described in section 1.2. Note that
+depending upon the problem statement, one may choose simpler models, the
+exact same models, or even complex models. However, often, in most imple-
+mentations (for nominal driving conditions) it is suggested to use kinematic
+models since they oﬀer a good balance between simplicity and accuracy.
+•MPC Design Parameters:
+– Sample Time ( Ts):Sample time determines the rate at which the control
+loop is executed. If it is too large, the controller response will be sluggish
+and may not be able to correct the system fast enough leading to accidents.
+Also, high sample time makes it diﬃcult to approximate a continuous ref-
+erence trajectory by discrete paths. This is known as discretization error .
+Control Strategies for Autonomous Vehicles 31
+On the other hand, if the sample time is too small, the controller might
+become highly reactive (sometimes over-reactive) and may lead to a un-
+comfortable and/or unsafe ride. Also, smaller the sample time, more is the
+computational complexity since an entire control loop is supposed to be
+executed within the time interval (including online optimization). Thus, a
+proper sample time must be chosen such that the controller is neither slug-
+gish, nor over-reactive but can quickly respond to disturbances or setpoint
+changes. It is recommended to have sample time Tsof 5 to 10 percent of
+the rise time trof open loop step response of the system.
+0.05∗tr6Ts60.1∗tr
+– Prediction Horizon ( p):Prediction horizon is the number of time steps
+in the future over which state predictions are made by the model predictive
+controller. If it is too small, the controller may not be able to take the
+necessary control actions suﬃciently in advance, making it “too late” in
+some situations. On the other hand, a large prediction horizon will make
+the controller predict too long into the future making it a wasteful eﬀort,
+since a major part of (almost entire) predicted trajectory will be discarded
+in each control loop. Thus, a proper prediction horizon must be chosen
+such that it covers signiﬁcant dynamics of the system and at the same time,
+is not excessively high. It is recommended to determine the prediction
+horizonpdepending upon the sample time Tsand the settling time tsof
+open loop step response of the system (at 2% steady state error criterion).
+ts
+Ts6p61.5∗ts
+Ts
+– Control Horizon ( m):Control horizon is the number of time steps in
+the future for which the optimal control actions are computed by the
+optimizer. If it is too short, the optimizer may not return the best possible
+control action(s). On the other hand, if the control horizon is longer, model
+predictive controller can make better predictions of future states and thus
+the optimizer can ﬁnd best possible solutions for control actions. One can
+also make the control horizon equal to the prediction horizon, however,
+note that usually only a ﬁrst couple of control actions have a signiﬁcant
+eﬀect on the predicted states. Thus, excessively larger control horizon only
+increases the computational complexity without being much of a help.
+Therefore, a general rule of thumb is to have a control horizon mof 10 to
+20 percent of the prediction horizon p.
+0.1∗p6m60.2∗p
+– Constraints: Model predictive controller can incorporate constraints on
+control inputs (and their derivatives) and the vehicle state (or predicted
+output). These can be either hard constraints (which cannot be violated
+32Control Strategies for Autonomous Vehicles
+under any circumstances) or soft constraints (which can be violated with
+minimum necessary amount). It is recommended to have hard constraints
+for control inputs thereby accounting for actuation limits. However, for
+outputs and time derivatives (time rate of change) of control inputs, it is
+not a good idea to have hard constraints as these constraints may conﬂict
+with each other (since none can be violated) and lead to an infeasible
+solution for the optimization problem. It is therefore recommended to have
+soft constraints for outputs and time derivatives of control inputs, which
+may be occasionally violated (if required). Note that in order to keep the
+violation of soft constraints small, it is minimized by the optimizer.
+– Weights: Model predictive controller has to achieve multiple goals simul-
+taneously (which may compete/conﬂict with each other) such as minimiz-
+ing the error between current state and reference while limiting the rate
+of chance of control inputs (and obeying other constraints). In order to
+ensure a balanced performance between these competing goals, it is a good
+idea to weigh the goals in order of importance or criticality. For example,
+since it is more important to track the ego vehicle pose than it’s velocity
+(minor variations in velocity do not aﬀect much) one may assign higher
+weight to pose tracking as compared to velocity tracking. This will cause
+the optimizer to give more weightage to the vehicle pose as compared to
+it’s velocity (similar to how hard constraints are more weighted as opposed
+to soft constraints).
+•Cost Function ( J):The exact choice of cost function depends very much
+upon the speciﬁc problem statement requirements, and is up to the control
+engineer. To state an example, for longitudinal control, one may use velocity
+errorevor distance to goal eχas cost, while for lateral control, one may use
+the cross-track error e∆and/or heading error eψas the cost. Practically, it
+is advised to use quadratic (or higher degree) cost functions as opposed to
+linear ones since they penalize more for deviations from reference, and tend to
+converge the optimization faster. Furthermore, it is a good idea to associate
+cost not only for the error from desired reference e, but also for the amount
+of change in control inputs ∆ ubetween each time step so that comfort and
+safety are maintained. For that, one may choose a cost function that considers
+the weighted squared sums of predicted errors and control input increments as
+follows.
+J=p/summationdisplay
+i=1we∗e2
+t+i+p−1/summationdisplay
+i=0w∆u∗∆u2
+t+i; where/braceleftBigg
+t→present
+t+i→future
+•Optimization: The main purpose of optimization is to choose the optimal set
+of control inputs uoptimal (from a set of all plausible controls u) corresponding
+to the predicted trajectory with lowest cost (whilst considering current state
+x, reference state xrefand constraints). As a result, there is no restriction on
+the optimizer to be used for this purpose and the choice is left to the control
+Control Strategies for Autonomous Vehicles 33
+engineer who should consider the cost function Jas well as the time complexity
+required for solving the optimization problem. Practically, it is a good idea to set
+a tolerance till which minimization optimization is to be carried out, beyond
+which, optimization should be terminated and optimal set of control inputs
+corresponding to the predicted trajectory with lowest cost should be returned.
+A general optimization function might look something like the following.
+uoptimal =argmin (J|u,x,xref,/angbracketleftoptimizer/angbracketright,/angbracketleftconstraints/angbracketright,/angbracketlefttolerance/angbracketright)
+Following are some of the variants of MPC depending upon the nature of system
+(plant model), constraints and cost function.
+1.Linear Time-Invariant MPC: If the plant model and constraints are linear,
+and the cost function is quadratic, it gives rise to convex optimization problem
+where there is a single global minima and a variety of numerical methods exist
+to solve such optimization problems. Thus, we can use linear time invariant
+model predictive controller to control such systems.
+2.Linear Time-Variant MPC: If the plant model is non-linear, we may need
+to linearize it at diﬀerent operation points (varying in time) thereby calling for
+linear time-variant model predictive controller.
+•Adaptive MPC: If the structure of the optimization problem remains
+the same across all operating conditions (i.e. states and constraints do not
+change with operating conditions), we can simply approximate the non-
+linear plant model to a linear model (linearization) and use an adaptive
+model predictive controller which updates the plant model recursively as
+the operating conditions change.
+•Gain-Scheduled MPC: If the plant model is non-linear and the states
+and/or constraints change with the operating conditions, we need to use
+gain-scheduled model predictive controller. In this approach, we perform
+oﬄine linearization at operating points of interest and for each operat-
+ing point, we design an independent linear model predictive controller,
+considering the states and constraints for that particular operating point.
+We then select the suitable linear MPC for a speciﬁc range of operating
+conditions and switch between these linear model predictive controllers as
+operating conditions change.
+3.Non-Linear MPC: If it is not possible/recommended to linearize the plant
+model, we need to use non-linear model predictive controller. Although this
+method is the most powerful one since it uses most accurate representation
+of the plant model, it is by far the most challenging one to solve in real-time
+since non-linear constraints and cost function give rise to non-convex optimiza-
+tion problem with multiple local optima. It is quite diﬃcult to ﬁnd the global
+optimum and getting stuck in the local optima is possible. This approach is
+therefore highly complex in terms of computation and its eﬃciency depends
+upon the non-linear solver used for optimization.
+34Control Strategies for Autonomous Vehicles
+A general rule of thumb for selecting from the variants of MPC is to start simple
+and go complex if and only if it is necessary. Thus, linear time-invariant or traditional
+MPC and adaptive MPC are the two most commonly used approaches for autonomous
+vehicle control under nominal driving conditions.
+Model Predictive Control Implementation
+Implementation of model predictive controller for lateral control of a simulated
+autonomous vehicle is illustrated in ﬁgure 1.12. The implementation as well employs
+a PID controller for controlling the longitudinal vehicle dynamics.
+Figure 1.12 Model Predictive Control Implementation
+For the purpose of this implementation, the reference trajectory to be followed by
+the ego vehicle (marked green in the trajectory plot) was discretized into waypoints
+Control Strategies for Autonomous Vehicles 35
+to be tracked by the lateral controller, and each waypoint had an associated velocity
+setpoint to be tracked by the longitudinal controller.
+A simple kinematic bicycle model also worked really well for tracking the entire
+reference trajectory (which included both straight as well as curved segments) at
+varying longitudinal velocities. The model predictive controller was able to track the
+prescribed trajectory with a promising level of precision and accuracy. Additionally,
+the steering control commands generated during the entire course of simulation lied
+well within the span δ∈[−10◦,10◦], which is an indication of the controller being
+able to generate optimal control actions at right time instants.
+One of the most signiﬁcant drawback of MPC is its heavy requirement of compu-
+tational resources. However, this can be easily counteracted by limiting the prediction
+and control horizons to moderately-small and small magnitudes, formulating simpler
+cost functions, using less detailed motion models or setting a higher tolerance for op-
+timization convergence. Although this may lead to sub-optimal solutions, it reduces
+computational overhead to a great extent, thereby ensuring real-time execution of
+the control algorithm.
+In conclusion, model predictive control can be regarded as the best control strat-
+egy for both simplistic as well as rigorous driving behaviors, provided a suﬃciently
+powerful computational resource is available online.
+1.3.3 Learning Based Control
+As stated in section 1.3.2, traditional controllers require in-depth knowledge of the
+process ﬂow involved in designing and tuning them. Additionally, in case of model
+based controllers, the physical parameters of the system, along with its kinematic
+and/or dynamic models need to be known before designing a suitable controller. To
+add to the problem, most traditional controllers are scenario-speciﬁc and do not adapt
+to varying operating conditions; they need to be re-tuned in case of a scenario-change,
+which makes them quite inconvenient to work with. Lastly, most of the advanced tra-
+ditional controllers are computationally expensive, which induces a time lag derived
+error in the processing pipeline.
+Recently, learning based control strategies have started blooming, especially end-
+to-end learning. Such controllers hardly require any system-level knowledge and are
+much easier to implement. The system engineer may not need to implement the per-
+ception, planning and control sub-systems, since the AI agent learns to perform these
+operations implicitly; it is rather diﬃcult to exactly tell which part of the neural net-
+work acts as the perception sub-system, which acts as planning sub-system and which
+acts as the control sub-system. Although the “learning” process is computationally
+quite expensive, this step may be performed oﬄine for a single time, after which, the
+trained model may be incorporated into the system architecture of the autonomous
+vehicle for a real-time implementation. Another advantage of such controllers is their
+ability to generalize across a range of similar scenarios, which makes them ﬁt for
+minor deviations in the driving conditions. All in all, learning based control schemes
+seem to be a tempting alternative for the traditional ones. However, there is still a
+long way in achieving this goal as learning based controllers are somewhat unreliable;
+36Control Strategies for Autonomous Vehicles
+if presented with an unseen scenario, they can generate erratic control actions based
+on the learned features. Constant research is being carried out in this ﬁeld to under-
+stand the way these controllers learn, and guiding them to learn the most appropriate
+features.
+The learning based control strategies can be broadly classiﬁed into two categories,
+viz.imitation learning andreinforcement learning . While the former is a supervised
+learning strategy, the later is more of a self-learning technique. The upcoming sections
+discuss these strategies in a greater detail.
+It is to be noted that, apart from end-to-end control, hybrid control strategies are
+also possible, meaning some aspects of traditional controllers (such as gains of PID
+controller or system model for MPC) can be “learned” through recursive training
+(using imitation/reinforcement learning), thereby improving the performance of the
+controller.
+1.3.3.1 Imitation Learning Based Control
+Imitation learning is adopted to train an AI agent using a set of labeled data. The
+agent learns to map the features to the labels, while minimizing the error in its
+predictions. This technique produces fairly good results even at an early stage of the
+training process. However, achieving perfection using this technique requires a larger
+dataset, a suﬃciently prolonged training duration and lot of hyperparameter tuning.
+Figure 1.13 Imitation Learning Architecture
+We shall consider behavioral cloning , an exemplar implementation of this tech-
+nique, as a case study. Behavioral cloning is concerned with cloning the driving be-
+havior of an agent (a human driver or a traditional controller) by learning speciﬁc
+Control Strategies for Autonomous Vehicles 37
+features from the training dataset provided. Figure 1.13 illustrates the training and
+deployment phases of imitation learning, which are discussed in the following sections.
+Training Phase
+During the training phase, the ego vehicle is driven (either manually or using a
+traditional controller) in a scenario resembling one in the deployment phase, and
+timestamped sensor readings (images, point cloud, etc.) along with the control in-
+put measurements (throttle, brake and steering) are recorded in a driving log. The
+collected dataset is then balanced to remove any inherent prejudice after which, it is
+augmented and preprocessed, thereby imparting robustness to the model and helping
+it generalize to a range of similar scenarios. Practically, the augmentation and pre-
+processing steps are performed on-the-go during the training process using a batch
+generator . Finally, a deep neural network is “trained” to directly predict the control
+inputs based on sensor readings.
+It is to be noted that, practically, the collected dataset inﬂuences the training
+process more than anything else. Other important factors aﬀecting the training, in
+order of importance, include neural network architecture (coarse-tuning is suﬃcient
+in most cases), augmentation and preprocessing techniques used and hyperparame-
+ter values chosen (ﬁne-tuning may be required based on the application). It is also
+completely possible that one training pipeline works well on one dataset, while the
+other works well on a diﬀerent one.
+Training a neural network end-to-end in order to predict the control actions re-
+quired to drive an autonomous vehicle based on the sensory inputs is essentially
+modeling the entire system as a linear combination of input features to predict the
+output labels . The training process can be elucidated as follows.
+First a suitable neural network architecture is deﬁned; this architecture may be
+iteratively modiﬁed based on experimental results. The trainable parameters of the
+model include weights and biases . Generally, the weights are initialized to a small
+non-zero random value, whereas the biases are initialized to zero.
+The network then performs, what is called, a forward propagation step. Here,
+each neuron of every layer of the neural network calculates a weighted average of
+the activated input vector ait receives from the previous layer, based on its current
+weight vector wiand adds a bias term bito it. For the ﬁrst layer, however, the input
+vectorxis considered in place of a[l−1]. The result of this operation ziis then passed
+through a non-linear activation function g(z), to produce an activated output ai.
+z[l]
+i=wT
+i·a[l−1]+bi
+a[l]
+i=g[l](z[l]
+i)
+Note thatlhere, denotes the lthlayer of the neural network and idenotes the ith
+neuron of that layer.
+Practically, however, these operations are not performed sequentially for each
+38Control Strategies for Autonomous Vehicles
+and every neuron. Instead, vectorization is adopted, which groups the similar vari-
+ables and vectors into distinct matrices and performs all the matrix manipulations at
+once, thereby reducing the computational complexity of the operation. The activated
+output vector of last layer is termed as predicted output ˆ yof the neural network.
+The predicted output ˆ yis then used to compute the loss Lof the forward prop-
+agation, based on the loss function deﬁned. Intuitively, loss is basically a measure of
+incorrectness (i.e. error) of the predicted output w.r.t. the labeled output.
+Generally, for a regression problem like the one we are talking about, the most
+commonly adopted loss function is the mean squared error (MSE) . It is deﬁned as
+follows.
+L(ˆy,y) =1
+nn/summationdisplay
+i=1/bardblyi−ˆyi/bardbl2
+For classiﬁcation problems, though, the cross-entropy loss function is a favorable
+choice. For a dataset with Mdiﬀerent classes, it is deﬁned as follows.
+L(ˆy,y) =/braceleftBigg
+−(yi∗log( ˆyi) + (1−yi)∗log(1−ˆyi)) ;M= 2
+−/summationtextM
+i=1yi∗log( ˆyi) ; M > 2
+The equations deﬁned above are used to compute loss for each training example.
+These individual losses Lovermtraining examples can be used to evaluate an overall
+costJusing the following relation.
+J(w,b) =1
+mm/summationdisplay
+i=1L(ˆy(i),y(i))
+Note thatwandbin the above equation denote vectorized form of weights and
+biases respectively, across the entire training set (or a mini-batch).
+The cost is then minimized by recursively updating the weights and biases using
+an optimizer. This step is known as back propagation .
+The most traditional optimizer is the gradient decent algorithm. In its very rudi-
+mentary form, the algorithm updates trainable parameters (i.e. weights and biases)
+by subtracting from them their respective gradients dwanddbw.r.t. the cost function
+J, scaled by the learning rate hyperparameter α.
+/braceleftBigg
+w[l]=w[l]−α∗dw[l]
+b[l]=b[l]−α∗db[l]
+Where,dwanddbare computed as follows.
+/braceleftBigg
+dw[l]=∂J
+∂w[l]=dz[l]·a[l−1]
+db[l]=∂J
+∂b[l]=dz[l]
+Here,dzandda, interdependent on each other, can be computed using the fol-
+lowing relations.
+Control Strategies for Autonomous Vehicles 39
+/braceleftBigg
+dz[l]=da[l]∗g[l]/prime(z[l])
+da[l−1]=w[l]T·dz[l]
+However, the current state-of-the-art optimizer adopted by most domain experts
+is the Adam optimizer. The algorithm commences by computing the gradients dw
+anddbusing the gradient descent method and then computes the exponential moving
+averages of the gradients Vand their squares S, similar to Momentum andRMSprop
+algorithms respectively.
+/braceleftBigg
+Vdw=β1∗Vdw+ (1−β1)∗dw
+Vdb=β1∗Vdb+ (1−β1)∗db
+/braceleftBigg
+Sdw=β2∗Sdw+ (1−β2)∗dw2
+Sdb=β2∗Sdb+ (1−β2)∗db2
+The bias correction equations for the exponential moving averages after titera-
+tions are given as follows.
+
+
+/hatwideVdw=Vdw
+(1−βt
+1)
+/hatwideVdb=Vdb
+(1−βt
+1)
+
+
+/hatwideSdw=Sdw
+(1−βt
+2)
+/hatwideSdb=Sdb
+(1−βt
+2)
+The ﬁnal update equations for the training parameters are therefore as given
+below.
+
+
+w=w−α∗/hatwideVdw√
+/hatwideSdw+/epsilon1
+b=b−α∗/hatwideVdb√
+/hatwideSdb+/epsilon1
+Note that/epsilon1in the above equations is a small factor that prevents division by
+zero. The authors of Adam optimizer propose the default values of 0 .9 forβ1, 0.999
+forβ2and 10−8for/epsilon1.They show empirically that Adam works well in practice and
+compares favorably to other adaptive learning based algorithms.
+Deployment Phase
+During the deployment phase, the trained model is incorporated into the control
+architecture of the ego vehicle to predict (forward propagation step alone) the same
+set of control inputs (throttle, brake and steering) based on measurements (images,
+point cloud, etc.) from the same set of sensors as during the training phase, in real
+time.
+It is worth mentioning that the pipeline adopted for the deployment phase should
+have minimum latency in order to ensure real-time performance.
+40Control Strategies for Autonomous Vehicles
+Imitation Learning Based Control Implementation
+Implementation of imitation learning strategy for lateral control of a simulated
+autonomous vehicle is illustrated in ﬁgure 1.14. Speciﬁcally, the longitudinal vehicle
+dynamics are controlled using a pre-tuned PID controller, while the lateral vehicle
+dynamics are controlled using a neural-network trained end-to-end.
+Figure 1.14 Imitation Learning Based Control Implementation
+The ego vehicle was manually driven for 20 laps, wherein a front-facing virtual
+camera mounted on the vehicle hood captured still frames of the road ahead. The
+steering angle corresponding to each frame was also recorded. This comprised the
+labeled dataset for training a deep neural network to mimic the driving skills of the
+human driver in an end-to-end manner (a.k.a. behavioral cloning). The trained neural
+network model was saved at the end of training phase.
+The trained model was then deployed onto the ego vehicle, which was let to
+drive autonomously on the same track so as to validate the autonomy. The AI agent
+was successful in cloning most of the human driving behavior and exhibited 100%
+autonomy, meaning it could complete several laps of the track autonomously. The
+lap time achieved by AI agent trained using imitation learning was 52.9 seconds, as
+compared to∼48.3 seconds (statistical average) achieved by human driver.
+The greatest advantage of adopting imitation learning for control of autonomous
+vehicles is its simplistic implementation and its ability to train fairly quickly (as
+compared to reinforcement learning). The neural network simply “learns” to drive
+using the dataset provided, without the need of any complex formulations governing
+the input-output relations of the system. However, for the very same reason, this
+approach is highly susceptible to mislabeled or biased data, in which case, the neural
+network may learn incorrectly (this can be thought of as a bad teacher imparting
+erroneous knowledge to the students).
+In conclusion, imitation learning is a convincing control strategy; however, ad-
+vancements are required before achieving suﬃcient accuracy and reliability.
+Control Strategies for Autonomous Vehicles 41
+1.3.3.2 Reinforcement Learning Based Control
+Imitation learning simply teaches the learner to mimic the trainer’s behavior and the
+learner may never surpass performance of its trainer. This is where reinforcement
+learning comes into picture.
+Figure 1.15 Reinforcement Learning Architecture
+As depicted in ﬁgure 1.15, an agent trained using reinforcement learning tech-
+nique essentially learns through trial and error. This allows the agent to explore the
+environment and discover new strategies on its own, possibly some that may be even
+better than those of human beings!
+Generally, the policyπto be trained for optimal behavior is a neural network,
+which acts as a function approximator governing the relationship between input ob-
+servationsoand output actionsa.
+π(a|o)
+The agent is rewarded for performing a set of “good” actions and is penalized
+for performing any “bad” actions. The agent’s goal is, therefore, to maximize the
+expected reward, given a speciﬁc policy.
+argmaxE [R|π(a|o)]
+Note that the term “expected reward” is used instead of just “reward” . The expec-
+tationE, here, can be thought of as a simple average over a set of previous rewards
+based on a history of actions. While certain actions can produce exceedingly high/low
+reward points, it is a good habit to average them out in order generalize rewarding in
+the right direction. This reinforces the policy by updating its parameters such that
+“generally good” actions are more likely to be performed in the future.
+The most critical portion of reinforcement learning is, therefore, deﬁning a reward
+function . However, reward functions can be tricky to deﬁne. It is to be noted that the
+agent will perform any possible action(s) in order to maximize the reward, including
+cheating at times, essentially not learning the intended behavior at all. Deﬁning a
+complex reward function, on the other hand, may limit the agent’s creativity in terms
+of discovering novel strategies. Furthermore, rewarding the agent after performing
+good actions for a prolonged duration is also not a good idea, as the agent may wander
+42Control Strategies for Autonomous Vehicles
+randomly in the pursuit of maximizing its reward, but may likely never achieve the
+training objective.
+That being said, let us see how the agent actually learns. At its core, there are two
+approaches to “train” a policy, viz. working in the action space and working in the
+parameter space. The former approach converges faster while the later one provides
+a chance of better exploration.
+Working in Action Space
+As depicted in ﬁgure 1.16, this approach deals with perturbing the action space
+and observing the reward being collected. The policy gradient can then be com-
+puted, which points towards the direction in which the policy parameters need to be
+updated.
+Figure 1.16 Reinforcement Learning in Action Space
+One of the standard algorithms employing this approach is the proximal policy
+optimization (PPO) algorithm. Initially, the agent performs random actions in order
+to explore the environment. The policy is recursively updated towards the rewarding
+actions using the gradient ascent technique.
+Instead of updating the policy regardless of how large its change was, PPO con-
+siders the probability ratio rof old and new policies.
+r=πnew(a|o)
+πold(a|o)
+In order to reduce variance, the reward function is replaced by a more general
+advantage function A. The “surrogate” objective function Lfor PPO can be therefore
+written as follows.
+L=E/bracketleftbiggπnew(a|o)
+πold(a|o)∗A/bracketrightbigg
+=E[r∗A]
+The PPO algorithm ensures that the updated policy πnewmay not be far away
+from the old policy πoldby clamping the probability ratio rwithin a suitable interval
+[1−/epsilon1,1 +/epsilon1], where/epsilon1is a hyperparameter, say, /epsilon1= 0.2. The main objective function
+Lclipfor PPO algorithm can be therefore written as follows.
+Lclip=E[min(r∗A,clip (r,1−/epsilon1,1 +/epsilon1)∗A)]
+Control Strategies for Autonomous Vehicles 43
+Finally, the gradient ascent update rule for updating the policy parameters θ∈Rd
+(weights and biases), considering a learning rate hyperparameter αis deﬁned as
+follows.
+∆θ=α∗∇Lclip
+While this approach increases stability and convergence rate, it reduces the agent’s
+creativity and the agent may therefore get stuck in a sub-optimal solution.
+Working in Parameter Space
+As depicted in ﬁgure 1.17, this approach deals with perturbing the parameter
+space directly and observing the reward being collected. This technique falls under
+the domains of genetic algorithms (GA) orevolutionary strategies (ES) .
+Figure 1.17 Reinforcement Learning in Parameter Space
+Initially, a random population of policies is generated, which are all evaluated in
+order to analyze the reward obtained in each case. A new generation of policies is then
+populated in the direction with most promising results (maximum reward points),
+through the process of natural selection . Random mutations may also be introduced
+in order to take a chance towards creating a “breakthrough” generation altogether.
+This process is repeated until an “optimal” policy is obtained.
+Since the policy is already updated as a part of exploration, this approach does
+not involve any gradient computation or back propagation, which makes it extremely
+easy to implement and ensures faster execution. Furthermore, this approach, almost
+every time, guarantees better exploration behavior as compared to the algorithms
+working in action space. Mathematically, this translates to a reduced risk of getting
+stuck in a local optima. However, algorithms working in the parameter space take a
+lot of time to converge. One has to, therefore, make a trade-oﬀ between convergence
+rate and exploration behavior, or design a hybrid approach addressing the problem
+at hand.
+44Control Strategies for Autonomous Vehicles
+Reinforcement Learning Based Control Implementation
+Implementation of reinforcement learning strategy for lateral control of a simu-
+lated autonomous vehicle is illustrated in ﬁgure 1.18. Speciﬁcally, the longitudinal
+vehicle dynamics are controlled using a pre-tuned PID controller, while the lateral
+vehicle dynamics are controlled using a neural-network trained end-to-end (using the
+Proximal Policy Optimization algorithm).
+Figure 1.18 Reinforcement Learning Based Control Implementation
+Initially, the training was weighted towards completing an entire lap. The agent
+(ego vehicle) was rewarded proportional to its driving distance and was penalized for
+wandering oﬀ the road. The agent started oﬀ by performing random actions until
+it could get a sense of what was truly required in order to maximize its reward,
+and was ﬁnally able to complete an entire lap autonomously. The training was then
+weighted more towards reducing the lap time and the agent was rewarded inversely
+proportional to the lap time achieved and was additionally penalized in case the lap
+time was more than the average lap time achieved by human driver ( ∼48.3 seconds).
+The ﬁnal lap time achieved by AI agent trained using reinforcement learning was 47.2
+seconds, which was better than the human driver!
+Reinforcement learning has an upper hand when it comes to “learning” unknown
+behaviors from scratch, through self-exploration. The policy adapts itself in order to
+maximize the expected reward, and explicit relations governing characteristics of the
+system are not necessary. Another peculiar advantage of this technique is its ability
+to discover novel strategies and even surpass human performance.
+Nonetheless, owing to its exploratory nature, reinforcement learning requires a
+Control Strategies for Autonomous Vehicles 45
+signiﬁcantly high amount of training time, which might pose as a major issue in
+case of development-analysis cycles. Furthermore, this approach calls for a hand-
+crafted reward function, which, if deﬁned ineﬃciently, may cause unintended reward-
+ing, thereby leading to erroneous learning.
+In conclusion, reinforcement learning is a powerful strategy, especially in terms of
+achieving super-human performance. However, it is generally better to have at least
+a basic pre-trained model available to work on top of, in order to skip the initial (and
+most time consuming) portion of the training phase, wherein the agent generates
+almost random actions with an aim of primary exploration.
+1.4 OUR RESEARCH AT AUTONOMOUS SYSTEMS LAB (SRMIST)
+Autonomous Systems Lab at the Department of Mechatronics Engineering, SRM
+Institute of Science and Technology (SRMIST) is headed by Mr. K. Sivanathan, and
+is focused on research and development in various aspects of autonomous systems.
+Speciﬁcally focusing on autonomous vehicles, our team is constantly working on all
+the three sub-systems viz. perception, planning and control. Although most of our
+past works are limited to simulation, we are currently working towards developing
+our own research platform for testing hardware implementations as well.
+Further narrowing down to control of autonomous vehicles, our team has worked
+on most of the aforementioned control strategies, if not all, and we are continuously
+studying and experimenting with them in order to analyze their performance and
+test their limits. We are also working on developing novel and hybrid control strate-
+gies with an aim of ameliorating the controller performance (i.e. improved stability,
+tracking and robustness) and/or reducing computational cost (allowing real-time ex-
+ecution).
+It is to be noted that an exhaustive discussion on each and every research project
+carried out at Autonomous Systems Lab (SRMIST) is beyond the scope of this chap-
+ter. Nonetheless, some of our team’s research project demonstrations pertaining to
+autonomous vehicles are available at:
+www.youtube.com/playlist?list=PLdOCgvQ2Iny8g9OPmEJeVCas9tKr6auB3
+1.5 CLOSING REMARKS
+Throughout this chapter, we have discussed most of the current state-of-the-art con-
+trol strategies employed for autonomous vehicles, right from the basic ones such as
+bang-bang and PID control all the way up to advanced ones such as MPC and end-
+to-end learning, from theoretical, conceptual as well as practical viewpoints. Now,
+as we come towards the end of this chapter, we would like to add a few notes on
+some minute details pertaining to performance enhancement of control strategies for
+autonomous vehicles based on our knowledge and experience in the ﬁeld.
+•Gain Scheduling: Most non-linear systems exhibit varying dynamics under
+diﬀerent operating conditions. In such cases, a controller with single set of
+gains may not be able to regulate the system eﬀectively throughout the opera-
+tional design domain as the operating conditions change. The gain scheduling
+46Control Strategies for Autonomous Vehicles
+technique overcomes this limitation by employing multiple sets of gains appro-
+priately across the entire range of operating conditions.
+•Integral Windup: For PI and PID controllers, integrating the error over a
+prolonged duration may lead to very large values, resulting in loss of stability. It
+is, therefore, advised to limit the upper value of the accumulated error to a safe
+value. This can be achieved using a wide array of techniques, one of them being
+imposition of upper and lower bounds on the accumulated error and clipping
+the value within that range. Another approach would be limiting the size of
+history buﬀer over which the error is integrated through the use of a queue
+data structure of limited size based on the ﬁrst-in-ﬁrst-out (FIFO) principle to
+discard error values that are too old.
+•Smoothing Controller Outputs: Most of the controllers have a tendency
+of generating abrupt responses in case of a highly dynamic event, and while
+it may be appropriate in a few cases, it is generally undesirable. Such abrupt
+control actions may cause loss of stability or even aﬀect the actuation elements
+adversely. It, therefore, becomes necessary to sooth the controller outputs before
+applying them to the plant, and one way of achieving this is to clamp the
+controller outputs within a safe range (determined through rigorous testing),
+such that the controller is still able to track the setpoint under all the operating
+conditions. A secondary approach would comprise of limiting the rate of change
+of the control output, thereby enabling a smoother transition.
+•Introduction of Dead-Bands: Most corrective controllers oscillate about the
+setpoint, trying really hard to converge, and while this might be desirable in
+case of highly precise systems, it is generally not really necessary to achieve the
+setpoint exactly. The controller action may be nulliﬁed within close neighbor-
+hood of the setpoint. This is known as a dead-band. It must be noted, however,
+that the width of the dead-band must be chosen wisely, depending upon the
+precision requirements of the system in question.
+•Safe Reinforcement Learning: As discussed earlier, reinforcement learn-
+ing involves discovery of novel strategies majorly through a trial-and-error
+approach, due to which, it is seldom directly applied to a physical system
+(you don’t want to take millions of episodes to learn by crashing the agent
+almost each time). However, there are a few techniques that can be employed
+to overcome this limitation, one of them being training a simulated agent under
+pseudo-realistic operating conditions and then transferring the trained model
+onto the physical agent. Another way of approaching this problem would be
+to penalize the policy prior to any catastrophic event by self-supervising the
+agent through an array of sensors. A third (and more elegant) approach would
+be to train the agent for a “safe” behavior using imitation learning and then
+improving its performance by training it further using reinforcement learning.
+As a ﬁnal note, we summarize the control strategies described in this chapter
+against a set of qualitative comparison metrics in table 1.2.
+Control Strategies for Autonomous Vehicles 47
+Table 1.2 Summary of Control Strategies for Autonomous Vehicles
+Comparison MetricBang-Bang
+ControlPID
+ControlGeometric
+ControlModel Predictive
+ControlImitation Learning
+Based ControlReinforcement Learning
+Based Control
+Principle of OperationError Driven
+(FSM)Error Driven
+(Correcitve)Model Based
+(Corrective)Model Based
+(Optimal)Supervised
+LearningReinforcement
+Learning
+Tracking Poor Good Very Good Excellent Good -
+Robustness Poor Very Good Very Good Excellent Good Good
+Stability Poor Very Good Very Good Excellent Good Good
+Reliability Very Low Very High Very High Extremely High Low Low
+Technical Complexity Very Low Low Low Very High Low High
+Computational Overhead Very Low Low Low Very High High High
+Constraint Satisfaction Poor Good Good Excellent - -
+Technical Maturity Very High Very High High Moderate Low Very Low
+Generally, when it comes to traditional control strategies, PI or PID controllers
+are the primary choice for longitudinal control, whereas MPC or geometric controllers
+are predominantly employed for lateral control. However, exact choice depends upon
+the speciﬁcs of the problem statement. Learning based control strategies, on the other
+hand, do not have any “preferred” implementations, and it would be appropriate to
+say that these techniques are currently in their infant stage with a bright future ahead
+of them.
+FURTHER READING
+Ogata, K. (2010). Modern Control Engineering. 5thEdition, Prentice Hall.
+Kong, J., Pfeiﬀer, M., Schildbach, G., and Borrelli, F. (2015). Kinematic and Dynamic
+Vehicle Models for Autonomous Driving Control Design. IEEE Intelligent Vehicles
+Symposium (IV) , Seoul, pp. 1094–1099.
+Polack, P., Altche, F., Novel, B.A., and de La Fortelle, A. (2017). The Kinematic Bicycle
+Model: A Consistent Model for Planning Feasible Trajectories for Autonomous Vehi-
+cles? IEEE Intelligent Vehicles Symposium (IV) , Redondo Beach, pp. 812–818.
+O’Brien, R.T. (2006). Bang-Bang Control for Type-2 Systems. Proceeding of the Thirty-
+Eighth Southeastern Symposium on System Theory , Cookeville, pp. 163–166.
+Emirler, M.T., Uygan, I.M.C., Guvenc, B.A., and Guvenc, L. (2014). Robust PID Steering
+Control in Parameter Space for Highly Automated Driving. International Journal of
+Vehicular Technology , vol. 2014.
+Coulter, R.C. (1992). Implementation of the Pure Pursuit Path Tracking Algorithm. CMU-
+RI-TR-92-01 .
+Hoﬀmann, G.M., Tomlin, C.J., Montemerlo, M., and Thrun, S. (2007). Autonomous Au-
+tomobile Trajectory Tracking for Oﬀ-Road Driving: Controller Design, Experimental
+Validation and Racing. American Control Conference , New York, pp. 2296–2301.
+Snider, J.M. (2009). Automatic Steering Methods for Autonomous Automobile Path Track-
+ing.CMU-RI-TR-09-08 .
+Zanon, M., Frasch, J., Vukov, M., Sager, S., and Diehl, M. (2014). Model Predictive Control
+of Autonomous Vehicles . In: Waschl H., Kolmanovsky I., Steinbuch M., del Re L. (eds)
+Optimization and Optimal Control in Automotive Systems. Lecture Notes in Control
+and Information Sciences, vol. 455, Springer, Cham.
+48Control Strategies for Autonomous Vehicles
+Babu, M., Theerthala, R.R., Singh, A.K., Baladhurgesh B.P., Gopalakrishnan, B., and Kr-
+ishna, K.M. (2019). Model Predictive Control for Autonomous Driving considering Ac-
+tuator Dynamics. American Control Conference (ACC) , Philadelphia, pp. 1983–1989.
+Obayashi, M., and Takano, G. (2018). Real-Time Autonomous Car Motion Planning using
+NMPC with Approximated Problem Considering Traﬃc Environment. 6th IFAC Con-
+ference on Nonlinear Model Predictive Control NMPC , IFAC-PapersOnLine, vol. 51,
+no. 20, pp. 279–286.
+Tampuu, A., Semikin, M., Muhammad, N., Fishman, D., and Matiisen, T. (2020).
+A Survey of End-to-End Driving: Architectures and Training Methods. Preprint ,
+arXiv:2003.06404.
+Pomerleau, D. (1989). ALVINN: An Autonomous Land Vehicle In a Neural Network. Pro-
+ceedings of Advances in Neural Information Processing Systems 1 , pp. 305–313.
+LeCun, Y., Muller, U., Ben, J., Cosatto, E., and Flepp, B. (2005). Oﬀ-Road Obstacle Avoid-
+ance through End-to-End Learning. Advances in Neural Information Processing Sys-
+tems, pp. 739–746.
+Bojarski, M., Testa, D.D., Dworakowski, D., Firner, B., Flepp, B., Goyal, P., Jackel, L.D.,
+Monfort, M., Muller, U., Zhang, J., Zhang, X., Zhao, J., and Zieba, K. (2016). End to
+End Learning for Self-Driving Cars. Preprint , arXiv:1604.07316.
+Samak, T.V., Samak, C.V., and Kandhasamy, S. (2020). Robust Behavioral Cloning for Au-
+tonomous Vehicles using End-to-End Imitation Learning. Preprint , arXiv:2010.04767.
+Li, D., Zhao, D., Zhang, Q., and Chen, Y. (2019). Reinforcement Learning and Deep Learn-
+ing Based Lateral Control for Autonomous Driving [Application Notes]. IEEE Com-
+putational Intelligence Magazine , vol. 14, no. 2, pp. 83–98.
+Riedmiller, M., Montemerlo, M., and Dahlkamp, H. (2007). Learning to Drive a Real Car in
+20 Minutes. Frontiers in the Convergence of Bioscience and Information Technologies ,
+Jeju City, pp. 645–650.
+Kendall, A., Hawke, J., Janz, D., Mazur, P., Reda, D., Allen, J.M., Lam, V.D., Bewley, A.,
+and Shah, A. (2018). Learning to Drive in a Day. Preprint , arXiv:1807.00412.
+Kabzan, J., Hewing, L., Liniger, A., and Zeilinger, M.N. (2019). Learning-Based Model
+Predictive Control for Autonomous Racing. IEEE Robotics and Automation Letters ,
+vol. 4, no. 4, pp. 3363–3370.
+Rosolia, U., and Borrelli, F. (2020). Learning How to Autonomously Race a Car: A Predictive
+Control Approach. IEEE Transactions on Control Systems Technology , vol. 28, no. 6,
+pp. 2713–2719.
+Drews, P., Williams, G., Goldfain, B., Theodorou, E.A., and Rehg, J.M. (2018). Vision-Based
+High Speed Driving with a Deep Dynamic Observer. Preprint , arXiv:1812.02071.

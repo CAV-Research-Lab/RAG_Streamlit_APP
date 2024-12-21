@@ -1,0 +1,1288 @@
+=== Metadata ===
+{
+    "file_name": "Self-driving and coope- rative cars.pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Self-driving and coope- rative cars.pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+1
+E-book: Self-driving and cooperative carsKapitelname
+Opportunities for safe, 
+efficient, and sustainable 
+mobility for everyone
+Perspectives, need for action and regulationSelf-driving 
+and coope-
+rative carsE-BOOK
+2
+E-book: Self-driving and cooperative cars
+The Author  .............................................................................................................  3
+IKEM Introduction ..................................................................................................  4
+Introduction: Science-fiction meets the road ....................................................... 5
+ How have self-driving and cooperative cars developed in the past few years? ...................... 6
+ Current situation: Autonomous driving today  .................................................................................... 7
+Background: What are vehicles with self-driving mode? ...................................... 9
+ Autonomous means independent of a driver  ..................................................................................11
+ The level of automation doesn’t reveal everything .........................................................................12
+ Humans continue to take over responsibility in the system ........................................................15
+ The technologies behind the autonomy  ...........................................................................................17
+ Cooperative driving: From vehicle system to integrated overall system? ...............................25
+ Manual, automated, and self-driving mode. What does this mean? ........................................29
+ Self-driving mode needs its own regulations ..................................................................................36
+The Goal: More sustainable, safer, and efficient mobility for all ......................... 39
+ Opportunities for traffic and the job market  ......................................................................................40
+ The opportunities for sustainability  .....................................................................................................45
+ The risks of data misuse and access opportunities ......................................................................49
+In Conclusion: A new mobility landscape? .......................................................... 50
+ Outlook for private transport  ..................................................................................................................52
+ Prospects for commercial vehicles and company transport  .......................................................53T able of content
+3
+E-book: Self-driving and cooperative carsNext chapter  
+The Author
+Assessor jur. Matthias Hartwig is a fully qualified 
+lawyer and has been a scientific advisor to the 
+Institute for Climate Protection, Energy and 
+Mobility (IKEM) since 2011. Leading the Mobility 
+T eam since 2014, he also deals with the legal 
+issues surrounding mobility. These include the 
+following areas:
+• Energy industry, road, and traffic law
+• Planning law
+• Incentive and funding models in the area of 
+mobility
+• Business legal framework for mobility (in 
+particular state aid, procurement, and antitrust 
+law)
+Along with his team, he researches a variety 
+of projects relating to the legal, economic, and 
+social issues revolving around motor vehicles 
+with automated or autonomous driving features:
+ www.ikem.de/en/team/matthias-hartwig
+
+4
+E-book: Self-driving and cooperative carsIKEM Introduction
+The Institute for Climate Protection, Energy and Mobility 
+(IKEM) is an independent, non-profit association and 
+affiliated institute of the Universität Greifswald. The 
+IKEM researches key scientific issues that focus on 
+implementing a sustainable and social order whilst 
+using an interdisciplinary and integrative international 
+perspective. IKEM’s central research topics include: 
+• Expansion of renewable energy sources
+• Energy grids that are fit for the future
+• Electromobility
+• Digitalization, automation, and the networking of 
+transport 
+• Related traffic and mobility issues
+• Implementation of climate protection goals
+• Basic issues of energy supply, planning, resource 
+conservation, and efficiency
+You can find an overview of IKEM’s projects, partners, and 
+publications at:
+ 
+ www.ikem.de/enNext chapter  
+
+5
+E-book: Self-driving and cooperative carsIntroduction:
+Science-fiction meets 
+the road
+Next chapter  
+
+6
+E-book: Self-driving and cooperative carsIntroduction: Science-fiction meets the road
+How have self-driving 
+and cooperative cars 
+developed in the past few 
+years?
+Do you think of robotic cars as a science-fiction topic? 
+Just a few years ago, many experts would have agreed 
+with you. However, times are changing. In 2004, the US 
+Defense Advanced Research Projects Agency (DARPA) 
+held its first competition in the Mojave Desert. The goal? 
+For participants to develop a car with self-driving modes. 
+The aim was to cover 150 miles within ten hours using a 
+self-driving vehicle control system. The most successful 
+vehicle only managed about 7,3 miles.
+Since approximately 2011, several American technology 
+companies have announced that their self-driving vehicles 
+are nearing market maturity. These companies claimed 
+that their vehicles successfully covered hundreds of 
+thousands of test kilometers with only minor interventions 
+from test drivers. Quite an achievement when compared 
+to the short 7.3 miles achieved in the Mojave Desert 
+just seven years prior. But where are the self-driving cars 
+today?Next chapter  
+
+7
+E-book: Self-driving and cooperative carsIntroduction: Science-fiction meets the road
+Current situation: 
+Autonomous driving today
+Although these announcements may have been 
+considered hasty and exaggerated in retrospect, these 
+companies gave the market an important boost. Cars with 
+self-driving mode (also known as autonomous vehicles, 
+robot cars, driverless, or self-driving motor vehicles) 
+have since made their way to the forefront of mobility 
+research and are respectively hyped up by the media. For 
+a while there was some discussion predicting that robot 
+cars would replace conventional cars and although this 
+may be the case in the future, the excitement has since 
+subsided somewhat and has given way to a more realistic 
+view for today’s world.
+T oday, useful applications are already emerging leading to 
+the self-driving cars being able to handle a fair amount of 
+traffic situations on their own. However, almost all experts 
+agree that long-term human support will be needed in 
+certain traffic situations, as well as in vehicle maintenance 
+and monitoring. In addition, self-driving mode cannot be 
+used in all circumstances.
+Next chapter  
+
+8
+E-book: Self-driving and cooperative carsIntroduction: Science-fiction meets the road
+Matthias Hartwig “Mixed traffic, in which vehicles of different 
+levels of automation, cyclists, and 
+pedestrians participate side by side, will 
+continue to exist.”
+If you think of cars with self-driving mode as science-fic-
+tion, you’ll be surprised to find out:
+• Where this technology stands today
+• Why vehicles with self-driving mode will be soon be 
+used on the road
+• Why we can make good use of them (as they can 
+contribute to sustainable, efficient mobility and 
+contribute to road safety)
+• What remains to be done on the road in order to 
+achieve sustainable, safe, and efficient mobility for 
+vehicles with self-driving mode.Next chapter  
+
+9
+E-book: Self-driving and cooperative carsBackground:
+What are vehicles with 
+self-driving mode?
+Next chapter  
+
+10
+E-book: Self-driving and cooperative carsOnce cars with self-driving mode are actively on 
+the road amongst our everyday traffic, there will 
+no longer be a need for the conventional manual 
+drivers that we have today. Why? During the 
+driverless ride there is no need for the passenger 
+to be responsible for the constant monitoring of 
+traffic or vehicle control elements in general. This 
+is because the vehicle follows a program made 
+by a human but controlled from outside of the 
+vehicle by an attendant who takes on some of the 
+functions and responsibilities that beforehand 
+lay with the driver. T echnical tasks can also be 
+performed via digital environment systems that 
+then form an integrated overall system with the 
+vehicle. The Society of Automotive Engineers (SAE 
+International) prefers the definition “cooperative 
+driving” for cars dependent on communication and/
+or cooperation with outside entities such as those 
+described above. In other words, we (humans) 
+can set vehicles self-driving mode into motion 
+and thus have overall control of the vehicle, at 
+least by issuing commands that the vehicle then 
+automatically implements.
+A person can also take the vehicle out of traffic at any time. 
+It is also important and necessary that we humans perform 
+various functions in the maintenance and monitoring of 
+the vehicle as well as being an accompaniment to the 
+vehicle itself. Which functions and responsibilities lie within 
+the vehicle system or the digital surrounding environment 
+system and which lie with us as humans can differ greatly 
+from system to system.Background: What are vehicles with self-driving mode? Next chapter  
+
+11
+E-book: Self-driving and cooperative carsKapitelnameAutonomous means 
+independent of a driver
+Autonomous doesn’t mean self-governing, but rather 
+self-sufficient and independent of a driver. The term 
+“autonomous” can be translated from Greek as either 
+“self-governing” or “self-sufficient.” Vehicles with self-
+driving mode do not drive in a “self-governing” fashion 
+when in self-driving mode. They are directed by a code 
+that programmers use to pre-determine the vehicle’s 
+response. The program – and not the driver – thus 
+determines the reaction of the vehicle in self-driving 
+mode. Therefore, a more accurate translation would be 
+“self-sufficient” in the sense that in most traffic situations 
+the vehicle operates independently of human intervention 
+and a driver does not need to constantly monitor or 
+take over the system. This does not rule out a human 
+switching off self-driving mode and then controlling the 
+vehicle manually.
+
+12
+E-book: Self-driving and cooperative cars
+Background: What are vehicles with self-driving mode?
+Levels of automation facilitate the classification of automatic driving modes 
+of the vehicles. In order to assess their functions, however, a closer look at the 
+different systems is required.
+Automated vehicles have different levels of automation. The differentiation into these 
+stages allows for a better understanding and paves way for the possibility of discussion of 
+these vehicles. Internationally, the Society of Automotive Engineers (SAE) classifies road 
+vehicles into six automation levels (SAE level 0-5).1The level of automation 
+doesn’t reveal everything
+5
+4
+3
+2
+1
+0
+Full Automation
+High Automation
+Conditional Automation
+Partial Automation
+No AutomationDriver Assistance
+Next chapter  
+
+13
+E-book: Self-driving and cooperative carsBackground: What are vehicles with self-driving mode?
+Autonomous vehicles (full automation) or vehicles with SAE level 5 would, according to 
+this definition, be vehicles that are operated full-time by an automated driving system 
+without any interference from a human driver. 
+Likewise, it is proving to be extremely difficult for current research projects to precisely 
+classify vehicles designated as “autonomous” into SAE levels 3-5. Not just in research 
+projects but also in everyday language and, for example, in the legal definitions of some 
+American States. Therefore, the term “autonomous vehicle” is much broader. This text will 
+discuss “motor vehicles with self-driving mode.”Matthias Hartwig “Such vehicles will not exist for at least the 
+next 20 years.” Next chapter  
+
+14
+E-book: Self-driving and cooperative carsSelf-driving mode is essentially dynamic driving 
+in specific roadway and environmental conditions 
+without human intervention. It can only be activated 
+if the basic conditions are right. 
+Using the SAE levels, motor vehicles with 
+self-driving mode in this context would best be 
+classified as Level 4 (high automation). When 
+self-driving mode is active, all aspects of the 
+dynamic driving task under authorized roadway 
+and environmental conditions are managed 
+autonomously (self-sufficiently) by the vehicle. 
+If the vehicle stays within its intended range of 
+operation, no driver will be necessary. However, they 
+cannot work independently “under all roadway and 
+environmental conditions” as demanded by SAE 
+Level 5. Hence the self-driving mode will be limited 
+to specific roadway and environmental conditions 
+and might depend on communication and/or 
+cooperation with outside entities (for this, SAE 
+suggested the definition of a cooperative rather 
+than an autonomous vehicle). The system might 
+even need to be monitored from outside the vehicle 
+and with human technical back up in exceptional 
+situations.What is self-driving mode?Background: What are vehicles with self-driving mode? Next chapter  
+
+15
+E-book: Self-driving and cooperative carsBackground: What are vehicles with self-driving mode?
+Humans continue to take 
+over responsibility in the 
+system
+Although self-driving mode can replace the driver 
+after its activation, it cannot replace all humans in 
+the system.
+If there is no driver for a vehicle, humans in other functions 
+take on some of the responsibility instead. In recent 
+research projects – and everyday language – vehicles 
+referred to as “autonomous” often have a safety driver 
+who intervenes in critical situations. In these vehicles, 
+self-driving mode is still under development. The 
+consequence of this is that the driver of such vehicles 
+has more responsibility than a conventional driver. The 
+authorities that mandate the piloting companies require 
+such vehicles to have a fully attentive licensed driver 
+with special training behind the wheel at all times. For 
+example, when issuing a “T esting Permit,” the New York 
+State Department of Motor Vehicles states that “A person 
+holding a valid driver license must be in the driver’s seat 
+while a vehicle is operated on public highways.Next chapter  
+
+16
+E-book: Self-driving and cooperative carsBackground: What are vehicles with self-driving mode?
+That person must be prepared to take control when 
+required to in order to operate the vehicle safely and 
+lawfully. Every test vehicle operator must be adequately 
+trained in the safe operation of the test vehicle to ensure 
+both legal and safe operation.”2 In the US, there is no 
+vehicle currently available for sale that is self-driving.3 
+Even if in the future, with no drivers in the vehicle and the 
+authorities not actively requiring one, there will be some 
+sort of supervising vehicle attendant inside or outside 
+of the vehicle. At the same time, the monitoring and 
+maintenance staff at depots and in operating centers 
+(or control centers) can play an important role. For a 
+long time to come, those responsible – either inside 
+or outside the vehicle – must be available to perform 
+safety checks on the vehicle before start-up, to activate 
+and deactivate the self-driving mode, and to guarantee 
+reliable functioning while it’s in operation. In exceptional 
+cases, it may even be necessary for an “emergency 
+driver” to take over operation on-site or remotely. 
+Furthermore, the authorities expect the applicant for 
+a vehicle permit to “submit with this application a law 
+enforcement interaction plan to inform law enforcement 
+officers and first responders how to safely interact with 
+the […] vehicle(s) in emergency and traffic enforcement 
+situations.”4Next chapter  
+
+17
+E-book: Self-driving and cooperative carsKapitelnameThe technologies behind 
+the autonomy
+For a vehicle to move without driver intervention, it must 
+itself have a sufficient wealth of information. In order 
+to obtain this information and to provide this relevant 
+information to the vehicle, various technical developments 
+outside the vehicle are required. The following table gives 
+an overview of the technology that enables self-driving 
+mode, making it easier to understand what these vehicles 
+can do. 
+
+18
+E-book: Self-driving and cooperative carsDriving order: The 
+vehicle must “know” 
+which destination it is 
+expected to drive to.• A human always determines the driving order. The 
+vehicle cannot decide “autonomously” where it 
+is going, the human must input the destination 
+themselves in some form or another (e.g. “Drive to the 
+next charging station”).
+• The digitalization of communication can help here, for 
+example, apps and smartphones.Background: What are vehicles with self-driving mode?
+Information T echnologies
+Most of today’s transport positioning systems use the 
+satellite-based Global Positioning System (GPS).  
+GPS guarantees accuracy of positioning with deviations 
+below eight meters. For self-driving mode, deviations of less 
+than 5 cm may be required. This can be guaranteed by:
+• Differential Global Positioning System (DGPS): 
+Reference stations on the earth eliminate GPS 
+inaccuracies.
+• Landmark and marker orientation: If the system 
+uses its sensors (camera) to recognize prominent 
+landmarks whose position is stored in the system; they 
+can position themselves with them. Road markings 
+(center line) are also gathered to aid orientation.Self-positioning: The 
+vehicle must “know” 
+where it’s located.Next chapter  
+
+19
+E-book: Self-driving and cooperative carsInformation T echnologiesBackground: What are vehicles with self-driving mode?
+Self-status detection: 
+The vehicle must know a 
+lot about its own status: 
+Functioning of important 
+systems, direction of 
+travel, speed, door closing, 
+indoor and outdoor 
+temperature, etc.Many different sensors provide this information: 
+Odometers, rotation rate sensors on the wheels, 
+gyrocompass, tire pressure sensors, door opening 
+sensors, thermometer, etc.• “Virtual Rail” with Radio Frequency 
+Identification (RFID) or other processes: Small 
+chips or other electronic orientation aids are applied 
+in or on the road or in the road environment, which 
+corresponding transmitter-receiver systems can detect 
+electromagnetically to use for self-positioning.
+• If the speed and direction of travel of the vehicle are 
+known due to vehicle data, a position change can be 
+calculated.Next chapter  
+Self-positioning: The 
+vehicle must “know” 
+where it’s located.
+20
+E-book: Self-driving and cooperative carsFrom static geodata (map data), to static traffic elements 
+(traffic signs, construction sites), to traffic light signals, the 
+position of fog banks, traffic congestion, individual cars, 
+bicycles, and pedestrians, a motor vehicle with self-driving 
+mode must have an accurate picture of its surroundings. 
+A “Local Dynamic Map” (LDM) stores the required 
+data in the vehicle. Static information (e.g. map data) can 
+be stored in the LDM in advance and compared with the 
+actual environment in test runs on the intended route. 
+However, data fed in this way requires constant updating. 
+The LDM may obtain data from sensors on the vehicle 
+itself or from sensors or digital services outside the vehicle. 
+(
+ Illustration).
+• T o satisfy the high demand for data, the vehicle must 
+be networked with its environment. The following 
+serve as communication:
+• Mobile communications:  The large amounts 
+of data can be handled better with a high mobile 
+standard. The currently much-discussed 5G mobile 
+standard seems particularly suitable here given its 
+high data transmission rates, real-time transmission, 
+and low latency.
+• Wi-Fi: A wireless local area network (Wi-Fi) is being 
+built by wireless modules on streetlights and sign 
+gantries to improve communication.Information T echnologiesBackground: What are vehicles with self-driving mode? Next chapter  
+Roadway and envi-
+ronmental conditions: 
+The vehicle must “know” 
+how to reach its desti-
+nation the fastest and 
+safest way.
+Traffic situation: The 
+vehicle needs the exact 
+position of buildings and 
+other fixed obstacles, 
+the current position, the 
+outline, the speed, and 
+the direction of move-
+ment of all road users in 
+the area (cars, bicycles, 
+pedestrians), traffic signs, 
+traffic lights, etc. Only 
+with a precise picture of 
+the traffic situation can 
+it also take into account 
+all traffic regulations and 
+avoid the endangerment 
+of other road users.
+21
+E-book: Self-driving and cooperative carsBackground: What are vehicles with self-driving mode?
+• Sensors in the vehicle or on the roadside detect the 
+traffic environment and situation:
+• Digital camera: Cameras capture the environment 
+optically, but may not detect everything (e.g. in 
+darkness, fog, or backlight).
+• Laser scanner/LIDAR: The distance and speed 
+of objects can be measured by using many laser 
+beams. This allows for the creation of an accurate 
+picture of the environment.
+• Radar and ultrasound sensors: Additional 
+directional and distance measurement technologies 
+complement the range of perception of other 
+sensors and provide redundancy so that nothing is 
+overlooked.
+• Sensor data consolidation and evaluation: 
+Different sensors and the images they have created 
+and the data they collected have various advantages 
+and disadvantages. Computers can use it to calculate 
+a coherent picture that detects traffic much better than 
+just one sensor.
+• Regional digital map:  Geodata and dynamic 
+traffic data can be merged and refined in a vehicle-
+independent digital map. This data can be used by the 
+vehicle.Information T echnologiesNext chapter  
+Roadway and envi-
+ronmental conditions: 
+The vehicle must “know” 
+how to reach its desti-
+nation the fastest and 
+safest way.
+Traffic situation: The 
+vehicle needs the exact 
+position of buildings and 
+other fixed obstacles, 
+the current position, the 
+outline, the speed, and 
+the direction of move-
+ment of all road users in 
+the area (cars, bicycles, 
+pedestrians), traffic signs, 
+traffic lights, etc. Only 
+with a precise picture of 
+the traffic situation can 
+it also take into account 
+all traffic regulations and 
+avoid the endangerment 
+of other road users.
+22
+E-book: Self-driving and cooperative carsBackground: What are vehicles with self-driving mode?
+Information T echnologies
+• Sensor data from other vehicles (Vehicle-to-Vehicle 
+Communication, V2V) can also be used, for example 
+to supplement a regional digital map (e.g. traffic 
+congestion information from other vehicles).
+• Digital traffic signs: A camera cannot detect with 
+sufficient reliability whether a traffic light is green or red. 
+A digital radio signal from the traffic light can provide 
+clarity in this case.
+• Control technology: Brings together a large amount 
+of data contained in an operator center in order to 
+be able to centrally monitor and maintain the vehicle 
+and infrastructure and coordinate the necessary 
+interventions from outside.Next chapter  
+Roadway and envi-
+ronmental conditions: 
+The vehicle must “know” 
+how to reach its desti-
+nation the fastest and 
+safest way.
+Traffic situation: The 
+vehicle needs the exact 
+position of buildings and 
+other fixed obstacles, 
+the current position, the 
+outline, the speed, and 
+the direction of move-
+ment of all road users in 
+the area (cars, bicycles, 
+pedestrians), traffic signs, 
+traffic lights, etc. Only 
+with a precise picture of 
+the traffic situation can 
+it also take into account 
+all traffic regulations and 
+avoid the endangerment 
+of other road users.
+23
+E-book: Self-driving and cooperative carsBackground: What are vehicles with self-driving mode?
+Vehicle
+Pedestrians
+Ego vehicle
+Slippery road
+Signal phase
+T raffic congestion
+Landmarks
+T raffic sign
+Map Type 1Type 2Type 3Type 4
+Type 1: Permanent static data (map data) 
+Type 2: T ransistent static data (roadside infrastructure)
+Type 3: T ransient dynamic data (congestion, signal phase) 
+Type 4: Highly dinamic data (vehicles pedestrians)Example of a “Local Dynamic Map”Next chapter  
+
+24
+E-book: Self-driving and cooperative carsBackground: What are vehicles with self-driving mode?
+Powerful computer programs and artificial intelligence
+These processes are often used in image recognition and image analysis. For example, 
+if a computer program has already analyzed tens of thousands of images of different 
+models of cars, it will be able to identify a car as such even if it has not “seen” the specific 
+model before. Accordingly, if the computer program has analyzed many vehicles turns, 
+it can predict the course of a turning vehicle with certain probabilities. This ability is very 
+important for self-driving mode since the systems are better able to navigate in unknown 
+surroundings and constellations. Independent and ethically thought-out decisions, 
+comparable to those of a human being, cannot be made by such systems. Therefore, the 
+term “artificial intelligence” may give rise to partially exaggerated expectations.Artificial intelligence describes the ability of a 
+computer program to extract logical correlations from 
+large amounts of information (pattern analysis and 
+pattern recognition) to draw conclusions according to 
+certain rules (i.e. predicting patterns).What does artificial intelligence mean?In particular, the merging and evaluation of sensor data requires the use of powerful 
+computers and complex programs. In this case, artificial intelligence can also be used.Next chapter  
+
+25
+E-book: Self-driving and cooperative carsKapitelnameThe self-driving vehicle system of a car with self-driving mode may, in certain 
+circumstances, rely on digital surrounding environment systems (cooperative automation).5 
+From a technical point of view, the vehicle system with digital surrounding environment 
+systems can also be considered as an integrated overall system. This overall system 
+must meet certain requirements to ensure optimum results for traffic safety and traffic 
+flow. Autonomous driving (SAE: cooperative driving) requires a change of focus from the 
+vehicle to an overall system because it will only achieve adequate performance in various 
+traffic situations in close cooperation with digital surrounding environment systems. For 
+example, when driving through traffic lights at a complicated intersection on-road sensors 
+and digital signals from the traffic lights themselves would be needed at a red light to 
+ensure safety and accuracy.
+We are accustomed to associating cars almost as a uniform or a distinct tool used by a 
+driver. This distinction is common to all traffic and vehicle safety regulations in every country. 
+In the US the National T raffic and Motor Vehicle Safety Act6 regulates motor vehicle safety 
+and mandates the application of the Federal motor vehicle standards7 regarding design, 
+construction and performance of all motor vehicles.8
+Cooperative driving: From vehicle system 
+to integrated overall system?
+26
+E-book: Self-driving and cooperative carsThen again the rules of the road are regulated by the Federal States and address the driver 
+only, who must control his tool and is responsible for every action of the vehicle itself. If 
+the driver in the vehicle becomes just a passenger, this division can no longer work. Car 
+manufacturers must comply with Federal Motor Vehicle Safety Standards and certify that 
+their vehicle well aligned with safety features to avoid risks under all circumstances and in 
+all driving modes. For motor vehicles with autonomous motion functions this includes to 
+ensure that they operate in compliance with the rules of the road.9 
+The concept of the vehicle as a definable tool must also be questioned. Whether a vehicle 
+with self-driving mode can handle its driving task safely and smoothly will increasingly 
+depend on information originating from various digital surrounding environment systems 
+(digital traffic signs, regional digital map, roadside sensors, etc.) (cooperative driving 
+systems). The vehicle drives based upon its own digital map, which it continuously updates 
+with the help of information from outside. The vehicle is not always able to decide on its 
+own whether this data is reliable or not. It has to rely in part on the surrounding environment 
+system. The U.S. Department of T ransportation states that cooperative automation will 
+be “an important complementary technology that is expected to enhance the benefits of 
+automation at all levels, but should not be and realistically cannot be a precondition to the 
+deployment of automated vehicles.”10Background: What are vehicles with self-driving mode? Next chapter  
+“I think that SAE Level 5 will remain a 
+dream for quite a long time, but SAE Level 
+4 Technology V2V and V2X will be very 
+beneficial and more important than what 
+the current discussion implies for the 
+majority of valuable use cases.”
+Matthias Hartwig 
+27
+E-book: Self-driving and cooperative cars• A vehicle cannot detect a conventional traffic light with a 
+camera with enough reliability. 
+• It can only drive quickly at an intersection if it gets a digital 
+traffic signal. 
+• However, this signal only has an added value if the traffic 
+light operator guarantees its reliability. 
+• The vehicle is thus increasingly cooperative with digital 
+surrounding environment systems.Traffic light example
+Parking garage example
+• A parking garage designed for self-driving valet parking 
+could soon be possible using comprehensive data where 
+cameras and other sensors detect free parking spaces, 
+vehicles, and pedestrians into a dynamic traffic map 
+(technical surrounding environment system).
+• Navigating becomes very easy for the motor vehicle in 
+self-driving mode here. However, it must be able to rely 
+on the given information. Not only does the vehicle have 
+to be safe, but the vehicle and surrounding environment 
+system must form a secure overall system to prevent 
+accidents together.
+• At a certain point, the question arises as to who is actually 
+in control of the vehicle – the vehicle or the parking 
+garage.Background: What are vehicles with self-driving mode? Next chapter  
+
+28
+E-book: Self-driving and cooperative carsThe vehicle and the surrounding environment system would technically form an overall 
+system. Only if this overall system is safe and provides enough valid data for navigation will 
+the vehicle be able to safely navigate and run smoothly through traffic. In order to ensure 
+the identifiability of those responsible, there must be continual legal areas of responsibility. 
+As a result, in the future it is likely that there will be system administrators for the vehicle 
+whom will monitor the various digital surrounding environment systems. T echnically, a 
+single system in isolation would often lead to a dead end as the required amount of safety 
+precautions along with the monitoring of traffic flow can only be provided when there is 
+an interaction of all components. Some expect this to result in a system approval process 
+with very complex verification processes and accountability obligations. The emerging 
+regulatory challenges are closely connected to the regulation of Vehicle-to-Vehicle (V2V) 
+and Vehicle-to-Infrastructure communication (V2X). No country has presented a regulatory 
+approach for this technology as of yet. Car manufacturers have to petition for legislation as 
+they can’t guarantee the safety of the integrated overall system on their own, while their 
+vehicle is only a subsystem.Background: What are vehicles with self-driving mode?
+ Next chapter  
+
+29
+E-book: Self-driving and cooperative carsUntil Nevada authorized the operation of autonomous vehicles and endorsed a driver 
+license for operators of autonomous vehicles, all traffic regulations in the US only referred 
+to manual driving. It was never referred to as anything else, because until recently it 
+was obvious that an alert driver would have to steer the vehicle at all times. Some driver 
+assistance systems had already been regulated under the Federal Motor Vehicle Safety 
+Standards (FMVSS), since from a regulatory perspective a driver assistance system 
+doesn’t change the customary distribution of tasks between the human driver and the 
+technical system. The driver remains responsible for driving the vehicle in every situation. 
+They must observe traffic at all times and maintain control of the vehicle.While a variety of terms are used to describe automated vehicles and their 
+driving modes, many experts and legislations identify three: manual driving, 
+automated driving (sometimes called autonomous driving), and self-driving 
+(sometimes called fully autonomous). These are 3 different driving modes with 
+different regulatory and technical requirements. In this case, a single motor 
+vehicle can have both a manual, an automated, and a self-driving mode.Manual, automated, and self-driving mode. 
+What does this mean?
+Manual driving modeBackground: What are vehicles with self-driving mode? Next chapter  
+
+30
+E-book: Self-driving and cooperative carsSince 2011 legislation and executive orders have 
+regulated the operation of automated vehicles on public 
+roads in 41 States. Not only the first bill in Nevada, but 
+all regulation requires a licensed and specially trained 
+driver to be present in the vehicle, to monitor the vehicle 
+and the traffic, and to be ready to take over control of the 
+vehicle if necessary at all times. This driver still has the 
+responsibility of a conventional driver and must comply 
+or guarantee compliance with all rules of the road and 
+traffic regulations, even during the automated journey. 
+If the driver notices that his vehicle in the automatic 
+driving mode violates regulations of the rules of the road 
+and traffic regulations, they must deactivate the system 
+and take over control. The system must independently 
+register relevant deviations and then prompt the driver 
+to deactivate the system. The greatest challenge for the 
+developers of such vehicles is therefore to permanently 
+maintain and control the attention of the driver, as it is 
+still essential to the system. In aviation automation the 
+demands are even higher with it being mandatory to have 
+two piolets present in each airliner. In both pilots monitor 
+each other respectively. A corresponding development for 
+motorized, private transport on the road, however, is ruled 
+out. The freedom of Americans to drive their own vehicles 
+by obtaining a driver license should not be further limited 
+due to excessive skill or intellectual requirements. Even 
+today, for some it is not easy to obtain a driver’s license, 
+this problem should not be exacerbated by automation.Background: What are vehicles with self-driving mode?
+Automated driving modeNext chapter  
+
+31
+E-book: Self-driving and cooperative cars
+Background: What are vehicles with self-driving mode? Next chapter  
+Private transport usually means one person using a 
+means of transport. Unlike public transit, this person 
+determines the time period, the route, and the 
+destination themselves. The most classic means of 
+motorized private transport is the car.What is private transport?
+32
+E-book: Self-driving and cooperative carsBackground: What are vehicles with self-driving mode? Next chapter  
+There is no legal framework for the use of motor vehicles with self-driving mode on public 
+roads. “Every vehicle currently for sale in the United States requires the full attention of 
+the driver at all times for safe operation.”11 Under the current FMVSS, no self-driving 
+mode can be introduced according to any interpretation of the rules and exemptions 
+from existing standards. The National Highway T raffic Safety Administration (NHTSA) can 
+provide exemptions from existing standards, but only for limited exceptions in obligation 
+to comply with the FMVSS.12 The FMVSS do not apply to motor vehicles “solely for 
+purposes of testing or evaluation by a manufacturer that agrees not to sell or offer for sale 
+the motor vehicle at the conclusion of the testing or evaluation.“ However, testing vehicles 
+on public roads under this special condition leaves the manufacturer with an uncalculated 
+risk of liability and doesn’t contribute to the development of proper legal framework for 
+vehicles with self-diving mode. Therefore, the U.S. Department of T ransportation has 
+promised while prioritizing safety to “modernize or eliminate outdated regulation that 
+unnecessarily impede the development of automated vehicles or that do not address 
+critical safety needs.”13 Having said this, a clear commitment to regulate vehicles with 
+self-driving mode does not exist, because this would mean a paradigm shift in transport 
+regulation. The driver may no longer be considered in the development of such a self-
+driving mode. They are instead responsible for monitoring the system and assuming a 
+fallback responsibility.
+This circumstance requires a completely different system architecture of the vehicle. In 
+self-driving mode, the vehicle must be able to solve all standard traffic situations it may 
+encounter on its own. If the subsystem were to fail or in other exceptional situations, the 
+vehicle must remain able to steer into safety (for example, to safely stop on the roadside). 
+Human intervention may be necessary in clearly defined cases such as:
+• During maintenance
+• During activation
+• In extraordinary traffic situations
+• In exceptional situations
+• After deliberate deactivation of self-driving mode by a personSelf-driving mode
+33
+E-book: Self-driving and cooperative cars“The developers of such vehicles must 
+ultimately consider – and to a certain 
+extent anticipate during development – 
+any possible traffic situations that may 
+require additional help.”Background: What are vehicles with self-driving mode?
+Matthias Hartwig Next chapter  
+However, the vehicle must be designed so that a certain amount of time can elapse 
+before the human helper takes action and it must not become a traffic obstacle during this 
+waiting period.
+The local limitation in the field of application plus the careful selection and design of 
+the route can limit this complexity. For example, if a shuttle for a regular service is being 
+developed by a local transport operator in a small residential area in a 30 MPH zone, a 
+very detailed digital map can be maintained for this area, into which all traffic signs and 
+regulations have already been entered in. If for example it is found that the vehicle is not 
+able to overtake garbage trucks for some reason, the vehicle simple does not operate at 
+the times during which garbage is picked up in the residential area. Alternatively, it can 
+contact an operator center in time to authorize uncommon maneuvers. Such situations 
+can be easily anticipated and planned for in a small-scale area. If the vehicle should 
+nevertheless get into an unpredictable traffic situation, it can drive to the side of the road 
+and wait for employees from the operator center to arrive.
+34
+E-book: Self-driving and cooperative carsIn just a few years, there will be vehicles that can 
+be controlled manually by a driver as well as having 
+automated and self-driving modes.
+Example: BMW 3 Series with various driving 
+modes 
+A BMW 3 Series with parking, traffic jam assist, and 
+cruise control is already state-of-the-art. In a few years, 
+additional assistance functions provided by the vehicle will 
+be highly reliable even at higher speeds and there may 
+even be talk of a highway assistant. Intervention by the 
+driver would only be required in certain circumstances. 
+The driver remains part of the system but is adequately 
+guided to a necessary intervention (automatic driving 
+mode). At the same time, however, it will still be possible 
+for the driver to take over control of the vehicle, with only 
+the driver and emergency assistance functions remaining 
+active (manual driving mode). 
+Furthermore, it is quite realistic that the parking assistant 
+is then capable of so-called autonomous valet parking. 
+The BMW 3 Series may be able to park itself – if the 
+respective parking garage support this function. If both 
+the vehicle and the parking garage offer this coordinated 
+function, the driver exits at the barrier to the parking 
+garage.Vehicles with several driving modesBackground: What are vehicles with self-driving mode? Next chapter  
+
+35
+E-book: Self-driving and cooperative cars
+Background: What are vehicles with self-driving mode? Next chapter  
+In close coordination with the parking garage’s digital 
+surrounding environment system, the vehicle takes 
+over the journey to the parking space on the third floor. 
+This self-driving mode could increasingly be used in 
+other environments over the years, so long as it offers a 
+corresponding digital surrounding environment system. 
+The prerequisite for the activation of the self-driving mode 
+will always be that the surrounding environment system is 
+compatible, the vehicle is active and functional, and that 
+the vehicle registers itself there.
+The BMW 3 Series from this example would not be a 
+manual, automated, or self-driving vehicle, but rather a 
+motor vehicle with all three driving modes incorporated. 
+In each of the three driving modes, the vehicle developers 
+and the driver must take the specific regulations into 
+account.
+36
+E-book: Self-driving and cooperative carsSelf-driving mode needs its own 
+regulations
+Manual, automated, and self-driving modes each need their own regulation. 
+While the first regulation of manual driving coincided with the introduction of 
+the first automobiles, the States started to regulate the operation of automated 
+vehicles in 2011 and the U.S. Department of Transportation (U.S. DOT) 
+published the first Federal Automated Vehicles Policy in Sept. 2016.14 NHTSA, 
+in contrast to manual and automated driving modes with self-driving mode the 
+driver is no longer the reference point for regulation. Self-driving mode is also 
+unable to simulate a human driver. Therefore, unique legal regulations based 
+on the existing traffic law and ethical standards are necessary for this driving 
+mode, but they must also take into account the technical conditions.
+The “U. S. DOT automation principals” “will interpret and […] adapt the definitions of 
+‘driver’ and ‘operator’ to recognize that such terms do not refer exclusively to a human, but 
+may in fact include an automated system.”15 This means that when in self-driving mode 
+the vehicle is the driver and needs to comply with the rules of the road in the same way 
+a human driver would. Legal regulations are always used as instructions to people who 
+interpret human laws (judges and decision-makers in business and administration). The 
+requirement that an automated system ought to simulate the human driver is formulated 
+here in an exaggerated fashion. This regulation makes sense for automated driving, 
+because in this case a driver is constantly responsible for the system and must be able to 
+take over control of the vehicle immediately in crisis situations. This driver will judge the 
+system according to whether it is reacting in traffic situations as they would themselves.Background: What are vehicles with self-driving mode? Next chapter  
+
+37
+E-book: Self-driving and cooperative carsKapitelnameHumans and machines are too different in their reaction times and in how they perceive 
+and analyze traffic situations for the application of the same set of regulations to make 
+sense in each case. Humans have an intelligence that machines cannot simulate 
+coupled with excellent image recognition and the ability to analyze situations. This is 
+complemented by intuition and the ability to independently evaluate situations in terms 
+of ethics, which machines lack. On the other hand, machines have an almost unlimited 
+information processing capacity along with multitasking capabilities, which are ultimately 
+limited only by the amount of information available to them. In terms of positive reactions, 
+humans are able to demonstrate flexibility and therefore personal responsibility yet 
+machines can react in a fraction of a second and can demonstrate superior reliability 
+(adherence to a program). Self-driving modes therefore need their own guidelines for 
+their development incorporated into the FMVSS. This must include the rules of the road 
+and traffic regulations as it reflects legitimate expectations of other road users in mixed 
+traffic. For example, self-driving vehicles should also stop at a red light, even if they have 
+reliable information that no other vehicle is driving through the intersection. Otherwise, this 
+would be a bad example. Apart from this, these regulations should be geared toward the 
+capabilities of a machine and guided by optimal results for traffic safety and traffic flow.What can humans do and what can machines do?
+
+38
+E-book: Self-driving and cooperative carsA vehicle in self-driving mode cannot be addressed 
+by any law or regulation, because they only apply 
+to humans. Therefore, the safety of the self-driving 
+strategy and reaction of the vehicle on the road must 
+become subject to the FMVSS standards. But in the 
+US, traffic is regulated by State law. This leads to the 
+question of which State law should guide the FMVSS? 
+This again shows that the rule of “self-driving vehicles 
+should follow the rules of the road” is not very practical, 
+because it would force the developers of a self-driving 
+mode to look at the traffic regulations in all the States 
+and territories in depth and (where appropriate) develop 
+different driving software for different States. The U. S. 
+DOT therefore already announced it “[u]rges States and 
+localities to work to remove barriers […] to automated 
+vehicle technologies and to support interoperability.”16 
+As for self-driving mode, it should further review the 
+rules of the road in all States and territories and develop 
+technical standards that include the most important 
+common rules whilst encouraging regulatory consistency 
+for interoperability. The States will lose some of their 
+regulative power because a vehicle in self-driving mode 
+is not and never will be a human capable of complying 
+with traffic regulations. The only chance for a common 
+technical standard and interoperability is to open up the 
+State traffic regulations that do not apply to vehicles in 
+self-driving mode and trust the U.S. DOT and NHTSA to 
+do a good job.Reviewing and modifying traffic 
+laws and regulations of the StatesBackground: What are vehicles with self-driving mode? Next chapter  
+
+39
+E-book: Self-driving and cooperative carsThe Goal: More 
+sustainable, safer, and 
+efficient mobility for all
+Motor vehicles with self-driving mode promise sustainable, safe, and efficient 
+mobility for all. If and when this promise will be fulfilled depends on various 
+factors.
+With the support of the U.S. DOT , the State governments, and the European Union, 
+not only large car companies but also many previously unknown companies new to the 
+automotive industry (e.g. big data companies) are investing billions in research into motor 
+vehicles with automated and self-driving modes and into the development of a digital 
+surrounding environment for these vehicles.Next chapter  
+
+40
+E-book: Self-driving and cooperative carsThe Goal: More sustainable, safer, and efficient mobility for all
+Opportunities for traffic and 
+the job market
+All parties involved believe that motor vehicles with self-
+driving mode can contribute to the achievement of the 
+following objectives:
+Ninety-four percent of all serious motor vehicle crashes 
+“are due to human error or choices. Fully automated 
+vehicles that can see more and act faster than human 
+drivers could greatly reduce errors, the resulting crashes, 
+and their toll.”18 Connected vehicles with automated or 
+self-driving modes can absorb and process much more 
+information in less time than a human driver and they do 
+not get tired and are never drunk. They will not miss a 
+digital traffic light and they can even look around corners 
+to reliably detect complex traffic situations at intersections 
+through roadside sensors. A majority of the sources of 
+errors that are the cause of traffic accidents today can be 
+excluded.Increasing the safety of traffic17Next chapter  
+
+41
+E-book: Self-driving and cooperative cars
+However, automatic systems can and must be designed 
+so that potential errors do not lead to life-threatening 
+injuries or illnesses, and so that new sources of errors 
+can be avoided. Motor vehicles with a self-driving mode 
+can only be certified under the FMVSS and can only 
+be registered if they avoid personal injury as much as is 
+technologically possible and thus significantly reduce 
+accidents when compared to human driving performance. 
+The first U.S. DOT principle of automation therefore 
+declares “We will prioritize safety.” Despite the very 
+technology-friendly approach of the U.S. administration, 
+the protection of the public “against all unreasonable 
+risk of accidents occurring as a result of the design, 
+construction or performance of motor vehicles”19 will 
+always be the guiding principle for the road agency. As 
+soon as vehicles with automated and self-driving modes 
+can contribute to safety, they will take on an essential 
+part of this protection strategy. Until then, high safety 
+standards will be the challenge developers have to face.The Goal: More sustainable, safer, and efficient mobility for all
+Human error and a lack of information lead to a large part 
+of traffic disruption. If available, automatic and cooperative 
+systems can incorporate an almost unlimited amount 
+of information for optimized driving and route guidance. Increasing the traffic flow and traffic 
+efficiencyNext chapter  
+
+42
+E-book: Self-driving and cooperative carsWhether motor vehicles with automated driving mode increase or inhibit the flow of 
+traffic largely depends on the abundance of geo-information and traffic information made 
+available to them, as well as the development of on-board and roadside sensors and 
+digital surrounding environment systems. A large amount of the required information is 
+already available on the Internet. Weather services can now deliver valid weather data for 
+cooperative driving. However, this validation remains a big challenge for map and traffic 
+data all the way down to digital traffic lights. In addition, the roadside sensors for detecting 
+the traffic and the parking situation (data-saving example, by radar and LIDAR) are not free, 
+but promise a big increase in traffic efficiency in conventional parking spot searches. In 
+research projects, for example, cities and municipalities are beginning to recognize new 
+duties and design possibilities. In cooperation with private data companies, they could 
+issue regional dynamic maps complemented by digital mobility platforms for their region, 
+offering validated map data with information about traffic regulations, construction sites, 
+enrich dynamic traffic data, and make it available for automated and self-driving modes as 
+well as cooperative driving. This is an optimistic vision of the future, but with some political 
+will it is certainly feasible.
+The Goal: More sustainable, safer, and efficient mobility for all Next chapter  
+
+43
+E-book: Self-driving and cooperative carsThe global market for vehicles with self-driving mode is 
+expected to reach $54.23 billion in 2019 and $556.67 
+billion by 2026, an average growth rate of 39.47 
+percent.21 U. S. DOT expects that “with the development 
+of automated vehicles, American creativity and innovation 
+hold the potential to once again transform mobility.”22 
+The loss of jobs (e.g. bus drivers in public transit) is not 
+to be feared in the coming years. Self-driving modes will 
+only be able to handle more and more traffic situations 
+gradually over time. Drivers will continue to be needed 
+in dense city traffic, on the highway, and for large buses 
+on major routes. However, the use of vehicles with 
+self-driving mode could provide increased passenger 
+numbers to public passenger transport and ride-sharing 
+solutions. Self-driving minibuses can bring more 
+passengers to central stops and make public transit and 
+shared mobility more attractive. Even more, not fewer, 
+drivers would probably be needed on the main routes. 
+In addition, self-driving mode offers potential for more 
+jobs in research, development, and maintenance. Control 
+centers will also need staff who can monitor the vehicles 
+and, in exceptional circumstances, quickly dispatch a 
+technician to the job site, similar to the call centers of 
+passenger elevator service providers.Creating new economic opportunities and 
+jobs through technological modernization 
+and innovation20The Goal: More sustainable, safer, and efficient mobility for all Next chapter  
+
+44
+E-book: Self-driving and cooperative carsA motor vehicle with self-driving mode has the potential 
+for users to use the ride itself for both personal and 
+work-related tasks. Commuters in particular may stand 
+to regain a lot of time that was previously tied up with 
+the task of driving. On the way to the office users could 
+begin dealing with emails or watch a movie on their way 
+home.“In addition, self-driving mode offers 
+potential for more jobs in research, 
+development, and maintenance.”
+Matthias Hartwig 
+New potential uses for the vehicle itselfThe Goal: More sustainable, safer, and efficient mobility for all Next chapter  
+
+45
+E-book: Self-driving and cooperative carsThe opportunities for 
+sustainability
+Many also hope that motor vehicles with a self-driving 
+mode will also fulfill the following three promises. 
+However, whether these can be realized depends on the 
+right course of decision-makers in politics and business 
+and on early and effective regulation by the legislature.
+According to the Paris Agreement on Climate Change 
+(2015), the increase in the global average temperature 
+should be limited to well below 2 °C above pre-
+industrial levels. Certain efforts are expected to limit 
+the temperature rise to 1.5 °C above pre-industrial 
+levels. Although the US is no longer committed to the 
+agreement, climate protection will remain on the US 
+and the international agenda. In particular, greenhouse 
+gas emissions (carbon dioxide, methane, nitrous oxide, 
+and others) are expected to be significantly reduced.23 
+Integrating climate action into national policies, strategies, 
+and planning24 and is expected to significantly reduce the 
+risks and impacts of climate change. Zero-emission transportThe Goal: More sustainable, safer, and efficient mobility for all Next chapter  
+
+46
+E-book: Self-driving and cooperative carsIn many sectors (heat generation, agriculture) it is more difficult to reduce greenhouse gas 
+emissions than in the transport sector. Therefore, most experts agree that direct emissions 
+from transport must reach zero in the long term in order to achieve the goals of the Climate 
+Change Agreement (known as zero-emission transport). In addition, transport is known 
+to be responsible for environmental and health issues caused by particulates, nitrogen 
+compounds, and other emissions. Also, for this reason, zero-emission transport is an 
+important political goal. The increase in traffic flow and traffic efficiency through the use 
+of vehicles with self-driving mode is already able to make a proportionate contribution to 
+reducing emissions, but in itself will not ensure zero- emissions transport. This requires, 
+moreover, that all vehicles with self-driving mode are operated only with electricity from 
+renewable sources (electric vehicles with batteries or fuel cells). Self-driving mode and 
+battery-based electric engines also fit well together because the vehicle itself knows when 
+it has to be charged and can automatically connect to a charging station. Therefore, most 
+national and international projects on vehicles with automated and self-driving mode 
+deploy electric vehicles. Automation, digitalization and electrification of transport are 
+grouped together by experts.
+The Goal: More sustainable, safer, and efficient mobility for all Next chapter  
+
+47
+E-book: Self-driving and cooperative carsIf politics and economics pave the way, self-driving shuttles and similar vehicles with 
+limited specific driving and local applications can enable local passenger transport in the 
+near future, bringing everyone from door to door at any time. Properly designed, such 
+a transport system would be able to cope with much fewer vehicles and hardly require 
+parking (only stops). This has great potential for urban planning and the use of space. 
+Areas currently used by traffic could have new uses (parks, playgrounds, cafes, etc.). 
+A self-driving shuttle can also be programmed to treat all people equally, regardless of 
+gender, age, ethnicity, sexual orientation, and physical characteristics or limitations. By 
+taking socio-scientific insights into account, the feeling of safety for passengers could 
+increase considerably. This can be accomplished, for example, by appropriately designing 
+the vehicle, system, the stops, and the route guidance. This, too, has great significance for 
+non-discriminatory transport.
+T oday’s transport system focuses on motorized private transport. Especially in rural areas, 
+therefore, all the people who are too young, too old, or too sick to drive their own car, or 
+cannot afford one, are often excluded from mobility or dependent on someone else with 
+a driver license. Motor vehicles with a self-driving mode can end this dependency by 
+making conventional and new forms of public transit comprehensive and affordable for all 
+municipalities.Access to safe, affordable, accessible, and sustainable 
+transport systems for all25 and non-discriminatory transport26The Goal: More sustainable, safer, and efficient mobility for all Next chapter  
+
+48
+E-book: Self-driving and cooperative carsMobility for all promises an enhanced quality of life. Cities and towns whose streets and 
+squares are used exclusively for driving and parking offer a lower quality of life. Asphalt 
+road surfaces damage the soil and encourage flooding.27 Motor vehicles with self-driving 
+mode – in conjunction with existing public transit – can provide convenient, reliable, and 
+efficient door-to-door mobility for all and play an important role in local logistics.
+Matthias Hartwig “In this way, it may often be easier for many 
+people to go without their own car.”
+Fewer vehicles will be in use for package delivery services as well. In addition, decreased 
+traffic volume and an automatic assessment of the traffic situation result in better time 
+management and fewer traffic jams. In addition, in a digital traffic system, vehicles can 
+proactively adapt their speed to the traffic situation and find parking and stopping spaces 
+without search traffic. Self-driving modes thus transform the cityscape hand in hand with 
+digitalization. In addition, fewer vehicles means less resource consumption elsewhere.More space for people, less space for transport, less 
+resource consumptionThe Goal: More sustainable, safer, and efficient mobility for all Next chapter  
+
+49
+E-book: Self-driving and cooperative carsThe risks of data misuse 
+and access opportunities
+Automation and networking of transport also entail risks. If 
+motor vehicles with self-driving mode are improperly used, 
+the worst would be increased traffic volume, increased 
+emissions, and unequal mobility opportunities. In addition, 
+manufacturers must do everything they can to prevent 
+possible hacker attacks on vehicles and to ensure the 
+security of the data. Motor vehicles with a self-driving 
+mode can be misused for data collection and could be 
+attractive targets for hackers. A look at China reveals further 
+risks: China is currently testing a rating system with social 
+points for all Chinese citizens, which could also decide on 
+their access to public mobility services. The possibilities of 
+abuse of this kind must be effectively and comprehensively 
+counteracted in the USA by consistent regulations for 
+data protection and data security. Research into motor 
+vehicles with self-driving modes also increases the need 
+for discussion for the possibilities of abuse and possible 
+solutions to such issues.
+The Goal: More sustainable, safer, and efficient mobility for all Next chapter  
+
+50
+E-book: Self-driving and cooperative carsIn Conclusion:
+A new mobility landscape?
+Self-driving valet parking, self-driving public transit shuttles, as well as 
+self-driving DHL Packstations and street cleaners – there are numerous 
+possibilities.
+As mentioned above, at present motor vehicles with self-driving mode cannot 
+overcome every possible traffic situation without human intervention. Certain situational 
+circumstances will continue to require human control. Drivers are still needed on the 
+highway at high speeds or at least in dense city traffic.
+Next chapter  
+
+51
+E-book: Self-driving and cooperative carsIn a few years, however, there will be self-driving modes 
+that are capable of handling more and more traffic 
+situations without the intervention of the driver. In close 
+cooperation with a digital surrounding environment 
+system, for example, they will be able to enter and 
+exit a parking garage and park in one of the available 
+parking spaces (self-driving valet parking). Various 
+locally and functionally limited deployment scenarios are 
+conceivable in passenger traffic as well. Over the years, 
+the areas and fields of application will continue to grow. 
+With self-driving taxis (robo-taxis) in limited operational 
+areas, sharing providers may be able to largely cover 
+their current business areas within 20 years and thus 
+complement their car-sharing offer. There could even be 
+a combination: If you want to drive the robo-taxi yourself, 
+you can scan your driver license and get started. Through 
+multimodality and the digitalization of communications 
+(apps and mobility centers), motor vehicles with self-
+driving modes can become part of high-performance 
+public transit with door-to-door mobility. Buses with 
+drivers will continue to handle traffic on the main routes 
+on the highway and in dense city traffic. Streetcars and 
+commuter trains are also (in part) suitable for the use of 
+self-driving modes.In Conclusion: A new mobility landscape? Next chapter  
+
+52
+E-book: Self-driving and cooperative carsYou will not be able to buy a car for quite some time that 
+is able to overcome every conceivable traffic situation, 
+including on ordinary roads, without human intervention. 
+However, passenger cars in private transport will soon be 
+available for sale with situationally limited functions such 
+as self-driving valet parking or highly automated driving 
+on the highway. Perhaps in the next few years, cities and 
+municipalities will also equip (individual distinct) areas 
+with digital surrounding environment systems that allow 
+self-driving mode for all public transit. Correspondingly 
+equipped private cars could then possibly use such 
+systems for a fee. In complex, dangerous traffic situations 
+– such as on highways or in dense city traffic – in private 
+vehicles with self-driving mode, drivers will still have to 
+control the vehicle for quite some time.Outlook for private 
+transportIn Conclusion: A new mobility landscape? Next chapter  
+
+53
+E-book: Self-driving and cooperative carsLikewise, the use of vehicles with self-driving mode in the field of commercial vehicles and 
+company transport offers many opportunities. For example, self-driving DHL Packstations or 
+street cleaners that drive at night on empty roads to their job site are certainly conceivable. 
+Such applications may be possible in just a few years as they do not require high speeds 
+and would therefore be easier to implement. In addition, a variety of operational applications 
+for motor vehicles with self-driving mode are conceivable. In the near future, ports will be 
+handled by self-driving cranes, forklifts, and transport vehicles and in warehouses, motor 
+vehicles with self-driving modes will soon become part of everyday life. A few years ago, 
+airports began to gain experience with self-driving vehicles not only in passenger transport, 
+but also in baggage handling. The potential for safety, sustainability, and efficiency through 
+autonomous driving functions are high in these areas.
+The relevance of self-driving mode for traffic safety and their economic opportunities is 
+very high. In addition, they are very promising in terms of gains in comfort and lifespan. 
+Whether motor vehicles with autonomous driving functions will also fulfill their great potential 
+for environmental and climate protection and whether they will keep the promise of equal 
+mobility in less traffic and whether affordable and non-discriminatory mobility will be possible 
+for all remains to be seen. It seems possible with a bit of political will. Motor vehicles with 
+self-driving mode can then make a significant contribution to better mobility for all.Prospects for commercial vehicles and 
+company transportNext chapter  
+
+54
+E-book: Self-driving and cooperative carsReferences
+1 SAE J3016 Standard: https://www.sae.org/news/2019/01/sae-updates-j3016-automated-
+driving-graphic (Accessed on: 05/23/2019)
+2 https://dmv.ny.gov/dmv/apply-autonomous-vehicle-technology-demonstration-testing-
+permit
+3 NHTSA: https://www.nhtsa.gov/technology-innovation/automated-vehicles-safety
+4 Department of Motor Vehicle of New York State; Autonomous Vehicle T echnology 
+Demonstration/T esting Addendum (AV-2), https://dmv.ny.gov/forms/av2.pdf
+5 U.S. Department of T ransportation: Preparing for the future of transportation – Automated 
+Vehicles 3.0, p. 13; https://www.transportation.gov/sites/dot.gov/files/docs/policy-initiatives/
+automated-vehicles/320711/preparing-future-transportation-automated-vehicle-30.pdf
+6 Public Law 89-563, Sept. 9, 1966.
+7 Title I Sec. 114, Public Law 89-563, Sept. 9, 1966.
+8 Title I Sec. 102 (1), Public Law 89-563, Sept. 9, 1966.
+9 U.S. Department of T ransportation: Preparing for the future of transportation – Automated 
+Vehicles 3.0, p. iv; https://www.transportation.gov/sites/dot.gov/files/docs/policy-initiatives/
+automated-vehicles/320711/preparing-future-transportation-automated-vehicle-30.pdf
+10 U.S. Department of T ransportation, p. 13.
+11 https://www.nhtsa.gov/technology-innovation/automated-vehicles-safety
+12 NHTSA: Understanding NHTSA’s Regulatory T ools, p. 8, in reference to 49 U.S. C. § 30113 
+https://www.nhtsa.gov/sites/nhtsa.dot.gov/files/documents/understanding_nhtsas_current_
+regulatory_tools-tag.pdf
+13 U.S. Department of T ransportation: Preparing for the future of transportation – Automated 
+Vehicles 3.0, p. iv; https://www.transportation.gov/sites/dot.gov/files/docs/policy-initiatives/
+automated-vehicles/320711/preparing-future-transportation-automated-vehicle-30.pdf
+14 https://www.transportation.gov/sites/dot.gov/files/docs/AV%20policy%20guidance%20PDF .
+pdf
+15 U.S. Department of T ransportation: Preparing for the future of transportation – Automated 
+Vehicles 3.0, p. iv; https://www.transportation.gov/sites/dot.gov/files/docs/policy-initiatives/
+automated-vehicles/320711/preparing-future-transportation-automated-vehicle-30.pdfNext chapter  
+
+55
+E-book: Self-driving and cooperative carsReferences
+16 U.S. Department of T ransportation: Preparing for the future of transportation – Automated 
+Vehicles 3.0, p. ix; https://www.transportation.gov/sites/dot.gov/files/docs/policy-initiatives/
+automated-vehicles/320711/preparing-future-transportation-automated-vehicle-30.pdf
+17 UN Sustainable Development Goal 3.6: https://sustainabledevelopment.un.org/sdg3 (Accessed 
+on: 05/23/2019).
+18 https://www.nhtsa.gov/technology-innovation/automated-vehicles-safety
+19 Title I Sec. 102 (1), Public Law 89-563, Sept. 9, 1966.
+20 UN Sustainable Development Goal 8.2: https://sustainabledevelopment.un.org/sdg8 (Accessed 
+on: 05/23/2019).
+21 Allied Market Research (2018): https://www.alliedmarketresearch.com/press-release/
+autonomous-vehicle-market.html (Accessed on: 05/23/2019).
+22 U.S. Department of T ransportation: Preparing for the future of transportation – Automated 
+Vehicles 3.0, p. ii; https://www.transportation.gov/sites/dot.gov/files/docs/policy-initiatives/
+automated-vehicles/320711/preparing-future-transportation-automated-vehicle-30.pdf
+23 E.g. EPA Clean Air Act Overview https://www.epa.gov/clean-air-act-overview/air-pollution-
+current-and-future-challenges
+24 UN Sustainable Development Goal 13.2: https://sustainabledevelopment.un.org/sdg13 
+(Accessed on: 05/23/2019).
+25 UN Sustainable Development Goals 11.2 and 11.3: https://sustainabledevelopment.un.org/
+sdg11 (Accessed on: 05/23/2019).
+26 UN Sustainable Development Goals 5.1 and 10.2.
+27 Less covered ground is a specific UN Sustainability Indicator 11.3.1.
+56
+E-book: Self-driving and cooperative carsImage directory
+© Steven Han / Gettyimages
+© J2R / Gettyimages
+© BMW Group
+© 7077’ / Eyeem
+© Liao Xie / Gettyimages
+© BMW Group
+© Danny Hu / Gettyimages
+© Fabian Plock / Gettyimages
+© Bim / Gettyimages
+© Yevgeniy Babichenmo / Gettyimages
+© Adinda Fika / Unsplash
+© T omasz Zajda / Gettyimages
+© Bill Bonfield / Gettyimages
+© Mareen Fischinger / Gettyimages
+© Bim / Gettyimages
+© Shi Jing / Gettyimages
+© Yulia-Images / EyeEm
+© Clu / Gettyimages
+© Ferrantraite / Gettyimages
+© Prasit photo / GettyimagesCover
+Page 5
+Page 7
+Page 9
+Page 11
+Page 17
+Page 25
+Page 27
+Page 27
+Page 28
+Page 31
+Page 35
+Page 37
+Page 39
+Page 41
+Page 42
+Page 46
+Page 49
+Page 50
+Page 53T o the beginning  
+
+Bayrische Motoren Werke AG 
+Petuelring 130  
+80788 Munich 
+Germany
+Phone: 0049 089 382 0 
+Contact: 
+  bmw.com/contactImprint

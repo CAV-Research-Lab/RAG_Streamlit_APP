@@ -1,0 +1,2 @@
+[2024-12-21 00:54:08] what is verification and validation?
+[2024-12-21 00:57:31] what methods do we have for validation?

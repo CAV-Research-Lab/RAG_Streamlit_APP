@@ -1,0 +1,1350 @@
+=== Metadata ===
+{
+    "file_name": "algorithms.pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/algorithms.pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+CHAPTER 1
+INTRODUCTION
+CHAPTER 2
+INTELLIGENT AGENTS
+function TABLE -DRIVEN -AGENT (percept )returns an action
+persistent :percepts , a sequence, initially empty
+table , a table of actions, indexed by percept sequences, initiall y fully speciﬁed
+appendpercept to the end of percepts
+action←LOOKUP (percepts ,table )
+returnaction
+Figure 2.7 The T ABLE -DRIVEN -AGENT program is invoked for each new percept and re-
+turns an action each time. It retains the complete percept se quence in memory.
+function REFLEX -VACUUM -AGENT ([location ,status ])returns an action
+ifstatus =Dirty then return Suck
+else iflocation =Athen return Right
+else iflocation =Bthen return Left
+Figure 2.8 The agent program for a simple reﬂex agent in the two-locatio n vacuum environ-
+ment. This program implements the agent function tabulated in Figure ??.
+function SIMPLE -REFLEX -AGENT (percept )returns an action
+persistent :rules , a set of condition–action rules
+state←INTERPRET -INPUT (percept )
+rule←RULE-MATCH (state ,rules )
+action←rule.ACTION
+returnaction
+Figure 2.10 A simple reﬂex agent. It acts according to a rule whose condit ion matches the
+current state, as deﬁned by the percept.
+3
+function MODEL -BASED -REFLEX -AGENT (percept )returns an action
+persistent :state , the agent’s current conception of the world state
+transition model , a description of how the next state depends on
+the current state and action
+sensormodel , a description of how the current world state is reﬂected
+in the agent’s percepts
+rules , a set of condition–action rules
+action , the most recent action, initially none
+state←UPDATE -STATE (state ,action ,percept ,transition model ,sensormodel )
+rule←RULE-MATCH (state ,rules )
+action←rule.ACTION
+returnaction
+Figure 2.12 A model-based reﬂex agent. It keeps track of the current stat e of the world,
+using an internal model. It then chooses an action in the same way as the reﬂex agent.
+CHAPTER 3
+SOLVING PROBLEMS BY SEARCHING
+function BEST-FIRST-SEARCH (problem,f)returns a solution node or failure
+node←NODE(STATE =problem .INITIAL )
+frontier←a priority queue ordered by f, withnode as an element
+reached←a lookup table, with one entry with key problem .INITIAL and value node
+while not IS-EMPTY (frontier )do
+node←POP(frontier )
+ifproblem .IS-GOAL(node .STATE )then return node
+for eachchild inEXPAND (problem ,node )do
+s←child .STATE
+ifsis not inreached orchild .PATH-COST<reached[s].PATH-COST then
+reached [s]←child
+addchild tofrontier
+returnfailure
+function EXPAND (problem ,node )yields nodes
+s←node .STATE
+for eachaction inproblem .ACTIONS (s)do
+s′←problem .RESULT (s,action )
+cost←node .PATH-COST +problem .ACTION -COST(s,action ,s′)
+yield NODE(STATE =s′, PARENT =node , ACTION =action , PATH-COST=cost)
+Figure 3.7 The best-ﬁrst search algorithm, and the function for expand ing a node. The data
+structures used here are described in Section ??. See Appendix B for yield .
+5
+function BREADTH -FIRST-SEARCH (problem )returns a solution node or failure
+node←NODE(problem .INITIAL )
+ifproblem .IS-GOAL(node .STATE )then return node
+frontier←a FIFO queue, with node as an element
+reached←{problem .INITIAL}
+while not IS-EMPTY (frontier )do
+node←POP(frontier )
+for eachchild inEXPAND (problem ,node )do
+s←child .STATE
+ifproblem .IS-GOAL(s)then return child
+ifsis not inreached then
+addstoreached
+addchild tofrontier
+returnfailure
+function UNIFORM -COST-SEARCH (problem )returns a solution node, or failure
+return BEST-FIRST-SEARCH (problem , PATH-COST)
+Figure 3.9 Breadth-ﬁrst search and uniform-cost search algorithms.
+function ITERATIVE -DEEPENING -SEARCH (problem )returns a solution node or failure
+fordepth = 0to∞do
+result←DEPTH -LIMITED -SEARCH (problem ,depth )
+ifresult/ne}ationslash=cutoﬀ then return result
+function DEPTH -LIMITED -SEARCH (problem ,ℓ)returns a node or failure orcutoﬀ
+frontier←a LIFO queue (stack) with N ODE(problem .INITIAL ) as an element
+result←failure
+while not IS-EMPTY (frontier )do
+node←POP(frontier )
+ifproblem .IS-GOAL(node .STATE )then return node
+ifDEPTH (node )> ℓ then
+result←cutoﬀ
+else if not IS-CYCLE (node )do
+for eachchild inEXPAND (problem ,node )do
+addchild tofrontier
+returnresult
+Figure 3.12 Iterative deepening and depth-limited tree-like search. I terative deepening re-
+peatedly applies depth-limited search with increasing lim its. It returns one of three different
+types of values: either a solution node; or failure , when it has exhausted all nodes and proved
+there is no solution at any depth; or cutoﬀ , to mean there might be a solution at a deeper depth
+thanℓ. This is a tree-like search algorithm that does not keep trac k ofreached states, and
+thus uses much less memory than best-ﬁrst search, but runs th e risk of visiting the same state
+multiple times on different paths. Also, if the I S-CYCLE check does not check allcycles,
+then the algorithm may get caught in a loop.
+6 Chapter 3 Solving Problems by Searching
+function BIBF-S EARCH (problem F,fF,problem B,fB)returns a solution node, or failure
+nodeF←NODE(problem F.INITIAL ) //Node for a start state
+nodeB←NODE(problem B.INITIAL ) //Node for a goal state
+frontier F←a priority queue ordered by fF, withnodeFas an element
+frontier B←a priority queue ordered by fB, withnodeBas an element
+reached F←a lookup table, with one key nodeF.STATE and value nodeF
+reached B←a lookup table, with one key nodeB.STATE and value nodeB
+solution←failure
+while not TERMINATED (solution ,frontier F,frontier B)do
+iffF(TOP(frontier F))<fB(TOP(frontier B))then
+solution←PROCEED (F,problem Ffrontier F,reached F,reached B,solution )
+elsesolution←PROCEED (B,problem B,frontier B,reached B,reached F,solution )
+returnsolution
+function PROCEED (dir,problem ,frontier ,reached ,reached 2,solution )returns a solution
+//Expand node on frontier; check against the other frontier in reached 2.
+//The variable “dir” is the direction: either F for forward or B for backward.
+node←POP(frontier )
+for eachchild inEXPAND (problem ,node )do
+s←child .STATE
+ifsnot inreached orPATH-COST(child )<PATH-COST(reached[s])then
+reached [s]←child
+addchild tofrontier
+ifsis inreached 2then
+solution 2←JOIN-NODES (dir,child ,reached 2[s]))
+ifPATH-COST(solution 2)<PATH-COST(solution )then
+solution←solution 2
+returnsolution
+Figure 3.14 Bidirectional best-ﬁrst search keeps two frontiers and two tables of reached
+states. When a path in one frontier reaches a state that was al so reached in the other half of
+the search, the two paths are joined (by the function J OIN-NODES ) to form a solution. The
+ﬁrst solution we get is not guaranteed to be the best; the func tion T ERMINATED determines
+when to stop looking for new solutions.
+7
+function RECURSIVE -BEST-FIRST-SEARCH (problem )returns a solution or failure
+solution ,fvalue←RBFS(problem , NODE(problem .INITIAL ),∞)
+returnsolution
+function RBFS(problem ,node ,flimit )returns a solution or failure , and a new f-cost limit
+ifproblem .IS-GOAL(node .STATE )then return node
+successors←LIST(EXPAND (node ))
+ifsuccessors is empty then return failure ,∞
+for eachsinsuccessors do//updatefwith value from previous search
+s.f←max(s.PATH-COST+h(s),node.f))
+whiletrue do
+best←the node in successors with lowest f-value
+ifbest.f >flimit then return failure ,best.f
+alternative←the second-lowest f-value among successors
+result ,best.f←RBFS(problem ,best,min(flimit,alternative ))
+ifresult/ne}ationslash=failure then return result ,best.f
+Figure 3.22 The algorithm for recursive best-ﬁrst search.
+CHAPTER 4
+SEARCH IN COMPLEX
+ENVIRONMENTS
+function HILL-CLIMBING (problem )returns a state that is a local maximum
+current←problem .INITIAL
+whiletrue do
+neighbor←a highest-valued successor state of current
+ifVALUE (neighbor )≤VALUE (current )then return current
+current←neighbor
+Figure 4.2 The hill-climbing search algorithm, which is the most basic local search tech-
+nique. At each step the current node is replaced by the best ne ighbor.
+function SIMULATED -ANNEALING (problem ,schedule )returns a solution state
+current←problem .INITIAL
+fort= 1to∞do
+T←schedule (t)
+ifT= 0then return current
+next←a randomly selected successor of current
+∆E←VALUE (current ) – V ALUE (next )
+if∆E>0thencurrent←next
+elsecurrent←next only with probability e−∆E/T
+Figure 4.4 The simulated annealing algorithm, a version of stochastic hill climbing where
+some downhill moves are allowed. The schedule input determines the value of the “temper-
+ature”Tas a function of time.
+9
+function GENETIC -ALGORITHM (population ,ﬁtness )returns an individual
+repeat
+weights←WEIGHTED -BY(population ,ﬁtness )
+population2←empty list
+fori= 1toSIZE(population )do
+parent1 ,parent2←WEIGHTED -RANDOM -CHOICES (population ,weights , 2)
+child←REPRODUCE (parent1 ,parent2 )
+if(small random probability) thenchild←MUTATE (child )
+addchild topopulation2
+population←population2
+until some individual is ﬁt enough, or enough time has elapsed
+return the best individual in population , according to ﬁtness
+function REPRODUCE (parent1 ,parent2 )returns an individual
+n←LENGTH (parent1 )
+c←random number from 1 to n
+return APPEND (SUBSTRING (parent1 , 1,c), SUBSTRING (parent2 ,c+1,n))
+Figure 4.7 A genetic algorithm. Within the function, population is an ordered list of indi-
+viduals,weights is a list of corresponding ﬁtness values for each individual , andﬁtness is a
+function to compute these values.
+function AND-OR-SEARCH (problem )returns a conditional plan, or failure
+return OR-SEARCH (problem ,problem .INITIAL ,[])
+function OR-SEARCH (problem ,state ,path )returnsa conditional plan ,or failure
+ifproblem .IS-GOAL(state )then return the empty plan
+ifIS-CYCLE (path )then return failure
+for eachaction inproblem .ACTIONS (state )do
+plan←AND-SEARCH (problem , RESULTS (state ,action ),[state] +path])
+ifplan/ne}ationslash=failure then return [action] +plan]
+returnfailure
+function AND-SEARCH (problem ,states ,path )returnsa conditional plan ,or failure
+for eachsiinstates do
+plani←OR-SEARCH (problem ,si,path )
+ifplani=failure then return failure
+return[ifs1thenplan1else ifs2thenplan2else...ifsn−1thenplann−1elseplann]
+Figure 4.10 An algorithm for searching AND –ORgraphs generated by nondeterministic en-
+vironments. A solution is a conditional plan that considers every nondeterministic outcome
+and makes a plan for each one.
+10 Chapter 4 Search in Complex Environments
+function ONLINE -DFS-A GENT (problem ,s′)returns an action
+s,a, the previous state and action, initially null
+persistent :result , a table mapping (s, a)tos′, initially empty
+untried , a table mapping sto a list of untried actions
+unbacktracked , a table mapping sto a list of states never backtracked to
+ifproblem .IS-GOAL(s′)then return stop
+ifs′is a new state (not in untried )thenuntried [s′]←problem .ACTIONS (s′)
+ifsis not null then
+result [s,a]←s′
+addsto the front of unbacktracked [s′]
+ifuntried [s′] is empty then
+ifunbacktracked [s′] is empty then return stop
+elsea←an action bsuch that result [s′,b] = P OP(unbacktracked [s′])
+elsea←POP(untried [s′])
+s←s′
+returna
+Figure 4.20 An online search agent that uses depth-ﬁrst exploration. Th e agent can safely
+explore only in state spaces in which every action can be “und one” by some other action.
+function LRTA*-A GENT (problem,s′, h)returns an action
+s,a, the previous state and action, initially null
+persistent :result , a table mapping (s, a)tos′, initially empty
+H, a table mapping sto a cost estimate, initially empty
+ifIS-GOAL(s′)then return stop
+ifs′is a new state (not in H)thenH[s′]←h(s′)
+ifsis not null then
+result [s,a]←s′
+H[s]←min
+b∈ACTIONS(s)LRTA*-C OST(s,b,result [s,b],H)
+a←argmin
+b∈ACTIONS(s)LRTA*-C OST(problem ,s′,b,result [s′,b],H)
+s←s′
+returna
+function LRTA*-C OST(problem ,s,a,s′,H)returns a cost estimate
+ifs′is undeﬁned then return h(s)
+else return problem .ACTION -COST(s,a,s′) +H[s′]
+Figure 4.23 LRTA∗-AGENT selects an action according to the values of neighboring sta tes,
+which are updated as the agent moves about the state space.
+CHAPTER 5
+ADVERSARIAL SEARCH AND GAMES
+function MINIMAX -SEARCH (game ,state )returnsan action
+player←game .TO-MOVE(state )
+value ,move←MAX-VALUE (game ,state )
+returnmove
+function MAX-VALUE (game ,state )returns a (utility ,move ) pair
+ifgame .IS-TERMINAL (state )then return game .UTILITY (state ,player ),null
+v←−∞
+for eachaingame .ACTIONS (state )do
+v2,a2←MIN-VALUE (game ,game .RESULT (state ,a))
+ifv2>vthen
+v,move←v2,a
+returnv,move
+function MIN-VALUE (game ,state )returns a (utility ,move ) pair
+ifgame .IS-TERMINAL (state )then return game .UTILITY (state ,player ),null
+v←+∞
+for eachaingame .ACTIONS (state )do
+v2,a2←MAX-VALUE (game ,game .RESULT (state ,a))
+ifv2<vthen
+v,move←v2,a
+returnv,move
+Figure 5.3 An algorithm for calculating the optimal move using minimax —the move that
+leads to a terminal state with maximum utility, under the ass umption that the opponent plays
+to minimize utility. The functions M AX-VALUE and M IN-VALUE go through the whole
+game tree, all the way to the leaves, to determine the backed- up value of a state and the move
+to get there.
+12 Chapter 5 Adversarial Search and Games
+function ALPHA -BETA-SEARCH (game ,state )returns an action
+player←game .TO-MOVE(state )
+value ,move←MAX-VALUE (game ,state ,−∞,+∞)
+returnmove
+function MAX-VALUE (game ,state ,α,β)returns a (utility ,move ) pair
+ifgame .IS-TERMINAL (state )then return game .UTILITY (state ,player ),null
+v←−∞
+for eachaingame .ACTIONS (state )do
+v2,a2←MIN-VALUE (game ,game .RESULT (state ,a),α,β)
+ifv2>vthen
+v,move←v2,a
+α←MAX(α,v)
+ifv≥βthen return v,move
+returnv,move
+function MIN-VALUE (game ,state ,α,β)returns a (utility ,move ) pair
+ifgame .IS-TERMINAL (state )then return game .UTILITY (state ,player ),null
+v←+∞
+for eachaingame .ACTIONS (state )do
+v2,a2←MAX-VALUE (game ,game .RESULT (state ,a),α,β)
+ifv2<vthen
+v,move←v2,a
+β←MIN(β,v)
+ifv≤αthen return v,move
+returnv,move
+Figure 5.7 The alpha–beta search algorithm. Notice that these functio ns are the same as the
+MINIMAX -SEARCH functions in Figure ??, except that we maintain bounds in the variables
+αandβ, and use them to cut off search when a value is outside the boun ds.
+function MONTE -CARLO -TREE-SEARCH (state )returnsan action
+tree←NODE(state )
+while IS-TIME-REMAINING ()do
+leaf←SELECT (tree)
+child←EXPAND (leaf)
+result←SIMULATE (child )
+BACK-PROPAGATE (result ,child )
+return the move in A CTIONS (state ) whose node has highest number of playouts
+Figure 5.11 The Monte Carlo tree search algorithm. A game tree, tree, is initialized, and
+then we repeat a cycle of S ELECT / EXPAND / SIMULATE / BACK-PROPAGATE until we run
+out of time, and return the move that led to the node with the hi ghest number of playouts.
+CHAPTER 6
+CONSTRAINT SATISFACTION
+PROBLEMS
+function AC-3(csp)returns false if an inconsistency is found and true otherwise
+queue←a queue of arcs, initially all the arcs in csp
+whilequeue is not empty do
+(Xi, Xj)←POP(queue )
+ifREVISE (csp,Xi, Xj)then
+ifsize ofDi= 0 then return false
+for eachXkinXi.NEIGHBORS -{Xj}do
+add (Xk, Xi) toqueue
+returntrue
+function REVISE (csp,Xi, Xj)returns true iff we revise the domain of Xi
+revised←false
+for eachxinDido
+ifno valueyinDjallows (x,y) to satisfy the constraint between XiandXjthen
+deletexfromDi
+revised←true
+returnrevised
+Figure 6.3 The arc-consistency algorithm AC-3. After applying AC-3, e ither every arc is
+arc-consistent, or some variable has an empty domain, indic ating that the CSP cannot be
+solved. The name “AC-3” was used by the algorithm’s inventor (?) because it was the third
+version developed in the paper.
+14 Chapter 6 Constraint Satisfaction Problems
+function BACKTRACKING -SEARCH (csp)returns a solution or failure
+return BACKTRACK (csp,{})
+function BACKTRACK (csp,assignment )returns a solution or failure
+ifassignment is complete then return assignment
+var←SELECT -UNASSIGNED -VARIABLE (csp,assignment )
+for eachvalue inORDER -DOMAIN -VALUES (csp,var,assignment )do
+ifvalue is consistent with assignment then
+add{var=value}toassignment
+inferences←INFERENCE (csp,var,assignment )
+ifinferences/ne}ationslash=failure then
+addinferences tocsp
+result←BACKTRACK (csp,assignment )
+ifresult/ne}ationslash=failure then return result
+removeinferences fromcsp
+remove{var=value}fromassignment
+returnfailure
+Figure 6.5 A simple backtracking algorithm for constraint satisfacti on problems. The
+algorithm is modeled on the recursive depth-ﬁrst search of C hapter ??. The functions
+SELECT -UNASSIGNED -VARIABLE and O RDER -DOMAIN -VALUES , implement the general-
+purpose heuristics discussed in Section ??. The I NFERENCE function can optionally im-
+pose arc-, path-, or k-consistency, as desired. If a value choice leads to failure (noticed
+either by I NFERENCE or by B ACKTRACK ), then value assignments (including those made by
+INFERENCE ) are retracted and a new value is tried.
+function MIN-CONFLICTS (csp,maxsteps )returns a solution or failure
+inputs :csp, a constraint satisfaction problem
+maxsteps , the number of steps allowed before giving up
+current←an initial complete assignment for csp
+fori= 1 tomaxsteps do
+ifcurrent is a solution for cspthen return current
+var←a randomly chosen conﬂicted variable from csp.VARIABLES
+value←the value vforvarthat minimizes C ONFLICTS (csp,var,v,current )
+setvar=value incurrent
+returnfailure
+Figure 6.9 The M IN-CONFLICTS local search algorithm for CSPs. The initial state may be
+chosen randomly or by a greedy assignment process that choos es a minimal-conﬂict value
+for each variable in turn. The C ONFLICTS function counts the number of constraints violated
+by a particular value, given the rest of the current assignme nt.
+15
+function TREE-CSP-S OLVER (csp)returns a solution, or failure
+inputs :csp, a CSP with components X, D, C
+n←number of variables in X
+assignment←an empty assignment
+root←any variable in X
+X←TOPOLOGICAL SORT(X,root)
+forj=ndown to 2do
+MAKE-ARC-CONSISTENT (PARENT (Xj),Xj)
+ifit cannot be made consistent then return failure
+fori= 1tondo
+assignment [Xi]←any consistent value from Di
+ifthere is no consistent value then return failure
+returnassignment
+Figure 6.11 The T REE-CSP-S OLVER algorithm for solving tree-structured CSPs. If the
+CSP has a solution, we will ﬁnd it in linear time; if not, we wil l detect a contradiction.
+CHAPTER 7
+LOGICAL AGENTS
+function KB-A GENT (percept )returns anaction
+persistent :KB, a knowledge base
+t, a counter, initially 0, indicating time
+TELL(KB, MAKE-PERCEPT -SENTENCE (percept ,t))
+action←ASK(KB, MAKE-ACTION -QUERY (t))
+TELL(KB, MAKE-ACTION -SENTENCE (action ,t))
+t←t+ 1
+returnaction
+Figure 7.1 A generic knowledge-based agent. Given a percept, the agent adds the percept
+to its knowledge base, asks the knowledge base for the best ac tion, and tells the knowledge
+base that it has in fact taken that action.
+17
+function TT-E NTAILS ?(KB,α)returnstrue orfalse
+inputs :KB, the knowledge base, a sentence in propositional logic
+α, the query, a sentence in propositional logic
+symbols←a list of the proposition symbols in KBandα
+return TT-C HECK -ALL(KB,α,symbols ,{})
+function TT-C HECK -ALL(KB,α,symbols ,model )returnstrue orfalse
+ifEMPTY ?(symbols )then
+ifPL-T RUE?(KB,model )then return PL-T RUE?(α,model )
+else return true//when KB is false, always return true
+else
+P←FIRST (symbols )
+rest←REST(symbols )
+return (TT-C HECK -ALL(KB,α,rest,model∪{P=true})
+and
+TT-C HECK -ALL(KB,α,rest,model∪{P=false}))
+Figure 7.10 A truth-table enumeration algorithm for deciding proposit ional entailment. (TT
+stands for truth table.) PL-T RUE? returns true if a sentence holds within a model. The
+variable model represents a partial model—an assignment to some of the symb ols. The key-
+word andhere is an inﬁx function symbol in the pseudocode programmin g language, not an
+operator in proposition logic; it takes two arguments and re turnstrue orfalse .
+function PL-R ESOLUTION (KB,α)returnstrue orfalse
+inputs :KB, the knowledge base, a sentence in propositional logic
+α, the query, a sentence in propositional logic
+clauses←the set of clauses in the CNF representation of KB∧¬α
+new←{}
+whiletrue do
+for each pair of clauses Ci,Cjinclauses do
+resolvents←PL-R ESOLVE (Ci,Cj)
+ifresolvents contains the empty clause then return true
+new←new∪resolvents
+ifnew⊆clauses then return false
+clauses←clauses∪new
+Figure 7.13 A simple resolution algorithm for propositional logic. PL- RESOLVE returns the
+set of all possible clauses obtained by resolving its two inp uts.
+18 Chapter 7 Logical Agents
+function PL-FC-E NTAILS ?(KB,q)returnstrue orfalse
+inputs :KB, the knowledge base, a set of propositional deﬁnite clauses
+q, the query, a proposition symbol
+count←a table, where count [c] is initially the number of symbols in clause c’s premise
+inferred←a table, where inferred [s] is initially false for all symbols
+queue←a queue of symbols, initially symbols known to be true in KB
+whilequeue is not empty do
+p←POP(queue )
+ifp=qthen return true
+ifinferred [p] =false then
+inferred [p]←true
+for each clausecinKBwherepis inc.PREMISE do
+decrement count [c]
+ifcount [c] = 0 then addc.CONCLUSION toqueue
+returnfalse
+Figure 7.15 The forward-chaining algorithm for propositional logic. T heagenda keeps
+track of symbols known to be true but not yet “processed.” The count table keeps track of
+how many premises of each implication are not yet proven. Whe never a new symbol pfrom
+the agenda is processed, the count is reduced by one for each i mplication in whose premise
+pappears (easily identiﬁed in constant time with appropriat e indexing.) If a count reaches
+zero, all the premises of the implication are known, so its co nclusion can be added to the
+agenda. Finally, we need to keep track of which symbols have b een processed; a symbol that
+is already in the set of inferred symbols need not be added to t he agenda again. This avoids
+redundant work and prevents loops caused by implications su ch asP⇒QandQ⇒P.
+19
+function DPLL-S ATISFIABLE ?(s)returnstrue orfalse
+inputs :s, a sentence in propositional logic
+clauses←the set of clauses in the CNF representation of s
+symbols←a list of the proposition symbols in s
+return DPLL(clauses ,symbols ,{})
+function DPLL(clauses ,symbols ,model )returnstrue orfalse
+ifevery clause in clauses is true inmodel then return true
+ifsome clause in clauses is false in model then return false
+P,value←FIND-PURE-SYMBOL (symbols ,clauses ,model )
+ifPis non-null then return DPLL(clauses ,symbols –P,model∪{P=value})
+P,value←FIND-UNIT-CLAUSE (clauses ,model )
+ifPis non-null then return DPLL(clauses ,symbols –P,model∪{P=value})
+P←FIRST (symbols );rest←REST(symbols )
+return DPLL(clauses ,rest,model∪{P=true})or
+DPLL(clauses ,rest,model∪{P=false}))
+Figure 7.17 The DPLL algorithm for checking satisﬁability of a sentence in propositional
+logic. The ideas behind F IND-PURE-SYMBOL and F IND-UNIT-CLAUSE are described in
+the text; each returns a symbol (or null) and the truth value t o assign to that symbol. Like
+TT-E NTAILS ?, DPLL operates over partial models.
+function WALKSAT(clauses ,p,maxﬂips )returns a satisfying model or failure
+inputs :clauses , a set of clauses in propositional logic
+p, the probability of choosing to do a “random walk” move, typi cally around 0.5
+maxﬂips , number of value ﬂips allowed before giving up
+model←a random assignment of true/false to the symbols in clauses
+for eachi= 1 tomaxﬂips do
+ifmodel satisﬁesclauses then return model
+clause←a randomly selected clause from clauses that is false in model
+ifRANDOM(0,1)≤pthen
+ﬂip the value in model of a randomly selected symbol from clause
+elseﬂip whichever symbol in clause maximizes the number of satisﬁed clauses
+returnfailure
+Figure 7.18 The W ALKSAT algorithm for checking satisﬁability by randomly ﬂippi ng the
+values of variables. Many versions of the algorithm exist.
+20 Chapter 7 Logical Agents
+function HYBRID -WUMPUS -AGENT (percept )returns anaction
+inputs :percept , a list, [stench ,breeze ,glitter ,bump ,scream ]
+persistent :KB, a knowledge base, initially the atemporal “wumpus physics ”
+t, a counter, initially 0, indicating time
+plan , an action sequence, initially empty
+TELL(KB, MAKE-PERCEPT -SENTENCE (percept ,t))
+TELLtheKBthe temporal “physics” sentences for time t
+safe←{[x,y] :ASK(KB,OKt
+x,y) =true}
+ifASK(KB,Glittert) =true then
+plan←[Grab ] + P LAN-ROUTE (current ,{[1,1]},safe) + [Climb ]
+ifplan is empty then
+unvisited←{[x,y] :ASK(KB,Lt′
+x,y) =false for allt′≤t}
+plan←PLAN-ROUTE (current ,unvisited∩safe,safe)
+ifplan is empty and A SK(KB,HaveArrowt) =true then
+possiblewumpus←{[x,y] :ASK(KB,¬Wx,y) =false}
+plan←PLAN-SHOT(current ,possiblewumpus ,safe)
+ifplan is empty then //no choice but to take a risk
+notunsafe←{[x,y] :ASK(KB,¬OKt
+x,y) =false}
+plan←PLAN-ROUTE (current ,unvisited∩notunsafe ,safe)
+ifplan is empty then
+plan←PLAN-ROUTE (current ,{[1,1]},safe) +[Climb]
+action←POP(plan )
+TELL(KB, MAKE-ACTION -SENTENCE (action ,t))
+t←t+ 1
+returnaction
+function PLAN-ROUTE (current ,goals ,allowed )returns an action sequence
+inputs :current , the agent’s current position
+goals , a set of squares; try to plan a route to one of them
+allowed , a set of squares that can form part of the route
+problem←ROUTE -PROBLEM (current ,goals ,allowed )
+return SEARCH (problem )//Any search algorithm from Chapter ??
+Figure 7.20 A hybrid agent program for the wumpus world. It uses a proposi tional knowl-
+edge base to infer the state of the world, and a combination of problem-solving search and
+domain-speciﬁc code to choose actions. Each time H YBRID -WUMPUS -AGENT is called, it
+adds the percept to the knowledge base, and then either relie s on a previously-deﬁned plan or
+creates a new plan, and pops off the ﬁrst step of the plan as the action to do next.
+21
+function SAT PLAN (init,transition ,goal,Tmax)returns solution or failure
+inputs :init,transition ,goal, constitute a description of the problem
+Tmax, an upper limit for plan length
+fort= 0toTmaxdo
+cnf←TRANSLATE -TO-SAT(init,transition ,goal,t)
+model←SAT-S OLVER (cnf)
+ifmodel is not null then
+return EXTRACT -SOLUTION (model )
+returnfailure
+Figure 7.22 The SATP LAN algorithm. The planning problem is translated into a CNF sen -
+tence in which the goal is asserted to hold at a ﬁxed time step tand axioms are included for
+each time step up to t. If the satisﬁability algorithm ﬁnds a model, then a plan is e xtracted by
+looking at those proposition symbols that refer to actions a nd are assigned true in the model.
+If no model exists, then the process is repeated with the goal moved one step later.
+CHAPTER 8
+FIRST ­ORDER LOGIC
+CHAPTER 9
+INFERENCE IN FIRST ­ORDER LOGIC
+function UNIFY (x,y,θ=empty )returns a substitution to make xandyidentical, or failure
+ifθ=failure then return failure
+else ifx=ythen return θ
+else if VARIABLE ?(x)then return UNIFY -VAR(x,y,θ)
+else if VARIABLE ?(y)then return UNIFY -VAR(y,x,θ)
+else if COMPOUND ?(x)and COMPOUND ?(y)then
+return UNIFY (ARGS(x), A RGS(y), U NIFY (OP(x), O P(y),θ))
+else if LIST?(x)and LIST?(y)then
+return UNIFY (REST(x), REST(y), U NIFY (FIRST (x), FIRST (y),θ))
+else return failure
+function UNIFY -VAR(var,x,θ)returns a substitution
+if{var/val}∈θfor some valthen return UNIFY (val,x,θ)
+else if{x/val}∈θfor some valthen return UNIFY (var,val,θ)
+else if OCCUR -CHECK ?(var,x)then return failure
+else return add{var/x}toθ
+Figure 9.1 The uniﬁcation algorithm. The arguments xandycan be any expression: a
+constant or variable, or a compound expression such as a comp lex sentence or term, or a list
+of expressions. The argument θis a substitution, initially the empty substitution, but wi th
+{var/val}pairs added to it as we recurse through the inputs, comparing the expressions
+element by element. In a compound expression such as F(A,B), OP(x) ﬁeld picks out the
+function symbol Fand A RGS(x) ﬁeld picks out the argument list (A,B).
+24 Chapter 9 Inference in First-Order Logic
+function FOL-FC-A SK(KB,α)returns a substitution or false
+inputs :KB, the knowledge base, a set of ﬁrst-order deﬁnite clauses
+α, the query, an atomic sentence
+whiletrue do
+new←{} //The set of new sentences inferred on each iteration
+for eachrule inKBdo
+(p1∧...∧pn⇒q)←STANDARDIZE -VARIABLES (rule)
+for eachθsuch that S UBST (θ,p1∧...∧pn) = S UBST (θ,p′
+1∧...∧p′
+n)
+for some p′
+1,...,p′
+ninKB
+q′←SUBST (θ,q)
+ifq′does not unify with some sentence already in KBornew then
+addq′tonew
+φ←UNIFY (q′,α)
+ifφis notfailure then return φ
+ifnew={}then return false
+addnew toKB
+Figure 9.3 A conceptually straightforward, but inefﬁcient, forward- chaining algorithm. On
+each iteration, it adds to KB all the atomic sentences that can be inferred in one step
+from the implication sentences and the atomic sentences alr eady inKB. The function
+STANDARDIZE -VARIABLES replaces all variables in its arguments with new ones that ha ve
+not been used before.
+function FOL-BC-A SK(KB,query )returns a generator of substitutions
+return FOL-BC-O R(KB,query ,{})
+function FOL-BC-O R(KB,goal,θ)returns a substitution
+for eachrule in F ETCH -RULES -FOR-GOAL(KB,goal)do
+(lhs⇒rhs)←STANDARDIZE -VARIABLES (rule)
+for eachθ′inFOL-BC-A ND(KB,lhs, UNIFY (rhs,goal,θ))do
+yieldθ′
+function FOL-BC-A ND(KB,goals ,θ)returns a substitution
+ifθ=failure then return
+else if LENGTH (goals ) = 0 then yield θ
+else
+ﬁrst,rest←FIRST (goals ), R EST(goals )
+for eachθ′inFOL-BC-O R(KB, SUBST (θ,ﬁrst),θ)do
+for eachθ′′inFOL-BC-A ND(KB,rest,θ′)do
+yieldθ′′
+Figure 9.6 A simple backward-chaining algorithm for ﬁrst-order knowl edge bases.
+25
+procedure APPEND (ax,y,az,continuation )
+trail←GLOBAL -TRAIL -POINTER ()
+ifax=[]and U NIFY (y,az)then CALL(continuation )
+RESET -TRAIL (trail)
+a,x,z←NEW-VARIABLE (), N EW-VARIABLE (), N EW-VARIABLE ()
+ifUNIFY (ax, [a] +x) and U NIFY (az, [a|z])then APPEND (x,y,z,continuation )
+Figure 9.8 Pseudocode representing the result of compiling the Append predicate. The
+function N EW-VARIABLE returns a new variable, distinct from all other variables us ed so far.
+The procedure C ALL(continuation ) continues execution with the speciﬁed continuation.
+CHAPTER 10
+KNOWLEDGE REPRESENTATION
+CHAPTER 11
+AUTOMATED PLANNING
+Init(At(C1,SFO)∧At(C2,JFK)∧At(P1,SFO)∧At(P2,JFK)
+∧Cargo(C1)∧Cargo(C2)∧Plane(P1)∧Plane(P2)
+∧Airport(JFK)∧Airport(SFO))
+Goal(At(C1,JFK)∧At(C2,SFO))
+Action(Load(c, p, a),
+PRECOND :At(c, a)∧At(p, a)∧Cargo(c)∧Plane(p)∧Airport(a)
+EFFECT :¬At(c, a)∧In(c, p))
+Action(Unload(c, p, a),
+PRECOND :In(c, p)∧At(p, a)∧Cargo(c)∧Plane(p)∧Airport(a)
+EFFECT :At(c, a)∧¬In(c, p))
+Action(Fly(p,from,to),
+PRECOND :At(p,from)∧Plane(p)∧Airport(from)∧Airport(to)
+EFFECT :¬At(p,from)∧At(p,to))
+Figure 11.1 A PDDL description of an air cargo transportation planning p roblem.
+Init(Tire(Flat)∧Tire(Spare)∧At(Flat,Axle)∧At(Spare,Trunk))
+Goal(At(Spare,Axle))
+Action(Remove(obj,loc),
+PRECOND :At(obj,loc)
+EFFECT :¬At(obj,loc)∧At(obj,Ground))
+Action(PutOn(t,Axle),
+PRECOND :Tire(t)∧At(t,Ground)∧¬At(Flat,Axle)∧¬At(Spare,Axle)
+EFFECT :¬At(t,Ground)∧At(t,Axle))
+Action(LeaveOvernight ,
+PRECOND :
+EFFECT :¬At(Spare,Ground)∧¬At(Spare,Axle)∧¬At(Spare,Trunk)
+∧¬At(Flat,Ground)∧¬At(Flat,Axle)∧¬At(Flat,Trunk))
+Figure 11.2 The simple spare tire problem.
+28 Chapter 11 Automated Planning
+Init(On(A,Table)∧On(B,Table)∧On(C,A)
+∧Block(A)∧Block(B)∧Block(C)∧Clear(B)∧Clear(C)∧Clear(Table))
+Goal(On(A,B)∧On(B,C))
+Action(Move(b,x,y),
+PRECOND :On(b,x)∧Clear(b)∧Clear(y)∧Block(b)∧Block(y)∧
+(b/ne}ationslash=x)∧(b/ne}ationslash=y)∧(x/ne}ationslash=y),
+EFFECT :On(b,y)∧Clear(x)∧¬On(b,x)∧¬Clear(y))
+Action(MoveToTable (b,x),
+PRECOND :On(b,x)∧Clear(b)∧Block(b)∧Block(x),
+EFFECT :On(b,Table)∧Clear(x)∧¬On(b,x))
+Figure 11.4 A planning problem in the blocks world: building a three-blo ck tower. One
+solution is the sequence [MoveToTable (C,A),Move(B,Table,C),Move(A,Table,B)].
+Reﬁnement (Go(Home,SFO),
+STEPS: [Drive(Home,SFOLongTermParking ),
+Shuttle(SFOLongTermParking ,SFO)] )
+Reﬁnement (Go(Home,SFO),
+STEPS: [Taxi(Home,SFO)] )
+Reﬁnement (Navigate ([a,b],[x,y]),
+PRECOND :a=x∧b=y
+STEPS: [] )
+Reﬁnement (Navigate ([a,b],[x,y]),
+PRECOND :Connected ([a,b],[a−1,b])
+STEPS: [Left,Navigate ([a−1,b],[x,y])])
+Reﬁnement (Navigate ([a,b],[x,y]),
+PRECOND :Connected ([a,b],[a+1,b])
+STEPS: [Right,Navigate ([a+1,b],[x,y])])
+...
+Figure 11.7 Deﬁnitions of possible reﬁnements for two high-level actio ns: going to San
+Francisco airport and navigating in the vacuum world. In the latter case, note the recursive
+nature of the reﬁnements and the use of preconditions.
+29
+function HIERARCHICAL -SEARCH (problem ,hierarchy )returns a solution or failure
+frontier←a FIFO queue with [Act]as the only element
+whiletrue do
+ifIS-EMPTY (frontier )then return failure
+plan←POP(frontier )//chooses the shallowest plan in frontier
+hla←the ﬁrst HLA in plan , ornull if none
+preﬁx ,suﬃx←the action subsequences before and after hlainplan
+outcome←RESULT (problem .INITIAL ,preﬁx )
+ifhlaisnull then //soplan is primitive and outcome is its result
+ifproblem .IS-GOAL(outcome )then return plan
+else for each sequence inREFINEMENTS (hla,outcome ,hierarchy )do
+add A PPEND (preﬁx ,sequence ,suﬃx ) tofrontier
+Figure 11.8 A breadth-ﬁrst implementation of hierarchical forward pla nning search. The
+initial plan supplied to the algorithm is [Act]. The R EFINEMENTS function returns a set of
+action sequences, one for each reﬁnement of the HLA whose pre conditions are satisﬁed by
+the speciﬁed state, outcome .
+30 Chapter 11 Automated Planning
+function ANGELIC -SEARCH (problem ,hierarchy ,initialPlan )returns solution or fail
+frontier←a FIFO queue with initialPlan as the only element
+whiletrue do
+ifEMPTY ?(frontier )then return fail
+plan←POP(frontier )//chooses the shallowest node in frontier
+ifREACH+(problem.INITIAL,plan)intersects problem .GOAL then
+ifplan is primitive then return plan //REACH+is exact for primitive plans
+guaranteed←REACH−(problem.INITIAL,plan)∩problem.GOAL
+ifguaranteed/ne}ationslash={}and M AKING -PROGRESS (plan ,initialPlan )then
+ﬁnalState←any element of guaranteed
+return DECOMPOSE (hierarchy ,problem .INITIAL ,plan ,ﬁnalState )
+hla←some HLA in plan
+preﬁx ,suﬃx←the action subsequences before and after hlainplan
+outcome←RESULT (problem .INITIAL ,preﬁx )
+for eachsequence inREFINEMENTS (hla,outcome ,hierarchy )do
+frontier←Insert (APPEND (preﬁx ,sequence ,suﬃx ),frontier )
+function DECOMPOSE (hierarchy ,s0,plan ,sf)returns a solution
+solution←an empty plan
+whileplan is not empty do
+action←REMOVE -LAST(plan )
+si←a state in R EACH−(s0,plan)such that sf∈REACH−(si,action)
+problem←a problem with I NITIAL =siand G OAL =sf
+solution←APPEND (ANGELIC -SEARCH (problem ,hierarchy ,action ),solution )
+sf←si
+returnsolution
+Figure 11.11 A hierarchical planning algorithm that uses angelic semant ics to identify and
+commit to high-level plans that work while avoiding high-le vel plans that don’t. The predi-
+cate M AKING -PROGRESS checks to make sure that we aren’t stuck in an inﬁnite regress ion
+of reﬁnements. At top level, call A NGELIC -SEARCH with[Act]as theinitialPlan .
+31
+Jobs({AddEngine1≺AddWheels1≺Inspect1},
+{AddEngine2≺AddWheels2≺Inspect2})
+Resources (EngineHoists (1),WheelStations (1),Inspectors (e2),LugNuts(500))
+Action(AddEngine1 ,DURATION :30,
+USE:EngineHoists (1))
+Action(AddEngine2 ,DURATION :60,
+USE:EngineHoists (1))
+Action(AddWheels1 ,DURATION :30,
+CONSUME :LugNuts(20),USE:WheelStations (1))
+Action(AddWheels2 ,DURATION :15,
+CONSUME :LugNuts(20),USE:WheelStations (1))
+Action(Inspecti,DURATION :10,
+USE:Inspectors (1))
+Figure 11.13 A job-shop scheduling problem for assembling two cars, with resource con-
+straints. The notation A≺Bmeans that action Amust precede action B.
+CHAPTER 12
+QUANTIFYING UNCERTAINTY
+function DT-A GENT (percept )returns anaction
+persistent :beliefstate , probabilistic beliefs about the current state of the world
+action , the agent’s action
+updatebeliefstate based on action andpercept
+calculate outcome probabilities for actions,
+given action descriptions and current beliefstate
+selectaction with highest expected utility
+given probabilities of outcomes and utility information
+returnaction
+Figure 12.1 A decision-theoretic agent that selects rational actions.
+CHAPTER 13
+PROBABILISTIC REASONING
+function ENUMERATION -ASK(X,e,bn)returns a distribution over X
+inputs :X, the query variable
+e, observed values for variables E
+bn, a Bayes net with variables vars
+Q(X)←a distribution over X, initially empty
+for each valuexiofXdo
+Q(xi)←ENUMERATE -ALL(vars ,exi)
+where exiiseextended with X=xi
+return NORMALIZE (Q(X))
+function ENUMERATE -ALL(vars ,e)returns a real number
+ifEMPTY ?(vars )then return 1.0
+V←FIRST (vars )
+ifVis an evidence variable with value vine
+then return P(v|parents(V))×ENUMERATE -ALL(REST(vars ),e)
+else return/summationtext
+vP(v|parents(V))×ENUMERATE -ALL(REST(vars ),ev)
+where eviseextended with V=v
+Figure 13.11 The enumeration algorithm for exact inference in Bayes nets .
+function ELIMINATION -ASK(X,e,bn)returns a distribution over X
+inputs :X, the query variable
+e, observed values for variables E
+bn, a Bayesian network with variables vars
+factors←[]
+for eachVinORDER (vars )do
+factors←[MAKE-FACTOR(V,e)] +factors
+ifVis a hidden variable thenfactors←SUM-OUT(V,factors )
+return NORMALIZE (POINTWISE -PRODUCT (factors ))
+Figure 13.13 The variable elimination algorithm for exact inference in B ayes nets.
+34 Chapter 13 Probabilistic Reasoning
+function PRIOR -SAMPLE (bn)returns an event sampled from the prior speciﬁed by bn
+inputs :bn, a Bayesian network specifying joint distribution P(X1,...,X n)
+x←an event with nelements
+for each variableXiinX1,...,X ndo
+x[i]←a random sample from P(Xi|parents(Xi))
+return x
+Figure 13.16 A sampling algorithm that generates events from a Bayesian n etwork. Each
+variable is sampled according to the conditional distribut ion given the values already sampled
+for the variable’s parents.
+function REJECTION -SAMPLING (X,e,bn,N)returns an estimate of P(X|e)
+inputs :X, the query variable
+e, observed values for variables E
+bn, a Bayesian network
+N, the total number of samples to be generated
+local variables :C, a vector of counts for each value of X, initially zero
+forj= 1toNdo
+x←PRIOR -SAMPLE (bn)
+if xis consistent with e then
+C[j]←C[j]+1 where xjis the value of Xinx
+return NORMALIZE (C)
+Figure 13.17 The rejection-sampling algorithm for answering queries gi ven evidence in a
+Bayesian network.
+35
+function LIKELIHOOD -WEIGHTING (X,e,bn,N)returns an estimate of P(X|e)
+inputs :X, the query variable
+e, observed values for variables E
+bn, a Bayesian network specifying joint distribution P(X1,...,X n)
+N, the total number of samples to be generated
+local variables :W, a vector of weighted counts for each value of X, initially zero
+forj= 1toNdo
+x,w←WEIGHTED -SAMPLE (bn,e)
+W[j]←W[j]+wwherexjis the value of Xinx
+return NORMALIZE (W)
+function WEIGHTED -SAMPLE (bn,e)returns an event and a weight
+w←1;x←an event with nelements, with values ﬁxed from e
+fori= 1tondo
+ifXiis an evidence variable with value xijine
+thenw←w×P(Xi=xij|parents(Xi))
+else x[i]←a random sample from P(Xi|parents(Xi))
+return x ,w
+Figure 13.18 The likelihood-weighting algorithm for inference in Bayes ian networks. In
+WEIGHTED -SAMPLE , each nonevidence variable is sampled according to the cond itional
+distribution given the values already sampled for the varia ble’s parents, while a weight is
+accumulated based on the likelihood for each evidence varia ble.
+function GIBBS -ASK(X,e,bn,N)returns an estimate of P(X|e)
+local variables :C, a vector of counts for each value of X, initially zero
+Z, the nonevidence variables in bn
+x, the current state of the network, initialized from e
+initialize xwith random values for the variables in Z
+fork= 1toNdo
+choose any variable Zifrom Zaccording to any distribution ρ(i)
+set the value of Ziinxby sampling from P(Zi|mb(Zi))
+C[j]←C[j]+1 wherexjis the value of Xinx
+return NORMALIZE (C)
+Figure 13.20 The Gibbs sampling algorithm for approximate inference in B ayes nets; this
+version chooses variables at random, but cycling through th e variables but also works.
+CHAPTER 14
+PROBABILISTIC REASONING OVER
+TIME
+function FORWARD -BACKWARD (ev,prior )returns a vector of probability distributions
+inputs :ev, a vector of evidence values for steps 1,...,t
+prior , the prior distribution on the initial state, P(X0)
+local variables :fv, a vector of forward messages for steps 0,...,t
+b, a representation of the backward message, initially all 1s
+sv, a vector of smoothed estimates for steps 1,...,t
+fv[0]←prior
+fori= 1 totdo
+fv[i]←FORWARD(fv[i−1],ev[i])
+fori=tdown to 1do
+sv[i]←NORMALIZE (fv[i]×b)
+b←BACKWARD (b,ev[i])
+return sv
+Figure 14.4 The forward–backward algorithm for smoothing: computing p osterior prob-
+abilities of a sequence of states given a sequence of observa tions. The F ORWARD and
+BACKWARD operators are deﬁned by Equations ( ??) and ( ??), respectively.
+37
+function FIXED -LAG-SMOOTHING (et,hmm ,d)returns a distribution over Xt−d
+inputs :et, the current evidence for time step t
+hmm , a hidden Markov model with S×Stransition matrix T
+d, the length of the lag for smoothing
+persistent :t, the current time, initially 1
+f, the forward message P(Xt|e1:t), initially hmm.PRIOR
+B, thed-step backward transformation matrix, initially the ident ity matrix
+et−d:t, double-ended list of evidence from t−dtot, initially empty
+local variables :Ot−d,Ot, diagonal matrices containing the sensor model informatio n
+addetto the end of et−d:t
+Ot←diagonal matrix containing P(et|Xt)
+ift > d then
+f←FORWARD(f,et−d)
+removeet−d−1from the beginning of et−d:t
+Ot−d←diagonal matrix containing P(et−d|Xt−d)
+B←O−1
+t−dT−1BTOt
+else B←BTOt
+t←t+1
+ift > d+1then return NORMALIZE (f×B1)else return null
+Figure 14.6 An algorithm for smoothing with a ﬁxed time lag of dsteps, implemented as
+an online algorithm that outputs the new smoothed estimate g iven the observation for a new
+time step. Notice that the ﬁnal output N ORMALIZE (f×B1)is justαf×b, by Equation ( ??).
+function PARTICLE -FILTERING (e,N,dbn)returns a set of samples for the next time step
+inputs :e, the new incoming evidence
+N, the number of samples to be maintained
+dbn, a DBN deﬁned by P(X0),P(X1|X0), and P(E1|X1)
+persistent :S, a vector of samples of size N, initially generated from P(X0)
+local variables :W, a vector of weights of size N
+fori= 1 toNdo
+S[i]←sample from P(X1|X0=S[i])//step 1
+W[i]←P(e|X1=S[i]) //step 2
+S←WEIGHTED -SAMPLE -WITH-REPLACEMENT (N,S,W) //step 3
+returnS
+Figure 14.17 The particle ﬁltering algorithm implemented as a recursive update oper-
+ation with state (the set of samples). Each of the sampling op erations involves sam-
+pling the relevant slice variables in topological order, mu ch as in P RIOR -SAMPLE . The
+WEIGHTED -SAMPLE -WITH-REPLACEMENT operation can be implemented to run in O(N)
+expected time. The step numbers refer to the description in t he text.
+CHAPTER 15
+PROBABILISTIC PROGRAMMING
+type Researcher, Paper, Citation
+random String Name(Researcher)
+random String Title(Paper)
+random Paper PubCited(Citation)
+random String Text(Citation)
+random Boolean Professor(Researcher)
+origin Researcher Author(Paper)
+#Researcher∼OM(3,1)
+Name(r)∼NamePrior ()
+Professor (r)∼Boolean(0.2)
+#Paper(Author=r)∼ifProfessor (r)thenOM(1.5,0.5)elseOM(1,0.5)
+Title(p)∼PaperTitlePrior ()
+CitedPaper (c)∼UniformChoice ({Paperp})
+Text(c)∼HMMGrammar (Name(Author(CitedPaper (c))),Title(CitedPaper (c)))
+Figure 15.5 An OUPM for citation information extraction. For simplicit y the model assumes
+one author per paper and omits details of the grammar and erro r models.
+39
+#SeismicEvents∼Poisson(T∗λe)
+Time(e)∼UniformReal (0,T)
+EarthQuake (e)∼Boolean(0.999)
+Location(e)∼ifEarthquake (e)thenSpatialPrior ()elseUniformEarth ()
+Depth(e)∼ifEarthquake (e)thenUniformReal (0,700) elseExactly(0)
+Magnitude (e)∼Exponential (log(10))
+Detected (e,p,s)∼Logistic(weights(s,p),Magnitude (e),Depth(e),Dist(e,s))
+#Detections (site=s)∼Poisson(T∗λf(s))
+#Detections (event=e,phase=p,station=s) = ifDetected (e,p,s)then1else0
+OnsetTime (a,s)if(event(a) =null)then∼UniformReal (0,T)
+else=Time(event(a)) +GeoTT(Dist(event(a),s),Depth(event(a)),phase(a))
++Laplace(µt(s),σt(s))
+Amplitude (a,s)if(event(a) =null)then∼NoiseAmpModel (s)
+else=AmpModel (Magnitude (event(a)),Dist(event(a),s),Depth(event(a)),phase(a))
+Azimuth(a,s)if(event(a) =null)then∼UniformReal (0,360)
+else=GeoAzimuth (Location(event(a)),Depth(event(a)),phase(a),Site(s))
++Laplace(0,σa(s))
+Slowness (a,s)if(event(a) =null)then∼UniformReal (0,20)
+else=GeoSlowness (Location (event(a)),Depth(event(a)),phase(a),Site(s))
++Laplace(0,σs(s))
+ObservedPhase (a,s)∼CategoricalPhaseModel (phase(a))
+Figure 15.6 A simpliﬁed version of the NET-VISA model (see text).
+#Aircraft(EntryTime =t)∼Poisson(λa)
+Exits(a,t)∼ifInFlight(a,t)thenBoolean(αe)
+InFlight(a,t) = (t=EntryTime (a))∨(InFlight(a,t−1)∧¬Exits(a,t−1))
+X(a,t)∼ift=EntryTime (a)thenInitX()
+else ifInFlight(a,t)thenN(FX(a,t−1),Σx)
+#Blip(Source=a,Time=t)∼ifInFlight(a,t)thenBernoulli (DetectionProb (X(a,t)))
+#Blip(Time=t)∼Poisson(λf)
+Z(b)∼ifSource(b)=null thenUniformZ (R)elseN(HX(Source(b),Time(b)),Σz)
+Figure 15.9 An OUPM for radar tracking of multiple targets with false ala rms, detection
+failure, and entry and exit of aircraft. The rate at which new aircraft enter the scene is λa,
+while the probability per time step that an aircraft exits th e scene is αe. False alarm blips (i.e.,
+ones not produced by an aircraft) appear uniformly in space a t a rate of λfper time step. The
+probability that an aircraft is detected (i.e., produces a b lip) depends on its current position.
+40 Chapter 15 Probabilistic Programming
+function GENERATE -IMAGE ()returns an image with some letters
+letters←GENERATE -LETTERS (10)
+return RENDER -NOISY -IMAGE (letters , 32, 128)
+function GENERATE -LETTERS (λ)returns a vector of letters
+n∼Poisson(λ)
+letters←[]
+fori= 1tondo
+letters[i]∼UniformChoice ({a,b,c,···})
+returnletters
+function RENDER -NOISY -IMAGE (letters ,width ,height )returns a noisy image of the letters
+cleanimage←RENDER (letters ,width ,height ,texttop= 10,textleft= 10)
+noisyimage←[]
+noisevariance∼UniformReal (0.1,1)
+forrow = 1towidth do
+forcol= 1toheight do
+noisyimage[row,col]∼ N(cleanimage[row,col],noisevariance)
+returnnoisyimage
+Figure 15.11 Generative program for an open-universe probability model for optical charac-
+ter recognition. The generative program produces degraded images containing sequences of
+letters by generating each sequence, rendering it into a 2D i mage, and incorporating additive
+noise at each pixel.
+function GENERATE -MARKOV -LETTERS (λ)returns a vector of letters
+n∼Poisson(λ)
+letters←[]
+letterprobs←MARKOV -INITIAL ()
+fori= 1tondo
+letters[i]∼Categorical (letterprobs)
+letterprobs←MARKOV -TRANSITION (letters[i])
+returnletters
+Figure 15.15 Generative program for an improved optical character recog nition model that
+generates letters according to a letter bigram model whose p airwise letter frequencies are
+estimated from a list of English words.
+CHAPTER 16
+MAKING SIMPLE DECISIONS
+function INFORMATION -GATHERING -AGENT (percept )returns anaction
+persistent :D, a decision network
+integratepercept intoD
+j←the value that maximizes VPI(Ej)/C(Ej)
+ifVPI(Ej)>C(Ej)
+then return Request(Ej)
+else return the best action from D
+Figure 16.9 Design of a simple, myopic information-gathering agent. Th e agent works by
+repeatedly selecting the observation with the highest info rmation value, until the cost of the
+next observation is greater than its expected beneﬁt.
+CHAPTER 17
+MAKING COMPLEX DECISIONS
+function VALUE -ITERATION (mdp ,ǫ)returns a utility function
+inputs :mdp , an MDP with states S, actionsA(s), transition model P(s′|s,a),
+rewardsR(s,a,s′), discount γ
+ǫ, the maximum error allowed in the utility of any state
+local variables :U,U′, vectors of utilities for states in S, initially zero
+δ, the maximum relative change in the utility of any state
+repeat
+U←U′;δ←0
+for each statesinSdo
+U′[s]←maxa∈A(s)Q-V ALUE(mdp,s,a,U)
+if|U′[s]−U[s]|> δ thenδ←|U′[s]−U[s]|
+untilδ≤ǫ(1−γ)/γ
+returnU
+Figure 17.6 The value iteration algorithm for calculating utilities of states. The termination
+condition is from Equation ( ??).
+function POLICY -ITERATION (mdp )returns a policy
+inputs :mdp , an MDP with states S, actionsA(s), transition model P(s′|s,a)
+local variables :U, a vector of utilities for states in S, initially zero
+π, a policy vector indexed by state, initially random
+repeat
+U←POLICY -EVALUATION (π,U,mdp )
+unchanged ?←true
+for each statesinSdo
+a∗←argmax
+a∈A(s)Q-V ALUE(mdp,s,a,U)
+ifQ-V ALUE(mdp,s,a∗,U)>Q-V ALUE(mdp,s,π[s],U)then
+π[s]←a∗;unchanged ?←false
+untilunchanged ?
+returnπ
+Figure 17.9 The policy iteration algorithm for calculating an optimal p olicy.
+43
+function POMDP-V ALUE -ITERATION (pomdp ,ǫ)returns a utility function
+inputs :pomdp , a POMDP with states S, actionsA(s), transition model P(s′|s,a),
+sensor model P(e|s), rewards R(s), discount γ
+ǫ, the maximum error allowed in the utility of any state
+local variables :U,U′, sets of plans pwith associated utility vectors αp
+U′←a set containing just the empty plan [], withα[](s)=R(s)
+repeat
+U←U′
+U′←the set of all plans consisting of an action and, for each poss ible next percept,
+a plan inUwith utility vectors computed according to Equation ( ??)
+U′←REMOVE -DOMINATED -PLANS (U′)
+until MAX-DIFFERENCE (U,U′)≤ǫ(1−γ)/γ
+returnU
+Figure 17.16 A high-level sketch of the value iteration algorithm for POM DPs. The
+REMOVE -DOMINATED -PLANS step and M AX-DIFFERENCE test are typically implemented
+as linear programs.
+CHAPTER 18
+MULTIAGENT DECISION MAKING
+Actors(A,B)
+Init(At(A,LeftBaseline )∧At(B,RightNet )∧
+Approaching (Ball,RightBaseline )∧Partner(A,B)∧Partner(B,A)
+Goal(Returned (Ball)∧(At(x,RightNet )∨At(x,LeftNet))
+Action(Hit(actor,Ball),
+PRECOND :Approaching (Ball,loc)∧At(actor,loc)
+EFFECT :Returned (Ball))
+Action(Go(actor,to),
+PRECOND :At(actor,loc)∧to/ne}ationslash=loc,
+EFFECT :At(actor,to)∧¬At(actor,loc))
+Figure 18.1 The doubles tennis problem. Two actors, AandB, are playing together and can
+be in one of four locations: LeftBaseline ,RightBaseline ,LeftNet , andRightNet . The ball
+can be returned only if a player is in the right place. The NoOp action is a dummy, which
+has no effect. Note that each action must include the actor as an argument.
+CHAPTER 19
+LEARNING FROM EXAMPLES
+function LEARN -DECISION -TREE(examples ,attributes ,parentexamples )returns a tree
+ifexamples is empty then return PLURALITY -VALUE (parentexamples )
+else if allexamples have the same classiﬁcation then return the classiﬁcation
+else ifattributes is empty then return PLURALITY -VALUE (examples )
+else
+A←argmaxa∈attributes IMPORTANCE (a,examples )
+tree←a new decision tree with root test A
+for each valuevofAdo
+exs←{e:e∈examples ande.A=v}
+subtree←LEARN -DECISION -TREE(exs,attributes−A,examples )
+add a branch to tree with label (A=v)and subtree subtree
+returntree
+Figure 19.5 The decision tree learning algorithm. The function I MPORTANCE is described in
+Section ??. The function P LURALITY -VALUE selects the most common output value among
+a set of examples, breaking ties randomly.
+46 Chapter 19 Learning from Examples
+function MODEL -SELECTION (Learner ,examples ,k)returns a (hypothesis, error rate) pair
+err←an array, indexed by size, storing validation-set error rates
+training set,testset←a partition of examples into two sets
+forsize = 1to∞do
+err[size]←CROSS -VALIDATION (Learner,size,training set,k)
+iferris starting to increase signiﬁcantly then
+bestsize←the value of size with minimum err[size]
+h←Learner (bestsize,training set)
+returnh,ERROR -RATE(h,testset)
+function CROSS -VALIDATION (Learner ,size,examples ,k)returns error rate
+N←the number of examples
+errs←0
+fori= 1tokdo
+validation set←examples [(i−1)×N/k :i×N/k ]
+training set←examples−validation set
+h←Learner (size,training set)
+errs←errs + ERROR -RATE(h,validation set)
+returnerrs /k//average error rate on validation sets, across k-fold cross- validation
+Figure 19.8 An algorithm to select the model that has the lowest validati on error. It builds
+models of increasing complexity, and choosing the one with b est empirical error rate, err,
+on the validation data set. Learner(size,examples )returns a hypothesis whose complexity
+is set by the parameter size, and which is trained on examples . In C ROSS -VALIDATION ,
+each iteration of the forloop selects a different slice of the examples as the validation set,
+and keeps the other examples as the training set. It then retu rns the average validation set
+error over all the folds. Once we have determined which value of thesize parameter is best,
+MODEL -SELECTION returns the model (i.e., learner/hypothesis) of that size, trained on all
+the training examples, along with its error rate on the held- out test examples.
+function DECISION -LIST-LEARNING (examples )returns a decision list, or failure
+ifexamples is empty then return the trivial decision list No
+t←a test that matches a nonempty subset examplestofexamples
+such that the members of examplestare all positive or all negative
+ifthere is no such tthen return failure
+ifthe examples in examplestare positive theno←Yeselseo←No
+return a decision list with initial test tand outcome oand remaining tests given by
+DECISION -LIST-LEARNING (examples−examplest)
+Figure 19.11 An algorithm for learning decision lists.
+47
+function ADABOOST (examples ,L,K)returns a hypothesis
+inputs :examples , set ofNlabeled examples (x1,y1),...,(xN,yN)
+L, a learning algorithm
+K, the number of hypotheses in the ensemble
+local variables :w, a vector of Nexample weights, initially all 1/N
+h, a vector of Khypotheses
+z, a vector of Khypothesis weights
+ǫ←a small positive number, used to avoid division by zero
+fork= 1toKdo
+h[k]←L(examples ,w)
+error←0
+forj= 1toNdo//Compute the total error for h[k]
+if h[k](xj)/ne}ationslash=yjthenerror←error+w[j]
+iferror>1/2then break from loop
+error←min(error,1−ǫ)
+forj= 1toNdo//Give more weight to the examples h[k]got wrong
+if h[k](xj) =yjthen w[j]←w[j]·error/(1−error)
+w←NORMALIZE (w)
+z[k]←1
+2log((1−error)/error)//Give more weight to accurate h[k]
+returnFunction (x) :/summationtextzihi(x)
+Figure 19.25 The A DABOOST variant of the boosting method for ensemble learning. The
+algorithm generates hypotheses by successively reweighti ng the training examples. The func-
+tion W EIGHTED -MAJORITY generates a hypothesis that returns the output value with th e
+highest vote from the hypotheses in h, with votes weighted by z. For regression problems, or
+for binary classiﬁcation with two classes -1 and 1, this is/summationtext
+kh[k]z[k].
+CHAPTER 20
+LEARNING PROBABILISTIC MODELS
+CHAPTER 21
+DEEP LEARNING
+CHAPTER 22
+REINFORCEMENT LEARNING
+function PASSIVE -ADP-L EARNER (percept )returns an action
+inputs :percept , a percept indicating the current state s′and reward signal r
+persistent :π, a ﬁxed policy
+mdp , an MDP with model P, rewards R, actionsA, discount γ
+U, a table of utilities for states, initially empty
+Ns′|s,a, a table of outcome count vectors indexed by state and action , initially zero
+s,a, the previous state and action, initially null
+ifs′is new thenU[s′]←0
+ifsis not null then
+increment Ns′|s,a[s,a][s’]
+R[s,a,s′]←r
+addatoA[s]
+P(·|s,a)←NORMALIZE (Ns′|s,a[s,a])
+U←POLICY EVALUATION (π,U,mdp )
+s,a←s′,π[s′]
+returna
+Figure 22.2 A passive reinforcement learning agent based on adaptive dy namic program-
+ming. The agent chooses a value for γand then incrementally computes the PandRvalues
+of the MDP. The P OLICY -EVALUATION function solves the ﬁxed-policy Bellman equations,
+as described on page ??.
+51
+function PASSIVE -TD-L EARNER (percept )returns an action
+inputs :percept , a percept indicating the current state s′and reward signal r
+persistent :π, a ﬁxed policy
+s, the previous state, initially null
+U, a table of utilities for states, initially empty
+Ns, a table of frequencies for states, initially zero
+ifs′is new thenU[s′]←0
+ifsis not null then
+increment Ns[s]
+U[s]←U[s] +α(Ns[s])×(r+γU[s′] -U[s])
+s←s′
+returnπ[s′]
+Figure 22.4 A passive reinforcement learning agent that learns utility estimates using tem-
+poral differences. The step-size function α(n)is chosen to ensure convergence.
+function Q-L EARNING -AGENT (percept )returns an action
+inputs :percept , a percept indicating the current state s′and reward signal r
+persistent :Q, a table of action values indexed by state and action, initia lly zero
+Nsa, a table of frequencies for state–action pairs, initially z ero
+s,a, the previous state and action, initially null
+ifsis not null then
+increment Nsa[s,a]
+Q[s,a]←Q[s,a] +α(Nsa[s,a])(r+γmaxa′Q[s′,a′]−Q[s,a])
+s,a←s′,argmaxa′f(Q[s′,a′],Nsa[s′,a′])
+returna
+Figure 22.8 An exploratory Q-learning agent. It is an active learner tha t learns the value
+Q(s,a)of each action in each situation. It uses the same exploratio n function fas the ex-
+ploratory ADP agent, but avoids having to learn the transiti on model.
+CHAPTER 23
+NATURAL LANGUAGE PROCESSING
+function CYK-P ARSE (words ,grammar )returns a table of parse trees
+inputs :words , a list of words
+grammar , a structure with L EXICAL RULES and G RAMMAR RULES
+T←a table //T[X,i,k] is most probable Xtree spanning wordsi:k
+P←a table, initially all 0 //P[X,i,k] is probability of tree T[X,i,k]
+//Insert lexical categories for each word.
+fori= 1toLEN(words )do
+for each (X,p)ingrammar .LEXICAL RULES(wordsi)do
+P[X,i,i]←p
+T[X,i,i]←TREE(X,wordsi)
+//Construct Xi:kfromYi:j+Zj+1:k, shortest spans ﬁrst.
+for each (i,j,k)inSUBSPANS (LEN(words ))do
+for each (X,Y,Z,p)ingrammar .GRAMMAR RULES do
+PYZ←P[Y,i,j]×P[Z,j+1,k]×p
+ifPYZ>P[X,i,k]do
+P[X,i,k]←PYZ
+T[X,i,k]←TREE(X,T[Y,i,j],T[Z,j+ 1,k])
+returnT
+function SUBSPANS (N)yields (i,j,k) tuples
+forlength = 2toNdo
+fori= 1toN+ 1−length do
+k←i+length−1
+forj=itok−1do
+yield(i, j, k)
+Figure 23.5 The CYK algorithm for parsing. Given a sequence of words, it ﬁ nds the most
+probable parse tree for the sequence and its subsequences. T he tableP[X,i,k] gives the
+probability of the most probable tree of category Xspanning wordsi:k. The output table
+T[X,i,k] contains the most probable tree of category Xspanning positions itokinclu-
+sive. The function SUBSPANS returns all tuples ( i,j,k) covering a span of wordsi:k, with
+i≤j < k , listing the tuples by increasing length of the i:kspan, so that when we go
+to combine two shorter spans into a longer one, the shorter sp ans are already in the table.
+LEXICAL RULES (word ) returns a collection of ( X,p) pairs, one for each rule of the form
+X→word [htbp], and G RAMMAR RULES gives (X,Y,Z,p) tuples, one for each grammar
+rule of the form X→Y Z [p].
+53
+[ [S[NP-2Her eyes ]
+[VPwere
+[VPglazed
+[NP*-2]
+[SBAR -ADV as if
+[S[NPshe]
+[VPdid n’t
+[VP[VPhear [NP*-1]]
+or
+[VP[ADVP even ]see[NP*-1]]
+[NP-1him]]]]]]]]
+.]
+Figure 23.8 Annotated tree for the sentence “Her eyes were glazed as if sh e didn’t hear
+or even see him.” from the Penn Treebank. Note a grammatical p henomenon we have not
+covered yet: the movement of a phrase from one part of the tree to another. This tree analyzes
+the phrase “hear or even see him” as consisting of two constit uentVPs, [VPhear [NP*-1]]
+and [VP[ADVP even ]see[NP*-1]], both of which have a missing object, denoted *-1,
+which refers to the NPlabeled elsewhere in the tree as [ NP-1him]. Similarly, the [ NP*-2]
+refers to the [ NP-2Her eyes ].
+CHAPTER 24
+DEEP LEARNING FOR NATURAL
+LANGUAGE PROCESSING
+It is a truth universally acknowledged that the earth is not the center of the uni-
+verse. There are those who assert there is. I do not accept the m, but others I
+consider to be of the same opinion. The truth is, however, tha t if there are other
+than the center, and if there are any other living things in th e universe and if they
+are not human, then we do not yet have our answers. We have to go on. This page
+gives a simpliﬁed, simpliﬁed answer to the problem. We don’t have all the answers.
+The truth is, however, that the truth is out there.
+When Gregor Samsa woke up one morning, he did not notice anything strange.
+“When my wife is looking at me, I feel like she is looking at a pi ece of art,” he said.
+“I think she is admiring something I have created.” The idea i s that by looking at
+your own life, you learn something important and become a bet ter person. It is a
+theory that emerged from psychologist Daniel Goleman’s wor k, in which he asked
+“How do you know you’re not a loser?”
+Alice was beginning to get very tired of sitting with her sist er on the bank. She
+sat up, yawned, and said, with a loud little scream, “I hope yo u don’t mind if I keep
+on doing what I should like to do, and if someone asks me which o f us will do
+more, don’t tell them that I won’t do much, my dear sister.”
+All happy families are alike; each happy family is like a garden of paradise. The
+only difference between happy families and unhappy familie s, is that the unhappy
+family doesn’t have any ﬂowers or trees.
+Tell me a story. Tell me a story. Tell me a story. Tell me a story. Tell me a story .
+Tell me a story. Tell me a story. Tell me a story. Tell me a story . Tell me a story.
+Tell me a story. Tell me a story. Please ﬁll out the following d etails. Thank you...
+Thank you for your interest in this interview. Please wait.. .
+Figure 24.13 Example completion texts generated by the GPT-2 language mo del, given the
+prompts in bold . Most of the texts are quite ﬂuent English, at least locally. The ﬁnal example
+demonstrates that sometimes the model just breaks down.
+CHAPTER 25
+COMPUTER VISION
+CHAPTER 26
+ROBOTICS
+function MONTE -CARLO -LOCALIZATION a,z,N,P(X′|X, v, ω),P(z|z∗),map
+returns a set of samples, S, for the next time step
+inputs :a, robot velocities vandω
+z, a vector of Mrange scan data points
+P(X′|X, v, ω), motion model
+P(z|z∗), a range sensor noise model
+map , a 2D map of the environment
+persistent :S, a vector of Nsamples
+local variables :W, a vector of Nweights
+S′, a temporary vector of Nsamples
+ifSis empty then
+fori= 1toNdo//initialization phase
+S[i]←sample from P(X0)
+fori= 1toNdo//update cycle
+S′[i]←sample from P(X′|X=S[i],v,ω)
+W[i]←1
+forj= 1toMdo
+z∗←RAYCAST(j,X=S′[i],map )
+W[i]←W[i]·P(zj|z∗)
+S←WEIGHTED -SAMPLE -WITH-REPLACEMENT (N,S′,W)
+returnS
+Figure 26.6 A Monte Carlo localization algorithm using a range-scan sen sor model with
+independent noise.
+CHAPTER 27
+PHILOSOPHY , ETHICS, AND SAFETY
+OF AI
+CHAPTER 28
+THE FUTURE OF AI
+CHAPTER 29
+MATHEMATICAL BACKGROUND
+CHAPTER 30
+NOTES ON LANGUAGES AND
+ALGORITHMS

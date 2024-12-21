@@ -1,0 +1,1317 @@
+=== Metadata ===
+{
+    "file_name": "A_Survey_of_the_State-of-the-Art_Localization_Techniques_and_Their_Potentials_for_Autonomous_Vehicle_Applications-2.pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/A_Survey_of_the_State-of-the-Art_Localization_Techniques_and_Their_Potentials_for_Autonomous_Vehicle_Applications-2.pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+IEEE INTERNET OF THINGS JOURNAL, VOL. 5, NO. 2, APRIL 2018 829
+A Survey of the State-of-the-Art Localization
+Techniques and Their Potentials for
+Autonomous Vehicle Applications
+Sampo Kuutti, Saber Fallah , Konstantinos Katsaros, Mehrdad Dianati,
+Francis Mccullough, and Alexandros Mouzakitis
+Abstract —For an autonomous vehicle to operate safely and
+effectively, an accurate and robust localization system is essen-tial. While there are a variety of vehicle localization techniquesin literature, there is a lack of effort in comparing thesetechniques and identifying their potentials and limitations forautonomous vehicle applications. Hence, this paper evaluates thestate-of-the-art vehicle localization techniques and investigatestheir applicability on autonomous vehicles. The analysis startswith discussing the techniques which merely use the informa-tion obtained from on-board vehicle sensors. It is shown thatalthough some techniques can achieve the accuracy required forautonomous driving but suffer from the high cost of the sen-sors and also sensor performance limitations in different drivingscenarios (e.g., cornering and intersections) and different environ-mental conditions (e.g., darkness and snow). This paper continues
+the analysis with considering the techniques which beneﬁt from
+off-board information obtained from V2X communication chan-nels, in addition to vehicle sensory information. The analysisshows that augmenting off-board information to sensory informa-tion has potential to design low-cost localization systems with highaccuracy and robustness, however, their performance depends onpenetration rate of nearby connected vehicles or infrastructureand the quality of network service.
+Index Terms —Autonomous vehicles, cooperative systems,
+global positioning system (GPS), intelligent vehicles, Internetof Things (IoT), sensor fusion, simultaneous localization and
+mapping, vehicular ad hoc networks.
+I. I NTRODUCTION
+BETWEEN 2000 and 2014 the number of registered road
+vehicles in the U.S. has increased by 35 million [ 1], an
+increase of 15%. This rapid increasing number of road vehicleshas ampliﬁed the importance of issues such as trafﬁc conges-
+tion, pollution, and road accidents. Autonomous vehicles are
+Manuscript received August 30, 2017; revised December 2, 2017 and
+February 13, 2018; accepted February 18, 2018. Date of publication
+March 5, 2018; date of current version April 10, 2018. This work was sup-
+ported by Jaguar Land Rover and the U.K.-EPSRC as part of the jointly fundedTowards Autonomy: Smart and Connected Control (TASCC) Programme
+under Grant EP/N01300X/1. (Corresponding author: Saber Fallah.)
+S. Kuutti and S. Fallah are with the Centre for Automotive
+Engineering, University of Surrey, Guildford GU2 7XH, U.K. (e-mail:s.j.kuutti@surrey.ac.uk; s.fallah@surrey.ac.uk).
+K. Katsaros is with the Technology Department, Digital Catapult, London
+NW1 2RA, U.K. (e-mail: kostas.katsaros@digicatapult.org.uk).
+M. Dianati is with the Warwick Manufacturing Group, University of
+Warwick, Coventry CV4 7AL, U.K. (e-mail: m.dianati@warwick.ac.uk).
+F. Mccullough and A. Mouzakitis are with Jaguar Land Rover Ltd.,
+Coventry CV4 7HS, U.K. (e-mail: fmccull2@jaguarlandrover.com).
+Digital Object Identiﬁer 10.1109/JIOT.2018.2812300considered as a potential solution to some of these problems by
+providing more efﬁcient driving and proper vehicle control [ 2].
+The architecture through which autonomous driving is
+achieved can be described by ﬁve functional systems, includ-ing localization, perception, planning, control, and systemmanagement [ 3]. The localization system identiﬁes the loca-
+tion of the vehicle on a global coordinate system while the
+perception system evaluates the driving environment aroundthe vehicle and identiﬁes elements such as other road users,
+trafﬁc signals, and obstacles. The planning system uses the
+inputs from the perception and localization systems to deter-mine the travel paths and driving actions such as lane changes,accelerating, and braking. The control system transforms the
+behavior and actions indicated by the planning system to the
+vehicle manipulation commands (e.g., steering, accelerating,and braking). The system management oversees the operation
+of all the systems and provides the human–machine interface.
+These functional systems must cooperate to answer the threeimportant questions of “Where is the car?” “What is aroundthe car?” and “What does the car need to do next?” to achieve
+fully autonomous operation.
+The perception, planning, and control functional systems
+require accurate knowledge of the vehicle’s location to carry
+out the correct driving decisions and actions. For example, an
+error of few decimeters can cause the vehicle to localize itselfon the wrong side of the road or can cause accidents to the vul-nerable users such as pedestrians and cyclists. Robustness is
+also required as the vehicle needs to localize itself in uncer-
+tain driving conditions (e.g., in cases where road markingsare absent or obscured) and in harsh environmental conditions
+(e.g., darkness and snow). Therefore, autonomous vehicles
+require robust localization systems with centimeter level ofaccuracy [ 4]. The global positioning system (GPS) is the most
+commonly used localization system for vehicle applications,
+as they offer a cheap and easily accessible solution for global
+positioning. However, GPS suffers from poor reliability dueto multiple limitations such as signal blockage and multipath
+as well as inadequate accuracy ( ∼10 m) for autonomous
+vehicles. In order to develop robust, accurate, and reliablelocalization systems for autonomous vehicle applications,recent research has focused on the development of localiza-
+tion systems either using advanced sensors (e.g., RADAR,
+LiDAR, camera, etc.) or fusing on-board and off-boardinformation.
+2327-4662 c/circlecopyrt2018 IEEE. Personal use is permitted, but republication/redistribution requires IEEE permission.
+See http://www.ieee.org/publications_standards/publications/rights/index.html for more information.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:26:36 UTC from IEEE Xplore.  Restrictions apply. 
+830 IEEE INTERNET OF THINGS JOURNAL, VOL. 5, NO. 2, APRIL 2018
+Advanced sensors can offer more accurate and reliable posi-
+tion measurements than GPS, but at an increased cost. Thesesensors typically operate by sensing information about theenvironment, such as road marks, obstacles, other road users
+etc. However, their performance is limited due to direct line of
+sight requirement and lack of robustness against harsh envi-ronmental situations (e.g., snow, darkness, etc.). Therefore,
+any obstacle which is obscured cannot be identiﬁed, thereby
+degrading the real-time system performance. Moreover, thecost-effectiveness is a further drawback of these advanced sen-sors, in order to satisfy the high accuracy requirements of
+autonomous vehicles. However, with the emergence of Internet
+of Things (IoT) [ 5], it is possible for a vehicle to access to
+a wider range of information (e.g., states of nearby vehicles,
+weather information, trafﬁc status, etc.). By connecting vehi-
+cles to intervehicle network, intravehicle network, and vehic-ular mobile internet, an IoT infrastructure application can beformed which is referred to as Internet of Vehicles (IoV) [ 6].
+Using IoV , it is possible to enable the next generation of intel-
+ligent transportation systems [ 7]–[9]. Providing wireless con-
+nectivity to vehicles enables communication with internal and
+external environments, supporting vehicle-to-vehicle (V2V),
+vehicle-to-infrastructure (V2I), vehicle-to-sensor, and vehicle-to-Internet communications [ 10]. Such information can be
+integrated to localization systems to further improve both accu-
+racy and robustness and to address the line of sight issues
+associated with on-board sensors at a relatively low cost. Thelocalization systems which beneﬁt from off-board informationare known as cooperative localization systems. It is noted that
+in the context of cooperative localization systems, off-board
+information can be received either from nearby vehicles, ﬁxedroadside infrastructure units, or both.
+There are various research works in the literature proposing
+different localization techniques with different approaches insensor conﬁguration, data fusion methodologies, connectivity,and feature map creation. However, there is a lack of analyz-
+ing and comparison of these different approaches to identify
+their potentials and limitations which can be highly beneﬁ-cial toward deployment of autonomous cars to the market.
+Therefore, this report aims to survey the state-of-the-art local-
+ization techniques and analyze their performance. To this end,the state of the current ﬁeld is evaluated and recommendationsfor future research in vehicle localization systems are made.
+The remainder of this paper is structured as follows.
+Section II describes mapping techniques used in vehicle local-ization context. Section III discusses recent localization tech-
+niques, which utilize only on-board sensors while Section IV
+is devoted to analyzing cooperative localization techniques.Finally, Section V concludes the current state of the localiza-tion techniques and technologies and makes recommendation
+for the direction of future work in the ﬁeld.
+II. M
+APPING TECHNIQUES
+Localization is in principle the process of positioning an
+object, in the context of this report a vehicle, a pedestrian
+or other road furniture, with respect to a reference global or
+local map. In this sense, a proper deﬁnition of alternative maptypes used for vehicle localization is required. This section
+deﬁnes types of maps relevant to vehicle localization whichare exploited by localization techniques described in thefollowing sections. In general, there are two main categories
+of maps: 1) planar which refers to maps that rely on layers
+or planes on a geographic information system (GIS), e.g.,high-deﬁnition (HD) maps and 2) point-cloud which refers to
+maps based on a set of data points in the GIS. The generation
+of such maps from companies such as HERE, Google, Uber,and TomTom, is challenging and pertains initial data collec-tion, data analysis, and continuous maintenance. Such maps
+can be maintained exploiting near-real time crowdsourcing
+information from vehicles traveling and updating backendmap systems, e.g., Mobileye’s road experience management
+system [ 11]. The main difference in using these two types
+of maps is the type of sensor responsible for localizingthe vehicle. Vision-based sensors such as cameras, lightdetection and Ranging (LiDAR), radio detection and rang-
+ing (RADAR), and ultrasonic use primarily point-cloud maps,
+whereas GPS-based systems use planar maps. Map matching,i.e., the process of localizing the vehicle with respect to the
+underlying map, is more complex in point cloud systems as
+it requires intense computations, both at the sensor itself (seethe next section for details) and for the identiﬁcation of thepoints. For that reason, systems such as the NVIDIA DRIVE
+PX2 [ 12] introduce high computation capabilities on-board
+the vehicle. Nevertheless, there is no clear advantage of onetype over the other in terms of accuracy of the localization asthe generation of HD/3-D-maps entail usage of vision-based
+sensors during the collection phase.
+Planar maps are generated by capturing and analyzing
+data from high-resolution satellite or aerial photography, GPS
+traces and imaging. The process of detailed recording the
+environment for later modeling is called micro-mapping ingeneral [ 13]. The resolution of those maps depends on the
+captured data and enrichment with additional layers of infor-
+mation from analyzed data. For example, HD maps provide
+a base map layer enriched with a precise sublane levelrepresentation of the road network, including the lane mark-
+ings, road furniture, and curvature. With additional details
+from stereoscopic cameras, 3-D maps provide also the heightof objects on the map. In addition to static informationabout the environment topology, dynamic information such as
+the trafﬁc conditions, events on the road, location of other
+moving objects can be incorporated into maps. A standardmethod to represent such information is the local dynamic
+map (LDM) [ 14], [15], that contains several layers of infor-
+mation. Such dynamic information can be used to self-adaptlocalization and makes maintenance of accurate map moreefﬁcient. For instance, Fig. 1illustrates different layers of
+an LDM which can be used for the localization systems of
+an autonomous vehicle. The ﬁrst layer represents the staticelements of a map, for example, the road network, build-
+ings, and other permanent features of a map. This information
+is usually provided by a map supplier. The second layercontains quasi-static features such as road-side infrastructure,variable speed limits. These are obtained during the opera-
+tion of the system. The third layer contains transient dynamic
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:26:36 UTC from IEEE Xplore.  Restrictions apply. 
+KUUTTI et al. : SURVEY OF STATE-OF-THE-ART LOCALIZATION TECHNIQUES AND THEIR POTENTIALS 831
+Fig. 1. Local dynamic map layers with example information. Adapted
+from [ 17].
+Fig. 2. Point cloud captured from LiDAR on-board a vehicle [ 18].
+data such as weather information, trafﬁc light timings, and
+phase and congestion levels, obtained through interaction
+with the infrastructure. Finally, the fourth layer of an LDMcontains highly dynamic data through vehicle-to-everything(V2X) communications and contains location information of
+other vehicles, road-side units (RSUs), even pedestrians or
+cyclists which have such communication capabilities.
+On the other hand, point cloud maps are generated by 3-D
+scanners, such as LiDAR sensors, and represent the external
+surface of an object in the 3-D space. The data are stored inX,Y, and Zformat for each co-ordinate where localization
+based on point cloud is performed using techniques such as
+Markov localization systems and simultaneous localization and
+mapping (SLAM) systems [ 16]. In the former systems, a vehi-
+cle collects information about the environment and other road
+users from on-board sensors and V2X information and uses the
+information to localize the vehicle inside a pre-existing staticfeature map while, in the latter ones, LDMs are created asthe vehicle passes the environment and are then compared to
+the pre-existing static map to localize the vehicle. The advan-
+tage of SLAM is the utilization of an LDM which means thatmaps can be updated with each pass of the environment and
+new maps can be created when the vehicle is in a nonmapped
+environment. Fig. 2shows an example of cloud point map that
+can be obtained from a LiDAR, on-board of a vehicle.
+III. S
+ENSOR -BASED LOCALIZATION TECHNIQUES
+These techniques rely only on on-board vehicle sensors
+to ﬁnd the global position of a vehicle in a speciﬁed
+Fig. 3. Differential GPS correction. Gray objects indicate estimated position
+from uncorrected GPS data, while black ﬁgures indicate the ground truth. The
+base station calculates the GPS error from its own GPS measurements andknown ground truth, which is then transmitted to the vehicle.
+coordinate system such as Earth-centered inertial (ECI) coor-
+dinate system, Earth-centered Earth-ﬁxed (ECEF) coordinate
+system, or the geographical coordinate system. For the brevity
+of this paper, the detailed deﬁnition of each coordinate systemis referred to [ 19]. The main sensors considered in this section
+include GPS, inertial motion units (IMUs), cameras, RADAR,
+LiDAR, and ultrasonic sensors. The following sections providedetails of the capabilities of each sensor including beneﬁts andlimitations as well as analysis of localization techniques using
+each sensor standalone or a combination of sensors.
+A. GPS/IMU Based Techniques
+Global navigation satellite systems (GNSS) such as GPS,
+GLONASS, BeiDou, and Galileo rely on at least four satellites
+to estimate global position at a relatively low cost. Typical GPS
+average accuracy ranges from few meters to above 20 m [ 20],
+limiting its implementation to autonomous vehicle applicationsas decimeter level ( ∼30 cm) accuracy is demanded to stay
+in lane [ 21]. However, GPS accuracy can be improved upon
+by using differential GPS (DGPS), assisted GPS (AGPS), orreal-time kinematic (RTK) solutions.
+A DGPS utilizes measurements from an on-board vehicle
+GPS unit and from a GPS unit on a ﬁxed infrastructure unitwith a known location as shown in Fig. 3. As GPS error is
+correlated between two nearby GPS units, calculating this cor-
+related error can be used to eliminate the error of on-board
+vehicle GPS to improve its accuracy. DPGS uses the knownposition of the ﬁxed infrastructure unit to calculate the local
+error in the GPS position measurement periodically, as illus-
+trated in Fig. 3. This correction is then broadcasted to the
+on-board vehicle GPS units to adjust their own GPS estimateto achieve an average accuracy in the range of 1–2 m [ 19].
+Also, AGPS offers increased accuracy and signal availability
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:26:36 UTC from IEEE Xplore.  Restrictions apply. 
+832 IEEE INTERNET OF THINGS JOURNAL, VOL. 5, NO. 2, APRIL 2018
+at an increased cost. AGPS uses information from a cellu-
+lar network to reduce delays in obtaining a position from thesatellite as well as increase the signal coverage by reducingacquisition thresholds [ 22]. However, it provides less position
+accuracy compared to a DGPS unit. On the other hand, an
+RTK-GPS utilizes dual-frequency GPS receivers to estimatethe relative position of a vehicle with respect to the position
+of a base station with known position. In this case, the rela-
+tive position is estimated based on carrier phase measurementof GPS signals to achieve centimeter level accuracy. Furtherimprovements in accuracy could be achieved in the future with
+the use of the European Galileo GNSS, which is expected to
+be fully operational with a constellation of 30 satellites by2020 [ 23]. The combined GPS-Galileo system is intended to
+provide centimeter-level accuracy for GNSS solutions with
+dual-receiver systems [ 24]. Also, the increased number of
+available satellites in combined GPS-Galileo systems couldimprove signal availability.
+Although DGPS, AGPS, and RTK-GPS methods improve
+the accuracy of a conventional GPS, they suffer from poor reli-ability. Therefore, the signal availability remains a problem,
+especially in urban environments, thereby reducing imple-
+mentation potentials of GPS technologies for the autonomousvehicle applications. Additionally, the time-to-ﬁrst-ﬁx (TTFF),which refers to the time required to obtain the signal from the
+satellites and acquire an initial position estimate after a GPS
+unit is turned presents another limitation. Typically, TTFFfor a GPS unit can be up to 12.5 min if the unit was com-pletely turned off. However, this can be partially mitigated by:
+1) keeping the clock operational whilst the unit is off; 2) uti-
+lizing a stand-by mode; or 3) acquiring the satellite almanacinformation from a cellular network with AGPS methods [ 25].
+For the aforementioned reasons, GPS needs to be either
+integrated with other sensors or replaced with more accu-rate sensors in the context of autonomous vehicles. For thispurpose, GPS is often integrated with IMUs to design a low-
+cost vehicle localization system. IMUs use a combination of
+accelerometers and gyroscopes to measure linear accelerationsand vehicle angular velocities, respectively. This information
+can be used to calculate the trajectory of the vehicle as it trav-
+els. For this reason, IMUs have been used to estimate vehicleposition relative to its initial position, in a method known asdead reckoning. However, the main problem with IMUs is
+accumulated errors where the measured position drifts further
+away from its true position as the vehicle travels. This problemcan be overcome by correcting the estimated position using
+other sensors, to avoid accumulated drift and to provide global
+positioning. To address the low accuracy and interferenceissues in GPS as well as the cumulative errors related to IMUsensors, Zhang et al. [26] proposed integrating the informa-
+tion from the GPS and IMU. To test the approach, the authors
+used a GPS/IMU system which provides GPS data, headingangle, and velocity of the vehicle at 10 Hz. The proposed
+method was successful in increasing the accuracy beyond stan-
+dalone GPS or IMU capabilities; however, cumulative errorswere still present in the system. Over a driving distance of408 m, the system accumulated root mean square (RMS)
+errors of 7.2 m, compared to that of 22.3 m and 13.2 m of
+IMU odometry and GPS, respectively. Therefore, while thistechnique was successful in mitigating some of the weaknesses
+of the standalone GPS and IMU methods, the magnitude of thelocalization errors means that the system would be inadequatefor autonomous vehicle systems. However, the results show the
+potential of fusing data from multiple sensors to improve the
+accuracy and robustness beyond what each sensor can achieveas standalone.
+B. Camera-Based Techniques
+As a method of replacing GPS with an alternative on-board
+sensor, Li et al. [27] proposed a low-cost localization method
+utilizing only cameras, where the images obtained from thecameras were down-sampled to a resolution of 800 ×600 pix-
+els to reduce computation time. This vision-based localization
+approach combines a topological map and a point-cloud map
+to provide an SLAM type technique. The localization, ﬁrst,estimates a rough position through dividing the images into
+grids and extracting the orientation histograms of each cell.
+Then, a ﬁne localization was done using the map consist-ing of landmarks in the environment. The proposed two-stagelocalization method not only increases the accuracy of the
+localization but also reduces the computation requirements for
+the ﬁne localization. Using the proposed method, mean posi-tioning errors of 75 cm were achieved. However, the system
+is sensitive to changes in illumination conditions or angle of
+observation which may cause the system to fail. Possible solu-tions to these weaknesses which were suggested by the authorsare the use of omnidirectional cameras with a 360
+◦ﬁeld of
+view to mitigate the ﬁeld of view change errors and designing
+more robust algorithm against severe weather and illuminationconditions. An alternative approach of using cameras is visual
+odometry discussed in [ 28], which uses information from cam-
+eras to calculate the trajectory of the vehicle for relative posi-tioning. The method suggested by the authors uses stereovisionprovided by two cameras mounted on the front of a vehicle.
+The attitude of a vehicle is calculated incrementally by com-
+paring relative movement and orientation to tracked featurepoints between left and right cameras at different time frames.The algorithm used by the authors is a random sample consen-
+sus algorithm, which rejects outlier estimates to provide robust
+estimates. Two experiments were completed in an urban envi-ronment with cameras recording 30 frames/s at a resolution
+of 320 ×240 pixels. Using this method, estimated and actual
+travel lengths of 145.37 m and 165.86 m in the ﬁrst experi-ment and 197.89 m and 216.3 mm in the second experimentwere observed, respectively. Main source of errors occurred
+when the subject vehicle was stationary while other objects
+moved in the vicinity, therefore potential improvements wouldbe the ability to differentiate between moving and stationary
+objects.
+To further improve the performance of the camera-based
+localization techniques, the integration of GPS, IMU, andcamera sensors have been proposed by the researchers. For
+instance, Kamijo et al. [29] suggested using GPS/IMU for
+global positioning, whilst using the camera to recognize lanemarkers for lateral positioning. Using this approach, mean
+positioning errors of 0.73 m were achieved. Suhr et al. [30]
+extended the method proposed [ 29] by the use of cameras
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:26:36 UTC from IEEE Xplore.  Restrictions apply. 
+KUUTTI et al. : SURVEY OF STATE-OF-THE-ART LOCALIZATION TECHNIQUES AND THEIR POTENTIALS 833
+for recognition of road markers as well as lane markers to
+support both lateral and longitudinal positioning. Over twoexperiments, this approach obtained mean lateral errors of0.49 m and 0.58 m and mean longitudinal errors of 0.95 m and
+1.43 m for the ﬁrst and second experiments, respectively. The
+authors noted that the method has larger longitudinal errorsthan lateral errors because lanes and road markers were used
+for lateral localization, whereas longitudinal localization only
+uses road markers. Since lanes are observed with a higherfrequency than road markers, the proposed method experienceshigher longitudinal errors compared to lateral errors. Major
+errors were observed: 1) when driving on long straight roads
+with no road markers detected; 2) when the vehicle was pass-ing through intersections with no road markings; or 3) when
+false detections of road markers occurred. As another example
+of integrating vision-based techniques with GPS and IMUs,Mattern and Wanielik [ 16] proposed two different approaches
+for localizing vehicles based on combination of on-board vehi-
+cle camera and aerial images along with IMU/GPS signals.
+The ﬁrst method utilizes feature maps based on aerial imagingcontaining information about landmarks, lane markings, curbs,
+and the road geometry. Imaging from the camera equipped on
+the vehicle was then used to localize the vehicle within thefeature map. The second approach uses aerial images whichare then processed to remove unnecessary information so that
+information only about local edges (e.g., the edges of features
+such as roads) is retained. The experimental results showedthat, for the ﬁrst method, 80% of position estimates had bothlateral and longitudinal errors less than 1 m, while the sec-
+ond method only achieved 60% of position estimates within
+this range. Moreover, the second method had peak errors of3.5 m and 7 m which would cause the vehicle to choose the
+wrong lane. The authors mentioned that future improvements
+to these techniques could be achieved by further processingof the aerial or camera imaging. Overall, these two methodsare still inadequate for autonomous vehicle localization due to
+the magnitude of errors present.
+In general, although cameras can offer low cost solutions
+to localization systems, the level of the accuracy depends on
+the image resolutions. It is noted that acquiring high resolution
+images can drastically increases the processing power demandand processing time of the localization system which cannotbe achievable using on-board vehicle processing systems.
+C. RADAR-Based Techniques
+A Radar sensor is a ranging sensor which utilizes radio
+waves. Radar functions by emitting periodic radio waves
+which can bounce off obstacles back to the receiver and dis-tance to target is measured from the time of arrival of radiowaves. Each radio wave provides a single range measurement
+which gives the distance to the obstacle that reﬂected it back to
+the receiver. Radars also have relatively low power consump-tion, for example, the Delphi short range radars (SRRs) use
+only 0.16 W and offer up to 64 range measurements at 20 Hz
+with a ﬁeld of view of ±75
+◦and a range of 80 m [ 31]. Even
+lower power requirements can be achieved by frequency mod-ulation continuous wave (FMCW)-based Radars, which use
+continuous Radar signals rather than the periodic ones used intraditional pulse-based Radar systems. For example, the K2pi
+microwave Radars based on FMCW can offer a 360
+◦ﬁeld of
+view and a range up to 100 m, with power requirements aslow as 0.1 W, however, the accuracy is typically lower than
+that of pulse-based radar systems [ 32].
+As an example of localization system using a Radar,
+Vivet et al. [32] evaluated the data obtained from a 360
+◦ﬁeld
+of view FCMW microwave Radar sensor through two differ-
+ent SLAM methods to localize a vehicle. The ﬁrst methodis a trajectory-oriented SLAM technique while the other oneanalyses the distortion caused by rotating Radar at high speed
+to obtain the trajectory of the vehicle and map the envi-
+ronment. For a vehicle traveling at the speed of 30 km/h,the methods resulted in mean position errors of 10 m and
+12 m for the ﬁrst and second techniques, respectively, thereby
+indicating the technique will be unsuitable for autonomousvehicles. However, the work in [ 31] explored the use of pulse-
+based SRR due to its low cost and good accuracy, where the
+Radar sensor acquires up to 64 detections, each at 20 Hz.
+Also, information of speed and yaw rate were used from sig-nals of a GPS/IMU system. The results showed RMS errors
+of 7.3 cm laterally and 37.7 cm longitudinally, with worst
+case errors of 27.8 cm laterally and 115.1 cm longitudinally.While these results are promising for Radar-based localiza-tion, Radar maps are dependent on the quality of discernible
+features available, which can cause errors when such fea-
+tures are not available. To further improve the accuracies ofRadar-based techniques, a novel approach of utilizing groundpenetrating Radar technology for localization was proposed
+in [13]. This method scans the subsurface features and the
+inhomogeneity of the subterranean geology to create a map.These features are unique and static enough that localiza-
+tion for autonomous vehicles could be completed utilizing
+subterranean feature maps. Testing was done using a vehicleequipped with GPS/IMU system integrated with the localizingground penetrating Radar (LGPR) system with a ground pen-
+etrating depth of 2–3 m, which was brought up to speeds of
+100 km/h in testing. The vehicles ﬁrst created a subterraneanfeature map of the environment over the initial pass of the envi-
+ronment and then attempted to localize itself within this map.
+Results showed the capability to localize within positionalRMS errors of 4 cm, which is within limits for a vehicle tomaintain its lane of trafﬁc. The proposed approach, therefore,
+shows signiﬁcant potential as it can provide the high accu-
+racy localization required for autonomous driving. Moreover,unlike localization systems such as camera-based localization
+systems, LGPR is not affected by weather or lighting con-
+ditions, thereby making it more robust to different operatingconditions. However, the authors pointed out that this conceptis relatively new and still requires further study to understand
+its capabilities and limitations.
+D. LiDAR-Based Techniques
+It is noted that Radar maps are susceptible to errors in the
+case of changes in the pre-existing map due to their lim-ited capabilities in collecting environmental data. Therefore,to increase localization accuracy and robustness, more accu-
+rate maps with denser point clouds are required. LiDAR
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:26:36 UTC from IEEE Xplore.  Restrictions apply. 
+834 IEEE INTERNET OF THINGS JOURNAL, VOL. 5, NO. 2, APRIL 2018
+Fig. 4. Principle of LiDAR sensor. The sensor sends a laser signal and upon
+receiving the signal back obtains the infrared reﬂectivity of the object as wellas distance to the object based on time for the signal to bounce back.
+technology can collect signiﬁcantly more data than Radar sen-
+sors, and therefore potentially offer higher accuracy compared
+to the Radar-based techniques. A LiDAR sensor measures
+distance to a target using multiple laser beams which eachmeasures the distance to the target, based on the time of arrival
+of the signal back at the receiver, as well as the infrared inten-
+sity of the obstacle, as illustrated in Fig. 4. LiDAR systems
+can be used to collect large amounts of ranging and infrareddata from obstacles, neighbor road users, etc. For instance,
+the Velodyne-64 system, which is a common LiDAR sensor
+used for localization systems, collects approximately 2.2 mil-lion 3-D points and their associated infrared intensity values
+per second over a range of 120 m and a ﬁeld of view of 360
+◦
+horizontal and ∼27◦vertical [ 34]. However, LiDAR technol-
+ogy is very expensive compared to other sensing technologiesand its performance is sensitive to environmental conditions
+such as rain or snow. The high-power requirement is also
+a major disadvantage of LiDAR sensors. For example, theVelodyne-64 system uses as much as 60 W to power itself.
+To investigate the use of LiDAR for localization, the work
+done in [ 35] suggested using LiDAR to detect curbs and road
+markings to create a feature map of the environment and local-ize vehicles within the map. In the proposed approach, curbs
+were identiﬁed by acquiring LiDAR measurements in 32 con-
+centric rings and analyzing the distance between the rings toidentify curb-like features using ﬁlters. Also, road markingswere identiﬁed by analyzing the LiDAR reﬂective intensity
+data and comparing it to expected values for road markings.
+These two features were then used to localize the vehi-
+cle within the feature map. For the urban experiments, an
+RTK-GPS, an IMU and a LiDAR sensor with 32 beams
+and maximum detection distance of 33 m were used. Theproposed approach resulted in lateral and longitudinal errorsof less than 30 cm which were considered satisfactory for
+autonomous driving in urban environments. In comparison,
+Levinson et al. [21] proposed a solution integrating GPS,
+IMU, wheel odometry, and LiDAR to generate high-resolution
+maps. The authors suggested eliminating map features that are
+unlikely to be static to create a 2-D map of the road sur-face in the infrared spectrum. Therefore, obstacles such asmoving cars are eliminated from the map. A SLAM-style
+relaxation ﬁlter was used to localize the vehicle within the
+created map at 200 Hz. Using the proposed approach, errorsas low as 10 cm were obtained, although, in some occasions,
+such as when turning, errors reached as high as 30 cm. The
+main weakness pointed out in the technique was its relianceon static maps, which meant that extreme changes to the
+road environments could cause the technique to fail. Possiblesolutions to this weakness were suggested such as using prob-abilistic maps to identify changed environments, comparing
+GPS and map-based localization to spot localization errors or
+creating 3-D environment models beyond the road surface.Therefore, to improve robustness to dynamic environments,
+the technique was further extended in [ 36] by incorporating
+the use of LDMs. Instead of creating orthographic maps ofthe road surface with ﬁxed infrared intensity values, a methodof using probabilistic infrared intensity values collected over
+multiple passes of the same environment was used. The use of
+probabilistic maps increases robustness to changes in the envi-ronment and allows the system to identify dynamic objects.
+In experimental testing, a GPS/IMU system updating inertial
+information and global position at 200 Hz together with a64-beam LiDAR sensor providing a million 3-D points persecond were used. A large amount of acquired data enabled
+the system to scan map cells multiple times and create
+a probabilistic map using computation of intensity values. Theproposed method was shown to achieve positional RMS error
+of 9 cm, suggesting accuracy feasible for urban autonomous
+driving as well as improved robustness to dynamic environ-ments compared to the previous methods.
+Further improvements to the accuracy of LiDAR-based
+localization was presented in [ 37]. The authors utilized an
+alternative grid representation of the ground which is invari-ant to the laser-perspective or vehicle motion. This eliminatesthe need for postfactory reﬂectivity calibrations required by
+other methods, improving localization performance. Using
+the proposed technique, longitudinal and lateral localizationRMS errors of 3.3 cm and 1.7 cm were achieved, thereby
+improving over the performance of previous state-of-the-art
+LiDAR localization methods without increasing the computa-tional requirements. Besides increased accuracy, an additionaladvantage of using LiDAR is the increased robustness to
+changes in the mapped environment when compared to tech-
+niques such as Radar or camera-based localization techniques.For instance, in [ 38], a vehicle equipped with LiDAR, IMU,
+and wheel odometry successfully drove autonomously in an
+urban environment. The proposed system localized itself whiledriving autonomously on a 1.9 km long route utilizing pointcloud data collected six months ago and data fusion via a par-
+ticle ﬁlter algorithm. The resulting mean longitudinal and
+lateral localization errors were 8.2 cm and 7.5 cm, respec-tively. Therefore, highly accurate localization was still possible
+even when changes had occurred in the environment and
+localization was performed in a different season from theinitial mapping data.
+While LiDAR techniques can offer very accurate and robust
+localization methods, the drawback is their high power and
+computational requirements as well the high implementa-tion costs. This presents a problem for mass production and
+marketing of autonomous vehicles equipped with LiDAR sen-
+sors. Attempting to reduce the computational requirementsof LiDAR-based localization, large point cloud maps werereduced to compact Gaussian mixture maps in [ 39]. While
+raw point cloud maps can require up to 500 MB of data per
+km of road, the Gaussian mixture maps require 10–100 MB
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:26:36 UTC from IEEE Xplore.  Restrictions apply. 
+KUUTTI et al. : SURVEY OF STATE-OF-THE-ART LOCALIZATION TECHNIQUES AND THEIR POTENTIALS 835
+of data, depending on the number of Gaussians per grid cell.
+Using the Gaussian mixture maps for localization resulted inlongitudinal and lateral RMS errors below 10 cm and 13 cm,respectively. Moreover, the proposed method was shown to
+be robust to harsh weather conditions and changes in road
+appearance due to construction work. On the other hand,addressing the high implementation cost of LiDAR techniques,
+Wolcott and Eustice [ 40] investigated the use of camera-based
+localization within pre-existing LiDAR maps. In contrast toLiDAR, camera-based technology is less accurate and is sus-ceptible to changes in illumination conditions or angle of
+observation but is signiﬁcantly cheaper. Therefore, the authors
+suggested creating initial maps used for localization usingLiDAR sensors and equipping autonomous vehicles with cam-
+eras to localize themselves within the LiDAR maps. This
+means that the highly accurate LiDAR maps are utilized, butautonomous vehicles could be signiﬁcantly cheaper. This tech-nique was shown to localize with longitudinal and lateral RMS
+errors of 19.1 cm and 14.3 cm, respectively, with data captured
+at 10 Hz, which provides a similar order of magnitude errors toLiDAR techniques but at a signiﬁcantly reduced cost, power,
+and processing requirements. Alternative methods of utilizing
+laser technology whilst maintaining low implementation costs,is the use of single beam laser range ﬁnders (LRFs), such asin [41], where A GPS system, gyroscope, two LRF systems
+and a 2-D feature map, consisting of road and building shapes,
+were integrated. The two LRFs scanned the environment, withone scanning horizontally and one vertically to identify build-ing facades and build a feature map based on this information.
+Comparing the pre-existing feature map to the LDM resulted
+in mean positional errors of 3.098 m, which is unsuitable forautonomous vehicle localization.
+E. Ultrasonic-Based Techniques
+Other localization methods have attempted to use alterna-
+tive low cost sensors such as ultrasonic sensors. For instance,Jung et al. [42] proposed the use of ultrasonic sensors inte-
+grated with a set of sensors including a digital magnetic
+compass, a gyroscope, and two encoders for ultrasonic-basedSLAM techniques. Ultrasonic sensors can scan the environ-ment by utilizing a mechanical wave of oscillating pressure
+which can propagate through air or other materials. Distance to
+target can be measured based on the time of arrival of the sig-nals back to the receivers. Ultrasonic sensors were chosen dueto their high performance with low electric power consumption
+and low cost. However, due to inaccurate extracting of fea-
+ture points, the localization process could take very longtimes. Average processing times of 10.65 s were observed,
+thereby making the technique unsuitable for high-speed vehi-
+cle applications. Also, the associated long average processingtime causes accumulated errors due to measurements from thesensors such as IMU. Moreover, the detection range of the
+ultrasonic sensors is limited to 3 m which is not sufﬁcient for
+obstacle detection system of an autonomous system.
+F . Discussion
+Table Icompares the aforementioned localization techniques
+in terms of sensor conﬁguration, accuracy, and the associatedpotentials and limitations. Suitability of the techniques for
+autonomous vehicles is based on the robustness and relia-bility as well as capability for in-lane localization accuracy.The required accuracy for in-lane localization is taken as
+30 cm, as derived in [ 4]. In summary, the analysis shows
+that no sensor as standalone offers adequate accuracy androbustness required for autonomous driving and data fusion
+of multiple sensors has signiﬁcant potential to design a cost
+effective localization system meeting accuracy requirementsfor autonomous driving. Integrated GPS/IMU/camera localiza-tion systems provide accuracy up to 73 cm, however, further
+improvements are needed to offer the accuracy and robustness
+required for fully autonomous vehicles. Radar sensor-basedtechniques offer cheaper localization systems compared to
+LiDAR-based systems and can meet the accuracy require-
+ments for autonomous vehicles, as shown in [ 33]. However,
+the robustness of these methods remains an obstacle for imple-mentation. In contrast, LiDAR can offer high accuracy but
+at a signiﬁcantly higher cost compared to Radar. Therefore,
+for LiDAR to be a commercially feasible option further tech-nological advances would be required to reduce the cost or
+alternatively the approach used in [ 40] could be used to take
+advantage of the high accuracy and robustness of LiDAR-based maps, but keep the cost of autonomous vehicles low byequipping them with cameras instead of LiDAR sensors. This
+type of approach could be the key to achieving high accuracy
+and formulating low-cost solutions but robust performance indifferent environment conditions is still a challenge due tolimitations of camera systems.
+IV . C
+OOPERATIVE LOCALIZATION TECHNIQUES
+The augmentation of off-board information obtained
+through V2V and V2I communication systems to the sensory
+information has shown the potential to improve the vehiclelocalization accuracy, robustness, and reliability in differentdriving and environmental conditions [ 43]. In such systems,
+vehicles can broadcast information about their states to other
+vehicles (V2V), including speed, heading, and location, aswell as the information related to the environment while
+adverse weather conditions or obstacles can be acquired from
+infrastructure (V2I).
+The cooperative localization techniques use wireless com-
+munication devices, such as Wi-Fi, cellular, and UWB radio
+communications where transmitted signals are used to esti-
+mate the range to the broadcaster. There are several approachesto estimate the distance or relative position to the broad-
+caster of a signal. To calculate the distance to the broad-
+caster only, one radio signal is required, while calculatinga relative position requires three radio signals in case of a 2-Dlocalization or four in the case of 3-D localization. In gen-
+eral, the positioning and ranging systems can work based on
+four principles, namely time-of-arrival (TOA), time-difference-of-arrival (TDOA), angle-of-arrival (AOA), and radio-signal-
+strength (RSS). Fig. 5illustrates the concepts of TOA, TDOA,
+and AOA. In TOA approach, a vehicle initiates the trans-mission by sending a signal to a reference node, which thensends a signal back, and relative distance to the reference node
+is measured based on time for the response signal to arrive
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:26:36 UTC from IEEE Xplore.  Restrictions apply. 
+836 IEEE INTERNET OF THINGS JOURNAL, VOL. 5, NO. 2, APRIL 2018
+TABLE I
+SUMMARY OF ON-BOARD SENSOR -BASED LOCALIZATION TECHNIQUES
+back at the vehicle. The accurate ranging of TOA approach
+is limited due to the need of a perfect synchronization ofclocks between all nodes which can be difﬁcult to achieve
+in practice. In TDOA approach, the position of a vehicle
+is estimated using transmission signals of three broadcast-ing stations, where one of the stations, known as the master
+station, initiates the transmission by sending a signal to the
+vehicle and the other stations, shown in Fig. 5(b) as sta-
+tions B and C. Once stations B and C receive the initialsignal from the master station, they send a signal to the vehi-
+cle. Since the location of all stations relative to each other
+is known, the travel time of radio signals between them isknown as well. Based on the time difference of signal arrivals
+T
+AV,TBV, and TCV, the distance to each station and thereby
+the relative position of the vehicle can be calculated [ 44]. In
+AOA approach, as illustrated in Fig. 5(c), antenna arrays mea-
+sure the angle of the signal at each node. However, the need for
+antenna arrays at each node increases the cost and complexity
+of the system. Finally, in the RSS method, the attenuation ofsignal strength while traveling from node to node is measured
+to estimate the travel distance of the signal. It is noted thata radio signal is transmitted from a broadcaster (i.e., a node)
+which can be stationary (e.g., infrastructure) or mobile (e.g.,
+vehicles).
+An ultrawide band (UWB) sensor uses radio signals to
+spread information over a wide portion of the frequency
+spectrum ( >500 MHz), allowing large amounts of rang-
+ing data to be transmitted with a low power requirementfor short distances and without interference with other sig-
+nals in the same spectrum [ 45]. Moreover, a UWB sensor
+is capable of penetrating through obstacles due to usingthe large wavelengths of the radio signals. A UWB sensor
+estimates the vehicle relative position to a stationary UWB
+station through communications between different UWB sta-tions. However, the limited range of the signals (5–50 m)requires well-developed infrastructure thereby limiting the uti-
+lization of UWB sensors for vehicle localization systems.
+Therefore, the sensor is typically used in short range, high
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:26:36 UTC from IEEE Xplore.  Restrictions apply. 
+KUUTTI et al. : SURVEY OF STATE-OF-THE-ART LOCALIZATION TECHNIQUES AND THEIR POTENTIALS 837
+(a) (b)
+(c)
+Fig. 5. Direction-based ranging techniques. (a) TOA method.
+(b) TDOA method. (c) AOA method.
+data rate applications such as indoor industrial autonomous
+vehicles [ 46].
+Radio waves can also be used for data communications
+in wireless networks, such as Wi-Fi or cellular networks.
+Wi-Fi devices are deﬁned by the IEEE 802.11 standards,
+which specify the set of media access control and physicallayer speciﬁcations that deﬁne the Wi-Fi technology. Wi-Fi
+devices operate in various frequency bands, with a 75 MHz of
+spectrum in the 5.9 GHz band reserved for V2V and V2I com-munications by the European Commission [ 47]. These devices
+can be used in vehicle localization systems to receive informa-
+tion from infrastructure or other vehicles as well as transmit
+information to other vehicles. The networks can either beinfrastructure-based with access points and routers or they can
+be ad hoc networks in which each node participates in rout-
+ing by forwarding data to other nodes. Wi-Fi devices achievedata transmission rates ranging from 6 Mb/s up to 54 Mb/s,with communication ranges up to 100 m and transmission
+power requirements of up to 100 mW [ 48]. On the other
+hand, cellular networks use technologies such as 3GPP longterm evolution, i.e., 4G, to transfer data between the cellular
+devices. Cellular networks utilize cellular base stations with
+a transmission range of up to 15 km to enable data trans-mission. Each base station provides communication to a cellaround it. As the cellular device travels toward the neighbor
+cell the signal strength from the next base station becomes
+stronger and therefore the device switches communicationsto that base station in a procedure called hand-off. Although
+cellular devices typically only use one base station for com-
+munication, multiple cellular base stations are typically withincommunication range, which enables localization through theranging methods discussed previously. Cellular networks typ-
+ically broadcast in the 800, 900, 1800, 2100, or 2600 MHz
+bands, achieving transmission rates up to 100 Mb/s [ 48].A. Vehicle-to-Vehicle Localization Techniques
+In this paper, a V2V localization technique refers to a local-
+ization technique which integrates information from adjacentvehicles with the on-board sensory information. V2V commu-nication systems form a vehicular ad-hoc network (V ANET) of
+interconnected mobile nodes which are aware of the locations
+and trajectories of each other. Although distance measure-ments to a V ANET broadcaster cannot be as accurate as,
+for example, LiDAR measurements, it offers distance mea-
+surements out of line-of-sight and at relatively low costand less processing requirements. V2V systems are usuallybased on the IEEE 802.11p protocol, which is an extension
+to the IEEE 802.11 protocol that deﬁnes the standards for
+Wi-Fi technology. The IEEE 802.11p-based wireless accessin the vehicular environment (WA VE) technology can offer
+bit rates of 3–27 Mb/s over a communication range of up
+to 1000 m [ 48]. The message types expected to be used
+in V ANET systems can vary regionally, for example, inthe European context, V2V communication systems mainly
+depend on the use of three different types of messages:
+1) cooperative awareness messages (CAMs); 2) decentralizedenvironmental notiﬁcation messages (DENMs); and 3) ser-vice announcement messages (SAMs). CAMs are periodically
+transmitted to share vehicle information (position, dynam-
+ics, attributes etc.) to other road users thereby maintainingcooperative awareness in the V ANET [ 49]. DENMs are event
+driven messages containing information about an event, such
+as an accident or a hard-braking vehicle, to other nearbyvehicles [ 50]. SAMs are messages sent by vehicles or infras-
+tructure on the control channel to announce services available
+on the so-called service channels [ 51].
+The widely used technique of V2V systems to improve
+GPS accuracy is multilateration, illustrated in Fig. 6, in which
+multiple GPS measurements from adjacent vehicles as well
+as distance to the other vehicles are used to increase theoverall accuracy of a vehicle’s self-localization estimate. Themore position estimates the vehicles can acquire, the more
+accurately they can estimate their own position [ 52]. In [ 53],
+simulation of vehicles equipped with multilateration (V2V andGPS) systems was carried out to show that V2V communi-
+cation can reduce average localization errors from 6.75 m for
+GPS-only localization, down to 3.30 m. However, factors suchas uncertainty of intervehicle distance, the number of vehiclesin a cluster, communication latency, and communication fail-
+ures will affect this performance. During communication
+failures or with high errors in the intervehicle distance mea-surements, these errors tend toward the GPS-only localization
+error. Similarly, in [ 52], the localization accuracy of a mul-
+tilateration system was improved by integrating informationfrom on-board sensors, such as millimeter wave Radar. Usingsimulation results and assuming a communication interval of
+100 ms and a maximum sensing range of 100 m, the authors
+showed that their approach, when all vehicles were equippedwith GPS and V2V communication devices, achieved an aver-
+age error of 0.6 m. Therefore, the proposed approach reduced
+the localization error by 85% compared to GPS solutions and60% compared to a multilateration system. In the research,while the accuracy intervehicle distance estimation depends
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:26:36 UTC from IEEE Xplore.  Restrictions apply. 
+838 IEEE INTERNET OF THINGS JOURNAL, VOL. 5, NO. 2, APRIL 2018
+Fig. 6. V2V multilateration. Transmitted positions and calculated distances
+to the nearby vehicles are used to obtain additional self-localization estimates
+for subject vehicle A.
+on the number of vehicles with V2V communication systems,
+it was shown that if 100% of the vehicles are equipped with
+a V2V technology, the system recognized 70% of all nearbyvehicles within an error of 1 m while if 40% of vehicles wereequipped with V2V systems, only 50% of all nearby vehi-
+cles within an error of 1 m were recognized by the system.
+Therefore, the relationship between the number and penetra-tion rate of connected vehicles and localization accuracy is
+nonlinear where a minimum number of connected vehicles
+would be required for adequate accuracy and reliability. Also,the results of the simulations show that the V2V localizationpaired with on-board ranging sensors can achieve good accu-
+racy. This approach was also evaluated in ﬁeld tests, in [ 54],
+where six vehicles with GPS/IMU and V2V systems weretested with one vehicle with a highly accurate positioning
+system to be used as the ground truth. Measurements from
+two of the six vehicles showed unexpected behavior and weretherefore removed from the results. The remaining resultsshowed that 50% of the errors were within 1.09 m, result-
+ing in an improvement of 66% compared to GPS as well as
+95% errors were within 3.54 m, resulting in an improvementof 85% compared to GPS. Therefore, the accuracy of V ANET
+localization is highly dependent on the number of connected
+vehicles in the area, as well as the accuracy of the shared posi-tion estimates. Moreover, the unexpected behavior of the twovehicles in the experiment highlighted the need to mitigate
+the possible effect of erroneous inputs from the other vehi-
+cles. Therefore, the localization algorithm would need faultdetection and isolation to reject any erroneous inputs.
+Ordóñez-Hurtado et al. [55] extended multilateration meth-
+ods to include the use of stationary vehicles for improving the
+localization accuracy. Since stationary vehicles can localizethemselves more accurately given enough time, the authors
+propose using stationary vehicles (e.g., parked vehicles) to
+transmit their location via V2V , so nearby vehicles can gaina more accurate self-localization estimate. Although batterydischarge of a powered-off vehicle is a concern, the authors
+pointed out that using a 1-W on-board unit, a 480 Wh bat-
+tery can last up to 2 days. The method was evaluated usinga small-scale and a large-scale scenario with 20 and 900 cars,
+respectively. Compared to multilateration without stationary
+vehicles, the simulation results showed up to 55.09% and62.85% improvement in the small-scale and large-scale cases,under best scenarios with the highest number of parked cars.
+The average improvement for both test cases was 33.01%.
+This shows the potential improvement in accuracy from theuse of stationary vehicles in V2V systems. Furthermore,
+Golestan et al. [56] used multiple GPS position estimates
+from other vehicles and ranging estimates using TOA andAOA measurements to improve localization accuracy. Also,
+the proposed approach used vehicle state information froma gas pedal, brake pedal, and steering wheel sensors. In thismethod, the vehicles used the shared state information from
+other vehicles to gain a better estimation of their own location
+as well as estimate the location of the other vehicle and thensent this information back to them. Therefore, vehicles not
+only gain information regarding other vehicles in the network,
+they acquire more estimates about their own position as well.The proposed approach was tested in simulations with ﬁvevehicles and achieved a mean square error (MSE) of 0.52 m
+for the best performing vehicle and 1.65 m for the worst one.
+Another approach for improving multilateration accuracy is
+weighted average localization. This approach assigns conﬁ-
+dence values to each position estimate received, and gives
+higher weight to measurements with higher conﬁdence in thelocalization algorithm. For example, Ahammed et al. [57]
+proposed a method with weights determined based on distance
+to the broadcaster, since vehicles further away from the subject
+vehicle are more likely to produce erroneous distance measure-ments. The proposed method was evaluated with a network
+of 10 cars, resulting in a mean localization error of 2.38 m.
+This approach was further extended in [ 58] to include signal
+to noise ratio (SNR) in the determination of weight factors aswell, since signal noise can affect the localization accuracy.
+The approach was evaluated through multiple simulations with
+network sizes ranging from 20 to 200 cars. The localizationerrors observed ranged from 85 cm for 20 cars down to 25 cmfor 200 cars. This shows that the inclusion of conﬁdence values
+in a multilateration system can greatly improve accuracy.
+It is important to note that all abovementioned cooperative
+localization techniques rely on the use of GPS for the vehicle
+self-localization. Whilst GPS may give adequate performance
+in most scenarios, as mentioned before, GPS suffers from poorreliability in some environments such as dense urban envi-ronments. Therefore, in safety critical applications such as
+autonomous vehicles, the localization system would need to
+be fault tolerant in order to continue operating with adequateperformance even in the case of high GPS errors or signal
+blockage. Simply integrating the GPS with other on-board sen-
+sors would be a possible solution to offer reliability throughsensor redundancy [ 59]. Other considerations for the reliability
+of V2V localization systems are the network quality of ser-
+vice. In [ 47], it was noted that the limits of the 802.11p can act
+as a barrier to situational awareness since the 5.9-GHz bandused is very sensitive to obstacles. While in good communica-
+tion condition the authors could establish a link from 700 m,
+a single thin wall of trees could create as much as 25% packetloss with distances as small as 50 m. Therefore, the effect ofhighly congested networks with fast moving nodes and vary-
+ing topology on the performance on cooperative localization
+systems will need to be considered.
+Table IIshows a summary of the V2V localization meth-
+ods discussed above. Currently, the most researched V2V
+techniques are multilateration systems which utilize GPS andV2V communication. The results in Table IIshow that these
+techniques can greatly improve GPS localization accuracy.
+However, while the accuracy of V2V localization systems
+based on multilateration are not adequate for autonomous
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:26:36 UTC from IEEE Xplore.  Restrictions apply. 
+KUUTTI et al. : SURVEY OF STATE-OF-THE-ART LOCALIZATION TECHNIQUES AND THEIR POTENTIALS 839
+TABLE II
+SUMMARY OF V2V L OCALIZATION METHODS
+vehicles, they show great promise for integration to more
+accurate on-board sensor-based techniques (e.g., camera-basedor LiDAR-based) to further improve performance, accuracy,reliability, and robustness at a relatively low cost. The main
+limitation of V2V localization techniques is their reliance on
+high penetration rate and number of connected vehicles whichcannot always be guaranteed to be available.
+B. Vehicle-to-Infrastructure Localization Techniques
+In vehicle-to-infrastructure (V2I) systems, the vehicles com-
+municate with RSUs or cellular base stations at ﬁxed positions.
+This allows the RSUs to communicate their location, weatherconditions, trafﬁc ﬂow, etc. with vehicles to estimate their ownposition more accurately. The potential advantages of the V2I
+systems over V2V systems include: 1) offering a more accu-
+rate location estimate due to ﬁxed position of RSUs (similar tothe stationary cars in the V2V localization, but more reliable
+as the RSUs are ﬁxed rather than only temporarily stationary);
+2) improved reliability as the number of RSUs within trans-mission range can be guaranteed unlike in V2V techniques;3) broadcasting critical information (e.g., events such as acci-
+dents which have occurred in the area or adverse weather
+conditions), allowing the vehicles to have a greater awarenessof their environment and allowing them to react to any risks;
+and 4) enhancing trafﬁc ﬂow and safety through supporting
+vehicle control and trafﬁc management systems where vehiclespeed, steering, and route selection are controlled by a controlstation aware of other vehicles on the road. However, the draw-
+back of V2I systems based on the IEEE 802.11p technologyis the large number of RSUs required for continuous commu-
+nication, which will require large initial installation works andcosts. Therefore, to limit these initial costs the design of V2Icommunication systems should be efﬁcient and reliable with-
+out needing excessive infrastructure implementation. As such,
+the spacing and conﬁguration of RSUs must be studied, aswell as different communication methods and their effect onsystem parameters (e.g., networks latency, packet loss, etc.).
+As shown in [ 60], output power transmission, antenna height,
+and tilt, the length of packets and the access mechanism,all affect the performance of V2I communication networks.
+Also, optimal conﬁgurations of roadside beacons may vary
+under different trafﬁc loads. Further, the use of existingcellular infrastructure can be used in order to reduce capitalexpenditure.
+There are multiple methods for estimating the relative posi-
+tion from the broadcaster of a signal as discussed previously.For instance, Hassan et al. [61] proposed the use of impulse
+radio UWB (IR-UWB) signals for V2I localization and com-
+pared different methods for relative positioning to the broad-caster. The main beneﬁts of IR-UWB are low-transmit power,low cost, wide bandwidth usage, high precision, and resistance
+to multipath errors due to short pulses. The proposed system
+uses V2I communication devices placed at lampposts at 20 mintervals to broadcast their position to nearby vehicles. Based
+on the distance to the RSUs and the distance measured from
+the RSU, the vehicle can estimate its position. The authors alsodiscussed various methods such as TOA, TDOA, and AOA forestimating the distance between the vehicle and RSUs. In sim-
+ulations, TDOA was observed to be the most efﬁcient at the
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:26:36 UTC from IEEE Xplore.  Restrictions apply. 
+840 IEEE INTERNET OF THINGS JOURNAL, VOL. 5, NO. 2, APRIL 2018
+middle of the network, whilst AOA was the most efﬁcient
+at the edges of the network. Therefore, the authors suggesta hybrid technique utilizing TDOA and AOA techniques wouldbe optimal for V2I applications.
+In contrast, Fascista et al. [62] proposed a localization
+technique based on AOA estimation. In the proposed systembeacon packets from an RSU were used to combine the
+AOA of the signal and the location of the RSU broadcasted
+in the signal into a least squares algorithm to localize thevehicle. The system was tested in a simulation and showedvery good accuracy when close to the RSU, due to high SNR
+and favorable geometrical conditions. The performance, how-
+ever, degraded as the distance between the vehicle and RSUincreased, with GPS-level accuracy obtained at approximately
+155 m away from the RSU. However, with closer spacing of
+the RSUs, this weakness could be mitigated. The beneﬁt ofthis technique is that no sensors are required on-board thevehicle apart from V2I communication systems, therefore,
+the main cost of the system would be the implementation
+of the RSUs. On the other hand, Khattab et al. [63] sug-
+gested V2I localization system for a vehicle equipped with
+IMU and V2I communications. Localization is based on two-
+way TOA ranging with an RSU and vehicle kinematics fromthe IMU, which achieved RMS errors of 1.8 m. An alternativeapproach using infrastructure to provide lateral positioning for
+in-lane localization was presented in [ 64], where the authors
+used passive transponders integrated into lateral white stripson the roads and on-board units to detect the transponders.These passive transponders, unlike the RSUs in other meth-
+ods, do not broadcast a signal but only reﬂect the signal from
+the on-board sensors back to the vehicle. The beneﬁt of theproposed approach is a very low cost of the transponders
+and large penetration depth in water and snow due to the
+ultrahigh frequency band utilized. The proposed method wastested in several laboratory experiments including in presenceof parasitic reﬂectors, asphalt, and other transponders. The
+results showed very high accuracy with errors below 3 cm
+in all experiments. However, the low range of the utilizedmethod is a drawback; all experiments were completed for
+distances below 2 m, and the results showed increasing error
+with distance. Therefore, the transponders would need to bedeployed at small intervals and a large quantity of them wouldbe required, although their low cost helps mitigate this draw-
+back. However, further testing would be required in a scenario
+with the transponders deployed on the road with all the ade-quate protection required and with moving vehicles to validate
+these high accuracies and investigate the robustness of the
+system to more diverse operating conditions.
+It is noted that communication systems for advanced driver
+assistance systems or autonomous vehicles need to have
+low latency, high accuracy, and strong security. The future
+ﬁfth-generation (5G) mobile networks are expected to offerincreased reliability, reduced latency, and higher throughput
+compared to current mobile networks, showing great promise
+for an alternative approach to current vehicle communicationsystems [ 4]. Del Peral-Rosado et al. [65] studied the feasibility
+of 5G networks for positioning using 5G-like multicarrier sig-
+nals and TDOA measurements. The considered scenario wason a highway with base stations deployed at 200 m intervals.
+The simulation results showed that at 50 and 100 MHz sig-nal bandwidth the position accuracy was below 25 and 20 cmin 99% of the cases, respectively. These results showed that
+5G networks can offer very accurate positioning, adequate for
+in lane positioning. Moreover, the use of existing infrastruc-ture, such as lampposts on a highway, can reduce the cost of
+deploying the 5G base stations.
+In general, the main drawback of V2I techniques is the high
+cost of implementing new dedicated infrastructure. A possiblesolution to mitigate this problem is utilizing existing cellular
+infrastructure for localization. A cellular device can generally
+communicate with multiple cellular base stations at any giventime, which enables techniques such as RSS to estimate the
+position of the phone based on the distance to the base sta-
+tions. There are two approaches to utilizing RSS measurementsfor cellular-based localization: triangulation and ﬁngerprinting.Triangulation uses path-loss models to estimate the distance
+to multiple base stations and then the vehicle location can
+be calculated based on the location of each base station andthe estimated distance to them. However, RSS-based triangu-
+lation has been shown to provide limited accuracy due to the
+inaccuracy of the path-loss models [ 66]. On the other hand,
+in ﬁngerprinting the signal characteristics from base stationsare recorded at different locations and stored in a database.
+The experienced signal characteristics can then be compared
+to the reference values in the database to estimate the posi-tion of the cellular device [ 59]. While ﬁngerprinting methods
+have been successful in indoor environments with up to 5 m
+accuracy [ 67], average errors up to 94 m were seen in an
+outdoor urban testing [ 68]. Alternatively, ﬁngerprinting could
+be based on signals from Wi-Fi access points, which has
+been shown to achieve localization errors of 18 m and veloc-
+ity estimation errors of 25% [ 69]. However, in [ 70], a novel
+approach to ﬁngerprinting was presented in which a vehiclewas equipped with 16 GSM devices to scan different GSM
+channels in parallel, GPS for global positioning, as well as
+IMU and magnetic compass for trajectory estimation. The RSSvalues of each channel were then recorded on different roads
+and combined with the trajectory estimation to localize the
+vehicle based on these values. The authors utilized a two-stagelocalization technique where a coarse localization was ﬁrstdone based on GPS data, and then a ﬁne localization based
+on the GSM RSS characteristics and vehicle trajectory esti-
+mation. Average localization errors of 4.2 m with 90% errorswithin 5.3 m were achieved using this approach. However, one
+drawback of the method is the update requirements of the RSS
+characteristics, as the average localization error increases to4.6 m when using six-week-old data. Therefore, the localiza-tion accuracy could signiﬁcantly degrade over time if updates
+are not completed at regular intervals, which would increase
+the cost of the system. However, this approach would notrequire new infrastructure, therefore the main associated costs
+would be equipping the vehicles with the necessary sensors
+and updating the GSM scan databases.
+Techniques integrating V2V , V2I, and on-board sensors
+have also been investigated by researchers. For instance,
+Bento et al. [71] combined V2V/V2I communication with
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:26:36 UTC from IEEE Xplore.  Restrictions apply. 
+KUUTTI et al. : SURVEY OF STATE-OF-THE-ART LOCALIZATION TECHNIQUES AND THEIR POTENTIALS 841
+GPS, IMU, magnetic sensor, and laser scanner. The proposed
+method used magnetic markers positioned at intersectionsand/or roundabouts, of which the known location wasbroadcaster by an infrastructure agent to nearby vehicles.
+Additionally, GPS/IMU was used for global positioning, whilst
+the laser scanner was used to provide range and directionestimates of the vehicles in front. This technique achieved
+RMS errors of 1.03 m, which still has room for improvement
+but shows the potential for the combination of V2V and V2Icommunications systems for providing low-cost and accuratevehicle self-localization. Similarly, in [ 72], V2V/V2I commu-
+nications were integrated with GPS. In addition to localization,
+the authors attempted to provide improved yaw, pitch, and rollestimates over traditional GPS/IMU systems. In the proposed
+architecture, there are three main components: 1) road vehi-
+cles; 2) RSUs; and 3) master antenna ﬁxed stations (MAFS).The road vehicles are equipped with two GPS receivers posi-tioned longitudinally on the vehicle’s roof. The RSU was
+equipped with a GPS receiver and V2I communication system.
+The MAFS was equipped with a GPS receiver in a ﬁxedposition with good signal connectivity. The MAFS then broad-
+casts its position to the other units. The system was evaluated
+using experiments which showed that the system is capableof self-localization within RMS errors of 0.698 m and stan-dard deviation of 0.14 m. Moreover, the system showed good
+performance in yaw and pitch estimations, obtaining mean
+errors of 7.90
+◦and 0.86◦, respectively. However, roll estimates
+showed large errors, with the mean error of 40.70◦. The high
+roll estimate error is due to roll estimates requiring collinear
+vehicles that are close to each other, however, when the vehi-
+cles are nearly collinear the estimates are very sensitive tonoise, leading to high errors.
+Similarly, combining V2V and V2I communication for
+localization, in [ 73] a localization technique utilizing radio
+frequency identiﬁcation (RFID) tags and readers, IMUs, andV2V communication was proposed. The proposed method
+used a matrix-based tag deployment strategy, where tags were
+deployed in clusters, with multiple adjacent clusters formingrows of tags. Each vehicle was then provided a map of the
+locations of each RFID tag. The advantage of the proposed
+method is that accurate localization could be achieved withlow-density and low-cost RFID infrastructure. As a ﬁrst step,the method was evaluated in a highway simulation with aver-
+age vehicle speeds of 108 km/h. It was shown that using
+intertag intervals of 100 m, 500 m, and 900 m resulted inmean absolute errors of 0.5 m, 1.4 m, and 2.9 m, respectively.
+Next, the proposed method was evaluated in experiments
+with intertag intervals of 200 m and two vehicles drivenat speeds of 60 km/h. Mean absolute errors of 0.71 mfor localization were achieved, with higher errors observed
+when the vehicle was turning. Therefore, even with relatively
+sparsely deployed tags, resulting in a cost of a few dollars perkilometer of road, submeter localization accuracy could be
+achieved.
+Another emergent communication technology is visible
+light communication (VLC), which has gained interest forV2I [ 74]–[76] and V2V [ 77]–[80] applications. VLC utilizes
+low cost light-emitting diodes (LEDs) to transmit informa-
+tion by turning the LED light on and off at a rate notperceivable to the human eye [ 81] supporting data rates up to
+96 Mb/s [ 82]. This enables transmission of data in V2I appli-
+cation via trafﬁc and street lights with ranges of 50–100 m [ 83]
+and in V2V applications via headlamp and taillights with
+ranges of 40–50 m [ 80]. VLC has been shown to provide
+good localization accuracy in indoor environments, such asEpsilon [ 84], which utilized RSS and trilateration to provide
+localization with 90th percentile accuracy of 0.4 m in an
+ofﬁce environment. However, adapting VLC to outdoor vehic-ular applications introduces further complications, such assignal attenuation from severe weather conditions and ambi-
+ent noise from direct sunlight or other strong light sources.
+Robustness to ambient noise can be improved by utilizinghigher frequencies and high pass ﬁlters. Yu et al. [80]i n v e s -
+tigated the localization accuracy of VLC in a V2V setting at
+multiple signal frequencies through numerical analysis, claim-ing that accuracies below 1 m and 0.1 m could be achieved byheadlamps with signal frequencies of 20 MHz and 40 MHz,
+respectively. It should be noted that increasing the signal
+frequency has the drawback of increasing processing require-ments and degrading transmission power. Also, simulation
+results by Kim and Jung [ 85] suggested that submeter local-
+ization accuracy could be achieved when within 20 m of LEDsin a tunnel environment where both tunnel ceiling lights andvehicle taillights were utilized for trilateration. However, the
+main drawback of VLC when compared to DSRC is the direct
+line-of-sight requirement and lower communication range. Inan urban scenario simulation, Yu et al. [80] showed that
+DSRC could communicate with an average of 32 vehicles,
+while VLC performed signiﬁcantly worse by communicating
+only with an average of ﬁve vehicles in the same scenario.Nevertheless, VLC could be well suited to some environments
+such as tunnels or carparks where the outdoor limitations of
+VLC do not apply as a dense LED deployment can be real-ized with constant uptime and with little ambient lighting,thereby providing low cost V2X communication with highly
+accurate localization capability. Overall, VLC is a promising
+communication alternative for V2X applications, but appli-cations to vehicle localization currently suffer from lack of
+research.
+C. Discussion
+Management of network trafﬁc and quality of service in
+both V2V and V2I systems require signals with low latencyas low as 10 ms [ 4]. Packet loss within the network should
+be also minimized, therefore, the network parameters (e.g.,
+signal bandwidth, transmission power, etc.) need to be opti-
+mized for scalability of the networks as interference incongested networks can cause high packet loss ratios and
+reduce the effective reliable transmission range by up to
+90% [ 86]. Moreover, in [ 51], it was noted that while coop-
+erative localizations can perform effectively under high speedand good communication conditions, in poor communication
+conditions the effectiveness can be signiﬁcantly reduced. The
+performance degradations can be overcome by modifying thecommunication parameters such as transmission power, packet
+transmission frequency, and data rate. However, this can intro-
+duce other problems such as channel congestion. A further
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:26:36 UTC from IEEE Xplore.  Restrictions apply. 
+842 IEEE INTERNET OF THINGS JOURNAL, VOL. 5, NO. 2, APRIL 2018
+TABLE III
+SUMMARY OF V2I L OCALIZATION TECHNIQUES
+limitation of the V2V communication systems is discussed
+in [87], where the applicability of various routing protocols
+is discussed for V ANET applications. The node behavior inurban and highway environments can vastly differ due todifferences in vehicle speed, mobility patterns, and vehicle
+densities. This means that different routing protocols will have
+varying levels of performance in urban and highway scenarios;while some are more suited to the urban environments others
+are more suited to highway environments. Therefore, a hybrid
+routing protocol may be required that can adapt itself to dif-ferent environments. Furthermore, the security of the networkmust also be ensured. Falsiﬁed or altered messages or denial-
+of-service attacks could severely impact the safety of V ANET
+applications. Similarly, the privacy of the network needs to bemaintained since most drivers will want to maintain the privacy
+and protection of any information sent over the network to
+avoid the possibility of their position being tracked. Therefore,a security mechanism for the network will be required to
+protect the integrity of the network whilst maintaining the
+users’ privacy [ 88].
+A summary of V2I localization techniques is represented
+in Table III. The comparison of the results in Tables I–III
+shows that the accuracy of localization systems highly depends
+on the information sources utilized. For instance, among thesensor-based techniques, LiDAR-based techniques can achieve
+very high accuracy and robustness at the cost of high power
+requirement and costly sensor with very limited performancein harsh environment conditions. It was also shown that themethods such as camera-based localization or LGPR tech-
+niques can offer adequate accuracy for autonomous vehicles at
+a lower cost at the expense of the lack of robustness againstvariation of environmental conditions. In general, the main
+limitations of all sensor-based techniques are their limited
+line of sight, out of range environmental information, and
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:26:36 UTC from IEEE Xplore.  Restrictions apply. 
+KUUTTI et al. : SURVEY OF STATE-OF-THE-ART LOCALIZATION TECHNIQUES AND THEIR POTENTIALS 843
+TABLE IV
+LOCALIZATION TECHNIQUES ADEQUATE FOR AUTONOMOUS VEHICLES
+limited operation in harsh environment. V2V techniques have
+presented great potential to address such limitations of sensor-
+based techniques. Currently, the only available V2V local-ization technique is multilateration which can signiﬁcantly
+improve the accuracy of GPS/IMU sensor-based technique
+when an adequate number of connected vehicles are avail-able. For example, the weighted average localization in [ 58]
+achieved very high accuracy in a network of 200 cars, but the
+accuracy decreased as the size of the networks decreased. The
+V ANET quality of service also limits the reliability of V2Vtechniques since network noise will affect the received signalscausing erroneous inputs into the localization algorithm. On
+the other hand, V2I localization techniques can mitigate the
+difﬁculty of guaranteeing an adequate number of signals andaccuracy of broadcasted position estimates in V2V localization
+techniques as the RSUs are installed in known ﬁxed positions
+and the RSU density can be optimized to provide adequateaccuracy and robustness. However, V2I techniques requirecostly infrastructure implementations to ensure high accu-
+racy and robustness. Alternatively, utilizing existing cellular
+networks provides a method for V2I localization without theneed for implementation of new costly infrastructure. Similar
+to V2V techniques, the quality of service in V2I networks is
+also a limitation for implementation as noise can affect thereceived signals causing erroneous inputs and packet loss andlatency can cause degradation in performance or failure of
+localization systems. A summary of localization techniques
+considered adequate for autonomous vehicle localization froma performance point of view is given in Table IV.
+V. C
+ONCLUSION
+In this paper, a concise survey of the current state-of-the-
+art of vehicle localization techniques using on-board sensing
+systems and their combinations with V2V and V2I systems
+was provided along with potentials and limitations of eachtechnique on the implementation on autonomous vehicles.
+It was shown that, from the performance point of view,
+the LiDAR techniques show the greatest promise for thelocalization of autonomous applications; however, the high
+power and processing requirements and its high cost renderit unfeasible from cost-efﬁciency and commercialization pointof view. Therefore, further optimization of LiDAR technology
+or alternative approaches such as localizing ground penetrating
+Radar or vision-based localization within LiDAR maps couldoffer a path toward commercially feasible systems. However,
+further ﬁeld testing to validate the robustness of these systems,
+validating their performance under a variety of driving con-ditions, and reﬁning operation parameters will be necessarybefore mass production.
+It was also highlighted that integrating V2V information
+with on-board sensory information has great potential toimprove the accuracy, robustness, and reliability of senor-
+based localization systems. The main advantages of the coop-
+erative systems are their capability of collecting informationout of line-of-sight and wider range, robustness to environ-mental conditions, and low cost. However, V2V techniques
+are limited by the shared position estimates and the number
+of connected vehicles in the area. Infrastructure with knownposition can be used to share accurate position estimates and
+with well-planned implementation, an adequate number of
+position estimates can always be available. However, many ofthe current cooperative systems have been evaluated throughsimulation, and while this is useful for the feasibility study
+and initial performance evaluation, a variety of ﬁeld tests will
+be required under different possible driving and communica-tion conditions before these systems are ready to be deployed.Moreover, the quality of service in V2V and V2I networks
+must be optimized for all possible operating conditions to
+ensure efﬁcient and effective operation once deployed. Thelarge scale of these networks means that the effect of char-
+acteristics such as transmission power, packet transmission
+frequency, data rate, RSU conﬁguration, and network size mustbe studied and optimized to minimize latency and packet loss.Furthermore, the security of these networks must be consid-
+ered to ensure the safety and privacy of all communication
+over the network, as well as the effect of any security mech-anisms to the performance of the network. Also, the effect of
+network failure on the performance of the autonomous vehicles
+must be considered. Furthermore, the emergent 5G communi-cation systems could facilitate secure, reliable, and ultralowlatency communications among vehicles and with infrastruc-
+ture, assisting cooperative localization techniques suitable for
+autonomous driving.
+The environment in which the solution is to be deployed
+must be considered as well. As previously discussed, each of
+the sensors and localization techniques have distinct pros andcons. Therefore, the best solution may depend on environ-mental factors such as weather, trafﬁc, or road conditions. For
+instance, camera-based solutions which depend on road mark-
+ing detection would not be feasible in parts of the world whereroad markings are covered, e.g., by snow most of the year
+or on roads which lack these markings completely. Similarly,
+V2X solutions rely heavily on dense networks of vehiclesand/or infrastructure. While dense infrastructure deploymentand a large number of nearby vehicles may be a reasonable
+assumption, for example, in urban or highway environments,
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:26:36 UTC from IEEE Xplore.  Restrictions apply. 
+844 IEEE INTERNET OF THINGS JOURNAL, VOL. 5, NO. 2, APRIL 2018
+this might not be the case for rural environments. Also,
+techniques which rely on GPS have to account for environ-ments where GPS signals could be completely unavailable,such as tunnels. In such environments V2I solutions such as
+VLC may be required to provide reliable localization.
+Further research will be required to validate and reﬁne
+the performance and robustness of the most promising local-
+ization techniques. Moreover, the integration of cooperative
+techniques with on-board sensing system will need furtherresearch to ﬁnd the optimal way to fuse these localizationtechniques together for increased reliability and accuracy.
+Furthermore, the optimal conﬁguration of vehicular ad hoc
+networks will need to be investigated to achieve low packetloss and latency in highly congested networks with high-speed
+nodes and varying topology. Additionally, the reliability of
+localization systems needs to be improved before commer-cialization, including consideration of sensor failures and faulttolerant systems.
+A
+PPENDIX A
+DEFINITIONS
+Here is a list of deﬁnitions of terms used in this report.1)Accuracy: How close the measured position or value is
+from the systems true position or value.
+2)Dead Reckoning: A localization method using an initial
+known position and odometry to calculate the changingposition during movement.
+3)Error: The difference between an estimated value or
+position to the true value or position.
+4)Feature Map: An information layer which includes
+the environment features (e.g., road marks, buildings,
+obstacles, other road users, etc.) and their locations.
+5)IEEE 802.11p: An addition to the IEEE 802.11 stan-
+dard to include wireless access in vehicular environ-
+ments communication system and deﬁnes modiﬁcations
+required to support it. IEEE 802.11 standard deﬁnes thespeciﬁcations for Wi-Fi products.
+6)Internet of Things: A network of interconnected tech-
+nologies, devices, objects, and services. See [ 5]f o r
+further details.
+7)Odometry: The measure of change in position over time,
+relative to the starting position.
+8)Packet Loss: The loss of packets, units of information
+transferred over networks, as they fail to reach theirdestination. Typically caused by network congestion.
+9)Robustness: Ability of the system to cope with errors
+and erroneous inputs.
+10) VANET: Vehicular ad hoc networks (V ANETs) are a type
+of mobile ad hoc network, in which each node is free
+to move independently and will therefore frequently
+change which nodes they are connected to. V ANETs areexpected to use the IEEE 802.11p standard for wireless
+communication.
+A
+PPENDIX B
+LIST OF ABBREVIATIONS
+Abbreviation Description
+3-D Three dimensional.5G Fifth generation.
+AGPS Assisted GPS.AOA Angle-of-arrival.
+CAM Cooperative awareness message.
+COVEL Cooperative vehicle localization for efﬁcient
+urban mobility.
+DENM Decentralised environmental notiﬁcation
+message.
+DGPS Differential global positioning system.
+DSRC Dedicated short range communication.
+ECEF Earth centered earth ﬁxed.ECI Earth-centered inertial.
+EKF Extended Kalman ﬁlter.
+FMCW Frequency modulation continuous wave.
+GIS Geographical information system.
+GNSS Global navigation satellite systems.GPS Global positioning system.
+GSM Global system for mobile communications.
+HD High deﬁnition.HMI Human–machine interface.
+IEEE Institute of electrical and electronics engi-
+neers.
+IMU Inertial measurement unit.
+IOT Internet of Things.
+IOV Internet of Vehicles.IR-UWB Impulse radio ultrawide bandwidth.
+ITS Intelligent transportation system.
+KF Kalman ﬁlter.LDM Local dynamic map.
+LED Light-emitting diode.
+LGPR Localizing ground penetrating radar.
+LiDAR Light detection and ranging.
+LRF Laser range ﬁnder.MAC Media access control.
+MAFS Master antenna ﬁxed stations.
+MANET Mobile ad hoc network.MSE Mean square error.
+PF Particle ﬁlter.
+PHY Physical layer.Radar Radio detecting and ranging.
+RANSAC Random sample consensus.
+RFID Radio frequency identiﬁcation.RMS Root mean square.
+RSS Radio signal strength.
+RSU Road side unit.RTK Real time kinematic.
+SAM Service announcement message.
+SLAM Simultaneous localization and mapping.SNR Signal-to-noise-ratio.
+SRR Short range Radar.
+TDOA Time-difference-of-arrival.
+TOA Time-of-arrival.
+TTFF Time-to-ﬁrst-ﬁx.UHF Ultrahigh frequency.
+UWB Ultrawide band.
+V2I Vehicle-to-infrastructure.V2V Vehicle-to-vehicle.
+V2X Vehicle-to-everything.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:26:36 UTC from IEEE Xplore.  Restrictions apply. 
+KUUTTI et al. : SURVEY OF STATE-OF-THE-ART LOCALIZATION TECHNIQUES AND THEIR POTENTIALS 845
+V ANET Vehicular ad hoc network.
+VLC Visible light communication.WA VE Wireless access in vehicular environment.
+R
+EFERENCES
+[1] Bureau of Transportation Statistics. (2016). Table 1-11: Number of U.S.
+Aircraft, Vehicles, Vessels, and Other Conveyances . Accessed:
+Dec. 1, 2016. [Online]. Available: http://www.rita.dot.gov/bts/
+sites/rita.dot.gov.bts/ﬁles/publications/national_transportation_statistics/
+html/table_01_11.html
+[2] Department for Transport. (May 2016). Research on the Impacts
+of Connected and Autonomous Vehicles (CAVs) on Trafﬁc Flow:
+Summary Report . Accessed: Mar. 29, 2017. [Online]. Available: https://
+www.gov.uk/government/uploads/system/uploads/attachment_data/ﬁle/530091/impacts-of-connected-and-autonomous-vehicles-on-trafﬁc-ﬂow-
+summary-report.pdf
+[3] K. Jo, J. Kim, D. Kim, C. Jang, and M. Sunwoo, “Development of
+autonomous car—Part I: Distributed system architecture and devel-opment process,” IEEE Trans. Ind. Electron. , vol. 61, no. 12,
+pp. 7131–7140, Dec. 2014.
+[4] 5G-PPP. (2015). 5G Automotive Vision . Accessed: Feb. 12, 2017.
+[Online]. Available: https://5g-ppp.eu/wp-content/uploads/2014/02/5G-
+PPP-White-Paper-on-Automotive-Vertical-Sectors.pdf
+[5] R. Minerva, A. Biru, and D. Rotondi. (2015). Towards a Deﬁnition of
+the Internet of Things (IoT) . [Online]. Available: https://iot.ieee.org/
+images/ﬁles/pdf/IEEE_IoT_Towards_Deﬁnition_Internet_of_Things_
+Revision1_27MAY15.pdf
+[6] Y . Fangchun, W. Shangguang, L. Jinglin, L. Zhihan, and S. Qibo, “An
+overview of Internet of Vehicles,” China Commun. , vol. 11, no. 10,
+pp. 1–15, Oct. 2014.
+[7] Asia-Paciﬁc Economic Cooperation (APEC), “White paper of Internet
+of Vehicles,” in Proc. 50th Telecommun. Inf. Working Group Meeting ,
+Brisbane, QLD, Australia, 2014.
+[8] Y . Cao and N. Wang, “Toward efﬁcient electric-vehicle charging using
+V ANET-based information dissemination,” IEEE Trans. Veh. Technol. ,
+vol. 66, no. 4, pp. 2886–2901, Apr. 2017.
+[9] Y . Cao et al. , “A cost-efﬁcient communication framework for battery-
+switch-based electric vehicle charging,” IEEE Commun. Mag. ,v o l .5 ,
+no. 5, pp. 162–169, May 2017.
+[10] N. Lu, N. Cheng, N. Zhang, X. Shen, and J. W. Mark, “Connected
+vehicles: Solutions and challenges,” IEEE Internet Things J. ,v o l .1 ,
+no. 4, pp. 289–299, Aug. 2014.
+[11] Mobileye. (2017). The Mapping Challenge . Accessed: Mar. 29, 2017.
+[Online]. Available: http://www.mobileye.com/our-technology/rem/
+[12] NVIDIA. (2017). Introducing the New Nvidia Drive px2 . Accessed:
+Apr. 20, 2017. [Online]. Available: http://www.nvidia.com/object/drive-px.html
+[13] OpenStreetMap. (2016). Micromapping . Accessed: Mar. 29, 2017.
+[Online]. Available: http://wiki.openstreetmap.org/wiki/Micromapping
+[14] ISO. (2015). ISO/TS 18750:2015, Intelligent Transport Systems—
+Cooperative Systems—Deﬁnition of a Global Concept for Local
+Dynamic Maps . Accessed: Mar. 29, 2017. [Online]. Available:
+https://www.iso.org/standard/63273.html
+[15] ETSI. (2014). Intelligent Transport Systems (ITS); Vehicular
+Communications; Basic Set of Applications; Local Dynamic
+Map (LDM) . Accessed: Mar. 29, 2017. [Online]. Available:
+http://www.etsi.org/deliver/etsi_en/302800_302899/302895/01.00.00_20/en_302895v010000a.pdf
+[16] N. Mattern and G. Wanielik, “Vehicle localization in urban envi-
+ronments using feature maps and aerial images,” in Proc. 14th Int.
+IEEE Conf. Intell. Transp. Syst. (ITSC) , Washington, DC, USA, 2011,
+pp. 1027–1032.
+[17] G. Vivo. (2010). SAFESPOT Core Architecture—LDM API and Usage
+Reference . [Online]. Available: http://www.safespot-eu.org/documents/
+SF_D7.3.1_Annex2_LDM_API_and_Usage_Reference_v0.7.pdf
+[18] F. Nelli. (2016). 3D Laser Scanning . Accessed: Mar. 29, 2017. [Online].
+Available: http://www.meccanismocomplesso.org/en/laser-scanning-3d/
+[19] I. Skog and P. Händel, “In-car positioning and navigation technologies—
+As u r v e y , ” IEEE Trans. Intell. Transp. Syst. , vol. 10, no. 1, pp. 4–21,
+Mar. 2009.
+[20] H.-S. Tan and J. Huang, “DGPS-based vehicle-to-vehicle cooperative
+collision warning: Engineering feasibility viewpoints,” IEEE Trans.
+Intell. Transp. Syst. , vol. 7, no. 4, pp. 415–428, Dec. 2006.[21] J. Levinson, M. Montemerlo, and S. Thrun, “Map-based precision
+vehicle localization in urban environments,” in Robotics: Science and
+Systems , vol. 3. Cambridge, MA, USA: MIT Press, 2007, pp. 121–128.
+[22] G. M. Djuknic and R. E. Richton, “Geolocation and assisted GPS,”
+Computer , vol. 34, no. 2, pp. 123–125, Feb. 2001.
+[23] European Commission. (2017). Galileo . Accessed: Mar. 15, 2017.
+[Online]. Available: https://ec.europa.eu/growth/sectors/space/galileo_en
+[24] European Commission. (2011). Satellite Navigation—Why Galileo?
+Accessed: Mar. 15, 2017. [Online]. Available: https://ec.europa.eu/
+growth/sectors/space/galileo_en
+[25] NavStar. (1996). NavStar GPS User Equipment Introduction . Accessed:
+May 16, 2017. [Online]. Available: https://www.navcen.uscg.gov/pubs/gps/gpsuser/gpsuser.pdf
+[26] F. Zhang et al. , “A sensor fusion approach for localization with cumula-
+tive error elimination,” in Proc. IEEE Conf. Multisensor Fusion Integr.
+Intell. Syst. (MFI) , 2012, pp. 1–6.
+[27] C. Li, B. Dai, and T. Wu, “Vision-based precision vehicle localiza-
+tion in urban environments,” in Proc. Chin. Autom. Congr. (CAC) ,
+Changsha, China, 2013, pp. 599–604.
+[28] I. Parra, M. A. Sotelo, D. Llorca, and M. Ocaña, “Robust visual odom-
+etry for vehicle localization in urban environments,” Robotica , vol. 28,
+no. 3, pp. 441–452, 2010.
+[29] S. Kamijo, Y . Gu, and L. Hsu, “Autonomous vehicle technologies:
+Localization and mapping,” IEICE Fundam. Rev. , vol. 9, no. 2,
+pp. 131–141, 2015.
+[30] J. K. Suhr, J. Jang, D. Min, and H. G. Jung, “Sensor fusion-based
+low-cost vehicle localization system for complex urban environments,”
+IEEE Trans. Intell. Transp. Syst. , vol. 18, no. 5, pp. 1078–1086,
+May 2017.
+[31] E. Ward and J. Folkesson, “Vehicle localization with low cost
+radar sensors,” in Proc. IEEE Intell. Veh. Symp. (IV) , 2016,
+pp. 864–870.
+[32] D. Vivet, F. Gérossier, P. Checchin, L. Trassoudaine, and R. Chapuis,
+“Mobile ground-based radar sensor for localization and mapping: Anevaluation of two approaches,” Int. J. Adv. Robot. Syst. , vol. 10, no. 5,
+pp. 307–318, 2013.
+[33] M. Cornick, J. Koechling, B. Stanley, and B. Zhang, “Localizing
+ground penetrating RADAR: A step toward robust autonomous groundvehicle localization,” J. Field Robot. , vol. 33, no. 1, pp. 82–102,
+2016.
+[34] Velodyne LiDAR. (2016). Product Guide . Accessed: Nov. 28, 2016.
+[Online]. Available: http://velodynelidar.com/docs/datasheet/LiDAR%20
+Comparison%20chart_Rev-A_Web.pdf
+[35] A. Y . Hata and D. F. Wolf, “Feature detection for vehicle localization
+in urban environments using a multilayer LIDAR,” IEEE Trans. Intell.
+Transp. Syst. , vol. 17, no. 2, pp. 420–429, Feb. 2016.
+[36] J. Levinson and S. Thrun, “Robust vehicle localization in urban environ-
+ments using probabilistic maps,” in Proc. IEEE Int. Conf. Robot. Autom.
+(ICRA) , 2010, pp. 4372–4378.
+[37] J. Castorena and S. Agarwal, “Ground-edge-based LIDAR localization
+without a reﬂectivity calibration for autonomous driving,” IEEE Robot.
+Autom. Lett. , vol. 3, no. 1, pp. 344–351, Jan. 2018.
+[38] H. Kim, B. Liu, C.-Y . Goh, S. Lee, and H. Myung, “Robust vehi-
+cle localization using entropy-weighted particle ﬁlter-based data fusionof vertical and road intensity information for a large scale urbanarea,” IEEE Robot. Autom. Lett. , vol. 2, no. 3, pp. 1518–1524,
+Jul. 2017.
+[39] R. W. Wolcott and R. M. Eustice, “Robust LIDAR localization using
+multiresolution Gaussian mixture maps for autonomous driving,” Int. J.
+Robot. Res. , vol. 36, no. 3, pp. 292–319, 2017.
+[40] R. W. Wolcott and R. M. Eustice, “Visual localization within LIDAR
+maps for automated urban driving,” in Proc. IEEE Int. Conf. Intell.
+Robots Syst. , 2014, pp. 176–183.
+[41] L. Wei, C. Cappelle, and Y . Ruichek, “Horizontal/vertical LRFs and GIS
+maps aided vehicle localization in urban environment,” in Proc. IEEE
+Annu. Conf. Intell. Transp. Syst. (ITSC) , The Hague, The Netherlands,
+2013, pp. 809–814.
+[42] S. Jung, J. Kim, and S. Kim, “Simultaneous localization and mapping of
+a wheel-based autonomous vehicle with ultrasonic sensors,” Artif. Life
+Robot. , vol. 14, no. 2, pp. 186–190, 2009.
+[43] M. Obst, N. Mattern, R. Schubert, and G. Wanielik, “Car-to-car com-
+munication for accurate vehicle localization—The CoVeL approach,” in
+Proc. 9th Int. Multi Conf. Syst. Signals Devices , 2012, pp. 1–6.
+[44] K. Cheok, G. Smid, G. Hudas, and J. Overholt, An Ultra-Wideband RF
+Method for Localizing an Autonomous Mobile Robot ,J a d iI n c . ,T r o y ,
+MI, USA, 2004.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:26:36 UTC from IEEE Xplore.  Restrictions apply. 
+846 IEEE INTERNET OF THINGS JOURNAL, VOL. 5, NO. 2, APRIL 2018
+[45] M. Terré, M. Pischella, and E. Vivier, “UWB,” in Wireless
+Telecommunication Systems . London, U.K.: ISTE, 2013, pp. 155–163.
+[46] F. Nekoogar, Ultra-Wideband Communications: Fundamentals and
+Applications , 1st ed. Upper Saddle River, NJ, USA: Prentice-Hall,
+2006.
+[47] J. Ibanez-Guzman, S. Lefevre, A. Mokkadem, and S. Rodhaim, “Vehicle
+to vehicle communications applied to road intersection safety, ﬁeldresults,” in Proc. 13th Int. IEEE Annu. Conf. Intell. Transp. Syst. , 2010,
+pp. 192–197.
+[48] P. Papadimitratos, A. de La Fortelle, K. Evenssen, R. Brignolo, and
+S. Cosenza, “Vehicular communication systems: Enabling technologies,
+applications, and future outlook on intelligent transportation,” IEEE
+Commun. Mag. , vol. 47, no. 11, pp. 84–95, Nov. 2009.
+[49] Intelligent Transport Systems (ITS); Vehicular Communications; Basic
+Set of Applications; Part 2: Speciﬁcation of Cooperative AwarenessBasic Service , ETSI Standard EN 302 637-2, 2014. [Online]. Available:
+http://www.etsi.org/deliver/etsi_en/302600_302699/30263702/01.03.02_
+60/en_30263702v010302p.pdf
+[50] Intelligent Transport Systems (ITS); Vehicular Communications;
+Basic Set of Applications; Part 3: Speciﬁcations of DecentralizedEnvironmental Notiﬁcation Basic Service , ETSI Standard EN 302
+637-3, 2014. [Online]. Available: http://www.etsi.org/deliver/etsi_en/
+302600_302699/30263703/01.02.01_30/en_30263703v010201v.pdf
+[51] M. Sepulcre, J. Gozalvez, and J. Hernandez, “Cooperative vehicle-to-
+vehicle active safety testing under challenging conditions,” Transp. Res.
+C Emerg. Technol. , vol. 26, pp. 233–255, Jan. 2013.
+[52] S. Fujii et al. , “Cooperative vehicle positioning via V2V communications
+and onboard sensors,” in Proc. Veh. Technol. Conf. , 2011, pp. 1–5.
+[53] M. Rohani, D. Gingras, V . Vigneron, and D. Gruyer, “A new decen-
+tralized Bayesian approach for cooperative vehicle localization basedon fusion of GPS and V ANET based inter-vehicle distance measure-ment,” IEEE Intell. Transp. Syst. Mag. , vol. 7, no. 2, pp. 85–95,
+Apr. 2015.
+[54] N. Mattern, M. Obst, R. Schubert, and G. Wanielik, “Co-operative vehi-
+cle localization algorithm—Evaluation of the COVEL approach,” in
+Proc. 9th Int. Multi Conf. Syst. Signals Devices , 2012, pp. 1–5.
+[55] R. Ordóñez-Hurtado, W. Griggs, E. Crisostomi, and R. Shorten,
+“Cooperative positioning in vehicular ad-hoc networks supportedby stationary vehicles,” Feb. 2015. [Online]. Available: https://www.hamilton.ie/smarttransport/publications/arXivCooperativePosition
+ingFeb2015.pdf
+[56] K. Golestan, S. Seifzadeh, M. Kamel, F. Karray, and F. Sattar, “Vehicle
+localization in V ANETs using data fusion and V2V communication,” in
+Proc. 2nd ACM Int. Symp. Design Anal. Intell. Veh. Netw. Appl. , 2012,
+pp. 123–130.
+[57] F. Ahammed, J. Taheri, A. Y . Zomaya, and M. Ott, International
+Conference on Mobile and Ubiquitous Systems: Computing, Networking,and Services. Berlin, Germany: Springer, 2010.
+[58] L. Altoaimy and I. Mahgoub, “Fuzzy logic based localization for vehic-
+ular ad hoc networks,” in Proc. IEEE Symp. Comput. Intell. Veh. Transp.
+Syst. (CIVTS) , 2014, pp. 121–128.
+[59] A. Boukerche, H. Oliveira, E. Nakamura, and A. Loureiro, “Vehicular ad
+hoc networks: A new challenge for localization-based systems,” Comput.
+Commun. , vol. 31, no. 12, pp. 2838–2849, 2008.
+[60] J. Vales-Alonso, F. Vicente-Carrasco, and J. J. Alcaraz, “Optimal con-
+ﬁguration of roadside beacons in V2I communication,” Comput. Netw. ,
+vol. 55, no. 14, pp. 3142–3153, 2011.
+[61] O. Hassan, I. Adly, and K. A. Shehata, “Vehicle localization system
+based on IR-UWB for V2I applications,” in Proc. 8th Int. Conf. Comput.
+Eng. Syst. (ICCES) , Cairo, Egypt, 2013, pp. 133–137.
+[62] A. Fascista, G. Ciccarese, A. Coluccia, and G. Ricci, “A localization
+algorithm based on V2I communications and AOA estimation,” IEEE
+Signal Process. Lett. , vol. 24, no. 1, pp. 126–130, Jan. 2017.
+[63] A. Khattab, Y . A. Fahmy, and A. A. Wahab, “High accuracy GPS-free
+vehicle localization framework via an INS-assisted single RSU,” Int. J.
+Distrib. Sensor Netw. , vol. 11, no. 5, 2015, Art. no. 795036.
+[64] N. Houdali, T. Ditchi, E. Gérome, J. Lucas, and S. Holé, “RF infrastruc-
+ture cooperative systems for in lane vehicle localization,” Electronics ,
+vol. 3, no. 4, pp. 598–608, 2014.
+[65] J. A. del Peral-Rosado, J. A. López-Salcedo, S. Kim, and
+G. Seco-Granados, “Feasibility study of 5G-based localization for
+assisted driving,” in Proc. Int. Conf. Localization GNSS (ICL GNSS) ,
+2016, pp. 1–6.
+[66] S. Ergen et al. , “RSSI-ﬁngerprinting-based mobile phone localization
+with route constraints,” IEEE Trans. Veh. Technol. , vol. 63, no. 1,
+pp. 423–428, Jan. 2014.[67] A. Varshavsky et al. , “Are GSM phones THE solution for localiza-
+tion?” in Proc. 7th IEEE Workshop Mobile Comput. Syst. Appl. , 2006,
+pp. 20–28.
+[68] M. Y . Chen et al. , “Practical metropolitan-scale positioning for GSM
+phones,” in Proc. 8th UbiComb , Orange County, CA, USA, 2006,
+pp. 225–242.
+[69] C.-H. Chen, C.-A. Lee, and C.-C. Lo, “Vehicle localization and veloc-
+ity estimation based on mobile phone sensing,” IEEE Access ,v o l .4 ,
+pp. 803–817, 2016.
+[70] H. Xue, H. Zhu, S. Cao, S. Chang, and J. Cao, “UPS: Combatting
+urban vehicle localization with cellular-aware trajectories,” in Proc.
+Glob. Commun. Conf. (GLOBECOM) , 2016, pp. 1–7.
+[71] L. C. Bento, R. Paraﬁta, and U. Nunes, “Inter-vehicle sensor fusion
+for accurate vehicle localization supported by V2V and V2I commu-nications,” in Proc. 15th Int. IEEE Conf. Intell. Transp. Syst. (ITSC) ,
+Anchorage, AK, USA, 2012, pp. 907–914.
+[72] L. Bento, R. Chelim, and U. Nunes, “Collaborative vehicle self-
+localization using multi-GNSS receivers and V2V/V2I communica-tions,” in Proc. IEEE 18th Int. Conf. Intell. Transp. Syst. (ITSC) , 2015,
+pp. 2525–2532.
+[73] H. Qin, Y . Peng, and W. Zhang, “Vehicles on RFID: Error-cognitive
+vehicle localization in GPS-less environments,” IEEE Trans. Veh.
+Technol. , vol. 66, no. 11, pp. 9943–9957, Nov. 2017.
+[74] S. Arai et al. , “Experimental on hierarchical transmission scheme for
+visible light communication using LED trafﬁc light and high-speed cam-era,” in Proc. IEEE 66th Veh. Technol. Conf. (VTC Fall) , Baltimore, MD,
+USA, 2007, pp. 2174–2178.
+[75] S. Arai et al. , “Multiple LED arrays acquisition for image-sensor-based
+I2V-VLC using block matching,” in Proc. IEEE 11th Consum. Commun.
+Netw. Conf. (CCNC) , Las Vegas, NV , USA, 2014, pp. 605–610.
+[76] C. Li and S. Shimamoto, “An open trafﬁc light control model for reduc-
+ing vehicles’ CO
+2emissions based on ETC vehicles,” IEEE Trans. Veh.
+Technol. , vol. 61, no. 1, pp. 97–110, Jan. 2012.
+[77] C. B. Liu, B. Sadeghi, and E. W. Knightly, “Enabling vehicular visible
+light communication (V2LC) networks,” in Proc. 8th ACM Int. Workshop
+Veh. Inter Netw. , Las Vegas, NV , USA, 2011, pp. 41–50.
+[78] L.-C. Wu and H.-M. Tsai, “Modeling vehicle-to-vehicle visible light
+communication link duration with empirical data,” in Proc. IEEE
+Globecom Workshops , Atlanta, GA, USA, 2013, pp. 1103–1109.
+[79] S.-H. You, S.-H. Chang, H.-M. Lin, and H.-M. Tsai, “Visible light com-
+munications for scooter safety,” in Proc. MobiSys , Taipei, Taiwan, 2013,
+pp. 509–510.
+[80] S.-H. Yu, O. Shih, H.-M. Tsai, N. Wisitpongphan, and R. D. Roberts,
+“Smart automotive lighting for vehicle safety,” IEEE Commun. Mag. ,
+vol. 51, no. 12, pp. 50–59, Dec. 2013.
+[81] R. Roberts, P. Gopalakrishnan, and S. Rathi, “Visible light position-
+ing: Automotive use case,” in Proc. IEEE Veh. Netw. Conf. (VNC) ,
+Jersey City, NJ, USA, 2010, pp. 309–314.
+[82] S. Rajagopal, R. D. Roberts, and S.-K. Lim, “IEEE 802.15.7 visible
+light communication: Modulation schemes and dimming support,” IEEE
+Commun. Mag. , vol. 50, no. 3, pp. 72–82, Mar. 2012.
+[83] P. H. Pathak, X. Feng, P. Hu, and P. Mohapatra, “Visible light commu-
+nication, networking, and sensing: A survey, potential and challenges,”
+IEEE Commun. Surveys Tuts. , vol. 17, no. 4, pp. 2047–2077, 4th Quart.,
+2015.
+[84] L. Li, P. Hu, C. Peng, G. Shen, and F. Zhao, “Epsilon: A visible light
+based positioning system,” in Proc. 11th USENIX Symp. Netw. Syst.
+Design Implement. (NSDI) , Seattle, WA, USA, 2014, pp. 331–343.
+[85] B. W. Kim and S.-Y . Jung, “Vehicle positioning scheme using V2V and
+V2I visible light communications,” in Proc. IEEE 83rd Veh. Technol.
+Conf. (VTC Spring) , Nanjing, China, 2016, pp. 1–5.
+[86] R. Schmidt, T. Köllmer, T. Leinmüller, B. Böddeker, and
+G. Schäfer, “Degradation of Transmission Range in V ANETscaused by Interference,” Praxis Der Informationsverarbeitung Und
+Kommunikation , vol. 32, no. 4, pp. 224–234, 2009.
+[87] A. Fonseca and T. Vazão, “Applicability of position-based routing for
+V ANET in highways and urban environment,” J. Netw. Comput. Appl. ,
+vol. 36, no. 3, pp. 961–973, 2013.
+[88] R. G. Engoulou, M. Bellaïche, S. Pierre, and A. Quintero, “V ANET
+security surveys,” Comput. Commun. , vol. 44, no. 5, pp. 1–13, 2014.
+Authors’ photographs and biographies not available at the time of publication.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:26:36 UTC from IEEE Xplore.  Restrictions apply. 

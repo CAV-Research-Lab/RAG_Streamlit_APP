@@ -1,0 +1,230 @@
+=== Metadata ===
+{
+    "file_name": "Lecture 1- Introduction to Intelligent (Autonomous) Vehicles.pptx",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Lecture 1- Introduction to Intelligent (Autonomous) Vehicles.pptx",
+    "status": "Processed"
+}
+
+=== Content ===
+History of Intelligent and  Autonomous Vehicles
+1
+From Science Fiction to Reality
+Early Concepts
+Saber Fallah (ENG3170)
+2
+The Early Visions of Autonomous Vehicles
+The idea of autonomous vehicles in the 1920s and 1930s:
+The driverless vehicles of the 1920s were called “phantom autos,” and they were remote-controlled by the tapping of a telegraph key.
+
+The movie star Helen Twelvetrees with her 1935 Pontiac, the same model that was remote-controlled during “phantom auto” demonstrations. (Mitchell Library, State Library of New South Wales)
+Houdina’s Remote Controlled Car. Photo Credit: Discovery Magazine
+Early Concepts
+Saber Fallah (ENG3170)
+3
+The Early Visions of Autonomous Vehicles
+Norman Bel Geddes' "Futurama" exhibit at the 1939 World's Fair:
+Norman Bel Geddes, a prominent industrial designer and futurist, was known for his forward-thinking designs and ideas. In the Futurama exhibit, he presented an intricate and highly detailed model of a city 20 years into the future, that is, the world as he imagined it would be in 1959.
+
+
+Wurts Bros. (New York, N.Y.). People waiting in line for the Futurama ride at General Motors Highways and Horizons pavilion, New York World’s Fair. Museum of the City of New York. 
+The Dawn of Development
+Saber Fallah (ENG3170)
+4
+First Strides in Autonomous Vehicle Development
+Research efforts in the 1980s and 1990s:
+One of the pioneering institutions in this field was Carnegie Mellon University with their NavLab project. NavLab, short for 'Navigation Laboratory,' was a series of autonomous vehicles developed by the university's Robotics Institute. 
+Meanwhile, in Europe, we had the EUREKA Prometheus Project, which stands for 'PROgraMme for a European Traffic of Highest Efficiency and Unprecedented Safety. 
+.
+Carnegie Mellon’s NavLab 5 Photo Credit: Carnegie Mellon
+Project Prometheus
+The Dawn of Development
+Saber Fallah (ENG3170)
+5
+First Strides in Autonomous Vehicle Development
+Early challenges and limitations:
+
+One of the main challenges was the limited computational power available.
+Another challenge was the rudimentary state of sensor technology. Early LiDAR and RADAR systems were bulky, expensive, and had limited range and resolution. 
+The algorithms and AI technologies used for perception and decision-making were also in their infancy. 
+Lastly, there were significant legal and regulatory hurdles. There was no legal framework for testing, let alone deploying, autonomous vehicles on public roads. 
+DARPA grand Challenge
+Saber Fallah (ENG3170)
+6
+DARPA Grand Challenge: A Turning Point
+The 2004 DARPA Grand Challenge:
+
+In 2004, DARPA organised the Grand Challenge, a competition inviting teams to develop an autonomous vehicle capable of navigating a 142-mile off-road course in the Mojave Desert. The goal of the challenge was to accelerate the development of autonomous vehicle technologies that could be used on the battlefield, reducing the risk to human soldiers.
+.
+
+DARPA grand Challenge
+Saber Fallah (ENG3170)
+7
+DARPA Grand Challenge: A Turning Point
+The Impact of 2004 DARPA Grand Challenge:
+
+Even though no vehicle completed the 2004 DARPA Grand Challenge, the event turned out to be a significant catalyst for innovation in the field of autonomous vehicles. The public event, widely reported in the media, sparked curiosity and demonstrated the intriguing potential of autonomous technology. It made it clear that autonomous vehicles were not just a thing of science fiction or limited to research labs but were a real possibility with vast implications.
+
+Stanford Racing and Victor Tango together at an intersection in the DARPA Urban Challenge Finals.
+Team Ensco's vehicle that was developed for the 2007 DARPA Urban Challenge
+Rise of Tech Companies
+In 2009, Google launched a self-driving car project under its Google X division. This project was led by several veterans of the DARPA challenges, bringing a wealth of experience and knowledge to the endeavor. 
+
+A few years later, in 2015, Tesla introduced Autopilot, a driver-assistance system that brought elements of autonomous driving to the company's electric vehicles. 
+Saber Fallah (ENG3170)
+8
+Tech Giants Enter the Field
+Rise of Tech Companies
+Rapid advancements in various technologies have converged to push this field into uncharted territories, bringing us closer than ever to realizing the vision of widespread autonomous vehicle use.
+
+One of the key areas of progress has been in the field of artificial intelligence (AI) and machine learning. These technologies form the 'brain' of an autonomous vehicle, enabling it to perceive its environment, make decisions, and learn from experience. 
+
+Another area of significant advancement is sensor technology. Modern autonomous vehicles are equipped with an array of sensors, including LiDAR, RADAR, cameras, and ultrasonic sensors. 
+
+Saber Fallah (ENG3170)
+9
+The Current State of Autonomous Vehicles
+Summary
+Saber Fallah (ENG3170)
+10
+Looking Back to Look Forward
+Benefits and Challenges of Autonomous and Intelligent Vehicles
+11
+Exploring the Potential Impacts and Hurdles
+Introduction To Benefits and Challenges
+Saber Fallah (ENGM298)
+12
+Introduction to Benefits
+Benefits
+Saber Fallah (ENGM298)
+13
+Improved Safety and Increased Mobility
+Safety:
+One of the most significant potential benefits of autonomous vehicles is their potential to improve road safety drastically. Today, a vast majority of road accidents are caused by human error, such as distracted driving, drunk driving, or simply miscalculating a risky manoeuvre. Autonomous vehicles, devoid of human fallibility, can address this issue at its core.
+
+Mobility:
+Beyond just improving safety, autonomous vehicles also hold the promise of significantly enhancing mobility, particularly for those who currently have limited access to transportation. This includes the elderly, people with disabilities, and others who, for various reasons, cannot drive. Autonomous vehicles could provide them with a new level of independence, allowing them to travel where and when they want without relying on others
+
+Benefits
+Saber Fallah (ENGM298)
+14
+Environmental Impact and Economic Productivity 
+Environmental Impact:
+Autonomous vehicles can contribute to reducing CO2 emissions in several ways. As most of the companies developing autonomous vehicles also focus on electric vehicles, widespread adoption of autonomous vehicles could coincide with the increased use of electric cars, reducing greenhouse gas emissions. 
+
+Economic Productivity:
+With an autonomous vehicle doing the driving, people will have the opportunity to utilize their travel time for other activities, whether it's work, relaxation, or entertainment. This could result in a significant boost to overall productivity. 
+
+Challenges
+Saber Fallah (ENGM298)
+15
+Introduction to Challenges
+Challenges
+Saber Fallah (ENGM298)
+16
+Technical Issues and Security & Privacy Concerns 
+Technical Issues:
+The unpredictability of human drivers, the random nature of pedestrians, and the infinite array of possible real-world scenarios create a challenging environment for autonomous systems.
+Adverse weather conditions further exacerbate these challenges. Snow, fog, and heavy rain can significantly impact the vehicle's sensor systems' ability to detect and recognize objects and road markings. 
+
+Security and Privacy Concerns:
+With autonomous vehicles relying heavily on data for operation, they inherently face data privacy issues.
+As computerized systems, autonomous vehicles are potentially susceptible to hacking. The risk of someone externally taking control of a vehicle or causing it to malfunction is a grave concern. 
+Challenges
+Saber Fallah (ENGM298)
+17
+Legal & Regulatory Issues and Job Displacement & Public Acceptance 
+Legal & Regulatory Issues:
+Our current laws and regulations were designed in an era of human drivers and are therefore inadequate for autonomous vehicles. How do we adapt existing regulations, or develop new ones, to account for vehicles that can drive themselves? 
+
+Job Displacement & Public Acceptance:
+As autonomous vehicles become more prevalent, there will be less need for human drivers, affecting a wide range of jobs, from truck drivers to taxi drivers, and even industries such as auto insurance and vehicle repair. 
+This is not just about ensuring that the technology is safe and reliable, but also about building trust. People need to feel comfortable with the idea of entrusting their safety to a machine. This requires transparent communication about how the technology works, its limitations, and the measures in place to ensure safety and protect privacy.
+Summary: Balancing Benefits and Challenges
+Saber Fallah (ENGM298)
+18
+
+We Discussed:
+The incredible benefits autonomous vehicles promise – enhanced safety, improved mobility, efficient traffic management, environmental sustainability, and increased economic productivity.
+
+The technical difficulties that autonomous vehicles face, such as dealing with complex driving scenarios and adverse weather conditions, as well as integrating these vehicles into our existing infrastructure.
+
+The legal and regulatory hurdles that need to be overcome, particularly in terms of existing laws' inadequacy and the ambiguity of responsibility in the event of accidents.  
+
+The societal implications, particularly in terms of potential job losses in driving-related sectors, and the need for public trust and acceptance of autonomous technology, are considerations that cannot be underestimated.
+
+
+
+Understanding Levels of Vehicle Autonomy
+19
+From Manual Control to Full Autonomy
+Introduction
+Saber Fallah (ENGM298)
+20
+Introduction to Levels of Driving Automation
+Levels of Driving Automation
+Saber Fallah (ENGM298)
+21
+
+Levels of Driving Automation
+Saber Fallah (ENGM298)
+22
+
+Levels of Driving Automation
+Saber Fallah (ENGM298)
+23
+
+Levels of Driving Automation
+Saber Fallah (ENGM298)
+24
+
+Levels of Driving Automation
+Saber Fallah (ENGM298)
+25
+
+Levels of Driving Automation
+Saber Fallah (ENGM298)
+26
+
+Levels of Driving Automation
+Saber Fallah (ENGM298)
+27
+Summary: The Progression of Driving Automation
+Understanding the Functionality Modules of Intelligent Vehicles
+28
+The Building Blocks of Autonomous Driving
+Introduction
+Saber Fallah (ENGM298)
+29
+Sensing Module: The Eyes and Ears
+Saber Fallah (ENGM298)
+30
+
+Perception Module: Making Sense of the Data
+Saber Fallah (ENGM298)
+31
+
+Localisation Module: Knowing the Position
+Saber Fallah (ENGM298)
+32
+
+Planning Module: Deciding what to do
+Saber Fallah (ENGM298)
+33
+
+Control Module: Executing the Plan
+Saber Fallah (ENGM298)
+34
+
+Summary: The Interconnected System
+Saber Fallah (ENGM298)
+35
+
+Sensing module acts as the 'eyes and ears' of the vehicle 
+Perception module can be thought of as the 'brain' that interprets the raw sensor data. 
+Localisation module helps the vehicle understand its exact position in the world, making navigation possible.
+Planning module uses this information to decide what the vehicle should do. 
+Control module translates these high-level plans into physical actions. 
+
+
+
+

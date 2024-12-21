@@ -1,0 +1,2478 @@
+=== Metadata ===
+{
+    "file_name": "Autonomous Vehicle Implementation Predictions Implications for Transport Planning.pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Autonomous Vehicle Implementation Predictions Implications for Transport Planning.pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+ www.vtpi.org  
+ 
+Info@vtpi.org  
+ 
+250-508-5150  
+ 
+ 
+Todd Alexander Litman © 2013 -2023 
+You are welcome and encouraged to copy, distribute, share and excerpt this document and its ideas, provided the author is given 
+attribution. Please send your corrections, comments and suggestions for improvement.  
+ 
+Autonom ous Vehicle Implementation Predictions  
+Implications for Transport Planning  
+23 October 2024  
+ 
+By  
+Todd Litman  
+Victoria Transport Policy Institute  
+ 
+ 
+  Waymo’s self-driving  taxis  are a well-publicized example of autonomous vehicle s. 
+ 
+Summary  
+This report explores  the impacts of  autonom ous (also called self-driving , driverless or robotic ) 
+vehicle s, and their implications for transportation  planning . It investigates how quickly such 
+vehicles are  likely to develop  and be deployed  based on experience with previous vehicle 
+technologies ; their likely  benefits and costs ; how th ey will affect travel  activity;  and their impacts 
+on road, parking and public transit  planning . This analysis indicates that  Level 5 autonomous 
+vehicles, able to operate without a driver, may be commercially available and legal to use in 
+some jurisdictions by the late 2020 s, but will initially have high costs and limited performance . 
+Some benefits, such as independent mobility for affluent non -drivers , may begin in the 20 30s 
+but most impacts , including reduced traffic and parking congestion , independent mobility for 
+low-income people (and there fore reduced need for public  transit ), increased safety, energy 
+conservation and pollution reductions, will only  be significant when  autonomous  vehicles 
+become common and affordable , probably in the 20 40s to 2060s, and some benefits may 
+require  dedicated autonomous vehicle lanes, which raises social equity concerns .  
+ 
+  
+
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+2 
+ Table of Contents  
+Executive Summary  ................................ ................................ ................................ .........................  3 
+Introduction  ................................ ................................ ................................ ................................ .... 7 
+Autonomous Vehicle Operational Models  ................................ ................................ .....................  8 
+Benefits and Costs  ................................ ................................ ................................ ...........................  9 
+Reduced Driver Stress, Improved Productivity and Mobility  ................................ ................................ ... 9 
+Ownership and Operating Costs  ................................ ................................ ................................ .............  10 
+Traffic Safety and Public Health  ................................ ................................ ................................ ..............  13 
+External Cost  ................................ ................................ ................................ ................................ ...........  15 
+Social Equity Impacts  ................................ ................................ ................................ ..............................  16 
+Benefit and Cost  Summary  ................................ ................................ ................................ .....................  18 
+Travel Impacts  ................................ ................................ ................................ ...............................  20 
+Development  and Deploymen t Predictions  ................................ ................................ .................  25 
+Experience with Previous Vehicle Technology Deployment  ................................ ................................ .. 28 
+Deployment Predictions  ................................ ................................ ................................ .........................  29 
+Community  Objectives  ................................ ................................ ................................ ..................  32 
+Planning Implications  ................................ ................................ ................................ ....................  33 
+Roadway Design ................................ ................................ ................................ ................................ ...... 33 
+Transportation Pricing  ................................ ................................ ................................ ............................  33 
+Curb Management  ................................ ................................ ................................ ................................ .. 33 
+Parking Planning  ................................ ................................ ................................ ................................ ..... 33 
+Public Transit Needs  ................................ ................................ ................................ ...............................  34 
+Other Trends Affecting Travel Demands  ................................ ................................ ................................  34 
+Potential Conflicts and Solutions  ................................ ................................ ................................ .. 38 
+Conclusions  ................................ ................................ ................................ ................................ ... 39 
+References  ................................ ................................ ................................ ................................ .... 42 
+ 
+ 
+  
+Driving in mixed 
+traffic involves 
+numerous 
+interactions with 
+diverse pedestrians, 
+animals, bicyclists 
+and vehicles, and so 
+is more complex 
+than flying an 
+airplane. (Keith 
+Shaw)  
+
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+3 
+ Executive Summary  
+Many decision -makers and practitioners wonder how a utonomous ( also called self-driving  or 
+robotic ) vehicles (AVs) will affect future travel, and therefore the need for roads, parking 
+facilities and public transit services, and what public policies can minimize the problems and 
+maximize the benefits of these new technologies. This report explores these issues.  
+ 
+Optimists predict that by 2030, autonomous vehicles will be sufficiently reliable, affordable and 
+common to displace most human driving, providing huge savings and benefits. However, there 
+are good reasons to be skeptical. Most optimistic predictions are made by people with financial 
+interests in the industry, based on experience with disruptive technologies such as digital 
+cameras, smart phones and personal computers. They tend to ignore significant obstacles to 
+autonomous vehicle development and exaggerate future benefits.  
+ 
+There is considerable uncertainty concerning autonomous vehicle development, benefits and 
+costs, travel impacts, and consumer demand. Considerable progress is needed before 
+autonomous vehicles can operate reliably in mixed urban traffic, heavy rain and snow, unpaved 
+and unmapped roads, and where wireless access is unreliable. Years of testing and regulatory 
+approval will be required before they are commercially available in most jurisdictions. The first 
+commercially available autonomous vehicles are likely to be expensive and limited in 
+performance. They will introduce new costs and risks. These constraints will limit sales. Many 
+motorists will be reluctant to pay thousands of extra dollars for vehicles that will sometimes be 
+unable to reach a destination due to inclement weather or unmapped roads.  
+ 
+Exhibit ES -1 illustrates a utonomous vehicle  user costs. They  are likely to be more expensive 
+than human -driven private vehicles and public transit, but cheaper  than ridehailing and human -
+driven taxis. Shared autonomous vehicles will be cheaper but less convenient and comfortable 
+than private AVs, so many households , particularly in suburb s and rural areas, will own AVs. 
+ 
+Exhibit ES-1  Cost Comparison  
+ 
+Autonomous vehicles (AVs) are likel y to cost more than human -operated  (HO) private vehicles and public 
+transit, but less than human -driven taxis and ridehailing services.  
+ $0.00$0.50$1.00$1.50$2.00$2.50
+HO car
+variable
+costsShared AV Public
+transitAV variable
+costsHD car
+average
+costsAV
+TaxiAV
+average
+costsRide-
+hailingHO
+TaxiDollars Per MileAutonomous Vehicles (AV)
+Human Driven (HD)
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+4 
+ Autonomous vehicles will have various benefits and costs, including many external costs (costs 
+imposed on other people). All of these impacts should be considered when planning for AVs.  
+ 
+Exhibit ES -2  Autonomous Vehicle Potential Benefits and Costs   Benefits  Costs/Problems  Internal (user Impacts ) 
+Reduced  drivers’  stress  and increased 
+productivity . Motorists  can rest, play and work 
+while travelling .  
+Mobility for non -drivers.  More  independent 
+mobility for non -drivers  can reduce motorists ’ 
+chauffeur ing burdens and  transit  subsidy needs .  
+Reduced paid driver costs.  Reduce s costs for taxis 
+services and commercial transport  drivers . Increase d vehicle  costs.  Requires additional vehicle 
+equipment,  services and fees . 
+Additional  user  risks.  Additional crashes caused by  system 
+failures, platooning, higher traffic speeds, additional risk -
+taking, and increased total vehicle travel . 
+Reduced s ecurity and privacy.  May be vulnerable to 
+information abuse (ha cking), and features such as location  
+tracking and data sharing may r educe privacy . External (Impacts on others)  Increased safety.  May reduce crash  risks and 
+insurance costs. May reduce high -risk driving .  
+Increased road capacity  and cost savings . More 
+efficient vehicle traffic may  reduce  congestion 
+and roadway costs.  
+Reduced parking costs.  Reduces demand for 
+parking at destinations . 
+Reduced energy consumption and pollution . May 
+increase fuel efficiency and reduce emissions.  
+Supports vehicle  sharing . Could facilitate 
+carsharing  and ridesharing, reducing total vehicle 
+ownership and travel, and associated costs . Increased infrastructure costs. May require higher roadway 
+design and maintenance standards.  
+Additional risk s. May increase risks to other road users and 
+may be used for criminal activities.  
+Increased traffic problems . Increased vehicle travel may 
+increase congestion, pollution and sprawl -related costs . 
+Social equity concerns.  May reduce affordable mobility 
+options including  walking, bicycling and transit services.  
+Reduced employment . Jobs for drivers may decline.  
+Reduced support for other solutions . Optimistic predictions 
+of autonomous driving  may discourage other transport 
+improvements and management strategies.  
+Autonomous vehicles can provide various benefits and costs, including external impacts on other people.  
+ 
+ 
+Vehicles last longer, cost more, impose larger external costs, and are more highly regulated 
+than most other consumer goods. As a result, vehicle technologies take longer to penetrate 
+markets than most other sectors. It will probably take decades for autonomous vehicles to 
+dominate new vehicle purchases and fleets, and some motorists may resist using them.  
+ 
+Optimistically, autonomous vehicles will be safe and reliable by 2025 , and  become  
+commercially available in many areas by  2030. If they follow the pattern of previous vehicle 
+technologies, during the 2030s and probably the 2040s, they will be expensive and limited in 
+performance, sometimes unable to reach destination s or requiring human intervention when 
+they encounter unexpected situations . Customers will include affluent  high -annual -mileage 
+motorists and businesses.  For the foreseeable future most moderate - and low -income 
+households will continue to use human -operated vehicles.  
+ 
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+5 
+ Shared autonomous vehicles (s elf-driving taxi s) and rides  (micro-transit services)  may be come  
+widely available by the  2030s. Shared vehicles  have moderate operating costs, and offer 
+moderate convenience and comfort. They should  be cheaper than current taxi and ridehailing 
+services,  but offer lower quality service since no driver will be available to assist  passengers , 
+provide security  or clean vehicles . Vehicle dispatching is likely to  be slow and unpredictable, 
+particularly in suburban and rural areas . Shared rides  will have the lowest costs but the least 
+convenience and comfort . It is possible that level 5 autonomy (vehicles able to operate without 
+a drive under all normal conditions) will be infeasible for decades.  Because of their predictable 
+routes  and high labor costs , autonomous operation is most appropriate for long -haul buses and 
+freight trucks, so self -driving  buses and trucks may become common in the 2030s and 2040s.  
+ 
+The figure below illustrates these market penetratio n and benefits projection s. This indicates 
+that it will probably be 2045 before half of new vehicles are autonomous, 2060 before half of 
+the vehicle fleet is autonomous, and possibly longer due to technical challenges or consumer 
+preferences. Level 4 autonomy (able to operate autonomously under limited conditions, such 
+as on grade -separated highways) can reduce driver stress and increase productivity, but most 
+benefits require Level 5 autonomy (able to operate autonomously under all normal conditions) 
+so vehicles can transport non -drivers and travel empty to pick up or drop off passengers.  
+ 
+Exhibit ES-2      Autonomous Vehicle Sales, Fleet , Travel and Benefit Projection s 
+ 
+This analysis suggests that it will be at least 2045 before half of new vehicles are autonomous, and 2060 
+before half of the vehicle fleet is autonomous. Significantly faster deployment will require scrapping many 
+otherwise functional vehicles that lack self -driving ability. Some benefits, such as reduced driver stress and 
+independent mobility for affluent non -drivers, can occur when autonomous vehicles are relatively costly 
+and rare. However, most benefits, such as independent mobility for moderate -income non -drivers and 
+affordable taxi and micro -transit services, can only be significant if they become common and affordable, 
+and some benefits, such as reduced congestion, will require dedicated lanes to allow platooning.   
+ 
+
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+6 
+ Many predictions assume that most autonomous vehicles will be electric, which have low fuel 
+costs but require costly batteries and currently pay no fuel taxes. Incorporating battery 
+replacement costs and efficient road user fees increases electric vehicle operating costs to be 
+similar to fossil fuel vehicles.  
+ 
+An important planning issue is whether autonomous vehicles will increase or reduce total 
+vehicle travel and associated traffic problems. It could go either way. By increasing non -drivers’ 
+vehicle travel, increasing travel convenience and comfort, reducing vehicle operating costs, 
+generating empty travel, and encouraging longer -distance commutes and more sprawled 
+development, they can increase vehicle travel. This additional vehicle travel provides marginal 
+consumer benefits, and since vehicle travel imposes significant external costs, much of the 
+additional vehicle travel is likely to be economically inefficient: its user benefits will be less than 
+total incremental costs. Alternatively, autonomous operation may facilitate vehicle sharing, 
+allowing households to reduce vehicle ownership and vehicle travel. This suggests that AVs will 
+increase vehicle travel in suburban and rural areas, and reduce it in urban areas. Their net 
+impacts will depend on transport and land use development policies. With current policies, 
+vehicle travel and sprawl are likely to increase 10 -30%. More efficient pricing, and roadway 
+management which favors shared vehicles, can reduce vehicle travel and associated problems.  
+ 
+Another critical issue is the degree that potential benefits can be achieved when only a portion 
+of vehicle travel is autonomous. Some benefits, such as improved mobility for affluent non -
+drivers, may occur when autonomous vehicles are uncommon and costly, but many potential 
+benefits, such as reduced congestion and emission rates, reduced traffic signals and lane 
+widths, require that vehicles operate autonomously in dedicated lanes.  
+ 
+Autonomous vehicle implementation is just one of many trends likely to affect future transport 
+demands and impacts, and not necessarily the most important. Their ultimate impacts depend 
+on how autonomous vehicles interact with other trends, such as shifts from private to shared 
+vehicles. Autonomous vehicles will probably not be a “ game changer ” during most of our lives, 
+and will only cause a “ paradigm shift ” if this technology causes large shifts from private to 
+shared vehicles and creates more multi -modal communities.  
+ 
+Transportation professionals have important roles to play in autonomous vehicle development 
+and deployment. We must anticipate how new technologies and services are likely to affect 
+road, parking and public transit needs, and how to respond to minimize problems and maximize 
+total benefits. We can help define the standards they must meet to legally operate on public 
+roads. We should evaluate their benefits and costs and develop policies to maximize net 
+benefits and ensure that their deployment supports strategic community goals.  
+ 
+ 
+  
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+7 
+ Introduction  
+The future is ultimately unknowable but planning requires predicting impending  conditions and 
+needs. Many decision -makers and practitioners (planners, engineers and analysts) wonder how 
+autonomous (also called self-driving  or robotic ) vehicle s will affect  future  travel  demands , and 
+therefore the need for  road s, parking  facilities  and public  transit services,  and what public 
+policies can minimize the ir risks and maximize the ir benefits  (APA 2016;  Berrada and Leurent 
+2017;  Grush and Niles 2018 ; Guerra 2015;  Kockelman and Boyles 2018 ; Larco 2022;  Milakis, van 
+Arem and van Wee 2017 ; Shaheen, Totte and Stocker  2018; Sperling 2017 ).  
+ 
+There is considerable uncertainty about thes e issues . Optimists  predict , based on experience 
+with previous technological innovations such as digital cameras , smart phones  and personal 
+computers,  that autonomous vehicles will  soon  be sufficiently  reliable and affordable  to replace  
+most human  driving , provid ing huge savings and benefits  (Johnston and Walker 2017; Keeney 
+2017; Kok, et al. 2017) . However, there are  good  reasons to be skeptical  of such  claims .  
+ 
+Optimistic predictions often overlook  significant obstacles  and costs.  Many technical pro blems 
+must be solved before autonomous vehicles  can operate  reliably  in all normal  conditions  
+(Chafkin 2022 ; Leonard, Mindell and Stayton 2020 ; Norton 2021 ). They will require years of 
+testing and regulatory approval  to progress on the Technology Readiness Level  (TRL)  scale , from 
+an idea to full commercial availability (McLeod 2021) , so they can  become affordable and 
+attractive to consumers . Motor vehicles are costly,  durable, and highly regulated , so new 
+vehicle technologies  generally  require decades  to penetrate fleets . Autonomous driving can 
+create new  problems ; a camera , telephone or computer failure may be frustrating but is 
+seldom fatal , but  motor vehicle system failures can be frustrating and deadly to occupants and 
+other road users . As a result, autonomous vehicles will probably take longer to develop and 
+provide smaller net benefits than optimists predict.  
+ 
+This has  important  policy implications  (Papa and Ferreira 2018 ; Speck 2017 ). Vehicles  rely on 
+public infrastructure and  can impose large external costs, and so require more planning and 
+regulation  than most other technologies. For example,  many predicted autonomous vehicle  
+benefits, including congestion and pollution reductions , require dedicated lanes to allow  
+platoon ing (numerous vehicles driving close together at relatively high speeds) , and 
+autonomous vehicles can be programed to prioritize user benefits  such as maximizing travel 
+speed and  occupant comfort, or community benefits such as  minimiz ing delay and risks to other 
+road users . Policy makers must  decide  whether to build special  autonomous vehicle lanes, how 
+to price them, and how to regulate their operation in maximize total benefits  (Zipper 2021) . 
+ 
+This report explores  these issues.  It investigates , based on experience with previous vehicle 
+technologies , how quickly self -driving vehicles are likely to be developed and deployed, 
+critically evaluates their benefits and costs, and discusses their likely travel impacts  and their 
+implications for planning decisions such as optimal road, parking and public transit supply.   
+ 
+ 
+  
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+8 
+ Autonomous Vehicle Operational Models  
+Exhibit 1 describes six defined  levels of  driving  automation . Many predicted benefits require 
+Level 5, which allows vehicles to transport non -drivers and goods in all normal conditions.  
+ 
+Exhibit  1 Automated Driving Levels (SAE  J3016 ) 
+  
+The Society of 
+Automotive 
+Engineers (SAE) 
+defines six vehicle 
+automation levels. 
+Many predicted 
+benefits require level 
+5, which allows 
+vehicles to operate 
+autonomously and 
+transport non -drivers 
+and goods in all 
+normal conditions.  
+ 
+ 
+Exhibit 2 compares four vehicle operating models . 
+ 
+Exhibit  2 Operating Models Compared  
+ Private  Human -
+Driven Vehicle s Private  Autonomous 
+Vehicle s Shared Autonomous 
+Vehicle s Shared 
+Autonomous Ride s 
+ Motorists own  or lease,  
+and drive , a vehicle.  Households  own or lease 
+self-driving vehicle s. Self-driving taxis offer 
+serve individuals . Micro-transit serve s 
+multiple passengers . 
+Advantages  Low costs. Always 
+available. Users can 
+leave  gear in vehicles. 
+Pride of ownership.  High convenience. Always 
+available. Users can leave 
+gear in vehicles. Pride of 
+ownership.  Users can choose vehicles 
+that best meet their 
+needs. Door to door 
+service.  Lowest  total  costs. 
+Minimizes 
+congestion, risk and 
+pollution emissions.  
+Disadvantages   
+Requires driving ability, 
+and associated stress.  High costs. Users cannot 
+choose different vehicles 
+for different uses.  Likely to 
+increase vehicle travel and 
+associated costs.  Users must wait for 
+vehicles. L imited services  
+(no driver to help 
+passengers  carry luggage 
+or ensure safety .  Least  speed,  
+convenience  and 
+comfort, particularly 
+in sprawled areas.  
+Appropriate 
+users  Lower - and moderate -
+income suburban and 
+rural residents.  Affluent suburban and 
+rural residents . Lower -annual -mileage 
+users.  Lower -income urban 
+residents.  
+Autonomous vehicles can be p rivate  or shared. Each model has advantages and disadvantages.   
+
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+9 
+ Benefits and Costs  
+This section describes  autonomous vehicle  benefits and costs.  
+ 
+Reduced Driver Stress, Improved Productivity and Mobility  
+Autonomous vehicles  can reduce driver s’ stress and tedium , and increase their productivity . 
+They  can be mobile offices and bedrooms, as illustrated below , allowing passengers to  rest or  
+work while travelling  (WSJ 2017) . This reduce s travel ti me unit costs  (cost per hour) . However, 
+for safety sake occupants  should wear seatbelts , restricting use of in -vehicle beds , and like any 
+confined space, vehicle interiors are likely to  become cluttered and dirty  (Broussard 2018) . 
+ 
+Exhibit 3 Productivity and Relaxation While Travelling  
+  
+Autonomous vehicles  can be mobile offices and bedrooms , allowing traveler s to work and rest.  
+ 
+ 
+Self-driving vehicles can introduce new stresses and discomforts.  Traveler s may experience 
+“access anxiety ” if vehicles are sometimes unable  to reach desired destinations, for example, 
+due to heavy rain  or snow , or if an area lacks the detailed maps required for autonomous 
+operation (Grush 2016).  Self-driving taxi and micro -transit services will be cheaper than human -
+operated taxis but offer lower  service quality  since t here will be no drivers to help carry 
+packages or ensure passenger safety. To minimize cleaning and vandalism costs most surfaces 
+may  stainless steel and plastic, and security cameras  will monitor passengers, yet they  may still 
+encounter previous occupants’ garbage, stains and odors  (Broussard  2018) . Shared 
+autonomous rides (micro -transit) require passengers to share space with strangers, and each 
+additional pick -up or drop -off can impose delay s, reducing speeds and reliability .  
+ 
+Autonomous vehicles can provide independent mobility for people  who cannot or should not 
+drive. This direct ly benefits those traveler s, and by improv ing their access to economic  
+opportunities can increase their  productivity , and  reduce chauffeuring burdens on their family 
+members and friends . On the other hand, o ptimistic predictions of autonomous vehicle benefits 
+may cause some communities to reduce support for public transit services which may reduce 
+mobility options for non -drivers  (Creger, Espino and Sanchez 2019 ). Dedicating highway lanes 
+for autonomous vehicle platooning may reduce capacity for human -operated traffic , harming  
+human -operated vehicle  occupants . 
+  
+
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+10 
+ Ownership and Operating Costs  
+Autonomous vehicles require  various  equipment and services summarized in the box below.  
+Since failure s could  be deadly , autonomous vehicles need robust and redundant components, 
+installed and maintained by specialists, increasing maintenance costs. Currently, optional 
+vehicle accessories  such as remote starting,  active lane assist  and safety camera s, typically cost 
+several thousand dollars , and  subscriptions to  navigation and security services, such as OnStar 
+and TomTom, cost hundreds of dollars per year . Upgrading to Tesla’s Full Self-Drive (FSD)  
+services , which provide limited autonomous operation,  cost $15 ,000 , and in 2022 owners sued 
+Tesla for false advertising of its availability and benefits ( Mayorquin 2022) . Vehicle owners will 
+probably need to subscribe to frequent software update and navigation mapping services.  
+Advanced driver assistance system sensors (cameras, radar and ultrasound) approximately 
+double minor collision damage costs, typically adding $3,000 to a repair bill  (AAA 2018) , 
+suggesting that autonomous vehicles will increase vehicle repair costs .  
+ 
+Exhibit 4 Autonomous Vehicle Equipment and Service Requirements  
+All Autonomous  Vehicles  Shared  Autonomous  Vehicles  
+• Sensors (optical, infrared, radar, laser , etc. ). 
+• Automated controls (steering, braking, signals, etc.)  
+• Software , servers and power supplies.  
+• Data  networks  to access special  maps, software 
+upgrades , plus vehicle -to-vehicle connections . 
+• Software and navigation map  update subscriptions . 
+• Critical component maintenance , repair and testing . • Dispatching and fleet management.  
+• Business administration  and insurance.  
+• Business profits.  
+• Security.  
+• Frequent cleaning and repairs.  
+• Delays and e mpty vehicle -miles for passenger  
+loading . 
+Autonomous vehicles, particularly those that are shared, will incur additional costs.  
+ 
+ 
+Some optimists  predict that electric autonomous vehicle will costs  less than 5 ¢ per mile  to 
+operate , but th is is probably an underestimate. Vehicle batteries must be replaced  about every 
+100,000 miles , which currently costs $3,000 -15,000, or 3-10¢ per vehicle -mile. This may decline 
+with production innovations, but probably not much since  most motorists choose larger, more 
+sophisticated  batteries  to maximize performance . Electric vehicles currently pay no fuel taxes ; 
+cost-recovery road -user fees would add 5-10¢ per vehicle -mile. Incorporating these factors 
+increases electric vehicle operating costs to 10 -25¢ per mile, similar to fossil fuel  vehicles.  
+ 
+What are Efficient Road User Fees?  
+Efficient road u ser fees recover roadway costs, plus  congestion, crash  and pollution damages . 
+Government roadway expenditures totaled  about $250 billion in 2016,  which averages about 8¢  per mile 
+(FHWA 201 8); optimal fees are somewhat  lower fees for automobiles and higher for heavy vehicles which 
+impose greater roadway costs. Under urban -peak conditions, decongested fees of 5 -25¢ per mile are 
+typically required to  internalize congestion costs and  reduce traffic volumes to roadway capacity.  
+ 
+ 
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+11 
+ Experience with previous vehicle innovations, such as automatic transmissions and airbags, 
+suggests that autonomous driving capability will initially be available only on higher priced 
+models and will  probably  take decades to become standard on lower -priced models.  
+ 
+Some a dvocates argue  that insurance and fuel savings  will offset these costs  (Intellias 2018)  but 
+that seems  unlikely. For exam ple, if autonomous driving reduces collision insurance costs by 
+half, the $300 -500 annual savings is  just 10 -20% of estimated  additional costs. Fuel cost savings 
+are also likely to be small or negative due to  additional equipment , larger vehicles to serve as 
+mobile offices , and induced vehicle travel .  
+ 
+As a result autonomous driving capability will probably add several thousand dollars to new 
+vehicle purchase prices, plus hundreds of dollars in additional annual maintenance, repair, 
+software and mapping subscription costs. This will add a few thousand dollars in annualized 
+expenses, at least for the first few decades of their commercial availability, until competition 
+and depreciation make these technologies available on cheaper models and used vehicles. This 
+suggests  that for the foreseeable  future private auton omous vehicle  costs  will probably average  
+$0.80-$1.20 per  vehicle -mile , which may  eventually decline to $0.60 -$1.00 per mile  as the 
+technology b ecomes available in cheaper  models. Shared autonomous vehicles  (self -driving 
+taxis) will probably  cost $0.50 to $1.00 per vehicle -mile , and sh ared autonomous rides  will 
+probably cost  $0.20 -0.40 per passenger -mile  (Nunes and Hernandez 2020) . This is cheaper than 
+human -operated taxis  ($1.50 to $3.00 per mile), but more expensive than  personal vehicle  
+operating costs  or public transit  fares  (20-40¢ per passenger -mile).  
+ 
+Some studies estimate lower costs. For example, Kok, et al. (2017) predict that shared, electric 
+autonomous vehicles will cost less than 10 ¢ per mile, cheap enough  that many  trips could be 
+funded through advertising , but  such  estimates ignore costs such as cleaning  and vandalism 
+repairs , profits, empty vehicle  travel , insurance ( many  assume 90%  lower insurance premiums ), 
+and roadway user fees , and so are probably underestimates . 
+ 
+Cleaning and Repairs – Often Overlooked Cost s 
+Although most autonomous taxi passengers are likely to be courteous and responsible, some will 
+probably be messy and a few will be vandalous. To discourage abuse, autonomous taxis interiors will be 
+hard metal and plastic services, with surveillance cameras, which may reduce but cannot eliminate these 
+problems, so vehicles will occasionally have garbage, unpleasant odors, or damage. Autonomous taxis 
+will probably need cleaning every 5 -15 trips, plus occasional repairs. Assuming $5 -10 per cleaning this 
+will a dd $0.33 -2.00 per trip, plus travel time and costs for driving to cleaning stations.  
+ 
+ 
+Autonomous vehicles can provide particularly large savings for commercial vehicles, such as 
+freight trucks and buses, due to their high labor costs. However, this will not necessarily 
+eliminate the need for on -board workers since many delivery vehicles require an operator to 
+unload goods, and buses may still need conductors to provide passenger services and security.  
+ 
+  
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+12 
+ Exhibit 5 Total Cost Comparison (AAA 2017; Bösch, et al. 2017; Johnson and Walker 
+2017; Keeney 2017; Litman 20 21; Stephens, et al. 2016)  
+ 
+Autonomous vehicles  (AVs)  are likely to  cost more than human -driven private vehicles ( HVs) and public 
+transit , but less than human -driven taxis and ridehailing services .  
+ 
+ 
+Exhibit s 5 and 6  compare user cost  estimates . Average costs  are what traveler s consider when 
+deciding whether to purchase a vehicle; operating  (variable ) costs are what vehicle owners 
+consider when deciding how to make a particular trip. Electric autonomous vehicles  are likely to 
+be cheaper  to operate than  most  current automobiles . Shared autonomous vehicles  will be 
+cheaper than taxi and ridehailing services but more expensive than private  automobile  
+operating costs. They are likely to  increase total  vehicle travel and  costs for autonomous vehicle 
+owners, but reduce vehicle travel and costs for those who shift from owning to shar ing vehicles  
+and drive less than about 6,000 annual vehicle -miles.  
+ 
+Exhibit  6 Variable Costs  Comparison  
+ Although automobiles are 
+expensive to own  they are 
+relative ly cheap to drive , with 
+operating  costs (fuel, tire 
+wear , etc.) currently averaging 
+about 20 ¢ per vehicle mile. 
+This is more than an electric 
+autonomous vehicle  but less 
+than shared autonomous rides 
+and vehicles, ridehailing and 
+taxi services.  
+ 
+ 
+Public policies will affect these costs. Governments  may  impose  new  road user fees  to recover 
+roadway costs and reduce traffic problems , which would increase electric  vehicle  operating 
+costs and make shared vehicle travel more attractive.  $0.00$0.50$1.00$1.50$2.00$2.50
+HD car
+variable
+costsShared AV Public
+transitAV variable
+costsHD car
+average
+costsAV
+TaxiAV
+average
+costsRide-
+hailingHD
+TaxiDollars Per MileAutonomous Vehicles (AV)
+Human Driven (HD)
+$0.00$0.50$1.00$1.50$2.00$2.50
+Private AV Current
+AutomobileShared AV
+RideShared AV Ridehailing TaxiDollars Per Mile
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+13 
+ Traffic Safety  and Public Health  
+Optimists claim that, because about  90% of crashes  involve a human error , autonomous 
+vehicles will reduce crash  rates by  90% (Kok, et al. 2017; McKinsey 2016) , but this overlooks 
+additional risks these technologies can introduce ( Hsu 2017;  ITF 2018;  Kockelman, et al. 2016;  
+Koopman and Wagner 2017; Ohnsman  2014 ). 
+• Hardware and software failures.  Complex electronic systems often  fail due to  false sensor s, 
+distorted signal s and  software error s. Self -driving vehicles will certainly have failures  that 
+contribute to crashes , although their frequency is difficult to predict  (Dawn Project 2022) . 
+• Malicious hacking. Self-driving technologies can be manipulated for amusement or crime.   
+• Increased risk -taking.  When traveler s feel safer they tend to  take additional risks, c alled 
+offsetting behavior  or risk compensation . For example, autonomous vehicle  passengers may 
+reduce  seatbelt  use, and other road users may be less cautious  (Millard -Ball 2016) , described  as 
+“over -trusting” technology (Ackerman 2017).  
+• Platoon ing risks . Many potential benefits, such as reduced congestion and pollution emissions, 
+require platooning  (vehicles operating close together at high speeds on dedicated lanes) , which 
+can introduce new risks , such as human drivers joining platoons and increased crashes severity.   
+• Increased total vehicle travel.  By improving convenience and comfort autonomous vehicles may 
+increase total vehicle travel and therefore  crash exposure (Trommer, et al. 2016; WSJ 2017) .  
+• Additional risks to non -auto traveler s. Autonomous vehicles may have difficulty detecting  and 
+accommodating pedestrians, bicyclists and motorcycles  (PBIC 2017).  
+• Reduced investment in conventional safety strategies.  The prospect of autonomous vehicles may 
+reduce  future efforts to improve driver safety  (Lawson 2018) . 
+• Higher vehicle repair costs due to additional equipment . Additional sensors and control systems, 
+and increased quality control, are likely to significantly increase collision repair costs  (AAA 2018) . 
+ 
+ 
+Because of t hese new risks , autonomous vehicles are unlikely to  achieve  the 90% net crash 
+reductions advocates predict . After analyzing  traffic crash  risk factors,  Mueller, Cicchino, and 
+Zuby (2020)  concluded that autonomous vehicles could prevent approximately  34% of crashes . 
+Sivak  and Schoettle  (2015 a) conclude that autonomous vehicles will have crash rates similar to  
+an average driver and may increase  total crashes when autonomous  and human -driven vehicles 
+mix.  Autonomous vehicles currently have high operational failure rates. One study found that 
+Tesla’s Full Self Driving vehicles would fail a normal driving test because it averages one 
+maneuver error every three minutes and one critical error every ten minutes (Dawn Project 
+2022). Tesla  vehicles using  Autopilot and “Full Self -Driving”  programs have experienced 
+numerous crashes and fatalities, which experts consider a higher rate than human -powered 
+vehicles ( Siddiq ui and Merrill 202 3). In 2019, the best autonomous test vehicles experienced 
+one disengagement  (human drivers over rode the automated system ) per 16,666  miles , but 
+most were more frequent (Hyatt 2020 ). These examples indicate that autonomous vehicle 
+operating technologies are not ready for broad implementation. City transportation officials 
+concluded that autonomous taxis are currently unsafe (Truong 2023) .  
+ 
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+14 
+ Groves  and Kalra  (2017) argue  that autonomous vehicle deployment is justified even if the y 
+reduce crash rates  just 10% , but their analysis does not account for  increases  in total vehicle 
+travel , for example, if they  reduce per-mile crash rates 10% but increase vehicle travel 2 0%, 
+increasing total crashes and risk to other road users . Shared autonomou s vehicles may  reduce 
+crashes by providing more affordable alternatives to higher -risk drivers . Efforts to reduce 
+higher -risk driving, such as graduated driver’s licenses, special testing for senior drivers, and 
+anti-impaired driver campaigns, can be more effective and publicly acceptable if affected 
+groups have convenient and affordable mobility options.  For example, parents may purchase 
+autonomous vehicles for their teenagers, and travelers may use autonomous vehicles after 
+drinking alcohol or taking drugs . 
+ 
+Autonomous vehicles are vulnerable to hacking. In one experiment, researchers demonstrated 
+that adding graffiti -like marks to a roadside stop -sign caused software to read an inaccurate 
+“Speed Limit 45” (Eykholt, et al. 2018). There will be an on -going arms race between hackers 
+and software designers over autonomous vehicles control, which will add costs and risks.  
+ 
+Many factors will affect these  impacts, including how v ehicles are program med, and how they 
+affect  total vehicle travel. For example, to increase travel speeds autonomous vehic les can be 
+programmed to take m ore risks and shortcuts through neighborhoods, to minimize traffic 
+problems  they can be program med to drive slower and avoid congested roads and 
+neighborhood streets . For example, Tesla’s self -driving software allows  drivers to choose a 
+faster,  “assertive”  operating mode  which frequently violates traffic laws  (Wilson 2022 a). 
+ 
+The Autonomous Vehicle Trolley Problem  
+“The trolley problem” refers to various scenarios that ethicists use to consider who should be protected 
+from  an out -of-control vehicle , for example, if it should be directed  to kill fewer  rather than more , older 
+rather than younger, or more  rather than less socially responsible  people.  Although  all vehicle  operators  
+may face these tra de-offs, human drivers ’ decisions  are generally  spontaneous , while  those made by  
+autonomous vehicles are  explicitly  programed. This raises a public policy issue: who should decide how 
+vehicle s are programed when making  risk trade -offs. 
+ 
+For example , should autonomous vehicles operate at legal speed  limits  or to match average traffic 
+speeds  on a roadway ? How should they prioritize risks to vehicle occupants over risks to other road 
+users? How should an autonomous vehicle respond if faced with unexpected conditions?  To protect 
+other road users and minimize other external costs, p rofessional organizations should provide guidance 
+concerning how autonomous vehicles should be programed to trade -off costs and risks , and 
+governments should  establish regulations to ensure that autonomous vehicles are programed.  
+ 
+ 
+Sohrabi, Khreis a nd Lord (2020) identified 32 pathways through which autonomous vehicles can 
+affect public health, of which 17 are negative and 8 are  positive . To maximize health  benefi ts 
+they recommend transportation  demand management policies to favor shared, electric 
+autonomous vehicles and prevent increases in total vehicle travel.    
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+15 
+ External Cost  
+Optimists  claim that  autonomous driving  will significantly  reduce external costs including traffic 
+congestion, parking costs, crash risks and  pollution emissions , but these effects  are uncertain  
+(Eddy and  Falconer  2017 ; Rodier 2018 ; TRB 2019 ). They may increase  some  external costs . For 
+example, if programmed to maximize passenger  safety and  comfort they may  reduce traffic 
+speeds. Unless implemented  with effective demand management  incentives  they  are likely t o 
+increase total vehicle travel , traffic problems  and sprawl,  which can increase total congestion, 
+crashes  and pollution and other costs  (Nadafianshahamabadi, Tayarani and Rowangould 2021) . 
+Some benefits require dedicated lanes for platooning ( Guhathakurta and Kumar 2019; Heaslip, 
+et al. 2020) , which are costly and only feasible on some  highways, and  they may require special 
+signs, roadway markings, signals  and transponders  that add costs  (Lawson 2018). Shared 
+autonomous  vehicles  will need  docking stations and  passenger loading areas  (Marsden, 
+Docherty and Dowling  2020; Zhang and Wang 2020) . They may lead to more social isolation and 
+income segregation ( Quilty 2024) . 
+ 
+Exhibit  7 Driverless Car “Platooning” (Chuen, et al. 2013)  
+  
+Many proposed autonomous 
+vehicle benefits, including 
+reduced congestion , fuel 
+consumption and emission s, 
+require platooning: multiple 
+electrically connected vehicles 
+travelling close together at 
+relatively high speeds, preferably 
+lead by a large truck. This 
+requires dedicated highway 
+lanes.  
+ 
+ 
+Optimists often assume that most autonomous vehicles will be electric, which reduce s but do es 
+not eliminate pollution emissions, since a major portion of electricity is generated by pollution -
+emitting fossil fuels (Larco, et al. 2018; Reighmuth 2020) , and electric vehicles produce non -
+exhaust particulate emissions from brake, tire and road wear, which are a major health hazard, 
+particularly in dense urban areas (Air Quality Expert Group 2020).  
+ 
+Overall  impacts will depend  on how autonomous vehicles  are designed and regulated. If 
+programmed for maximum caution and passenger comfort , they will drive slowly and 
+frequently stop to when faced with unexpected conditions, which will  reduce t raffic speeds and 
+cause  delays (Le Vine,  Zolfaghari  and Polak  2015) . If programmed to maximize travel speeds 
+they may incr ease risks to other road users and take shortcuts through neighborhoods.  
+  
+
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+16 
+ Social Equity Impacts  
+Autonomous vehicles are likely to hav e various social  equity impacts , as summarized below . 
+1. Horizontal e quity  with respect to subsidies  
+A basic economic principle is that markets (a transport  system can be considered a market for 
+mobility ) are most efficient and equitable if prices (what consumers pay to use a good) reflect 
+the costs of producing that good , or described differently,  consumers should generally “get 
+what they pay for and pay for what they get” unless subsidies are specific ally justified.   
+ 
+To reduce  congestion, crash  risk, energy consumption and pollution emissions autonomous 
+vehicles require dedicated travel lanes , and electric vehicles currently receive large purchase 
+subsidies and are exempt from the road user fees that fossil fuel vehicle users pay through fuel 
+taxes . As a result, without  new  cost-recovery pricing systems, electric autonomous vehicles may  
+receive inequitable subsidies . 
+2. External  traffic  costs  
+External  traffic  costs  (congestion, pedestrian delay,  road and parking facility costs, crash risk 
+and pollution emissions that vehicle travel imposes on other people ) are inequitable.   
+ 
+Optimists predict that electric autonomous vehicles will reduce these costs, but their actual 
+impacts are uncertain, and will depend on whether they induce more total vehicle travel, and 
+public policies. If given dedicated lanes, autonomous vehicles can increase vehicle throughput, 
+but under most  circumstances their congestion impacts are likely to be mixed. They are likely to 
+reduce crashes caused by human error, but will introduce new risks including hardware and 
+software failures, malicious hacking, increased risk -taking if other road users feel safer, and the 
+additional exposure caused by induced vehicle travel. Electric autonomous vehicles should 
+reduce  but not eliminate  pollution emissions compared with fossil fueled vehicles . These 
+benefits may be partly offset if autonomous driving  increase s total vehicle travel.  
+3. Horizontal equity with respect to road space  
+Road space is a scarce and valuable resource. Horizontal equity requires giving priority to space -
+efficient vehicles, such as vanpools and buses, so their passengers are not delayed by congestion 
+caused by users of space -intensive modes , such as single -occupant automobiles.  
+ 
+Private autonomous vehicles are likely to have low occupancy rates. As previously described, 
+without efficient road pricing it will often be cheaper for motorists to program their autonomous 
+cars to circle the block or return home, to avoid paying for off -street parking, which will 
+contribute even more to traffic congestion. To maximize equity, public roads should be managed 
+and priced to favor space -efficient modes, including shared autonomous taxis and microtransit, 
+and to limit traffic volumes to roadway capacity. This will be increasingly important as 
+autonomous vehicles become more common, which will increase potential travel demands . 
+ 
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+17 
+ 4. Vertical equity with respect to abilities and needs 
+This assumes that transportation policies should favor people with special needs, such as 
+people with disabilities or impairments, families with children, travellers carrying baggage, or 
+non-drivers located in automobile -dependent areas.  
+ 
+Autonomous vehicles can provide more independent  mobility for people with some disabilities , 
+such as visual impairments , and because of their lower costs, a utonomous taxis can provide an 
+affordable option for non -drivers  for some trips .  
+5. Vertica l equity with respect to income – affordability  
+This perspective  assumes that public policies should favor poorer over wealthier people, and 
+increase affordable transportation options, particularly to access essential services and 
+activities (healthcare, basic services, education, jobs, etc.).  
+ 
+For the next two or three decades  autonomous driving capability is predicted to  increase 
+annual costs by a few thousand dollars , to approximately $10,000 per vehicle -year , to pay for 
+additional hardware and software, maintenance, and mapping subscriptions . Autonomous taxis 
+will probably cost $0.50 to $1.00 per mile, which is cheaper than human -powered taxies but 
+more expensive than a personal human -operated  automobile. This suggests that  personal 
+autonomous vehicles will not be affordable  to lower -income households , and policies that favor 
+their use, such as dedicated lanes, will be regressive. Autonomous taxi services can increase 
+affordability compared with owning a personal vehicle for people who drive  relatively low 
+annual miles . Affordable transportation is usually defined as costing less than 15% of a 
+household’s total expenditure budget, so a $40,000 annual expenditure household (second 
+income quintile) can afford to spend up to $6,000 per year on transportation, which can only 
+pay for about 5,000 annual  autonomous taxi -miles each for two adults.  
+ 
+This implies that most low - and mode rate-income households can only  benefit from  
+autonomous vehicles  as part of a multimodal lifestyle ; autonomous vehicles will not help them 
+afford the high -annual -miles generally required for living in sprawled locations .  
+ 
+In summary, autonomous  vehicles are likely to  support some equity goals but contradict others. 
+Autonomous vehicles can provide independent mobility for some disadvantaged groups, such 
+as people with visual impairments, and can reduce taxi and public transit operating costs, which 
+increases affordability for people who drive less than about 5,000 annual miles.  Private 
+autonomous vehicles will be costly, so subsidies for their use tend to be unfair and regressive. 
+They can reduce affordability and fairness, and harm non -drivers overall, if they induce 
+additional vehicle travel and sprawl, which increases external costs (congestion, infrastructure 
+costs, crash risk and pollution emissions imposed on other people) , or if they increase 
+automobile dependency and sprawl, which reduces affordable transport options . 
+ 
+  
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+18 
+ Benefit and Cost  Summary  
+The table below compares costs and benefits of  various  vehicle types.  
+ 
+Exhibit 8 Costs Compared  
+ Private  Human -
+driven Vehicle s Private  Autonomous 
+Vehicle s Shared Autonomous 
+Vehicle s Shared 
+Autonomous Ride s 
+Financial cost s Low fixed costs 
+(particularly used cars), 
+moderate variable.  High fixed costs, low 
+variable costs.  Minimal  fixed costs, 
+moderate variable 
+costs.  Minimum fixed costs, 
+low variable costs.  
+Convenience  High. A private  vehicle 
+is available any time.  High. A private  vehicle 
+is available any time. 
+Provides vehicle travel 
+to non -drivers.  Moderate. Vehicles will 
+often require several 
+minutes to arrive. 
+Provides door -to-door 
+service.  Moderate. Collecting 
+passengers will often 
+take several minutes. 
+Does not provide 
+door -to-door service.  
+Comfort  Low to moderate, 
+depending on driving 
+conditions.  High. Users have their 
+own vehicles with 
+chosen amenities.  Moderate. Shared, 
+vehicles may be 
+abused.  Lowest. Traveler s 
+share vehicles  with 
+strangers . 
+External costs 
+(congestion, 
+facilities , crash es 
+and pollution)  Moderate to high.  High. Likely to increase 
+total vehicle travel 
+which will increase 
+external costs.  Moderate. May 
+increase total vehicle 
+travel in some 
+circumstances and 
+reduce it in others.  Lowest. Can reduce 
+total vehicle travel 
+and associated costs  
+Social equity 
+impacts  Moderate to high. 
+Inequitable.  Moderate to high. 
+Least equitable.  Moderate to low. 
+Mixed equity impacts.  Lowest. Most 
+equitable.  
+Most 
+appropriate uses  Moderate - and low -
+income suburban and 
+rural residents.  Affluent suburban and 
+rural residents  Suburban and urban 
+traveler s. Urban traveler s. 
+Vehicle types vary in their costs, convenience and comfort, and therefore their impacts on total vehicle travel.  
+ 
+ 
+Fulton, Compostella and Kothawala (2020)  perform similar analysis of the monetary and non -
+monetary factors that affect travel decisions including travel time, stress, convenience, 
+reliability, and preferences regarding driving and sharing vehicles.  
+ 
+Of course, these impacts will depend on specific vehicle features. Larger, higher -speed vehicles 
+tend to be more costly than smaller, lower -speed vehicles, and electric vehicles have lower 
+operating costs than fossil fuel vehicles. Financial costs are likely to be much higher during the 
+first decade or two that autonomous vehicles are commercially available, and should decline as 
+this technology becomes available in lower -priced models, and eventually in used vehicles.  
+  
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+19 
+ Exhibit 9 summarizes autonomous vehicle benefits and costs, categorized according to whether 
+they are internal (affect users) or external (affect other people). T otal impacts will depend on 
+how they  affect  total  vehicle travel: if they stimulate more driving, external costs are likely to 
+increase , but if they help reduce total vehicle travel , total costs  should decline.  
+ 
+Exhibit  9 Autonomous Vehicle Potential Benefits and Costs   Benefits  Costs/Problems  Internal (user Impacts ) 
+Reduced  drivers’  stress  and increased 
+productivity . Motorists  can rest, play and work 
+while travelling .  
+Mobility for non -drivers.  More  independent 
+mobility for non -drivers  can reduce motorists ’ 
+chauffeur ing burdens and  transit  subsidy needs .  
+Reduced paid driver costs.  Reduce s costs for taxis 
+services and commercial transport  drivers . Increase d vehicle  costs.  Requires additional vehicle 
+equipment,  services and fees . 
+Additional  user  risks.  Additional crashes caused by  system 
+failures, platooning, higher tra ffic speeds, additional risk -
+taking , and increased  total vehicle travel . 
+Reduced s ecurity and privacy.  May be vulnerable to 
+information abuse (ha cking), and features such as location  
+tracking and data sharing may r educe privacy . External (Impacts on others)  Increased safety.  May r educe crash  risks and 
+insurance costs. May reduce high -risk driving .  
+Increased road capacity  and cost  savings . More 
+efficient vehicle traffic may  reduce  congestion 
+and roadway costs.  
+Reduced parking costs.  Reduces demand for 
+parking at destinations . 
+Reduced energy consumption and pollution . May 
+increase fuel efficiency and reduce emissions.  
+Supports vehicle  sharing . Could facilitate 
+carsharing  and ridesharing, reduc ing total vehicle 
+ownership and travel, and associated costs . Increased infrastructure costs. May require higher roadway 
+design and maintenance standards.  
+Additional risk s. May increase risks to other  road users  and 
+may be used for criminal activities.  
+Increased traffic problems . Increased vehicle travel may 
+increase congestion, pollution and sprawl -related costs . 
+Social equity concerns.  May reduce affordable mobility 
+options  including  walking, bicycling and transit services . 
+Reduced employment . Jobs for drivers may decline.  
+Reduced support for other solutions . Optimistic predictions 
+of autonomous driving  may discourage other transport 
+improvements and management strategies.  
+Autonomo us vehicles can provide various benefits and costs , including  external impacts on other people.  
+ 
+ 
+Some benefits, such as  reduced driver stress  and increased productivity , can occur with Level 4 
+automation (able to operate autonomously under certain conditions, such as grade -separated 
+highways during clear weather), but most benefits  require Level 5 automation (able to operate 
+autonomously under all normal conditions), which allows vehicles to transport non -drivers and 
+drive empty . 
+ 
+  
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+20 
+ Travel Impacts  
+A key factor in this analysis is how autonomous operation  will affect total vehicle travel  (Circella  
+and Hardman 2022;  Miller and Kang 2019 ; Nunes et al. 2021 ). Exhibit 10  summarizes p otential  
+impacts .  
+ 
+Exhibit 10 Potential  Travel Impacts  (Miller and Kang 2019; Rodier 2018)  
+Increases Vehicle Travel  Reduces Vehicle Travel  
+• Increased vehicle travel by non -drivers.  
+• Empty vehicle travel to drop off and pick up passengers , 
+deliver goods , and travelling to  maintenance stations . 
+• Reduce d vehicle operating costs  (due to electrification)  
+increases vehicle travel . 
+• Increased passenger convenience and productivity 
+encourages people to travel more.  
+• Over  the long run encourages more sprawled 
+development and reduced public transit service.  • More convenient shared vehicle services allow 
+households to reduce vehicle ownership, which 
+leverages vehicle travel reductions . 
+• Self-driving buses , and better last -mile access,  
+improve transit services.  
+• Reduced traffic risk and parking facilities mak e 
+urban living more attractive.  
+Autonomous  vehicles can affect total vehicle travel in various ways.  
+ 
+ 
+Autonomous vehicles  can increase non-drivers ’ vehicle travel . By increasing passenger comfort 
+and productivity, autonomous operation  can make long -distance trips, including  commutes, 
+more endurable, increasing  vehicle travel  and spraw l. Electric vehicles cost about half as much 
+to operate as comparable fossil -fuel vehicles.  Because they cost more to own but less to drive 
+than current automobiles, they give vehicle owners even more incentive to maximize their 
+annual vehicle travel in order to get their money’s worth from these large fixed investments.  
+This is likely to increase annual  vehicle mileage , particularly  by suburban and rural autonomous 
+vehicle owners  (Nunes et al. 2021) . Jiang, He and Ma (2022) estimate that autonomous vehicles 
+are likely to increase total vehicle travel about 10%. One study found that  drivers who used 
+Tesla semi -autonomous Autopilot  technology  drove nearly 5,000 more annual miles than those 
+who didn’t  because  the increased comfort and reduced stress made them  more willing to sit in 
+traffic and take  more long -distance trips (Circella  and Hardman 2022) . Another study found that 
+families  given free chauffeuring service s increased their vehicle travel by 80% , with large  
+increase s in longer distance  and zero -occupancy travel (Harb, et al. 2018) . 
+ 
+On the other hand, b y providing more efficient and affordable  public transit and taxi services,  
+improving walking and bicycling conditions , and  reducing parking needs,  shared autonomo us 
+vehicles may encourage  vehicle sharing  and urban environments . As a result, total travel 
+impacts depend on the portion of  households that  choose urban rather than suburban or rural 
+locations, and the portion that  share  rather than own autonomous vehicles .  
+ 
+Optimists  predict that shared autonomous taxis will soon  displace most p rivate  vehicle s 
+(Keeney 2017 ). For example, Kok, et al (2017), predict ed that, “By 2030, within 10 years of 
+regulatory approval of fully autonomous vehicles, 95% of all U.S. passenger miles will be served 
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+21 
+ by transport -as-a-service (TaaS) providers who will own and operate fleets of autonomous 
+electric vehicles providing passengers with higher levels of service, faster rides and vastly 
+increased safety at a cost up to 10 times cheaper than today’s individually owned (IO) vehicles.”  
+ 
+However, m any travelers have good  reasons  to own rather than share  vehicles:  
+• Convenience . Motorists often keep items in their vehicles, including car seats, tools, sports 
+equipment and emergency supplies.  
+• Speed and Reliability . Under optimal conditions , taxis  and ridehail vehicles  arrive a few  minutes 
+of being summon ed, but can take much longer, particularly during busy periods, for special 
+vehicle types (to carry multiple passengers or a wheelchair), and in suburban and rural areas.  
+• Costs. Vehicle sharing is generally cost effective for motorists who drive less than about 6,000 
+annual miles. People who live in suburban and rural areas, who usually commute by car, or who 
+for other reasons drive high annual miles will probably choose to own a private vehicle.  
+• Status.  Many people take pride in their vehicles and driving ability, and so may prefer to own 
+private vehicles that are capable of human operation .  
+ 
+ 
+Shared rides have lowe r costs but less convenience and comfort, since trips take longer to 
+collect passengers, generally cannot offer door -to-door service, and passengers must travel in 
+confined spaces with strangers. Vehicle dispatching adds delays and uncertainty,  particularly in 
+suburban and rural areas  where an autonomous taxi  pickup  may take 10 -20 minutes . Vehicle 
+sharing generates deadheading  (zero -passenger vehicle travel) for example, when loading  
+passengers. More than 40% of current ridehail ing vehicle travel is  deadheading  (Henao and 
+Marshall 2018) . If sharing services become common  in an area , deadheading may decline but 
+cannot disappear, particularly in suburban  and rural areas where destinations  are dispersed.  
+ 
+The table below compares the travelers and trips most suited to various vehicles.  
+ 
+Exhibit 11 Most Suitable Traveler s and Trips  
+Human -Driven  Private  Autonomous  Shared Autonomous  
+Moderate - and lower -income 
+drivers, who purchased older, used 
+vehicles.  
+Motorists who prefer driving their 
+vehicles for enjoyment or perceived 
+safety sake.  
+Traveler s who place a high value on 
+privacy.  Traveler s who place a high value on 
+comfort or status . 
+Motorists who drive more than 
+6,000 annual miles.  
+Motorists who often carry  
+equipment, tools, or special 
+accessories in their vehicles . Trips currently made by taxi or 
+carshare vehicles.  
+Utilitarian trips currently made by a 
+private vehicle drive n less than 6,000 
+annual miles.  
+Urban residents.  
+People who want to save money 
+more than time.  
+Some traveler s are most suitable for private  vehicles, other for shared vehicles.  
+ 
+ 
+ 
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+22 
+ One way to predict autonomous vehicle  travel impacts is to consider how they  affect 
+generalized costs , which include vehicle operating  expenses and travel time  costs . As these 
+costs decline, people  tend to travel  more . Taxi and ridehailing typically cost about $2.00 per 
+mile, current gasoline cars about 20 ¢ per mile, and electric cars about 5 ¢ per vehicle -mile, 
+considering just short -term vehicle operating costs (fuel and tire wear). Drivers typically value 
+their time at 20 -40% of wage rates, or about 20 ¢ per minute; autonomous vehicles probably 
+reduce travel time costs by about half, down to about 10 ¢ per minute. Shared vehicles add time 
+costs as passengers wait for vehicles.  
+ 
+The figure below  compares these costs on a travel demand curve , which illustrates how prices 
+affect  vehicle  travel. Taxi and rideshare travel are relatively costly, so people who rely on these 
+modes tend to generate relatively few vehicle -miles . Carsharing, autonomous taxis and 
+autonomous rides are cheaper than taxis but more expensive and less convenient than private 
+automobiles, resulting in moderate annual vehicle travel by people who rely on them.  
+Conventional , fossil fuel  automobile  owners  typically drive about 10,000 annual miles , and 
+electric car  owners are likely to drive somewhat more  due to their low fuel costs. Electric 
+autonomous vehicle owners are likely to increase automobile travel due to their low fuel and 
+travel time costs.  
+ 
+Exhibit  12 Generalized Cost (Money and Time) Travel Demand Curve  
+  
+As costs decline vehicle 
+travel increases. Currently, 
+motorists typically drive 
+about 10,000 annual 
+miles. Autonomous taxis 
+users are likely to travel 
+less due to higher financial 
+costs and reduced 
+convenience, private 
+autonomous vehicle 
+owners are likely to travel 
+more due to lower 
+operating and increased 
+convenience.  
+ 
+ 
+Of course, these costs  and consumer responses  are difficult to predict and will depend on other 
+factors, including  quality of mobility services available, land use development conditions, and 
+individual preferences. However, it is safe to predict that people who rely on shared 
+autonomous vehicles will on average travel less, and those who  own personal electric 
+autonomous vehicle will travel more, than they would with conventional, fossil fuel, human -
+operated vehicles.  Public policies can affect the amount of travel generated by these modes by 
+affecting their financial and travel time costs, for example, through fuel and road user fees, and 
+roadway management strategies that make shared vehicles more convenient and faster to use.  $0.00$0.50$1.00$1.50$2.00
+0 2,000 4,000 6,000 8,000 10,000 12,000 14,000 16,000 18,000 20,000Generalized Cost Per Vehicle -Mile
+Annual Vehicle Miles Per TravelerTaxi/Ridehailing ($2.00)
+Carshare ($0.80)
+Autonomous Taxi ($0.60)
+Shared Autonomous Ride ($0.50)
+Current Car ($0.40)
+Electric Car ($0.30)
+Autonomous Electric Car ($0.15)
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+23 
+  
+A survey of 1,000 U.S. adults  found that many do not expect autonomous vehicles to 
+significantly affect their travel,  but those who do are far more likely to predict vehicle travel  
+increase s than decline s (Fleming and Singer 2019) . Sivak and Schoettle (2015 b) estimate that 
+accommodating non -drivers’ latent travel demands could increase total vehicle travel up to 
+11%. Trommer, et al. (2016) predict that autonomous vehicles will increase total vehicle travel 
+3-9%. Taiebat, Stolper and Xu (2019) predict that autonomous vehicles will increase  average 
+household ’s vehicle travel by 2–47% , with the largest increases by  higher income groups.   
+ 
+The table below summarizes travel  impacts.  
+ 
+Exhibit  13  Autonomous Vehicle Impacts on Various  Travel Demands  
+Travel Type  Autonomous Vehicle Impacts  Portion of Travel  
+Freight trucks  Particularly suitable for long -haul fr eight travel, due to its high labor 
+costs and limited routes, mostly on grade -separated highways.  10%  
+Small commercial 
+(trades and deliveries)  Trades (plumbers, computer technicians, etc.) carry equipment in 
+their vehicles , so they are likely to own autonomou s vehicles . Delivery 
+companies can use autonomous vehicles to reduce costs. This may 
+increase total vehicle travel.  5% 
+Public transport  Particularly suit able for public transit , due to its high labor costs. 
+Allows micro -transit with  frequent  and demand -response  service s.  Currently 2%, but 
+could increase.  
+Longer -distance (> 50 
+mile) personal trips  Particularly suitable for longer -distance personal trips, due to tedium. 
+May increase longer -distance travel.  Currently 20%, but 
+could increase.  
+Local suburban and 
+rural  Affluent suburban and rural residents are likely to purchase private 
+autonomous vehicles  and increase  total vehicle travel. Lower -income 
+residents are likely to continue driving private  vehicle s or use shared 
+autonomous vehicles,  which could  reduce their total vehicle travel.  50%  
+Local urban trips  Many  are likely to shift from private  cars to shar ed autonomous 
+mobility services, which is likely to reduce their total vehicle travel.  20%  
+Non -drivers  Non-drivers  are likely to increase their vehicle travel.  2-4% but increasing . 
+Autonomous vehicle travel impacts will vary by types of trips.  
+ 
+ 
+The following scenarios illustrate how autonomous vehicles would impact various users’ travel:  
+Jake  is affluent and vision  impaired . He purchases an autonomous vehicle  as soon as they become 
+available . Impacts:  Autonomous vehicle s allow Jake to maintain  independent mobility which 
+increases his vehicle travel.  
+Bonnie lives and works in a suburb. She can bike to most destinations but owns  a car for occasional 
+trips . When  autonomous  taxi service s become available she gives up her private vehicle . Impacts:  
+Autonomous vehicles allow Bonnie to avoid vehicle  ownership and  reduce vehicle travel.  
+Melisa  and Johnny  are shopping for a new home . Autonomous vehicles let them consider more 
+distant ho uses because Melisa can  rest and work  while commuting .  Impacts:  Autonomous vehicles 
+allow Melisa and Johnny to choose an exurban home which increased their total vehicle travel.  
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+24 
+ Garry  is a responsible  driver  when sober but dangerous when drunk. Affordable autonomous 
+vehicles allow him to avoid this risk . Impacts:  Affordable used autonomous vehicles allow Garry to 
+avoid impaired driving, accidents and revoked driving privileges, which reduces crash risks but 
+increases his vehicle ownership and travel . 
+ 
+The table below summarizes the impacts of these various scenarios. In most of these scenarios 
+autonomous vehicles increase total vehicle travel  
+ 
+Exhibit  14 Autonomous  Vehicle  Scenario Summary  
+ User Benefits  Travel Impacts  External Costs  
+Jake  (affluent and 
+visually impaired)  Independent mobility for 
+non-drivers  Increased vehicle travel and 
+external costs  Increased residential 
+parking and roadway costs  
+Bonnie  (multi -
+modal traveler)  Vehicle cost savings  Reduced vehicle ownership 
+and travel  Reduced residential parking 
+and roadway costs  
+Melisa and Johnny  
+(suburban family)  Better  home location 
+options  Increased vehicle ownership 
+and travel  Increased residential 
+parking and roadway costs  
+Garry  (high -risk 
+driver)  Avoids driving d runk and 
+associated risks  Less high -risk driving, more 
+total vehicle travel  Increased residential 
+parking and roadway costs  
+Autonomous vehicle availability can have various direct and indirect impacts.  
+ 
+ 
+This suggests that with current policies, autonomous vehicles are likely to increase total vehicle 
+travel by 10 -30%, and possibly more, increasing traffic congestion and roadway infrastructure 
+costs, and possibly crash risk and pollution emissions, depending on the type of travel that 
+increases. Public policies will affect these impacts (Miller and Kang 2019). If policies make 
+private autonomous vehicles affordable and attractive, for example, because electric vehicles 
+pay minimal road user fees and autonomous vehicles have dedicated lanes, total vehicle travel 
+is likely to increase. If they are charged efficient road user fees and roads have high occupancy 
+vehicle lanes, shared rides will become more attractive, reducing total vehicle travel.  
+ 
+This additional vehicle travel tends to provide small marginal benefits, since it consists of travel 
+that users most willingly forego if their costs increase. To value such benefits economists use 
+the rule of half , which states that the benefits of additional travel are worth half the to tal per -
+trip saving (Litman 2021 , “Evaluating Transportation Benefits”). For example, if a 10 ¢ per mile 
+cost reduction caused a motorists to travel 1,000 additional vehicle -miles, the net benefit can 
+be valued as $50, calculated at (10 ¢ x 1,000)/2 = $50). Since vehicle travel imposes significant 
+external costs, including congestion, infrastructure costs, and possibly crashes and pollution 
+emissions, much of the additional vehicle travel is likely to be economically inefficient; its 
+incremental benefits are less than its incremental costs.  
+  
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+25 
+ Development  and Deploymen t Predictions  
+New technologies generally follow an S -curve development pat tern, as illustrated below . An 
+initial concept usually experiences development, testing, approval, commercial release, product 
+improvement, market expansion, differentiation, maturation, and eventually saturation and 
+decline. Autonomous vehicle technology will probably follow this pattern.  
+ 
+Exhibit 15 Innovation S -Curve  
+  
+Most 
+innovations 
+follow a 
+predictable 
+deployment 
+pattern, often 
+called in 
+innovation S -
+curve.   
+ 
+ 
+ 
+In 2015, autonomous vehicle expert Chris Urmson famously predicted that his son would never 
+need a driver’s license because self -driving would be ubiquitous by the time he reached driving 
+age in 2019, but when that year actually arrive  he predicted a more modest, “hundreds or 
+maybe thousands of self -driving vehicles on the road within five years” (The Economist 2019).  
+ 
+Autonomous vehicle s are currently in development and testing stages ; in 2021 they rank ed 6 on 
+the 10 -point Technology Readiness Level  (McLeod 2021) . Because vehicles  impose large  
+external costs, including congestion and crash risks, they have higher testing and regulation 
+standards than other technologies such as personal computers and mobile phones.  
+ 
+Exhibit  16 Aircraft and Automobile Software Code Compared (GAO 2016 ) 
+ Vehicles need  more 
+complex computer 
+systems than aircraft, 
+due to the complex ity 
+of roadway 
+interactions.  
+ 
+ 0%20%40%60%80%100%Potential Market
+Commercial 
+release  
+Development  Product 
+improvement  Expansion  Maturation  Saturation  
+Concept  Testing  and approval  Market diffusion  Decline  
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+26 
+ Operating a vehicle on public roads is complex due to the frequency of interactions with often -
+unpredictable objects and risks such as vehicles, pedestrians, cyclists, potholes and animals. As 
+a result, autonomous vehicles require orders of magnitude more complex software then 
+aircraft, as illustrated in Exhibit 18 . Producing such software is challenging and costly, and will 
+contain errors. There will certainly be system failures, some causing severe accidents.  
+ 
+Many current vehicles have Level 2 and 3 technologies such as cruise control, hazard warning 
+and automated parking. Several companies are testing Level 4 vehicles in limited conditions 
+(CPUC 2020) . Although these  vehicles may have up to 80 -90% operability (vehicles can reach 
+80-90% of desired destination), achieving higher rates is increasingly difficult (Leonard, Mindell 
+and Stayton 2020; Wharton 2017)  and taking longer than optimists predicted (Wilson 2022b) . 
+For example, current automated fleets cannot operate in heavy rain or snow, or on unmapped 
+and unpaved roads, and have trouble making left turns and responding to novel risks (Chafkin 
+2022) . In 2022, autonomous taxi services are being tested but are unpredictable and slow (Metz 
+2022). Tesla’s Autopilot  offers automated operation in limited conditions , but its poor safety 
+record  (Dawn Project 2022) has delayed its deployment  (Hawkins 2017). Significant technical 
+progress is required before vehicles can operate autonomously under all normal conditions , 
+including heavy rain and snow, and on unmapped or unpaved roads, and they will need 
+additional years of testing, regulatory approval and commercial development in order to 
+become  reliable, affordable  and profitable , and therefore common  (Simonite 2016) . 
+ 
+Consider one challenge. For safety sake motorists are  advised to drive defensively , which means 
+anticipating potential risks  such  as wild animals and playful children . To do this, autonomous 
+vehicles will need a database that categorizes, for example, fire hydrants as low -risk, pets on 
+leashes as medium risk, and wild animals  such as kangaroos , as high risk . In addition, children 
+sometimes dress in animal costumes , and adolescents in zombie variations . Most drivers can 
+understand  such risks. I f a driver is warned , “Watch out for  teenagers  dressed  in zombie 
+kangaroo costumes, ” most  could probably understand the threat since they  too were once  
+playful  youth s, but a  computer would be flummoxed: its database  is unlikely to include such 
+unusual conditions  so the vehicle would either miss -categorize the risk , perhaps treating 
+costumed fun -seekers as injured crash victims  or a riotous mob, or stop  and wait for human 
+instructions. These systems can self -learn  and so could understand such  behaviors  if they 
+become common , but cannot anticipate new conditions, and each new set of instructions will 
+further increase system complexity and therefore potential risks and delays . 
+ 
+It is possible that the development, testing and approval  required for Level 5 operation  will only 
+require a few years, but if the technology proves to be unreliable and dangerous, it could  take  
+much  longer (Bhuiyan 2017). It is likely that different jurisdictions will impose different testing, 
+approval and operating requirements, resulting in varying rates of deployment.  
+ 
+In addition to technological progress, market deployment depends on consumer demand: 
+traveler s’ willingness to pay for autonomous mobility. Surveys indicate significant consumer 
+concerns ( Schoettle and Sivak  2014) . Traveler s will face access anxiety  if their vehicle cannot 
+reach all desired destinations (Grush 2017).  
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+27 
+  
+Although optimists predict that most vehicles will operate autonomously by 2030  (Johnston 
+and Walker 2017; Keeney 2017; Kok, et al. 2017) , most  of them have  financial interests in 
+autonomous vehicle industries , and base their predictions on  experience with electronic 
+technologies such as digital camera, smart phones and personal computers rather than motor 
+vehicle innovations . For example, the widely -cited report, “ Rethinking Transportation 2020 -
+2030 ” was written by ReThink, “an independent think tank that analyzes and forecasts the 
+speed and scale of technology -driven disruption and its implications across society.” Mobility -
+As-A-Service: Why Self -Driving Cars Could Change Everything , was published by ARK Investment 
+Management , and written by an analyst who has little apparent experience with transportation 
+innovation. Automotive Revolution – Perspective Towards 2030: How the Convergence of 
+Disruptive Technology -Driven Trends Could Transform the Auto Industry , was published by the 
+McKinsey  business management firm. Although their predictions are often qualified – 
+autonomous vehicles “could” or “might” change everything – their conclusions are often 
+presented with unjustified certitude.  
+ 
+Such reports are primarily oriented toward investors , and so focus on autonomous vehicle ’s 
+sales potential , but  most policy and planning decisions depend on the portion of autonomous 
+vehicles in the fleet and in total  vehicle travel. Most new vehicle technologies are initially 
+available as options in higher priced models and motorists seldom purchase new vehicles 
+simply to obtain a new technology, so innovations generally take decades to fully penetrate  
+fleets . Optimists argue that benefits will be large enough to justify premature scrapping  of 
+vehicle s that lack autonomous driving capability, but that seems unlikely under realistic 
+assumptions of their benefits and costs.  
+ 
+Most objective experts predict that Level 5 automation  will require many more years for 
+development  and testing  (Mervis  2017 ). For example, Michigan Mobi lity Transformation Center 
+director Huei Peng said that, “ it may be decades before a vehicle can drive itself safely at any 
+speed on any road in any weather ” (Truett 2016). Similarly, Toyota Research  Institute CEO, Gill 
+Pratt stated that autonomous driving, “ is a wonderful goal but none of us in the automobile or 
+IT industries are close to a chieving true Level 5 autonomy” (Ackerman 2017). Uber self -driving 
+vehicle lab director Raquel Urtasun said that, “Having self -driving cars at a smaller scale, on a 
+small set of roads, we are fairly close  …Nobody has a solution to self -driving cars that is reliable 
+and safe enough to work every where ” (Marowits 2017).  Artificial intelligence  expert  Yoshua 
+Bengio said that, "I think people underestimate how much basic science still needs to be done 
+before these cars or such systems will be able to anticipate the kinds of unusual, dangerous 
+situations that can happen on the road" (Marowits 2017).   
+ 
+The following section uses experience with previous vehicle technologies to provide realistic 
+predictions of autonomous vehicle development and deployment.  
+  
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+28 
+ Experience with Previous Vehicle Technology Deployment  
+Previous vehicle technologies can help  predict autonomous vehicle deployment . 
+ 
+Mass automobile production began in 1908  with the Ford Model T . By the 1920s, cities 
+experienced traffic and parking congestion, and by the 1930s vehicles outnumbered  
+households , but the transport system remained  mixed, with most people  relying on  walking, 
+bicycling and public transit in addition to their cars. Only after the 19 60s did  most  adults  have a 
+private  vehicle , and only after the 1980s did the market approach saturation .   
+ 
+Exhibit 17  U.S. Population and Automobile Ownership (FHWA 2016)  
+  
+Although mass automobile 
+production started in 1908  with 
+the Ford Model T , it took 
+decades for automobiles to 
+become the dominant travel 
+modes . Only in the 19 60s did 
+most  potential drivers own a 
+private  vehicle, and only after 
+1980 did ownership approach 
+saturation.  
+ 
+ 
+Below are other examples of vehicle technology development and deployment.  
+• Automatic Transmissions  (Healey 2012) . First  developed in the 1930s , it took until the 1980s  for 
+them  to become reliable and affordable. W hen optional , they typically cost  an extra  $1,000 to 
+$2,000. They are included in  90%  of new vehicle in North America , and 50% in Europe and Asia .   
+• Air Bags  (Dirksen 1997) .  First  introduced in 1973. Initially an expensive and sometimes 
+dangerous option (they cause d injuries and deaths), but became cheaper and safer , were  
+standard on some models starting  in 1988, and  mandated by U.S. federal regulation in 1998.  
+• Hybrid Vehicles  (Berman 2011) . These b ecame commercially available  in 1997  but were initially 
+unreliable and expensive . Their performance has improved  but they  typically increase vehicle 
+prices about  $5,000. Between 2010 and 2020 they represented 2% to 3%  of vehicle sales.  
+• Remote lock/unlock, diagnostics , emergency response  and navigation  services.  OnStar became 
+available in 1997, TomTom in 2002 . Such services typically cost $150 -750 annually.  
+• Vehicle  Navigation Systems  (Lendin o 2012) . Vehicle  navigation systems  became  available as 
+expensive accessories in the mid -1980s. In the mid -1990 s factory -installed systems became  
+available on some models for about $2,000. Performance and usability have  since  improved, and 
+prices have declined to about $500 for factory -installed systems, and under $200 for portable 
+systems. They are standard in many higher -priced models.  Vehicle navigation apps, such as 
+Google Maps and Waze, are available for free or a modest fee.  00.10.20.30.40.50.60.70.8
+1900 1910 1920 1930 1940 1950 1960 1970 1980 1990 2000 2010Motor Vehicles Per Capita
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+29 
+ • Electric vehicles  (“History of Electric Vehicles” Wikipedia). Battery -electric cars developed in the 
+late 1800s , but were  uncommon during most of the Twentie th Century. In the 1990s, major 
+manufacture s produced improved models , such as General Motor’s EV1,  and by 2020 many  
+companies sold high quality electric cars . Despite this progress, only about 1% of total vehicle 
+sales are electric  and h igh-performance models  are expensive.  
+ 
+ 
+The table below  summarizes their  deployment. All of these technologies required decades from 
+initial commercial availability to market saturation, and some have never became universal.  
+ 
+Exhibit  18 Vehicle Technology Deployment Summary  
+Technology  Deployment Cycle  Typical Cost Premium  Market Saturation Share  
+Automatic transmissions  50 years (1940s -90s)  $1,500  90% U.S., 50% worldwide  
+Air bags  25 years (1973 -98) A few hundred dollars  100%, due to federal mandate  
+Hybrid vehicles  25+ years (1990s -2015+)  $5,000  Uncertain. Currently about 4%.  
+Subscription services  15 years  $400  annual  5-10% 
+Navigation systems  30+ years (1985 -2015+)  $500 and rapidly declining  Uncertain; probably over 80%.  
+Electric vehicles  100+ years  $10,000 for high -performance  Probably 80%+  
+New technologies usually require several decades between commercial availability to market saturation.  
+ 
+ 
+Because autonomous vehicles are more complex and costly than these technologies, their 
+market acceptance and penetration are likely to  take longer ( Lavasani  and Jin 2016). New 
+vehicles are becoming more durable, which reduces fleet tu rnover. As a result, new vehicle  
+technologies normally require three to five decades to penetrate 90% of fleets. Deployment 
+may be faster in developing countries where fleets are expanding, and in areas with strict 
+vehicle inspection  and replacement  requirements, such as Japan’s shaken  system. Annual 
+mileage tends to decline with vehicle age: vehicles average approximately 15,000 miles their 
+first year, 10,000 miles their 10th year, and 5,000 miles their 15th year, so vehicles older than  ten 
+years represent about 50% of fleets but only 20% of mileage (ORNL 2012, Table 3.8).  
+ 
+Deployment Predictions  
+The table below  uses the previous analysis to  predict autonomous  vehicle  sales, fleet and travel  
+market penetration , assum ing that Level 5 vehicles become commercially available in the  late 
+2020s but are initially  expensive  and have limited performance . During their first decade only a 
+minority of new vehicles are likely to be fully autonomous, with market shares increasing as 
+their performance improves, prices decline, and consumers gain confidence. By 2045 as much 
+as half of new vehicle  sales  could be autonomous , but w ithout mandates, market saturation  
+will probably take several decades,  and some  motorists  may  continue to choose human 
+operated vehicles due to costs and preferences.  These results are approximately consistent 
+with other researchers ’ estimates  (Grush 2016; Lavasani  and Jin 2016; Simonite 2016), although 
+slower than optimistic predictions by some industry experts  (Kok, et al. 2017; McKinsey  2016 ).  
+ 
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+30 
+ Exhibit  19 Autonomous  Vehicle Market Penetration  Projections   
+Stage  Decade  New Sales  Fleet  Travel  
+Development and testing  2020s  0% 0% 0% 
+Available with large price premium  2030s 2-5% 1-2% 1-4% 
+Available with moderate price premium  2040s 20-40%  10-20%  10-30%  
+Available with minimal price premium  2050s 40-60%  20-40%  30-50%  
+Standard feature included on most new vehicles  2060s 80-100%  40-60%  50-80%  
+Saturation (everybody who wants it has it)  2070s ? ? ? 
+Required for all new and operating vehicles  ? 100%  100%  100%  
+Autonomous vehicle will probably take several decades  to penetrate new vehicle sales, fleets and travel . 
+ 
+ 
+The figure below  illustrates these deployment rates , including higher and lower estimates .  
+ 
+Exhibit  20 Autonomous Vehicle Sales, Fleet and Travel Projections (Based on Exhibit 13 ) 
+  
+If autonomous vehicles follow previous  vehicle technologies , it will take one to three decades for them to 
+dominate new vehicle sales,  and one or two more decades to dominate vehicle travel, and even at 
+saturation a  portion of vehicle travel may  continue to be human operated , indicated by dashed lines.  
+ 
+ 
+Because  of their high labor costs  and predictable travel conditions , commercial vehicles  – long -
+haul freight trucks and buses, and local taxi services – are likely to automate first . However,  
+commercial  drivers  provide services including  passenger assistance  and security , unloading,  
+monitoring and maintenance , so some vehicle operator  jobs will change but  not disappear .  
+ 
+Signific antly faster implementation would  require more rapid  development, deployment and 
+fleet turnover than  previous vehicle technologies. For example, for most  vehicl e travel to be 
+autonomous by 204 5, almost all  vehicles produced  after 20 35 would need to be autonomous, 
+new vehicle purchase rates  and spending  would need to increase significantly  so fleet turnover 
+that normally takes three decades can occur in one , and many otherwise functional vehicles 
+would be scrapped simply because they  lack self -driving capability.  Sales
+Travel
+Fleet
+0%20%40%60%80%100%
+2030 2040 2050 2060 2070 2080Sales - Higher
+          - Lower
+Travel - Higher
+           -  Lower
+Fleet - Higher
+Fleet -  Lower
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+31 
+  
+Shared  mobility  services , such as  carsharing and ridehail ing, are already  reducing vehicle 
+ownership and parking demand in some situations ( DeLuca  2018) . Autonomous vehicle s could 
+accelerate these trends , but as previously described, outside dense urban areas  they  are 
+inconvenient and inefficient, and so are unlikely to replace the majority of  private vehicle travel 
+in sub urban and rural areas where most  Americans  currently  live. 
+ 
+The following factors affect the speed of autonomous vehicle deployment:  
+• The speed of technological development. Level 4 technologies (vehicles able to operate 
+autonomously in limited conditions) are currently available, but significant technological 
+progress is needed before vehicles can operate autonomously under all normal conditions. 
+Reliable Level 5 operation may be available in five years or may require another 25 years.  
+• Testing and r egulatory approval . Testing and approval standards are currently under 
+development, but several more years may be required for these standards to be adopt ed in 
+most jurisdictions, and additional time will be required for large -scale testing.  
+• Incremental costs . Autonomous vehicles require additional equipment and services which add 
+costs. For the foreseeable future (one to three decades) autonomous operation will only be 
+available in relatively expensive new vehicles, adding thousands of dollars in annual expenses 
+compared with human -operated vehicles. High incremental costs will reduce the portion of new 
+vehicles that have this technology, reducing the speed of fleet penetration.  
+• Consumer travel and housing preferences  and development practices . Currently, most North 
+American households live in automobile -dependent communities and own p rivate  vehicles. 
+Autonomous vehicle sharing is most appropriate for households that live in more multi -modal 
+communities where they travel less than about 6,000 annual miles by automobile. As a res ult, 
+shared autonomous vehicle travel will become more common if many households are able to 
+move into multi -modal communities. Consumer acceptance may be reduced by  safety  fears, 
+privacy concerns, or preferences, resulting in a significant portion of vehicle travel remaining 
+human -driven even after market saturation  
+• Service quality  and affordability . If autonomous  taxis are convenient , comfortable and 
+affordable , many people may shift from owning to sharing vehicles. However, if they are  
+unreliable, uncomfortable or expensive, more households will continue to own private  vehicles.  
+• Public policies.  Implementation could be accelerated if public policies encourage autonomous 
+vehicle development and purchase, if road and parking pricing, and roadway management favor 
+shared vehicles, i f highway lanes are dedicated to autonomous vehicle platooning, if 
+development policies allow more infill development, if autonomous operation is required for 
+new vehicles, or if governments support scrap ping a major portion otherwise functional  vehicles  
+because they lack autonomous driving capability .  
+  
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+32 
+ Community  Objectives  
+The table below describes  how autonomous vehicles a re likely to impact ten objectives.  
+ 
+Exhibit 21 Impacts on Community  Objectives  
+Objective s Likely Impacts  
+Congestion reduction  If they increase total  vehicle travel they are likely to increase congestion .  
+Roadway cost savings  If they increase  total vehicle travel and requiring special roadway design 
+features, they are likely to increase total roadway costs.  
+Parking cost savings  If shared or programmed to drive to avoid parking  they can reduce parking costs.  
+Consumer savings and affordability  Likely to be costly and so increase user costs unless shared.  
+Traffic safety  Likely to  reduce human errors but introduce new risks, and by increasing total 
+vehicle travel may increase total crashes.  
+Improved mobility options  Can increase mobility options for non -drivers, particularly if they are affordable.  
+Energy conservation  If they increase vehicle weight or total vehicle travel they are likely to increase 
+energy consumption and pollution emissions. These impacts are reduced but not 
+eliminated if they are electric powered.  Pollution reduction  
+Physical fitness and health  May reduce fitness and health if they encourage driving  over other modes . 
+Strategic development objectives  Likely to increase sprawl unless implemented with Smart Growth policies.  
+Autonomous vehicles may help achieve some planning objectives but contradict others . 
+ 
+ 
+This indicates that many  impacts depend on their costs and how they are deployed. Personal 
+autonomous vehicles can improve mobility options for non -drivers, and if users program their 
+cars to return home or circle the block when  unoccupied,  they can reduce parking costs, but 
+that will increased congestion and roadway costs, energy consumption, pollution emissions and 
+sprawl -related costs. If implemented as shared services , such as self-driving  buses, microtransit 
+or taxis, they help achieve more community goals, particularly if implemented with TDM 
+incentives that reduce total vehicle travel.  
+ 
+Exhibit 22 Comparing Benefits  
+Planning  
+Objective s Costly  
+Personal AVs  Inexpensive  
+Personal AVs  Shared  
+AVs Shared AVs with    
+TDM Incentives  
+Congestion reduction  X X  ✓ 
+Roadway cost savings  X X  ✓ 
+Parking cost savings  ✓ ✓ ✓ ✓ 
+Consumer savings and affordability  X ? ✓ ✓ 
+Traffic safety  ? ? ? ✓ 
+Improved mobility options  ✓ (for affluent users)  ✓ ✓ ✓ 
+Energy conservation  X X  ✓ 
+Pollution reduction  X X  ✓ 
+Physical fitness and health  X X  ✓ 
+Strategic development objectives  X X  ✓ 
+(✓ = Achieve objectives.  X = contradicts objective ) Autonomous vehicle impacts will depend on their user costs 
+and how they are deployed. Their benefits are greatest if  deployed as shared services with TDM incentives.  
+  
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+33 
+ Planning Implications  
+Autonomous vehicle s raise various planning  issues (Taeihagh and Lim 2018) :  
+ 
+Roadway Design  
+Autonomous vehicles may require new ro adway design features such as improved  lane 
+markings , signs designed to be read electronically,  and wireless repeaters in tunnels to provide  
+internet access.  Autonomous driving may allow narrower traffic lanes, but  to accommodate 
+trucks and buses, large  reductions are only feasible on  special  lanes  limited to  car traffic.  As 
+autonomous vehicles become more common, governments will be asked to dedicate highway 
+lanes to their use, to allow platooning. Similarly, autonomous vehicles could eliminate the need 
+for traffic signals, but this is only feasible in areas where all vehicle traffic is autonomous.  To 
+encourage shifts from lower - to higher -occupancy vehicle travel on congested corridors, 
+governments may need to establish more HOV priority lanes.  
+ 
+Transportation Pricing  
+As previously described, with current policies, electric autonomous vehicles are likely to 
+increase vehicle travel and traffic problems, typically by 10 -30%, by reducing travel time and 
+vehicle operating costs, stimul ating more sprawled development and  increasing deadheading 
+(empty vehicle travel). In addition, electric vehicles currently pay no road user fees , which is 
+unfair. To address  these problems governments will need to impose new  fees , which could 
+include a combination of road user charges of 4 -8¢ per vehicle -mile, plus decongestion pricing 
+of 5-30¢ per vehicle mile when operating in congested conditions  (Simoni, et al. 2019).  
+ 
+Curb Management  
+To facilitate vehicle sharing, cities will need to manage curbs to provide convenient passenger 
+loading and unloading  (Marsden , Docherty and  Dowling  2020; OECD/ITF 2018).  This involves  
+providing passenger loading areas , or by managing on -street parking to increase turnover so at 
+least one u noccupied space is usually available near every  destination.  
+ 
+Parking Planning  
+Autonomous vehicles can affect future parking demands in many ways (Chai,  et al. 2020; 
+González -González, Nogués and Stead  2020; Marsden, Docherty and Dowling  2020; Zhang and 
+Kaidi Wang 2020). Electric autonomous vehicles will require special parking facilities with 
+electric charging stations and vehicle cleaning and maintenance services.  Optimists predict that 
+autonomous vehicle s will significantly reduce parking demands and costs. A shift from private 
+to shared vehicles can reduce  total  vehicle ownership and parking needs, and private vehicle  
+owners may program their cars to return home after dropping off passengers , althoug h that 
+will increase traffic problems  and add delays and uncertainty  as to when passengers could be 
+picked up. Most traveler s will probably want their vehicles  to be available with in a few  minutes, 
+which will require parki ng within a mile or two of  their  destination. This may allow more off -site 
+and shared parking, reducing but not eliminating  urban parking demand s. 
+ 
+ 
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+34 
+ Public Transit Needs  
+Autonomous vehicles can affect public transit demands in several ways.  
+• Since labor represents the majority of  transit operating costs, autonomous technologies could 
+significantly reduce the costs of providing transit services. With a given budget , transit agencies 
+can provide more frequent service using smaller vehicles, and in some situations, have flexible 
+routes that deliver passengers closer to their destinations (paratransit).  
+• Cheaper taxi services can provide convenient mobility for non -drivers, either door -to-door or as 
+a feeder to bus stops and train stations. This should be particularly effective in suburban and 
+rural areas where conventional transit is inefficient.  
+• They can reduce conventional transit demand , which reduces revenue , cost efficiency  and 
+political support, resulting in reduced ser vice quality . Because paratransit  require s more road 
+space and energy than public transit , shift s from public transit to autonomous vehicles  are likely 
+to increase  traffic congestion, accidents and pollution emissions . 
+ 
+Some advocates claim that autonomous vehicles eliminate the need for conventional public 
+transit services, but high capacity transit will still be needed on major travel corridors, and 
+autonomous technologies can support transit by reducing operating costs and improving access 
+to stops and stations (ITF 2014; TRB 2017). To avoid  potential problems many experts 
+recommend that governments impose efficient road  pricing, develop high occupancy vehicle 
+lanes  and improve public transit services on busy travel corridors  in order to limit  traffic  
+congestion and maintain transit system efficiency .  
+ 
+Other  Trends Affecting Travel Demands  
+Autonomous vehicle development is just one of many trends that will affect future transport 
+demands and planning needs, as illustrated below . Changes in demographics, consumer 
+preferences, prices, information technologies,  mobility options, and other planning innovations 
+may have greater impacts than autonomous vehicles  for the foreseeable future .    
+ 
+Exhibit  23 Factors Affecting Transport Demands and Costs  
+ 
+Autonomous vehicles are one of many factors affecting future transport demands.  
+ 
+ 
+ Improved user information/navigation  
+Electronic pricing  
+Autonomous  vehicles  
+ 
+ 
+ Intelligent Transport Systems (ITS)  Changing User Preferences  
+Less driving  
+Shared rather than private vehicles  
+More walking & cycling  
+ More urban living  Price Change s 
+Rising fuel prices  
+Efficient road & parking pricing  Demographic Trends  
+Aging p opulation  
+More working at home  
+Reduced youth drivers’ license  
+ 
+ Improved Travel Options  
+Better walking and cycling  
+Improved public transit  
+Telework and delivery services  
+Carsharing  
+ 
+Planning Innovations  
+Expanded objectives  
+Systems operations  
+Demand management  
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+35 
+ Some benefits, such as reduced driver stress, can occur with Level 2 -4 automation, but most  
+benefits  require Level 5 automation , and some only occur when they are shared , or if  have 
+dedicated  lanes . The following matrix summarized the benefits  provided by various AV types . 
+ 
+Exhibit 24 Benefits  by Autonomous Vehicle Type  
+Autonomous Ve hicle 
+Types  Mobility for 
+Non-drivers  Reduced 
+Driver Stress  User 
+Savings  Occupant 
+Safety  External 
+Benefits  
+Level 1 -4 private  vehicles   ✓  ?  
+Level 5 private  vehicles  ✓ ✓  ✓ ? 
+Shared autonomous vehicles  ✓  ✓  ✓ 
+Shared autonomous rides  ✓  ✓  ✓ 
+Dedicated AV lanes    ✓  ? 
+Various types of autonomous vehicles provide different types of benefits. Many benefits require Level 5 
+and shared vehicles.  
+ 
+ 
+The table below is a timeline for  autonomous vehicle planning issues.  
+ 
+Exhibit  25 Autonomous Vehicle Planning Issues (Henaghan 2018; Largo, et al. 2018)  
+Issue  Analysis Required  Policies Required  Time  
+Reliability and 
+safety  Evaluate  reliability  and safety . 
+Estab lish regulatory framework . Define performance, testing and data 
+requirements for AV operation  on public roads.  2020 -30 
+Overall travel 
+impacts  Investigate travel changes, and 
+likely benefits and costs.  Transport management to reduce congestion, 
+accidents and emissions.  2020 -
+2040  
+Local vehicle traffic 
+impacts  Investigate changes in motor 
+vehicle traffic and their impacts.  Decongestion pricing, vehicle restrictions, HOV 
+priority, and policies that favor shared rides.  2020 -40 
+Safety  Investigate new risks , crash impacts 
+particularly  to other road users.  Regulate AVs to ensure safety for all road users. 
+Price and manage roads for safety.  2020-60s 
+Mobility for non -
+drivers  Autonomous vehicle availability 
+and affordability to non -drivers.  Policies that ensure that AVs serve people with 
+disabilities and low incomes . 2020 -30s 
+Impacts on vehicle 
+sharing  Quality of shared autonomous 
+vehicles and rides  Regulate and encourage shared autonomous 
+vehicles and rides  2030 -40s 
+Energy and 
+emission impacts  AV fuel type and consumption. 
+Impacts on total vehicle travel.  Encourage efficient and electric AVs. P rice and 
+manage roads  to minimize total vehicle travel.  2030-60s 
+Parking and 
+passenger loading  Impacts on vehicle ownership and 
+use, and parking  and loading  needs . Reduce parking requirements  and efficiently 
+manage  parking and  curb space .  2040 -50s 
+Roadway design  Impacts on  roadway traffic and 
+design needs.  Change roadway designs. Consider creating AV 
+lanes. Determine the ir funding and pricing.  2050 -70s 
+Plan for mixed 
+traffic  Degree of conflicts between AVs 
+and other road users.  Develop polices and facility designs to minimize 
+conflicts and risks.  2040 -60s 
+Autonomous 
+vehicle mandates  Potential benefits of mandating 
+AVs.  If benefits are very large, require all vehicles to 
+be AVs and restrict human driving.  2060 -80s 
+This table identifies various needs and requirements to achieve autonomous vehicle planning objectives.  
+ 
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+36 
+  
+Because pedestrians and bicyclists are difficult for sensors to see,  and less predictable than 
+motor vehicles, autonomous vehicles may impose special risks on non -motorized traveler s. The 
+Pedestrian and Bicycle Information Center identifies ten risks that autonomous vehicles can 
+impose on pedestrians and cyclists and how these can be minimized (PBIC 2017). Appleyard and 
+Riggs (2018) identify  planning  principles to ensure that  autonomous vehicles support 
+community livability  goals  by improving  driving behavior (slower speeds and enhanced ability to 
+yield and stop) , improving walking and bicycling conditions , and reducing parking needs .  
+ 
+Autonomous vehicle benefits will depend on public policies. The following table compares 
+optimistic and pessimistic outcomes of autonomous vehicle policies.  
+ 
+Exhibit 26 Optimistic and Pessimistic Outcomes  (based on Papa and Ferrei ra 2018)  
+Issues  Optimistic Outcome  Pessimistic Outcome  
+Sharing  Policies encourage vehicle sharing . AVs are promoted as private luxury goods.  
+Social 
+inclusion  Policies designed to maximize AV affordability and 
+accessibility  ensure that they are widely available . AVs are only affordable and available by  privileged  
+(affluent) users . 
+Environmental 
+sustainability  AV policies support environmental goals . AV policies give little consideration of  to 
+environmental goals . 
+Public 
+transport  Public  policies support p ublic transport, providing 
+funding and favoring shared vehicles in traffic . Public  policies focus too much on AVs and fail to 
+support public transport.  
+Intermodal 
+management  AVs are programmed to minimize  risks  and delay 
+to other road users . AVs are programed to favor  occupants over other 
+road users.  
+Data Network  Data networks are designed to maximize overall 
+transport system efficiency and sustainability.  Data networks are designed to maximize profits, so 
+critical information is sold . 
+Sensitive data 
+management  Personal data are carefully managed based on 
+general public interest.  Abundant personal d ata collected by  AVs are used 
+for commercial purposes.  
+Parking  Parking facilities  are converted into buildings, 
+active transport  infrastructure and greenspace . Parking policies remain as they are , so parking 
+continues to  consume valuable  land.  
+Curb Access  Curb access is efficiently managed to serve shared 
+vehicle passengers along with other uses.  Curb space is congested and dangerous, and other 
+others (pedestrian and bicyclists) are harmed.  
+Land use 
+policies  Urban areas  become more attractive place s to 
+live. Transport policies  promote quality of life.  Urban land is  managed  to accommodate AV  travel,  
+to the detriment of  other social groups.  
+Transport 
+planning  Transport planning is multi -modal, and favors 
+resource -efficient  modes.  Transport planning favors  AVs, for example, with 
+dedicated lanes and low user fees . 
+Autonomous vehicles raise many policy and planning issues.  
+ 
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+37 
+ The timeline below summarizes autonomous vehicle planning requirements . 
+ 
+Exhibit 27 Autonomous Vehicle Planning Requirement  Time -Line 
+ 
+Develop performance 
+and data collection 
+requirements for 
+autonomous vehicles 
+operating on public 
+roadways.   Study, and where appropriate 
+support, autonomous vehicle 
+implementation for specific 
+applications such as taxi, 
+carsharing and demand 
+response services.   If autonomous vehicles prove 
+overall beneficial and are the 
+majority of vehicles, it may be 
+possible to change roadway 
+design and management 
+practices.  
+      
+2020 2030s 2040s     2050s 2060s 2070s+ ➔ 
+       
+ 
+Support large -scale testing.  
+Evaluate their benefits and 
+costs under actual operating 
+conditions.   If autonomous vehicles 
+prove to be effective and 
+common, consider 
+dedicating some highway 
+lanes to their use.   If autonomous vehicles 
+prove to be very 
+beneficial, it may be 
+appropriate to restrict 
+human -driving.  
+ 
+This timeline summarizes how autonomous vehicles are likely to impact transport planning.  
+ 
+ 
+Autonomous Taxi Service Impacts  
+In 2017 Waymo and Uber started  testing driverless taxis in  the Phoenix , Arizona region.  (Bergen 2017; Lee 
+2017). Within a few months a pedestrian death put the program on hold but it was soon reestablished.  
+ 
+Phoenix  was chosen because it has  a mild climate , wide streets  and relatively few pedestrians.  The 
+vehicles are relatively slow.  Further  development and testing  is required  before the technology can 
+expand to cities with more severe  weather or congestion, and its expansion will depend on the service’s 
+profitability , which will require high consumer confidence  and satisfaction, and cost reductions . As a 
+result, it will probably take several years before commercial autonomous taxi services are widely  availabl e. 
+ 
+Taxis primarily serve local urban trips when traveler s lack a p rivate  vehicle, which represents a minor 
+portion of total travel. To significantly reduce vehicle travel and associa ted costs, autonomous taxis  must  
+become inexpensive, ubiquitous and integrated with other mobility options so households can reduce 
+their vehicle ownership and rely on  shared  vehicle s. This can be accelerated by public policies that 
+discourage private vehicle ownership and encourage sharing, such as reduced parking supply, High 
+Occupancy Vehicle Lanes, and convenient passenger loading  areas.  
+ 
+This is consistent with predictions that during the 2020s autonomous vehicles will have  limited availability 
+and performance. If the technology improves and become affordable  and reliable , so self-driving taxi 
+services become profitable, they can expand to serve more  areas and trip types. However, until most 
+households shift from owning vehicles to relying on shared mobility services, and until a greater share of 
+households live in compact and multi -modal neighborhoods, autonomous taxis will affect only a s mall 
+portion of total travel and provide modest community benefits.  
+  
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+38 
+ Potential Conflicts and Solutions  
+There are potential conflicts between user and community goals in autonomous vehicle design  
+and programming. For example, if programmed to maximize passenger comfort they may 
+reduce traffic speeds, and if programmed to protect occupants they may increase risk s to other 
+road users. Some bene fits (reduced congestion and emissions) require dedicated  autonomous 
+vehicle lanes , which  raise fairness, pricing and e nforcement  concerns . 
+ 
+There are also potential planning conflicts. By increasing total vehicle travel , encouraging 
+dispersed development , and displacing public tr ansit, autonomous vehicles can  exacerbate 
+congestion, sprawl and inequity  problems . Shared vehicles reduce parking demand but increase 
+the need for passenger loading  facilities  (OECD/ITF 2018). Some  public interest organizations 
+provide guidance  for optimizing autonomous vehicle benefits  (Cityfi 2023; Fulton, Mason and 
+Meroux  2017; Kaohsiung EcoMobility 2017) . The box below summarizes an  example.  
+ 
+Shared Mobility Principles for Livable Cities  (www.sharedmobilityprinciples.org ) 
+1. Plan our cities and their mobility together.  
+2. Prioritize people over vehicles.  
+3. Support the shared and efficient use of 
+vehicles, lanes, curbs, and land.  
+4. Engage with stakeholders.  
+5. Promote equity.  6. Lead the transition towards clean  and renewable energy.  
+7. Support fair user fees across all modes.  
+8. Aim for public benefits via open data.  
+9. Work towards integration and seamless connectivity.  
+10. In dense urban areas autonomous vehicles  should  only  
+operate  in shared fleets.  
+ 
+ 
+The following strategies  can help maximize autonomous vehicle  benefits and minimize their 
+social costs  (Freemark, et al. 2022; González -González,  Lynott 2018;  ITF 2023; Larco, et al. 2018; 
+Nogués and Stead  2020; Schlossberg, et al. 2018; WEF 2020 ): 
+• Emphasize social goals such as transport system efficiency , equity , affordability and safety .  
+• Test and regulate new technologies for safety and efficiency.  Update traffic laws and liability 
+policies to reflect autonomous vehicle operation.  
+• Ensure responsible collection, storage and sharing of key data, such as vehicle trips and conflicts  
+to measure positive and negative impacts . Encourage data system and platform interoperability.  
+• Require autonomous vehicles to be programed based on ethical and community goals.  
+• Implement efficient pricing , road space prioritization and TDM programs  to favor higher value 
+trips and  space -efficient modes , and to  prevent vehicle  traffic  growth by autonomous vehicles .  
+• Ensure that shared autonomous services are affordable and serve people with special needs.  
+• Integrate shared autonomous services into multi -modal transportation systems, for example, to 
+provide last-mile access to public transit stations and to reduce traffic lanes so more road space 
+is available for bikelanes, sidewalks and greenspaces.  
+• Incorporate universal design  that accommodates people with special needs and abilities.  
+• Use vehicle traffic reductions to redesign streets and improve urban livability.  
+• Reduce parking supply  to take advantage of shared autonomous vehicles.  
+• Efficiently price development to prevent inefficient sprawl.  
+  
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+39 
+ Conclusions  
+Many people wonder how soon  autonomous vehicles will help solve  transportation problems. 
+Optimists  predict that by 2030 , autonomous vehicles  will be sufficiently reliable , affordable  and 
+common  to displace most human  driving , providing huge savings and benefits . However, there 
+are good reasons to be skeptical.  Most optimistic predictions are made by people with financial 
+interests in the industry, based on experience with disruptive technologies such as digital 
+cameras, smart phones and personal computers. They tend to ignore significant  obstacles  to 
+autonomous vehicle development  and exaggerate  future  benefits .  
+ 
+There is considerable uncertainty concerning  autonomous vehicle  development,  demands, 
+benefits,  costs , and  travel impacts . Operating a vehicle on public roads is  complicated due to 
+frequen t interactions with often -unpredictable animals, people  and vehicle s. Considerable  
+progress is  needed before autonomous vehicles can operate reliably in mixed urban traffic, 
+heavy rain and snow, unpaved and unmapped roads, and with unreliable  wireless service . Years 
+of testing and regulatory approval are required  before they are  commercially available  in m ost 
+jurisdictions . The first commercially  available  autonomous veh icles are likely to be ex pensive , 
+limited in performance , and will introduce new risks. These constraints will limit sales . Many 
+motorists will be reluctant to pay thousands of extra  dollars  for vehicle s that will sometimes be 
+unable to reach a destination  due to inclement weather or unmapped roads. Vehicles last 
+longer, cost more,  impose larger external costs , and are more highly regulated  than most other 
+consumer goods , so new  vehicle technologies  are slow  to penetrate  markets . It wil l probably 
+take decades for most vehicles to be autonomous , and some  motorists may resist them . 
+ 
+Optimistically,  Level 5  autonomous vehicle s will be safe and reliable by 2025. A  few more  years 
+will be required for testing and  regulatory approval , so by 2030, autonomous vehicles may  be 
+commercially available  and allowed  to operate in many  areas . If they follow the pattern of 
+previous vehicle technologies, d uring the 20 30s and probably  the 20 40s, they will be expensive 
+and limited in performance , sometimes  unable to reach a desired destination or requiring 
+human intervention when they encounter  unexpected situation s. Customers will include 
+affluent  high -annual -mileage motorists , and businesses that  use vehi cles to transport 
+equipment and goods . For the foreseeable future  most moderate - and low -income households  
+will continue to  use human -operated vehicles . It will probably be the  2050s before  private  
+autonomous vehicles  are affordable to most middle - and lower -income motorists . 
+ 
+Shared autonomous vehicles (s elf-driving taxi s) and rides  (micro-transit services ) are being 
+tested  in some jurisdictions  but it will probably be the 2030s before they are widely available . 
+Shared vehicles  have moderate operating costs and offer moderate convenience and comfort.  
+They should  be cheaper than current taxi and ridehailing  services , but offer less service since no 
+driver will be  available to assist  passengers , provide security, or clean vehicles . Vehicle 
+dispatching will sometimes  be slow and unpredictable , particularly in less dense  areas . Shared 
+rides  have the lowest costs but the least convenience and comfort  since collecting  passenger s 
+add delays, they  cannot provide door -to-door service, and passengers must  share confined 
+spaces with strangers.  Because of these limitations, shared vehicles  and rides  will primarily 
+serve  urban trips  and are unlikely to dominate suburban and rural travel .  
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+40 
+  
+This analysis suggests that it will be at least 2045 before most vehicles are autonomous, and 
+longer  before they  are affordable. Significantly faster deployment will require scrapping most 
+otherwise functional vehicles that lack self -driving ability. Some benefits, such as reduced driver 
+stress and independent mobility for affluent non -drivers, can occur when autonomous vehicles 
+are relatively costly and rare. However, most benefits, such as independent mobility for 
+moderate -income non -drivers, can only be significant if they become common and affordable, 
+and some benefits, such as reduced congestion  and emissions , require dedicated lanes to allow 
+platooning. Their  social  equity impacts are mixed, they are likely to reduce some external costs 
+but increase others, and they can benefit some disadvantaged groups but harm others, 
+particularly if they induce additional vehicle travel and sprawl. Self-driving  taxies and micro -
+transit services can provide greater  efficiency and equity  benefits , particularly  if public policies 
+favor shared vehicle  travel, with decongestion pricing and high -occupancy vehicle lanes . 
+ 
+Many predictions assume that most autonomous vehicles will be electric, which have low fuel 
+costs but require costly batteries and currently pay no fuel taxes. Incorporating battery 
+replacement costs and efficient road user fees increases electric vehicle operating costs to be 
+similar to fossil fuel vehicles. Because of their high labor costs and predictable routes , self-
+driving  buses and trucks may become common  relatively quickly but m any of these  vehicles will 
+still need employees on board to  provide passenger assistance , security , loading and unloading.  
+ 
+The figure below illustrates  market penetration and benefit  predictions . Level 4 autonomy (able 
+to operate autonomously under limited conditions , such as on grade -separated highways ) can 
+reduce driver stress and increase productivity, but most benefits require Level 5 autonomy 
+(able to operate autonomously under all normal conditions) so vehicles can transport non -
+drivers and travel  empty to  pick up or drop off  passengers.  Some benefits, such as independent 
+mobility for affluent non -drivers, may occur while autonomous vehicles are expensive and rare, 
+but most benefits require that they be affordable and common, which will take decades.  
+ 
+Exhibit 28 Autonomous Vehicle Sales, Fleet , Travel  and Benefit  Projections  
+  
+This analysis suggests 
+that it will be at least 
+2045 before half of new 
+vehicles are autonomous, 
+and 2060 before most of 
+the vehicle fleet is 
+autonomous. Some 
+benefits can occur when 
+autonomous vehicles are 
+expensive and rare, but 
+most benefits will only be 
+significant when they are 
+affordable and common.  
+
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+41 
+  
+ 
+An important planning issue is whether autonomous vehicles will increase or reduce total 
+vehicle travel and associated problems. It could go either way.  By increasing non -drivers ’ 
+vehicle travel , increasing travel convenience and comfort,  reducing vehicle operating costs,  
+generating empty vehicle -miles  and encouraging more sprawled development,  they are likely to  
+increase  vehicle travel  and associated problems. With current policies, vehicle travel and sprawl 
+are likely to increase 10 -30%, with larger impacts in rural and suburban areas . This additional 
+travel provides marginal consumer benefits, and since vehicle travel imposes  significant  
+external costs, much of the additional vehicle travel is likely to be economically inefficient: its 
+total costs  are smaller than their total benefits . Alternatively, autonomous vehicles could  
+facilitate vehicle sharing, allow ing households to reduce veh icle ownership  and vehicle travel , 
+providing large savings and benefits . Their net impacts  will depend on transport and land use 
+development  policies . If implemented with transportation demand management (TDM) 
+incentives, such as efficient  road  pricing and shared vehicle  lane networks,  they can reduce 
+total vehicle travel and associated problems , increasing their net benefits . 
+ 
+Another  critical issue is the degree that potential benefits can be achieved when only a portion 
+of vehicle travel is autonomous. Some benefits, such as improved mobility for affluent non -
+drivers, may occur when autonomous vehicles are uncommon and costly, but many potential 
+benefits, such as reduced congestion and emission rates, reduced traffic signals and lane 
+widths, require that vehicles operate autonomously  in dedicated lanes .  
+ 
+Some public interest organizations have developed guidelines for optimizing autonomous 
+vehicle benefits. These emphasize social goals such as overall system -wise safety and efficient, 
+and transportation demand management to limit vehicle travel to roadway capacity and favor 
+high -occupancy over lower -occupancy vehicles.  
+ 
+Autonomous vehicle implementation is just one of many trends likely to affect future transport 
+demands and impacts , and not necessarily the most important. Their  ultimate impacts depend 
+on how autonomous vehicles  interact with other tren ds, such as shifts from private  to shared 
+vehicles. Autonomous vehicles will probably not  be a “game changer ” during most of our lives, 
+and will only cause  a “paradigm shift ” if this technology causes large  shifts from private  to 
+shared vehicles  and creates more multi -modal communities .  
+ 
+Transportation professionals have important roles to play in autonomous vehicle development 
+and deployment. We must anticipate how new technologies and services are likely to affect 
+road, parking  and public transit  needs, and how to respond  to minimize problems and maximize 
+total benefits . We can help define the standards they must meet to legally operate on public 
+roads. We should evaluate their benefits and costs and develop policies to maximize net 
+benefits and ensure that their deployment supports strategic community goals.  
+  
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+42 
+ References  
+ 
+AAA ( annual reports ), Your Driving Costs , American Automobile Association ( http://newsroom.aaa.com ); at 
+https://publicaffairsresources.aaa.biz/YDC/html5/index.html .  
+ 
+AAA (2018),  Advanced Driver Assistance Systems (ADAS) Repair Costs , Fact Sheet, AAA News Room 
+(https://newsroom.aaa.com ); at https://bit.ly/39JO6CI .  
+ 
+Evan Ackerman (2017), “Toyota's Gill Pratt on Self -Driving Cars and the Reality of Full Autonomy,” 
+Spectrum , International Institute of Electrical Engineers ( www.ieee.org ); at https://bit.ly/2FJYJax .  
+ 
+Air Quality Expert Group (2020), Non-Exhaust Emissions from Road Traffic , UK Department for 
+Environment, Food and Rural Affairs ( https://uk -air.defra.gov.uk ); at https://bit.ly/2Ufin64 . 
+ 
+APA (2016), Autonomous Vehicle s: Knowledgebase Collection , American Planning Association 
+(www.planning.org ); at www.planning.org/knowledgebase/autonomousvehicles .  
+ 
+Bruce Appleyard and William Riggs (2018), 10 Principles Toward More Sharing and Less Sprawl : A Manifesto 
+for Street Livability, Health, and Humanity in the Era of Driverless Cars , Planetizen ( www.planetizen.com ); at 
+www.planetizen.com/features/96769 -10-principles -toward -more -sharing -and-less-sprawl .   
+ 
+Jaâfar Berrada and Fabien Leurent (2017), “Modeling Transportation Systems involving Autonomous 
+Vehicles: State of the Art,” Transportation Research Procedia , Vol . 27, pp.  215-221 (https://bit.ly/2IK9iwO ).  
+ 
+Brad Berman (2011), History of Hybrid Vehicles , Auto Guide ; at https://bit.ly/42YMAYp . 
+ 
+Patrick Bösch, et al.  (2017), Cost -based Analysis of Autonomous Mobility Services , Working Paper  1225,  
+Institute for Transport Planning and Systems  (www.ivt.ethz.ch ); at https://bit.ly/3glVlpW . 
+ 
+Meredith Broussard (2018) , “The Dirty Truth Coming for Self -Driving Cars: Trash. Odors. Bodily Fluids. Will 
+Autonomous Rideshares be Ready for our Mess?” Slate  (https://slate.com ); at https://slate.me/2Ls9IrI .  
+ 
+Max Chafkin (2022), “Even After $100 Billion, Self -Driving Cars Are Going Nowhere, ” Bloomberg 
+Businessweek  (www.bloomberg.com ); at https://bloom.bg/3CTG2km .  
+ 
+Huajun  Chai,  et al. (2020), The Impacts of Automated Vehicles on Center City Parking Demand , National 
+Center for Sustainable Transport ( https://ncst.ucdavis.edu ); at https://bit.ly/2CxLAEc .   
+ 
+Tay Hong Chuen, et al. (2013), Autonomous Vehicles , MT5009; at https://bit.ly/2RTGdS7 .   
+ 
+Giovanni Circella  and Scott Hardman (2022), Driverless Cars Won’t be Good for the Environment if They 
+Lead to More Auto  Use, The Conversation ( https://theconversation.com ); at https://bit.ly/3gkmrgO .  
+ 
+Cityfi (2023), Autonomous Vehicles: A Guide for Cities , Urbanism Next Center ( www.urbanismnext.org ); at 
+https://tinyurl.com/3ejvpway .  
+ 
+CPUC (2020), Autonomous Vehicle Pilot Permits Issued , California Public Utilities Commission 
+(www.cpuc.ca.gov/avcissued ).  
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+43 
+  
+Hana Creger, Joel Espino and Alvaro S.  Sanchez (2019 ), Autonomous Vehicle Heaven or H ell? Creating a 
+Transportation Revolution that Benefits All, Greenlining  (http://greenlining.org ); at https://bit.ly/2W710ab .  
+ 
+Angela DeLuca  (2018), Ending the Search for Parking , Urbanism Next 
+(https://urbanismnext.uoregon.edu ); at https://bit.ly/2q6uTWD .  
+ 
+Stephen Dirksen (1997), Air Bags: History of American Technology , Bryant University Community Web 
+(http://web.bryant.edu/~ehu/h364proj/sprg_97/dirksen/airbags.html ). 
+ 
+Dawn Project (2022), Tesla Full Self -driving Safety Analysis , The Dawn Project: Making Computers Safe for 
+Humanity  (https://dawnproject.com ); at https://bit.ly/3rlvh4q .  
+ 
+The Economist (2019), “Driverless Cars are Stuck in a Jam,” 10 October ( www.economist.com ); at 
+www.economist.com/leaders/2019/10/10/driverless -cars-are-stuck -in-a-jam. 
+ 
+John Eddy and  Ryan Falconer (2017), A Civil Debate: Are Driverless Cars Good for Cities? , Doggerel 
+(http://doggerel.arup.com ); at https://bit.ly/3Hl2sdX . 
+ 
+Kevin Eykholt , et al.  (2018), “ Robust Physical -World Attacks on Deep Learning Models ,” Cryptography and 
+Security  (https://arxiv.org/abs/1707.08945 ).  
+ 
+Fehr & Peers (2014), Effects of Next -Generation Vehicles on Travel Demand & Highway Capacity , Fehr and 
+Peers ( www.fehrandpeers.com ); at www.fehrandpeers.com/fpthink/nextgenerationvehicles .  
+ 
+FHWA ( Annual reports ), Highway Statistics , Federal Highway Administration ( www.fhwa.dot.gov ); at 
+www.fhwa.dot.gov/policyinformation/statistics.cfm . 
+ 
+Kelly Fleming and Mark Singer (2019), Energy Implications of Current Travel and the Adoption of Automated 
+Vehicles , National Renewable Energy Laboratory; at www.nrel.gov/docs/fy19osti/72675.pdf .  
+ 
+Yonah Freemark, et al. (2022), Regulations to Respond to the Potential Benefits and Perils of Self -Driving 
+Cars , Urban Institute ( www.urban.org ); at https://urbn.is/3UE7Ekl .  
+ 
+Lew Fulton, Jacob Mason and Dominique Meroux  (2017), Three Revolutions in Urban Transportation , UC 
+Davis and ITDP ( www.itdp.org ); at www.itdp.org/publication/3rs -in-urban -transport .  
+ 
+Lewis Fulton, Junia Compostella and Alimurtaza Kothawala (2020) , Estimating the Costs of New Mobility 
+Travel Options: Monetary and Non -Monetary Factors , National Center for Sustainable Transportation 
+(https://escholarship.org/uc/itsdavis_ncst ); at ( https://doi.org/10.7922/G20R9MN8 ). 
+ 
+GAO (2016), Vehicle Cybersecurity: DOT and Industry Have Efforts Under Way, but DOT Needs to Define Its 
+Role in Responding to a Real -world Attack , GAO (www.gao.gov ); at https://bit.ly/1ruZi09 . 
+ 
+GM (20 20), OnStar Services (www.onstar.com ).   
+ 
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+44 
+ Esther González -González, Soledad Nogués and Dominic Stead  (2020), “Parking Futures: Preparing 
+European Cities for the Advent of Automated  Vehicles ,” Land Use Policy , Vo. 90 
+(doi.org/10.1016/j.landusepol.2019.05.029 ). 
+ 
+David G. Groves  and Nidhi Kalra  (2017), Enemy of Good: Autonomous Vehicle Safety Scenario Explorer , Rand 
+Corporation www.rand.org ); at www.rand.org/pubs/tools/TL279.html .  
+ 
+Bern Grush (2016), Driverless Cars Ahead: Ontario Must Prepare for Vehicle Automation , Residential and 
+Civil Construction Alliance of Ontario (RCCAO); at  https://bit.ly/2DFNNwy .   
+ 
+Bern Grush and John Niles (2018) , The End of Driving: Transportation Systems and Public Policy Planning for 
+Autonomous Vehicles , Elsevier  (www.elsevier.com/books/the -end-of-driving/niles/978 -0-12-815451 -9).  
+ 
+Erick Guerra (2015), “Planning for Cars that Drive Themselves,” Journal of Planning Education and Research , 
+pp. 1 –15 (DOI: 10.1177/0739456X15613591); at http://bit.ly/1RqcBaZ .  
+ 
+Subhrajit Guhathakurta and Amit Kumar (2019), “When and Where are Dedicated Lanes Needed under 
+Mixed Traffic of Automated and Non -Automated Vehicles for Optimal System Level Benefits? ,” Center for 
+Transportation, Equity, Decisions and Dollars ( https://ctedd.uta.edu ); at https://bit.ly/3lgxA6l . 
+ 
+Mustapha Harb, et al. (2018), “Projecting Travelers into a World of Self -Driving Vehicles,” Transportation , 
+Vol. 45, pp. 1671 -1685 ( https://link.springer.com/article/10.1007%2Fs11116 -018-9937 -9).  
+ 
+Mark Harris (2014), “ FBI Warns Driverless Cars Could Be Used As 'Lethal Weapons' ” The Guardian  
+(www.theguardian.com ), 16 July 2014; at  https://bit.ly/1p7fQU6 .  
+ 
+Andrew Hawkins (2017), “ Tesla’s Autopilot is Supposed to Deliver Full Self -Driving, So Why Does it Feel 
+Stuck in the Past? ,” The Verge (www.theverge.com ); at https://bit.ly/2Fmtfed .   
+ 
+James R. Healey (2012), “Stick Shifts Popular Again, Despite Lower Gas Mileage,” USA Today , 30 April 
+(www.usatoday.com ); at https://bit.ly/2FoFPdc .     
+ 
+Kevin Heaslip, et al. (2020), Assessment of Capacity Changes Due to Automated Vehicles on Interstate 
+Corridors , Virginia Transportation Research Council ( www.virginiadot.org ); at  https://bit.ly/3Aghf71 .   
+ 
+Jennifer Henaghan (2018), Preparing Communities for Autonomous Vehicles , American Planning Association 
+(www.planning.org ); at https://bit.ly/2piKBhX .   
+ 
+Alexandro Henao and Wes Marshall (2018), “The Impact of Ridehail ing on Vehicle Miles Traveled,”  
+Transportation  (https://doi.org/10.1007/s11116 -018-9923 -2).  
+ 
+Jeremy Hsu (2017), “When It Comes to Safety, Autonomous Cars Are Still ‘Teen Drivers,’” Scientific 
+American  (www.scientificamerican.com ); at http://bit.ly/2j9gFPT .  
+ 
+Kyle Hyatt (2020), Toyota had the Most Autonomous Vehicle Disengagements , Road Show ( www.cnet.com ); 
+at www.cnet.com/roadshow/news/2019 -california -self-driving -disengagement -report -baidu -waymo -cruise .  
+ 
+Intellias (2018), How a Self -Driving Car Could Save You Money ; at https://bit.ly/36ZVBDD . 
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+45 
+  
+ITF (2018), Safer Roads with Automated Vehicles?  International Transport Forum ( www.itf -oecd.org ); at 
+www.itf -oecd.org/sites/default/files/docs/safer -roads -automated -vehicles.pdf . 
+ 
+ITF (20 23), Preparing Infrastructure for Automated Vehicles , International Transport Forum 
+(www.internationaltransportforum.org ) at www.itf -oecd.org/preparing -infrastructure -automated -vehicles .   
+ 
+Qinhua Jiang, Brian Yueshuai He and Jiaqi Ma (2022), “Connected Automated Vehicle Impacts in Southern 
+California: VMT, Emissions, and Equity, Transportation Res . D, Vo. 109 ( doi.org/10.1016/j.trd.2022.103381 ). 
+ 
+Charlie Johnston and Jonathan Walker (2017), Peak Car Ownership: The Market Opportunity for Electric 
+Automated Mobility Services , Rocky Mountain Institute ( www.rmi.org ); at http://bit.ly/2rhJRNi .  
+ 
+Kaohsiung EcoMobility Festival (2017), Kaohsiung Strategies for the Future of Urban Mobility , 
+EcoMobility Festival ( www.ecomobilityfestival.org ); at https://bit.ly/2OMwsDD .   
+ 
+Tasha Keeney (2017), Mobility -As-A-Service: Why Self -Driving Cars Could Change Everything , ARC 
+Investment Research ( http://research.ark -invest.com ); at http://bit.ly/2xz6PNV . 
+ 
+Irem Kok, et al. (2017), Rethinking Transportation 2020 -2030: Disruption of Transportation and the Collapse 
+of the Internal -Combustion Vehicle &  Oil Industries , RethinkX  (www.rethinkx.com ); at http://bit.ly/2pL0cZV .  
+ 
+Kara Kockelman, et al. (2016), Implications of Connected and Automated Vehicles on the Safety and 
+Operations of Roadway Networks , University of Texas Center for Transportation Research 
+(http://ctr.utexas.edu ); at http://library.ctr.utexas.edu/ctr -publications/0 -6849 -1.pdf .  
+ 
+Kara Kockelman and Stephen  Boyles (2018), Smart Transport for Cities & Nations: The Rise of Self -Driving & 
+Connected Vehicles , The University of Texas at Austin ( www.caee.utexas.edu ); at https://bit.ly/3gDpEaa .  
+ 
+Philip Koopman and Michael Wagner (2017), “Autonomous Vehicle Safety: An Interdisciplinary Challenge,” 
+IEEE Intelligent Transportation Systems , Vol. 9, No. 1; at http://ieeexplore.ieee.org/document/7823109 . 
+ 
+Nico Larco, et al. (2018), AVs in the Pacific Northwest: Reducing Greenhouse Gas Emissions in a Time of 
+Automation , Urbanism Next Center ( https://urbanismnext.uoregon.edu ): at https://bit.ly/2MHIXix .  
+ 
+Nico Larco (2022),  The Road Ahead for Automated Vehicles , U.S. House of Representatives Committee on 
+Transportation & Infrastructure , Urbanism N ext Center  (www.urbanismnext.org ); at https://bit.ly/3rxlNCc .  
+ 
+Mohammad Lavasani  and Xia Jin (2016),  “Market Penetration  Model for Autonomous Vehicles on the Basis 
+of Earlier  Technology Adoption Experience ,” Transport.  Res. Rec. 2597 , pp.  67–74 (DOI:  10.3141/2597 -09). 
+ 
+Steve Lawson (2018),  Tackling the Transition to Automated Vehicles, Roads that Cars Can Read Report  III, 
+European Road Assessment Association ( www.eurorap.org ); at https://bit.ly/2IrYTTQ .   
+ 
+Scott Le Vine,  Alireza Zolfaghari  and John Polak  (2015) , “Autonomous Cars: Tensi on Between Occupant -
+Experience a nd Intersection Capacity, ” Transportation Research C  (doi.org/10.1016/j.trc.2015.01.002 ).  
+ 
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+46 
+ John J. Leonard, David A. Mindell and Erik L. Stayton (2020), Autonomous Vehicles, Mobility, and 
+Employment Policy , MIT Work of the Future ( https://workofthefuture.mit.edu ); at https://bit.ly/3eTRWeA .   
+ 
+Jamie Lendino (2012), “The History of Car GPS Navigation,” PC Magazine ( www.pcmag.com ), 16 April; at 
+www.pcmag.com/article2/0,2817,2402755,00.asp .  
+ 
+Todd Litman (20 21), Transportation Cost and Benefit Analysis , Victoria Transport Policy Institute  
+(www.vtpi.org/tca ). 
+ 
+Todd Litman (2013), “The New Transportation Planning Paradigm,” ITE Journal  (www.ite.org ), Vo. 83, No. 6, 
+pp. 20 -28, 2013; at www.vtpi.org/paradigm.pdf . 
+ 
+Todd Litman (2014), “Ready or Waiting,” Traffic Technology International  
+(www.traffictechnologytoday.com ), January, pp. 36 -42; at  www.vtpi.org/AVIP_TTI_Jan2014.pdf .  
+ 
+Todd Litman (2017), Presentation to the Canadian Standing Senate Committee on Transport and 
+Communication Concerning Connected and Self -driving Vehicles  (http://bit.ly/2u2Grhe ).  
+ 
+Todd Litman (20 21), New Mobilities: Smart Planning for Emerging Transportation Technologies , Island 
+Press (https://islandpress.org/books/new -mobilities ).  
+ 
+Jana Lynott (2018), Creating the Transportation System We Want: Building Blocks for the Road Ahead , 
+AARP Public Policy Institute ( www.aarp.org ); at https://bit.ly/2Xg3PpN .  
+ 
+Marowits (2017), “Self-driving Ubers Could Still be Many Y ears Away, Says Research Head,” CTV News 
+(www.ctvnews.ca ); at http://bit.ly/2Dl48Y7 .  
+ 
+Greg Marsden, Iain Docherty and Robyn Dowling  (2020), “ Parking Futures: Curbside Management in the Era 
+of ‘New Mobility’ Services ,” Land Use Policy , Vol. 91 (doi.org/10.1016/j.landusepol.2019.05.031 ).  
+ 
+Orlando Mayorquin (2022), “Elon Musk's Tesla Accused of Fraud, False Advertising of 'Autopilot' 
+Technology in Lawsuit, ” USA TODAY  (www.usatoday.com ); at https://bit.ly/3RJMLlL .  
+ 
+McKinsey (2016), Automotive Revolution  (www.mckinsey.de ); at https://bit.ly/2zYBTfG .  
+ 
+Peter McLeod  (2021), Technology Readiness Level Scale Explained , Prospect IP ( www.prospectip.com ); at 
+www.prospectip.com/technology -readiness -level -scale -explained .  
+ 
+Jeffrey Mervis (2017) , “Are We Going Too Fast on Driverless Cars? ,” Science Magazine 
+(www.sciencemag.org ); at www.sciencemag.org/news/2017/12/are -we-going -too-fast-driverless -cars.  
+ 
+Cade Metz (2022), “Stuck on the Streets of San Francisco in a Driverless Car ,” New York Times , 28 Sept. 
+2022 ( www.nytimes.com ); at https://nyti.ms/3RxKJnO .  
+ 
+Dimitris Milakis, Bart van Arem and Bert van Wee (2017), “Policy and Society Related Implications of 
+Automated Driving,” Jnl. of Intelligent Transport.  Systems , Vol. 21 /4, pp. 324 –348; a t https://bit.ly/2zSSOgZ .   
+ 
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+47 
+ Adam Millard -Ball (2016), “Pedestrians, Autonomous Vehicles, and Cities,” Journal of Planning Education 
+and Research , pp. 1 -7 (DOI: 10.1177/0739456X16675674); a t https://bit.ly/2hhYrxV .    
+ 
+John S. Miller and Di Kang (2019), Ways to Consider Driverless Vehicles in Virginia Long -Range Travel 
+Demand Models , Virginia Transpo rt. Res. Council  (www.virginiadot.org/vtrc ); at https://bit.ly/33C5VBM .  
+ 
+Alexandra S. Mueller, Jessica B. Cicchino and David S. Zuby (2020), What Humanlike Errors Do Autonomous 
+Vehicles Need to Avoid to Maximize Safety? , Insurance Institute for Highway Safety ( www.iihs.org ); at 
+www.iihs.org/topics/bibliography/ref/2205 . 
+ 
+Razieh Nadafianshahamabadi, Mohammad Tayarani and Gregory Rowangould (2021), “A Closer Look at 
+Urban Development Under the Emergence of Autonomous Vehicles, Journal of Transport Geography , Vo. 
+94 (doi.org/10.1016/j.jtrangeo.2021.103113 ).  
+ 
+NCHRP (2018), Impacts of Connected Vehicles and Automated Vehicles on State and Local Transportation 
+Agencies , National Cooperative Highway Research Program ( http://trb.org ); at https://bit.ly/2dwWddo .   
+ 
+NHTSA ( various years ), Automated Vehicles , National Highway Traffic Safety Administration 
+(www.nhtsa.gov ); at https://one.nhtsa.gov/Research/Crash+Avoidance/Automated+Vehicles .  
+ 
+Peter Norton (2021), Autonorama: The Illusory Promise of High -Tech Driving , Island Press 
+(https://islandpress.org ); at https://bit.ly/3JCo9bm ; Mic hael Lewyn review https://bit.ly/3QnutWk . 
+ 
+Ashley Nunes and Kristen D. Hernandez (2020), “Autonomous Taxis & Public Health: High Cost or High 
+Opportunity Cost?, Transportation Research Part A , Vo. 138, pp. 28 -36 (doi.org/10.1016/j.tra.2020.05.011 ).  
+ 
+Ashley Nunes et al. (2021), “Estimating the Energy Impact of Electric, Autonomous Taxis: Evidence from a 
+Select Market ,” Environmental Research Letters  (https://doi.org/10.1088/1748 -9326/ac1bd9 ). 
+ 
+OECD/ITF (2018), The Shared -use City: Managing the Curb , Organization for Economic Cooperation and 
+Development and the International Transport Forum  (www.itf -oecd.org ); at https://bit.ly/2B8hLqG .   
+ 
+Alan Ohnsman (2014) , “Automated Cars May Boost Fuel Use, Toyota Scientist Says ,” Bloomberg Press , 16 
+July 2014  (www.bloomberg.com ); at https://bloom.bg/2mDkmAu .  
+ 
+ORNL (annual reports ), Transportation Energy Book , Oak Ridge National Lab ( www -cta.ornl.gov/data ).  
+ 
+Enrica Papa and António Ferreira (2018), “Sustainable Accessi bility and the Implementation of Automated 
+Vehicles,” Urban Science , Vo. 2 /1 (doi:10.3390/urbansci2010005 ); at https://bit.ly/2DHjZQz .  
+ 
+PBIC (2017), Automated and Connected Vehicles, Pedestrians, and Bicyclists , Pedestrian and Bicycle 
+Information Center ( www.pedbikeinfo.org ); at www.pedbikeinfo.org/AV .  
+ 
+Emily Quilty (2024) , “The Problem with Pod Man ,” Mobilities  (doi.org/10.1080/17450101.2024.2348652 ) 
+ 
+David Reighmuth (2020), Are Electric Vehicles Really Better for the Climate? Yes. Here’s Why , Union of 
+Concerned Scientists ( https://blog.ucsusa.org ); at https://bit.ly/2ZPLku3 . 
+ 
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+48 
+ Caroline Rodier (2018) , Travel Effects and Associated Greenhouse Gas Emissions of Automated Vehicles , UC 
+Davis Institute for Transportation Studies ( https://ncst.ucdavis.edu ); at https://bit.ly/3iJVlB5 . 
+ 
+Shelley Row (2013), “The Future of Transportation: Connected Vehicles to Driverless Vehicles…What Does It 
+Mean To Me?” ITE Journal  (www.ite.org ), Vol. 83, No. 10, pp. 24 -25. 
+ 
+SAE (2014), Levels of Driving Automation are Defined in New SAE International Standard J3016 , Society of 
+Automotive Engineers ( www.sae.org ); at www.sae.org/misc/pdfs/automated_driving.pdf . 
+ 
+Bruce Schaller (2017), Empty Seats, Full Streets : Fixing Manhattan's Traffic Problem , Schaller Consulting 
+(http://schallerconsult.com ); at http://schallerconsult.com/rideservices/emptyseats.pdf .  
+ 
+Susan Shaheen, Hannah  Totte and  Adam  Stocker  (2018), Future of Mobility White Paper , ITS Berkeley; at 
+https://escholarship.org/uc/item/68g2h1qv .  
+ 
+Shared Mobility Principles for Livable Cities  (www.sharedmobilityprinciples.org ). Principles  to guide 
+decision -makers and stakeholders toward the best outcomes for new mobility options.  
+ 
+Marc Schlossberg, et al. (2018), Rethinking the Street in an Era of Driverless Cars , Urbanism Next Research 
+(www.urbanismnext.com ); at www.urbanismnext.com/s/Rethinking_Streets_AVs_012618 -27hcyr6.pdf .  
+ 
+Brandon Schoettle and Michael Sivak (2014), A Survey Of Public Opinion About Autonomous And Self -
+Driving Vehicles , Transportation Research Institute, University of Michigan  (www.umich.edu/~umtriswt ).  
+ 
+Brandon Schoettle and Michael Sivak (201 6), Motorists' Preferences for Different Levels of Vehicle 
+Automation , Transportation Research Institute, University of Michigan  (www.umich.edu/~umtriswt ).  
+ 
+Faiz Siddiqui  and Jeremy B. Merrill (2023 ), “17 fatalities, 736 crashes: The Shocking Toll of Tesla’s 
+Autopilot ,” Washington Post  (www.washingtonpost.com ); at https://wapo.st/3XjHJ2Y .  
+ 
+Michele D. Simoni, et al. (2019), Congestion Pricing in a World of Sel f-Driving Vehicles: An Analysis o f 
+Different Strategies in Alternative Future Scenarios , TRB Annual Meeting; at  https://bit.ly/3Kn1EqS . 
+ 
+Tom Simonite (2016), “ Prepare to be Underwhelmed by 2021’s Autonomous Cars ,” MIT Technology Review  
+(www.technologyreview.com ); at https://bit.ly/2PZxH6X .   
+ 
+Michael Sivak  and Brandon Schoettle  (2015 a), Road Safety with Self -Driving Vehicles , Sustainable 
+Worldwid e Transportation Program ( www.umich.edu/~umtriswt ), University of Michigan.  
+ 
+Michael Sivak  and Brandon Schoettle  (2015 b), Potential Impact of Self -Driving Vehicles on Household 
+Vehicle Demand and Usage , Sustainable Worldwid e Transportation Program ( www.umich.edu/~umtriswt ).  
+ 
+Soheil Sohrabi, Haneen Khreis and Dominique Lord (2020), “Impacts of Autonomous Vehicles on Public 
+Health: A Conceptual Model and Policy Recommendations,” Sustainable Cities and Society , Vo. 63 
+(https://doi.org/10.1016/j.scs.2020.102457 ); at https://bit.ly/3fCbOWs .  
+ 
+Jeff Speck (2017), Autonomous Vehicles , United Conference of Mayors; at  https://bit.ly/2BE9tcG .  
+ 
+Autonomous Vehicle Implementation Predictions: Implications for Transport Planning  
+Victoria Transport Policy Institute  
+49 
+ Daniel Sperling (2017), Three Revolutions: Steering Automated, Shared, and Electric Vehicles to a Better 
+Future , Island Press ( https://islandpress.org ).  
+ 
+T. Stephens, et al. (2016), Estimated Bounds and Important Factors for Fuel Use and Consumer Costs of 
+Connected and Automated Vehicles, Technical Report , National Renewable Energy Laboratory 
+(www.nrel.gov ); at www.nrel.gov/docs/fy17osti/67216.pdf .  
+ 
+Araz Taeihagh and Hazel Si Min Lim (2018), “Governing Autonomous Vehicles: Emerging Responses for 
+Safety, Liability, Privacy, Cybersecurity, and Industry Risks,” Transport Reviews , at https://bit.ly/2DYQaLd .  
+ 
+Morteza Taiebat, Samuel Stolper and Ming Xu (2019), “Forecasting the Impact of Connected and 
+Automated Vehicles on Energy Use,”  Applied Energy , Vo. 247 ( doi.org/10.1016/j.apenergy.2019.03.174 ).  
+ 
+Stefan Trommer, et al. (2016), Autonomous Driving : The Impact of Vehicle Automation on Mobility 
+Behaviour , Institute of Transport Research ( www.ifmo.de ); at http://bit.ly/2kIAOOQ .  
+ 
+Kevin Truong (2023), “San Francisco Transit Chief Blasts Cruise, Waymo Robotaxis as Unsafe: ‘Race to the 
+Bottom’, ” San Francisco Standard  (https://sfstandard.com ); at https://bit.ly/3Ximfn4 .  
+ 
+TRB (2019), Socioeconomic Impacts of Automated and Connected Vehicles , European Commission and the 
+Transportation Research Board ( www.trb.org ); at www.trb.org/Publications/Blurbs/178576.aspx . 
+ 
+Wharton (2017), The Road Ahead for Connected Vehicles , Wharton School of Management 
+(http://wharton.upenn.edu ); at http://whr.tn/2BqKIuT .  
+ 
+Kea Wilson (2022 a), Why Tesla Can Program Its Cars to Break Road Safety Laws , StreetBlog USA 
+(https://usa.streetsblog.org ); at https://bit.ly/3fGTmMg .  
+ 
+Kea Wilson (2022 b), Why the Argo Shut Down is a Bad Sign for America’s AV Future , Streetblog USA 
+(https://usa.streetsblog.org); at https://bit.ly/3WsX9Rs.  
+ 
+WSJ (2017), “ Why Your Next Car May Look Like a Living Room ,” Wall Street Journal  (www.wsj.com ); at 
+http://on.wsj.com/2tlCvYp .   
+ 
+WEF (2020), Guidelines for City Mobility : Steering Towards Collaboration , World Economic Forum 
+(www.weforum.org/reports/guidelines -for-city-mobility -2020 ) 
+ 
+Wenwen Zhang and Kaidi Wang (2020), “Parking Futures: Shared Automated Vehicles and Parking Demand 
+Reduction Trajectories in Atlanta,” Land Use Policy , Vo. 91 ( doi.org/10.1016/j.landusepol.2019.04.024 ). 
+ 
+David Zipper (2021), When Cities Say No to New Transportation Technology , City Lab 
+(www.bloomberg.com/citylab ); https://bloom.bg/3ioMpSL .  
+ 
+ 
+www.vtpi.org/avip.pdf  

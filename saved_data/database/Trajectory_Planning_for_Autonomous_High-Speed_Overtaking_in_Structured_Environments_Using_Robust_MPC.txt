@@ -1,0 +1,1288 @@
+=== Metadata ===
+{
+    "file_name": "Trajectory_Planning_for_Autonomous_High-Speed_Overtaking_in_Structured_Environments_Using_Robust_MPC.pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Trajectory_Planning_for_Autonomous_High-Speed_Overtaking_in_Structured_Environments_Using_Robust_MPC.pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+2310 IEEE TRANSACTIONS ON INTELLIGENT TRANSPORTATION SYS TEMS, VOL. 21, NO. 6, JUNE 2020
+Trajectory Planning for Autonomous High-Speed
+Overtaking in Structured Environments
+Using Robust MPC
+Shilp Dixit , Umberto Montanaro, Mehrdad Dianati , David Oxtoby,
+Tom Mizutani, Alexandros Mouzakitis, and Saber Fallah
+Abstract — Automated vehicles are increasingly getting
+main-streamed and this has pushed development of systemsfor autonomous manoeuvring (e.g., lane-change, merge, andovertake) to the forefront. A novel framework for situationalawareness and trajectory planning to perform autonomousovertaking in high-speed structured environments (e.g., highwayand motorway) is presented in this paper. A combination of apotential ﬁeld like function and reachability sets of a vehicle areused to identify safe zones on a r oad that the vehicle can navigate
+towards. These safe zones are provided to a tube-based robust
+model predictive controller as reference to generate feasible
+trajectories for combined lateral and longitudinal motion of avehicle. The strengths of the proposed framework are: 1) it is freefrom non-convex collision avoidance constraints; 2) it ensuresfeasibility of trajectory even if decelerating or accelerating whileperforming lateral motion; and 3) it is real-time implementable.The ability of the proposed framework to plan feasible trajec-tories for high-speed overtaking is validated in a high-ﬁdelityIPG CarMaker and Simulink co-simulation environment.
+Index Terms — Trajectory planning, autonomous overtaking,
+MPC, robust MPC, autonomous vehicles.
+I. I NTRODUCTION
+THE initial waves of autonomous driving cars are plying
+on public roads and successfully providing features such
+as lane-keeping, distance maintenance, lane departure, cruis-ing, etc. Such systems have helped in improving safety on
+highways, occupant comfort while reducing driver workload
+simultaneously [1]. However, human intervention or input is
+still required while performing more challenging, but equally
+common manoeuvres (e.g., lane-change, merge, overtake etc.).
+Manuscript received August 14, 2018; revised February 7, 2019; accepted
+April 30, 2019. Date of publication June 10, 2019; date of current ver-sion May 29, 2020. This work was supported in part by the JaguarLand Rover and in part by the United Kingdom-Engineering and Physi-
+cal Sciences Research Council (UK-E PSRC) as part of the jointly funded
+Towards Autonomy: Smart and Connected Control (TASCC) Programmeunder Grant EP/N01300X/1. The Associate E ditor for this paper was B. Fidan.
+(Corresponding author: Saber Fallah.)
+S. Dixit, U. Montanaro, and S. Falla h are with the Department of Mechan-
+ical Engineering, University of Surrey, Guildford GU2 7XH, U.K. (e-mail:s.dixit@surrey.ac.uk; u.montanaro@surrey.ac.uk; s.fallah@surrey.ac.uk).
+M. Dianati is with the WMG, International Manufacturing
+Centre, University of Warwick, Coventry CV4 7AL, U.K. (e-mail:m.dianati@warwick.ac.uk).
+D. Oxtoby, T. Mizutani, and A. Mouzakitis are with Jagual Land Rover
+Ltd., Coventry CV3 4LF, U.K. (e-mail: doxtoby@jaguarlandrover.com;tmizutan@jaguarlandrover.com; a mouzak1@jaguarlandrover.com).
+Digital Object Identiﬁer 10.1109/TITS.2019.2916354Fig. 1. Schematic of an overtaking ma noeuvre (SV: subject vehicle, LV: lead
+vehicle).
+Overtaking represents a template for such complex manoeu-
+vres as it ( i) combines lateral and longitudinal motion of an
+overtaking vehicle (subject vehicle) while avoiding collisions
+with a slower moving obstacle vehicle (lead vehicle), and
+(ii) includes sub-manoeuvres i.e., lane-change, lane-keeping,
+and another lane change back to the original lane in a
+sequential manner [2] (see Fig. 1). Hence, the development of
+autonomous overtaking systems is under great focus since itunlocks the potential to perform a host of different manoeuvres
+and pushes the cap abilities of aut onomous vehicle further
+towards the overall goal of complete end-to-end autonomy.
+The inherently intricate structure of overtaking stems from
+its dependence on a large number of factors such as roadcondition, weather, trafﬁc condition, type of overtaking vehi-
+cle, type of overtaken vehicle, relative velocity, legislation,
+culture, etc. [3]. Furthermore, each overtaking manoeuvre isunique in terms of duration of the manoeuvre, relative velocity
+between vehicles, distance travelled, etc. [4]–[8] thus making
+classiﬁcation and standardisation difﬁcult. Moreover, safely
+performing an overtaking manoe uvre requires accurate infor-
+mation of road and lane availability, lead vehicle trajectory,lead vehicle driving intentions, road conditions, etc.
+There are a variety of diverse ways proposed in literature for
+planning safe trajectories to perform an autonomous overtak-ing manoeuvre by treating it as a moving-obstacle avoidance
+problem. Incremental search based algorithms and sampling
+based trajectory planning methods such as ‘Rapidly exploring
+Random Trees’ (RRT) have been proposed for planning safe
+trajectories for autonomous overtaking [9]–[13]. Even thoughalgorithms incorporating basic vehicle kinematics within a
+RRT search algorithm have been proposed, the planned trajec-
+tories can be jerky which could lead to reduced occupant com-fort. If accurate knowledge of road and surrounding obstacles
+This work is licensed under a Creative Commons Attribution 4.0 License. For more information, see https://creativecommons.org/licenses/by/4.0/
+DIXIT et al. : TRAJECTORY PLANNING FOR AUTONOMOUS HIGH-SPEED OVERTAKING IN STRUCTURED ENVIRONMENTS 2311
+is available, potential ﬁeld based techniques are shown to be
+successful at generating collision free trajectories for avoiding
+stationary or moving obstacles [9], [14]. However, while guar-
+anteeing collision free trajectories, potential ﬁeld based meth-ods do not incorporate vehicle dynamics and hence cannot
+ensure feasibility of the planned trajectory [15]–[17]. Model
+Predictive Control (MPC) helps address these shortcomingswith its ability to formulate veh icle dynamics and collision
+avoidance constraints as a ﬁnite-horizon constrained optimi-
+sation problem. However, collision avoidance constraints for
+trajectory planning are generally non-convex which limits the
+feasibility and uniqueness of the solution of the optimisa-tion problem. Researchers rely on techniques such as con-
+vexiﬁcation [18], change of reference frame [19]–[21], create
+approximate linear collision avoidance constraints [22], [23],and shared control [24], [25] to address the issue. In [26]
+the concept of motion primitives is included within an MPC
+framework to plan collision avoidance trajectories. However,
+since these motion primitives were computed ofﬂine and
+accessed via a look-up table, only a subset of all feasibletrajectories were considered for motion planning. In [2] over-
+taking trajectories were gener ated by directing the vehicle
+along virtual target points located at safe distances aroundthe lead vehicle thus reformulating trajectory planning into a
+navigation problem. A similar approach inspired from missile
+guidance systems called Rendezvous Guidance was used to
+plan a trajectory for an overtaking manoeuvre [27], [28]. How-
+ever, in all these techniques the subject vehicle (SV) has beenmodelled as a point mass with no dynamics and hence these
+methods are unsuitable for high-speed trajectory planning of
+autonomous vehicles. For the brevity of the paper, interestedreaders are directed towards [29] for more details related to
+trajectory planning for autonomous overtaking.
+In this paper, extracting the relevant beneﬁts of each
+approach described in the literature, we propose a mathe-
+matical framework of potential ﬁeld like functions and MPCfor performing an autonomous high-speed overtaking manoeu-
+vre. The framework is composed by three components ( i)
+an artiﬁcial potential ﬁeld, ( ii) a target generation block,
+and ( iii) a trajectory generatio n block. This paper is an
+extension of our previous work in [30] and builds upon the
+framework by ( i) using a tube-based robust MPC technique
+to plan feasible trajectories over a larger range of vehicle
+velocities, ( ii) development of collision avoidance constraints
+based on lateral position and velocity of the subject vehicle,
+and ( iii) numerically validating the entire framework in IPG
+CarMaker-Simulink co-simulation environment. The potentialﬁeld is used to map the surrounding region of the subject
+vehicle. Contrary to typical pot ential ﬁeld approaches where an
+obstacle’s position has been used to identify high-risk zones,the method in this paper combines an obstacle’s position,
+orientation and relative velocity to create a map of safe
+zones surrounding the subject vehicle. At every sampling
+instant, the target generation b lock identiﬁes the safest point
+of the road which is compatible with the dynamics of thesubject vehicle and computes the r eference state set point (e.g.,
+velocity, lateral position, an d heading angle) to be tracked.
+To achieve this aim of reaching t he reference, the targetgeneration block combines the safe zones in the potential ﬁeld
+with the vehicle dynamics capability of the subject vehicle
+which are captured through the reachable set of the subject
+vehicle from its current state. Fi nally, the trajectory generation
+block uses a MPC strategy to generate feasible trajectories
+and steer the vehicle to the requi red reference (target) states.
+The robust tube based MPC approach in [31] and [32] isused to solve the reference tracking problem. The dynamics
+of the lateral and yaw motio n of a vehicle have a nonlinear
+relation with the longitudinal velocity. The robust tube based
+MPC formulation allows this nonlinearity to be modelled as
+an additive disturbance which allows the controller to planfeasible lateral motion (lane-change) trajectories over a large
+range of longitudinal velocities. Moreover, the robust MPC
+method proposed in [31] and [32] guarantees ( i) closed-loop
+stability, and ( ii) persistent feasibility of the optimisation
+problem which is desirable for any model predictive control
+formulation [33]. Additionally, a novel technique of designing
+collision avoidance constraints a s a function of the longitudinal
+velocity and lateral position of the vehicle is presented. Thistechnique differs from the ones in literature since the constraint
+design does not depend on the longitudinal position thus
+allowing the designers the possibility of reducing the statedimension of the system. This i s beneﬁcial as removing a state
+from the system model helps in reducing the dimension of the
+parameters space which helps in bringing down the memory
+and computational requirements for solving the optimisationproblem. Hence, this paper represents practical use of thetheory on the robust MPC presented in [31] and [32] to design
+admissible, safe, and collision free trajectories for autonomous
+vehicles. The effectiveness of the entire framework for highspeed autonomous overtaking is validated in a co-simulation
+platform where high-ﬁdelity ve hicle dynamics are simulated
+in IPG-CarMaker while the trajectory planning method with
+the MPC is implemented in M
+ATLAB /Simulink.
+The paper is structured as follo ws: Section II introduces the
+basic symbols and mathematical deﬁnitions used in the paper.
+The mathematical formulation of relevant vehicle dynamics
+and vehicle model structure to be used for controller designis discussed in Section III. In Section IV, the robust MPC
+approach in [31] and [32] is brieﬂy overviewed to give to
+the reader the fundamental details of this algorithm which has
+been used for trajectory planning. In Section V, the situation
+awareness system for the vehicle using potential ﬁeld likefunctions is presented, while Section VI is dedicated to the
+design of the target generation block. The design of trajectory
+planning based on the MPC method in [31] and [32] along withthe design of the collision avoidance constraints is covered in
+Section VII. The effectiveness of the framework to support
+high speed overtaking is numerically shown in Section VIII.Finally, the concluding remarks are presented in Section IX.
+II. M
+ATHEMATICAL NOTATIONS AND DEFINITIONS
+For a symmetric matrix Mand vector x,||x||Mdenotes the
+weighted norm given by ||x||M=√
+xTMx. Given two sets U
+andV, such that U⊆RnandV⊆Rn, the Minkowski sum is
+2312 IEEE TRANSACTIONS ON INTELLIGENT TRANSPORTATION SYS TEMS, VOL. 21, NO. 6, JUNE 2020
+Fig. 2. Road setup: coor dinate frame and range.
+deﬁned by U⊕V/defines{u+v|u∈U,v∈V}and the Pontryagin
+set-difference is U/circleminusV/defines{w∈Rn|w+v∈U,v∈V}.M a t r i x
+0n,m∈Rn×mdenotes a matrix of zeros, matrix In∈Rn×n
+denotes an identity matrix. For vectors a∈Rna,b∈Rnb,
+vector (a,b)denotes/bracketleftbigaT,bT/bracketrightbigT.F o rag i v e ns e t /Gamma1⊂Rna+nb,
+the projection operation is deﬁned as A=Proja(/Gamma1)={a∈
+Rna:∃b∈Rnb,(a,b)∈/Gamma1}. For a system with states x∈
+X⊆Rnxand inputs u∈U⊆Rnu, whose dynamics are :
+˙x=f(x,u) (1)
+where f(·,·)is the state function (linear or non-linear),
+R(t∗;x0)denotes the reachable set at the time instant t∗when
+the initial state is x(0)=x0and it is deﬁned as
+R(t∗;x0)=/uniondisplay
+u(.),t∈[0,t∗]x(t∗;x0,u(·)) (2)
+with u(·)∈Ubeing an admissible input in the time range
+[0,t∗]a n d x(t∗;x0,u(·))is the solution of (1) with initial
+condition x0and input u(·)[34].
+For solving the overtaking problem through the combined
+use of MPC and potential ﬁeld, in addition to a coordinate
+inertial-frame (I-frame), three a dditional coordinate frames
+are exploited, i.e., vehicle-frame (V-Frame), obstacle-frame(O-frame), and road-frame (R-frame). The V-frame is located
+in the centre of gravity of the subject vehicle and follows
+the Roll-Pitch-Yaw (RPY) convention [35]. Similarly, the
+O-frame is located at the centre of gravity of the lead vehicle
+and follows the RPY convention while the R-frame is amoving coordinate frame located at the projection of the origin
+of V-frame onto the innermost (rightmost) edge of the road
+with x-axis in the direction of the travel. A generic point onthe road is denoted as p=(ξ,η),p
+r=(ξr,ηr),pv=(ξv,ηv),
+orpo=(ξo,ηo)when expressed in the inertial, road, vehicle,
+or obstacle frame, respectively. The coordinate frames are
+depicted in Fig. 2 where wlane[m] is the width of the lane
+while shadow area denotes a rectangle moving along theroad-frame with vertices V={V
+1,V2,V3,V4}. The potential
+ﬁeld is computed online within this region for situational
+awareness and thus the values of {V1,V2,V3,V4}are chosen
+in a range relevant for high-speed overtaking [5], [29], [36].
+Finally, Ti
+jwith i,j∈{I,V ,R,O }, denotes the linear trans-
+formation from i-frame to the j-frame. Notice that, this
+transformation can be applied to either individual vectors or
+sets. When applied to a generic set /Delta1⊂R2,Ti
+j(/Delta1)denotes
+the following set Ti
+j(/Delta1)/defines{Ti
+j(z)}z∈/Delta1.
+Fig. 3. Kinematic bicycle model.
+III. C ONTROL ORIENTED VEHICLE MODEL
+A wide variety of vehicle models have been developed by
+researchers to study the dynamics of a vehicle and controller
+design for various applications [37]. A comprehensive surveyof vehicle model for trajectory planning in [15] list out the
+relevant vehicle models for this task. Moreover, the review
+paper for trajectory planning for autonomous high speedovertaking demonstrates that co mpared to point mass vehicle
+models, single track vehicle models (i.e., bicycle models)
+provide a suitable compromise between model order and
+model accuracy [29]. A nonlinear kinematic vehicle model
+assumes no slip between tyre and road is found to be suitablefor trajectory planning for hi ghway driving when lateral accel-
+eration is within bounds ( |a
+y|≤0.4g) [38], [39] (see Fig. 3).
+Furthermore, since normal driving on the highway involvessmall steering inputs, small angles approximation for the
+side-slip angle and steering angle are often assumed [40], [41].
+Under this assumption of small angles approximation thevehicle bicycle model is :
+˙ξ=v (3a)
+˙η=vψ+l
+r
+lf+lrvδf (3b)
+˙ψ=1
+lf+lrvδf (3c)
+˙v=ax (3d)
+where ξandηare the longitudinal and lateral displacement of
+the centre of gravity in the I-frame, ψis the inertial heading
+angle, vis the velocity of the vehicle, lfis the distance of
+front axle from centre of gravity, and lris the distance of the
+rear axle from the centre of gravity. The control inputs arelongitudinal acceleration a
+xand front steering angle δf.T h e
+two aspects that stand-out based on the system dynamics in (3)
+are: ( i) nonlinearity in the system, and ( ii) close dependence
+of longitudinal velocity on the lateral and yaw dynamics of
+the vehicle. To simplify the design of path planning, systemin (3) might be linearised around a nominal longitudinal speed.
+However, the resulting lateral and yaw predictions of such
+linear system are valid only when the longitudinal speed
+DIXIT et al. : TRAJECTORY PLANNING FOR AUTONOMOUS HIGH-SPEED OVERTAKING IN STRUCTURED ENVIRONMENTS 2313
+does not deviate with respect to the nominal one. Hence,
+as a vehicle is expected to acceler ate (and possibly decelerate)
+while performing the lane change and passing sub-manoeuvres
+of the overtaking manoeuvre, linearising this system around anominal velocity might lead to inaccuracies in lateral and yaw
+predictions leading to unfeasible and/or unsafe trajectory gen-
+eration. To tackle nonlinear vehicle dynamics systematically,authors have proposed ( i) maintain constant vehicle longitudi-
+nal velocity during the lane change [2], ( ii) design non-linear
+controllers [2], and ( iii) successive linearisation [42]. In this
+paper, model (3) is used for computing the reachability sets
+of a vehicle to identify safe driving zones, while for thegeneration of the vehicle trajectory toward a target point,
+model (3) is rewritten as a linear time invariant (LTI) system
+subjected to an additive bounded disturbance. This is achievedby denoting x
+a/defines[ξ,η,ψ,v ]T∈Xa⊆R4as the system state
+and u/defines[ax,δf]T∈U⊆R2the system input with Xaand
+Ubeing state and input convex constraint sets, respectively,
+system (3) can be recast as a linear parameter varying (LPV)
+system
+˙xa=Ac(v)xa+Bcu (4)
+Ac(v)=⎡
+⎢⎢⎣0001
+00 v0
+0000
+0000⎤
+⎥⎥⎦,Bc(v)=⎡
+⎢⎢⎢⎢⎢⎣00
+0v·l
+f
+lf+lr
+0v
+lf+lr
+10⎤
+⎥⎥⎥⎥⎥⎦(5)
+where v∈Proj
+v(Xa). System (4) is discretised with a
+sampling time tsto obtain the linear parameter varying discrete
+system shown below.
+xa(k+1)=Ad(v)xa(k)+Bd(v)u(k) (6)
+The pair (Ad(v), Bd(v))is the discretised version of the pair
+(Ac(v), Bc(v)). For a given parameter (here v∈Projv(Xa)),
+(Ad(v), Bd(v))can take values from the convex set Pdeﬁned
+as
+P=co{/parenleftbigAd,j(v), Bd,j(v)/parenrightbig|j∈J} (7)
+withJ∈{1,2,···,J}, see [43] (chapter 3). Accordingly the
+dynamics of the LPV system (6) can be rewritten as a nominal
+LTI system subjected to an additive disturbance, i.e.,
+xa(k+1)=Admxa(k)+Bdmu(k)+wa (8)
+where the pair (Adm,Bdm)is obtained by the expression
+below [43].
+Adm=/parenleftbigg1
+J/parenrightbigg J/summationdisplay
+j=1Ad,j(v), Bdm=/parenleftbigg1
+J/parenrightbigg J/summationdisplay
+j=1Bd,j(v) (9)
+Moreover, the disturbance wais deﬁned as
+wa=(Ad(v)−Adm)xa(k)+(Bd(v)−Bdm)u(k) (10)
+and thus is bound by the set Wdeﬁned as
+W={(Ad(v)−Adm)xa(k)+(Bd(v)−Bdm)u(k)|
+(Ad(v), Bd(v))∈P,(xa,u)∈Xa×U} (11)
+It is noted that the structure of model (8) enables the use
+the robust tube-based MPC which is brieﬂy revised in the
+following section.IV . C ONTROL FORMULATION
+This section provides an overview of the robust MPC
+approach proposed in [31] and [32]. Compared to the classical
+MPC formulation [33], the advantage of the control method
+in [31] and [32] is its ability to steer the state of a constrained
+system toward any set-point (i.e. desired target steady state)
+whether it belongs to the terminal set or not. The methodguarantees the asymptotic convergence of the system state
+to any admissible target steady state. Furthermore, if the
+target steady state is not admissible, the control strategyin [31] and [32] steers the system to the closest admissible
+steady state. Moreover, the optimisation problem to solve
+at each sampling time is a quadratic programming problem,
+which allows explicit implementation of the method, thus
+facilitating its deployment in real time. Given a discrete lineartime-invariant system with states x∈X⊆R
+nx, inputs
+u∈U⊆Rnu, outputs y∈Y⊆Rny, and bounded process
+disturbance w∈W⊆Rnx,w h e r e X,UandWare known
+bounded convex sets, a discrete time state-space system is
+given by
+x(k+1)=Ax(k)+Bu(k)+w (12a)
+y(k)=Cx(k)+Du(k) (12b)
+where the matrices A,B,C,and Dare constant and it is
+assumed that the pair (A,B)is controllable. The control objec-
+tive is to stabilize system (12) and steer it in the neighbourhood
+of a reference set-point despite the disturbance while keeping
+the system state and control input within the required set
+constraints (i.e., XandU, respectively) The solution proposed
+in [31] and [32] leverages a nominal system of the plant in
+(12) deﬁned as
+¯x(k+1)=A¯x(k)+B¯u(k) (13a)
+¯y(k)=C¯x(k)+D¯u(k) (13b)
+where ¯x,¯u,a n d ¯yare the state, input and output of the
+nominal model, respectively. The idea in [31] and [32] to
+solve the constrained control problem for the uncertain system(12) is to use an MPC approach to steer the nominal model
+(13) towards the desired set point but with modiﬁed state and
+input set constraints, denoted as ¯X,a n d ¯U, respectively. The
+set constrains for the nominal model are selected such that
+if the closed-loop solution of the nominal system satisﬁes
+(¯x(k),¯u(k))∈¯X×¯U,∀k,t h e n (x(k),u(k))∈X×U.T h e s e
+tightened set constraints for the nominal system are computed
+as
+¯X=X/circleminusZ,¯U=U/circleminusKZ (14)
+where K∈R
+nx×nuso that AK=A+BK is Hurwitz, and Zis
+a robust positively invariant set [44] for the system e(k+1)=
+AKe(k)+w, with e/defines(x−¯x), such that
+AKZ⊕W⊆Z (15)
+In [31] and [32] it was proven that if ¯Xand¯Uare non-empty
+sets they contain the steady state set-points and control inputsthat can be robustly imposed to system (12) when e(0)=
+x(0)−¯x(0)∈Z, under the control action
+u=¯u+Ke,¯u∈¯U (16)
+2314 IEEE TRANSACTIONS ON INTELLIGENT TRANSPORTATION SYS TEMS, VOL. 21, NO. 6, JUNE 2020
+It is noted that, given a target steady state ˆx∈Rnx, the control
+action ¯uis generated by using a receding horizon technique
+to steer system (13) to an admissible steady-state ρss=
+(¯xss,¯uss)∈¯X×¯U, such that ¯xssis as close as possible to ˆx.
+Moreover, the subspace of steady-states and inputs of system
+(13) have a linear representation of the form
+ρss=Mθθ (17)
+where θ∈Rnθis a parameter vector th at characterises the sub-
+space of steady-states and inputs and Mθis a matrix of suitable
+dimensions (see [31], [32] for further details). Furthermore,
+by denoting Nas the prediction horizon, the control action
+¯uat the time instant kis computed by solving the following
+optimisation problem parametrised in xp=x(k)andˆx.
+min
+¯Ui,θ,¯xVN(¯x,¯ui,θ;xp,ˆx)
+subject to ¯x∈xp⊕(−Z)
+¯x(i)∈¯X
+¯u(i)∈¯U
+¯Xi=/Phi1¯x+/Psi1¯Ui,i=0,1,..., N
+(¯xss,¯uss)=Mθθ
+(¯x(N),θ)∈Xt (18)
+where ¯Ui={¯u(0),¯u(1) ,..., ¯u(N−1)}is the vector of stacked
+inputs, ¯Xi={ ¯ x(1),¯x(2) ,..., ¯x(N)}the vector of stacked
+predicted states, and /Phi1and/Psi1are the prediction matrices of
+appropriate dimensions constructed based on the the nominal
+system dynamics described in (13) resulting in a prediction
+model
+¯Xi=/Phi1¯x+/Psi1¯Ui,i=0,1,..., N (19)
+and the terminal set Xtis chosen as
+Xt={(¯x,θ)∈Rnx+nθ:(¯x,K/Omega1¯x+Lθ)∈¯X×¯U,
+Mθθ∈¯X×¯U,(A+BK/Omega1)¯x+BLθ∈¯X}(20)
+with K/Omega1∈Rnx+nθbeing a constant matrix such that the
+eigenvalues of A+BK/Omega1lie within the unit circle, L=/bracketleftbig
+K/Omega1,Inu/bracketrightbig
+Mθ, and the cost function VN(¯x,¯ui,θ;xp,ˆx)is
+VN(¯x,¯ui,θ;xp,ˆx)
+=N/summationdisplay
+i=0/bracketleftBig
+||¯x(i)−¯xss||2
+Q+| |¯u(i)−¯uss||2
+R/bracketrightBig
++| |¯x(N)−¯xss||2
+P+| |¯xss−ˆx||2
+T (21)
+where the matrices Q∈Rnx×nx,R∈Rnu×nu,T∈Rnx×nxare
+positive deﬁnite, and P∈Rnx×nxis a positive deﬁnite matrix
+solving the Lyapunov equation
+(A+BK/Omega1)TP(A+BK/Omega1)−P=−/parenleftBig
+Q+KT
+/Omega1RK/Omega1/parenrightBig
+(22)
+It is noteworthy that in the optimisation problem (18),
+the initial state of the nominal system ¯x(0)=¯xis also
+a decision variable selected such that xp−¯x∈Z,w h i c h
+guarantees the evolution of the system (12) in X×Ufor
+anyw∈W(see [31], [32] for further details). Therefore,
+the solution of the optimisation problem (18) yields an optimalinitial state ¯x∗/parenleftbig
+xp,ˆx/parenrightbig
+and an optimal input sequence ¯U∗
+i=
+{¯u∗(0,xp,ˆx),¯u∗(1,xp,ˆx),···,¯u∗(N−1,xp,ˆx)}along with
+an parametrised steady-state θ∗/parenleftbigxp,ˆx/parenrightbig. The net control action
+applied on the plant is given as
+u(k)=¯u∗(0,xp,ˆx)+K/parenleftbig
+xp−¯x∗(xp,ˆx)/parenrightbig
+(23)
+Remarks:
+•¯x,¯ui,a n dθare the decision variables of the optimisation
+problem (18), while xpandˆxare its parameters
+•The terms of the cost function under the summation
+represent the penalty for deviating from the steady-state
+and input, the second term penalises the deviation of the
+terminal state from the steady-state, and the ﬁnal termpenalises the deviation of the artiﬁcial state from the
+reference state
+•As the optimisation problem (18) can be expressed as aquadratic programming problem, it can be converted to
+an explicit MPC form to reduce online computations [45]
+•System constraint handling capabilities and closed loop
+asymptotic stability and feas ibility of the p roposed con-
+troller are proven in [31]
+•The minimal robust invariant set Zcan be computed
+using the recursive algorithm proposed in [44].
+V. L OCAL RISKMAP
+In this paper, it is assumed that the vehicles (subject vehicles
+and other trafﬁc vehicles) are travelling on a one-way straightroad of inﬁnite length. At highway speeds, in addition to
+maintaining approximately a lane-width’s distance with each
+vehicle in the lateral direction, vehicles also maintain safetydistances of ≈50 m to the vehicle in front and behind [5].
+Therefore, an overtaking manoeuvre is expected to maintain
+these distances while performing the lane-change manoeuvres
+that mark the start and end of an overtaking manoeuvre
+resulting in the need for a subject vehicle to have accuratesituational awareness of the surrounding obstacles in this range
+to plan safe trajectories. Semsar-Kazerooni et al. [46], [47]
+mentioned that embedding driving rules and collision avoid-ance constraints within a multi-objective optimisation problem
+results in a control laws with large computation requirements.
+On the other hand, a potential ﬁeld like function for envi-
+ronmental risk detection can be shaped in such a way that
+it guides towards desired driving behaviour. In this paper thesurrounding environment is described through the use of a
+potential ﬁeld where several road elements (i.e., road limits,
+road markers, and other road users) are considered for shapingthe potential function so as to include driving rules and guide
+the subject vehicle through safe road regions. The net potential
+function is generated by combin ing several potential functions
+where the design of each function is intended to incorporate
+one or more driving rule(s). The road potential function (U
+road)
+is designed to keep the subject vehicle away from the roadlimits, the lane potential function (U
+lane)is used for lane-
+keeping, the lane velocity potential function (Uvel)is designed
+such that the subject vehicle occupies the innermost (slowest)
+lane when more than one lane is available, and the car potential
+function (Ucar)is designed such that a subject vehicle either
+DIXIT et al. : TRAJECTORY PLANNING FOR AUTONOMOUS HIGH-SPEED OVERTAKING IN STRUCTURED ENVIRONMENTS 2315
+maintains a safe distance to the lead vehicle or if the other lane
+is available, moves to a faster lane. Similar to the approach
+presented in [48], a net potential function (Ur)is generated
+by superimposing these individual potential functions to createlocal risk maps that can be used for autonomous overtaking
+in a human-like manner. The construction of the individual
+potential functions is discussed below.
+A. Lane Velocity Potential
+Different lanes on a road have an implicit velocity asso-
+ciated with them, i.e., the vel ocity progressively increases
+from inner (right-most) to outer (left-most) lane. Thus, if one
+assumes that higher-speeds rep resent higher-risk, each lane of
+the road can be appropriated a certain potential to describeits risk. This is achieved by a simple gain-based function as
+shown below.
+U
+vel,i(pr)=γ/bracketleftbig
+vlane,i(pr)−vlane,1(pr)/bracketrightbig
+(24)
+where γis a gain factor, vlane,iis the nominal velocity of the
+ithlane, and Uvel,iis the potential due to lane-velocity of the
+ithlane.
+B. Road Potential
+The road potential [48] is designed such that the boundaries
+of the road have the highest (∞)potential and the centre of the
+road has the lowest potential. A function often used in robotics
+for perception is used here to d escribe the road potential and
+is given below.
+Uroad(pr)=1
+2ζ2/summationdisplay
+b=1/parenleftbigg1
+ηr−ηr,b/parenrightbigg2
+(25)
+where ζis a scaling factor and ηr,bis the y-coordinate of the
+bthroad edge, b∈{1,2}.
+C. Lane Potential
+A lane potential function [48] creates a virtual barrier
+between lanes to direct the subject vehicle towards the lane
+centre. A Gaussian function shown below is used to achievethis desired behaviour.
+U
+lane,i(pr)=Alaneexp/parenleftBigg
+−/parenleftbig
+ηr−ηl,i/parenrightbig2
+2σ2/parenrightBigg
+(26)
+Where ηl,iis the y-coordinate of the ithlane division, σand
+Alane are scaling factors, and Ulane,iis the potential due to
+lane boundary of the ithlane.
+D. Car Potential
+A technique inspired by [48] is used to embed lead vehicle
+position, orientation, and velocity within the potential function
+as an obstacle vehicle. By modelling the lead vehicle as
+a rectangular area, virtual triangular wedges, also denoted
+as buffer zones, are appended to the front and rear of thelead vehicle which act as safety margins. The location ( x,y
+coordinate) of triangle’s vertex behind the lead-vehicle is
+calculated based on the velocity of the subject vehicle andthe headway time h
+twhile the location of the triangle’s vertex
+in front of the lead-vehicle is calculated based on the velocity
+of the lead vehicle and the headway time ht. By denoting /Gamma1lv
+as the set of coordinates in the R-frame containing the obstacle
+vehicle and the two triangular wedges, a Yukawa function is
+used to describe the potential due to an obstacle vehicle as
+given below.
+Ucar(pr)=Acar/parenleftbigge−αKd
+Kd/parenrightbigg
+(27)
+where αis a Yukawa scaling factor, Acaris the Yukawa
+amplitude [49], and Kdis the Euclidean distance to the nearest
+coordinate of the obstacle given as
+Kd=min
+b0∈/Gamma1lv||b0−pr|| (28)
+where b0represents the set of points lying within the obstacle.
+These individual potentials are superimposed to obtain an
+overall risk map in the surrounding of the vehicle given by
+the expression below.
+Ur(pr)=Uvel+Uroad+Ulane+Ucar (29)
+Where Ulane=Nlanes/summationtext
+i=1Ulane,iand Uvel=Nlanes/summationtext
+i=1Uvel,iwith Nlanes
+being the number of lanes. To facilitate trajectory planning the
+potential ﬁeld is studied in the inertial frame through the use
+of the function U(p)/Delta1=Ur/parenleftbig
+TI
+R(p)/parenrightbig
+. By assigning a threshold
+limit Usafe, the safe regions of the road surrounding the subject
+vehicle are expressed in the inertial frame using the set
+G={p∈TI
+R(/Gamma1lv):U(p)≤Usafe} (30)
+Thus, equation (30) provides a set of safe regions and the
+subject vehicle needs to plan trajectories that keep it within
+this region set thereby reducing risk. Moreover, since the netpotential ﬁeld depends on the states of the subject vehicle (lon-
+gitudinal position, lateral position, and longitudinal velocity)
+and the lead vehicle (longitudinal position, lateral position, and
+longitudinal velocity), it updates at each time instant to provide
+an accurate environmental repre sentation for a subject vehicle.
+However, the set (30) does not consider vehicle dynamics
+of the subject vehicle, thus some regions of the road with
+satisfactory potential may not be reachable in practice. The
+method designed for selecting reference points in the set of
+safe regions which are compatible with the dynamics of the
+subject vehicle is detailed in the next section.
+VI. S
+ELECTION OF THE TARGET POINT
+In this section, the method designed for selecting reference
+points in the set of safe regions which are compatible with
+the dynamics of the subject vehicle is detailed. In idealhighway cruising conditions, a vehicle is expected to traverse
+along at a constant desired longitudinal velocity v
+deswhile
+maintaining its lane position. While travelling on a straight
+road, these dynamics of the system from (3) can be described
+by˙xa=[vdes,0,0,0]T. However, in real world scenarios,
+a vehicle is unable to maintain constant longitudinal velocity
+and lane position (due to trafﬁc, route, etc.) and has to
+perform different manoeuvres such as lane-change, merge, etc.
+2316 IEEE TRANSACTIONS ON INTELLIGENT TRANSPORTATION SYS TEMS, VOL. 21, NO. 6, JUNE 2020
+These manoeuvres can be thought of as transitions from one
+set of states to another set of states within the set Xac={x∈
+Xa:ψ=0}. In such ideal scenarios the objective of the
+subject vehicle is to adjust its trajectory to avoid obstacles
+while ensuring that the vehicle’s speed is maintained within
+the range v∈Projv(Xa). Starting from an initial position
+p0=(ξ0,η0)and travelling at vdes, using admissible control
+actions from the set {(ax,δf):ax≤0,(ax,δf)∈U},t h es e t
+Rtotal⊂R4of the vehicle conﬁgurations (states) reachable
+without exceeding the desired velocity vdesin the time interval
+[0,t∗]of the system can be computed using (2) and the vehicle
+model (3). The set of points on the road that are reachableR⊂R
+2form a subset of Rtotaland is expressed as
+R=Projp(Rtotal) (31)
+Remarks:
+•The velocity vdescorresponds to the maximum velocity
+of the SV as desired by the occupants and it is upperbound by the legal speed-limit of the road.
+•Thus, from a given initial position p0, the subject vehicle
+can theoretically reach all points lying within the set R
+without exceeding the maximum desired velocity vdes.
+It is noteworthy that the set of admissible control actionsmentioned above is a subset of Ua n di su s e do n l y
+for computing the reachable se t, the trajectory planning
+algorithm will have the entire set Uat its disposal for
+generating feasible trajectories.
+From (30), (31) the safe zones surrounding the subject vehicle
+which are reachable with respect to the current vehicle state
+and vehicle dynamics is
+R
+safe/definesG∩R (32)
+Then, the reference target coordinates ˆp=(ˆξ,ˆη)are chosen
+fromRwith the aim to maximise the distance travelled by
+the subject vehicle in the time interval [0,t∗],i . e .
+ˆp=arg max
+p∈Rsafe||p−p0|| (33)
+The longitudinal distance from ξ0toˆξcan be traversed by
+the SV by travelling with a uniform longitudinal velocity
+calculated using the equation below.
+ˆv=||ˆξ−ξ0||
+t∗(34)
+A vehicle with the ability to closely match or follow the
+reference velocity computed above will enhance its ability
+of get closer to the reference position ˆp. Thus, if the initial
+velocity v0of the vehicle is not equal to the target velocity ˆv,
+the trajectory planner should come up with a suitable accel-
+eration proﬁle to accelerate/d ecelerate the vehicle to achieve
+the target velocity ˆv. Moreover, since the subject vehicle is
+assumed to be travelling on a straight road, the target heading
+angle of the subject vehicle remains
+ˆψ=0 (35)
+It is noteworthy that in case the subject vehicle is travelling on
+a curved road, target heading angle ˆψcan be obtained fromthe road orientation at the given coordinate (ˆξ,ˆη)stored in the
+vehicle’s mapping functionality. Thus, stacking the reference
+targets for each state the target state vector ˆxa=[ˆξ,ˆη,ˆψ,ˆv]T
+for the system is obtained. It is noted that, the set of reachable
+lateral and longitudinal coordinates for subject vehicle in the
+vehicle frame is
+RV=TI
+V(R) (36)
+VII. T RAJECTORY GENERATION
+The target states ˆxawhich are generated using the approach
+in the Section VI at each time step result in piecewise
+references (e.g., if a lane-change is required, ˆηwill change
+from the centre of one lane to another). The robust MPC
+approach overviewed in Section IV is used in the proposed
+framework to plan trajectories for directing the vehicle fromits current state x
+a(0)=[ξ0,η0,ψ0,v0]Tto a (safe) target state
+ˆxa=[ˆξ,ˆη,ˆψ,ˆv]Tin an admissible way (i.e. by considering
+vehicle dynamics, state constraints, and input constraints).
+As the dynamics of the state ξof system (4) depends only on
+v, it is possible to further simplify the system for the trajectory
+generation. The reduced order system for trajectory generation
+is
+x(k+1)=Ax(k)+Bu(k)+w, y(k)=x(k) (37)
+where x=[η,ψ,v ]Tis the system state, u=[ ax,δf]T
+is the input, wis the disturbance vector composed by the
+last three entries of the wa-term in (10), and the system
+and input matrices Aand Bare obtained by extracting the
+appropriate rows and columns of Admand Bdmin (8), respec-
+tively. The state and input constraints polyhedrons XandU
+are
+X={x∈R3:xmin≤x≤xmax} (38a)
+U={u∈R2:umin≤u≤umax} (38b)
+where xmin,xmax∈R3and umin,umax∈R2are constant
+vectors. It is noted that the boundedness of XandUand
+the structure wa-term in (10) imply that the w-term in (8)
+belongs to a bounded polyhedron set denoted as W[43].
+From (37) and (38), it follows that the vehicle dynamics of
+interest for the overtaking manoeuvre match the hypothesisrequired for the application of the robust MPC in Section IV,
+which is therefore used for the generation of a feasible path to
+steer the vehicle toward ˆx=[ˆη,ˆψ,ˆv]
+Tbelonging to the safe
+reacheble set (32), where ˆη,ˆψandˆvare deﬁned in the section
+above.
+A. Collision Avoidance Constraints
+The basic tools that are used to construct the potential ﬁeld
+for situational awarness can also be used to obtain collision
+avoidance constraints that can be added to the optimisation
+problem in (18). An example demonstrating how the collision
+avoidance constraints can be designed while approaching alead vehicle is explained using Fig. 4 as an exemplar. While
+designing the potential ﬁeld in Section V-D, the equation
+a
+caξ+bcaη+cca=0 is one of the hyperplanes that is
+DIXIT et al. : TRAJECTORY PLANNING FOR AUTONOMOUS HIGH-SPEED OVERTAKING IN STRUCTURED ENVIRONMENTS 2317
+Fig. 4. Schematic to explain identiﬁcation of collision avoidance zone. Note:
+SV - blue rectangle, LV and surrounding unsafe region - red polygon, targetcoordinate - magenta cross, safe zone - green polygon.
+used to construct the bounds of the unsafe region around the
+lead vehicle ( /Gamma1lv). However, the utility of this hyperplane is
+expanded by using it to divide the given road segment into twozones; ( i) safe zone represented by a
+caξ+bcaη+cca>0,
+and ( ii) unsafe zone represented by acaξ+bcaη+cca<0, see
+Fig. 4.
+Thus, for a subject vehicle located at (ξ0,η0),a nM P Cb a s e d
+trajectory planner can ensure collision-free motion if con-straints are designed that limits all planned trajectories to stay
+within the safe zone. This is the crux of the various collision
+avoidance constraints that are described in literature [19], [50].However, as discussed in the section above, in this paper a
+reduced order system that does not have longitudinal position
+ξas one of its states is used by the MPC for planning trajec-
+tories. This gives rise to the need of expressing the collision
+avoidance constraints using the states from the reduced ordersystem i.e., ηandv.
+1) Constraint I: If(ξ
+0,η0)represent the current location of
+the SV in global coordinates and in the context of MPC areknown values then the satisfaction of the following constraint
+equation guarantees that initially the subject vehicle is within
+the safe zone.
+a
+caξ0+bcaη0+cca>0 (39)
+2) Constraint II: Similarly for a given nominal initial state
+¯x(0)=(¯η,¯ψ,¯v), which is a part of the decision variable of the
+problem in (18), the equation below ensures that the nominalinitial position of the SV is also within the safe zone.
+a
+caξ0+bca¯η+cca>0 (40)
+3) Constraint III: Finally, it is important to ensure that
+the trajectory obtained by solving the optimisation problemin (18) guarantees that the SV stays within the safe zone
+throughout the prediction horizon. From (3a), (4) it is evident
+that the evolution of the longitudinal position ξis a function
+of the longitudinal velocity of a vehicle v. Thus, along a
+given prediction horizon N, the predicted nominal longitudinal
+position ¯ξcan be estimated using the initial longitudinal
+position ξ
+0and the predicted nominal velocity ¯vusing the
+equation below.
+¯ξ(j)=⎡
+⎣ξ0+j/summationdisplay
+i=1(¯v(i)·ts)⎤
+⎦;j=1,2,..., N (41)
+The expression above is utilized to create Ndifferent con-
+straints that fulﬁll the collision avoidance criterion along the
+entire prediction horizon. The generalized constraint equation
+that is used to create the Ndifferent constraint equations isFig. 5. Closed-loop framewo rk for trajectory planning. Note: LV denotes
+lead vehicle.
+given below.
+aca⎡
+⎣ξ0+j/summationdisplay
+i=1(¯v(i)·ts)⎤
+⎦+bca¯η(j)+cca>0;
+j=1,2,..., N (42)
+where the predicted nominal velocity ¯v(i)and predicted lateral
+position ¯η(i)can be obtained from the prediction model
+in (19). Therefore, the set of (N+2)equations obtained
+from (39), (40) and from different values of jin (42)
+represent collision avoidance constraints that are expressedsolely as a function of two states namely lateral position
+and longitudinal velocity. These inequalities representing the
+collision avoidance constraints can be supplemented to the
+constraints of the optimisation problem in (18) to ensure
+that the planned trajectory is collision free along the entireprediction horizon. It is noteworthy that the technique for
+design of the collision avoidance constraints described above
+can be easily adopted to situations where ( i) the SV needs
+to perform the lane-change while completing an overtaking
+manoeuvre and/or ( ii) when there are multiple hyperplanes
+representing collision-avoidance constraints for more than one
+trafﬁc member.
+At each discrete time instant k, problem in (18) with
+additional constraints (39), (40), and (42) is solved by set-
+ting the target state and the initial state as ˆx=[ ˆη,ˆψ,ˆv]
+T
+and xp=x(k)respectively. The optimal trajectory x∗=
+[ξ∗,η∗,ψ∗,v∗]Tis generated by simulating the vehicle
+model (3) with the optimal inputs u∗=[a∗
+x,δ∗
+f]Tfrom the
+solution of MPC problem (18) and then passed to a trajectory
+tracking controller as reference signals. The following algo-
+rithm (depicted in the closed loop structure in Fig. 5) sum-marises all the steps required for performing a safe overtaking
+manoeuvre in the proposed framework, see Algorithm 1.
+VIII. N
+UMERICAL RESULTS
+In this section, a results obtained from a closed-loop simu-
+lations are used to evaluate the ability of the proposed frame-
+work for planning trajectories for a high-speed overtaking
+manoeuvre. The scenario used is as follows: both the subject
+vehicle and the lead vehicle are travelling on a two-lane one-way road of inﬁnite length at longitudinal velocity vand
+v
+LV, respectively. The dimensions of the road, lane-limits
+and lead vehicle’s states are available to the subject vehicle
+2318 IEEE TRANSACTIONS ON INTELLIGENT TRANSPORTATION SYS TEMS, VOL. 21, NO. 6, JUNE 2020
+Algorithm 1 Trajectory Planning
+1:initialize :
+2:RV←bank of reachable sets in V-frame
+3:Usafe←upper bound of risk potential
+4:procedure GENERATE TRAJECTORY
+5:top:
+6:vdes←desired longitudinal velocity from user
+7:Rtotal←reachable set for given vdesas (2)
+8:R←projection of Rtotalin I-frame as (31)
+9:loop :
+10: Ur←net potential ﬁeld in R-frame as (29)
+11: U←net potential ﬁeld in I-frame
+12:G←safe regions of the road as (30)
+13:Rsafe←G∩Ras (32)
+14: ˆxa←generateTargetStates (Rsafe)as (33)-(35)
+15: xa←getCurrentStateV ector (·)
+16: getCollisionA voidanceConstraints (·)as (39)-(42)
+17: u∗←solveRobustMPC (x,ˆx)as (23)
+18: x∗←applyOptimalInput (u(k))as (3)
+19: ifuser request change in vdesthen
+20: goto top.
+21: else
+22: goto loop .
+on-demand through for example a V2X communication link.
+Each lane of the highway is assumed to have a nominal
+desired velocity which is provided to the subject vehicle by
+the route planner while the decision to perform an overtakingmanoeuvre and availability of the faster lane is veriﬁed by
+the decision making block of the SV [51], [52]. The design
+parameters, state, and input set constraints in Table I are usedto set up the scenario and controller within an integrated
+Simulink and IPG CarMaker co-simulation platform. It is note-
+worthy that, the constraints for the inputs were designed by
+considering the steering and l ongitudinal acceleration applied
+by an inbuilt IPG CarMaker controller for several smoothhigh-speed overtaking manoeuvres in CarMaker. Furthermore,
+the control weights were chosen so as to ensure that the
+generated trajectory was similar to the one obtained via IPGCarMaker’s default lane-change tr ajectory. Alternatively, other
+techniques can be used to tune the control weights and a
+comprehensive review of such techniques is available in [53]
+and [54].
+Remarks:
+•As discussed in the section above, the optimal trajectorygenerated by the trajectory planner acts as referencesignal for a lower level trajectory tracking controller, see
+Fig. 5. The trajectory tracking controller is responsible
+for actuating the steering, accelerator/brakes to follow thereference trajectory as closely as possible while handling
+system non-linearities and disturbances. In this paper,
+the optimal velocity v
+∗obtained from the robust MPC
+is passed on to a longitudinal tracking controller as a
+reference signal. The longitudinal tracking controller issensitive to the powertrain delays and factors them in
+while computing an appropriate longitudinal acceleration
+signal for the SV . On the other hand, the lateral trackingis performed by an adaptive controller that uses x
+∗as
+its reference to compute appropriate steering action [55].
+In addition to tracking the reference trajectory as closely
+as possible, these lower level controllers can handlesystem delays, tire nonlinearities, road surface variations,
+etc. However, the task of longitudinal and lateral tracking
+can also be performed by the multitude of techniquesavailable in literature but is beyond the scope of this paper
+(the reader is referred to [29], [56]–[59] for possible
+alternative techniques).
+•The entire co-simulation was run on a laptop machinewith an Intel i7-6820HQ processor, 16GB RAM run-ning Microsoft Windows 7 64-bit, and M
+ATLAB 2012b
+32-bit. The average time required at each time step for
+the optimisation routine was 0.0077 s with a standarddeviation of 0.0011 s.
+A. Robust Positive Invariant Set and MPC Implementation
+The robust positive invariant set Zfor the error dynamics
+and the nominal control law in (15), (16) is calculated using
+the algorithm in [44]. The algorithm in [44] provides an iter-
+ative technique based on the supporting function of polytopicsets to calculate the outer approximation of a minimal robust
+positively invariant set for a discrete-time linear time-invariant
+system. Equation (15) suggests that the structure of the set Z
+has a dependence on ( i)s i z eo fs e t W,a n d( ii) the matrix A
+K.
+Since, the set Wis ﬁxed by the vehicle geometric constraints
+and chosen longitudinal velocity range (see Table I), the only
+degree of freedom available for designing the set Zis via the
+design of a Hurwitz matrix AKby choosing an appropriate
+controller Kto ensure stable error dynamics. The trade-off
+for the design of the nominal controller with ﬁxed gain K
+(or equivalently the design of the matrix) are twofold; ( i)t o
+constraint the error set Zto a reasonable size such that
+the deviation between nominal system and actual system isreduced and ( ii) to ensure that the input set ¯Ufor the MPC
+is as large as possible, thus enlarging the decision space for
+the MPC to compute smooth control inputs. Furthermore,it was noted that A
+K-matrices with eigenvalues close to the
+origin of the complex plane might result in an empty ¯U,
+while if the eigenvalues of AKare close to the unit circle,
+the set Zmight become so large that ¯Xis an empty set,
+thus both extreme cases make the MPC problem in (18) ill-posed. For this application, this tradeoff was met by selecting
+the dominant eigenvalue λofA
+Kfor the lateral and yaw
+dynamics such that Zis a bounded set and ¯Uis as large
+as possible. Fig. 6 provides a visual representation for this
+behaviour where the plot on the left depicts the disturbance
+setWand the robust positively invariant set Zfor a given
+controller, whereas the plot on the right depicts the net input
+setUand the constrained input set ¯U. It is noteworthy that
+only a projection of the disturbance and error sets onto the
+lateral and yaw dimension of the system is plotted since the
+disturbance for the system exists only along these dimensions,see (10). Furthermore, by increasing the dominant eigenvalue
+beyond λ=0.72 results in a large Zthat renders ¯X=φ.
+Likewise, the plots show that the error set grows along the
+DIXIT et al. : TRAJECTORY PLANNING FOR AUTONOMOUS HIGH-SPEED OVERTAKING IN STRUCTURED ENVIRONMENTS 2319
+TABLE I
+DESIGN PARAMETERS
+Fig. 6. Error polyhedron and resulting tightened input set obtained by
+changing magnitude of eigenvalue.
+lateral position dimension as the eigenvalue changes whereas
+the absolute limits along the heading angle dimension are close
+to constant. However, even for the error set Zobtained with
+the largest eigenvalue, the magnitude of the error limits inlateral position is a small fraction of the actual limits in lateral
+position while allowing a large ¯Umaking it a suitable choice
+for being used to solve the MPC problem in (18).
+B. Simulation Results
+A simulation environment is initialised with the subject
+vehicle behind the lead vehicle and the initialisation para-
+meters given in Table I. The simulation is then allowed
+to run and the proposed framework performs three primary
+tasks; ( i) surrounding risk zone detection, ( ii) safe target
+identiﬁcation, and ( iii) trajectory generation at each sampling
+time. Some details for each task output as well as overall
+simulation results are discussed below. Fig. 7a and 7b shows
+the snapshot of the output of the local risk map and target pointselection at the time instant t=14 s during the overtaking
+when the subject vehicle has det ected the lead vehicle as it is
+performing the ﬁrst lane change of the overtaking manoeuvre.Fig. 7a provides a 3D-view of the entire potential function
+computed as in (29) and the local minima at the centre of
+each lane for guiding a subject ve hicle can be seen along with
+the trapezoidal ﬁeld created by a lead vehicle (it is noted that
+in Fig. 7a and 7b large values of the potential ﬁeld are trun-cated for the sake of readability of the ﬁgure). Signiﬁcantly,
+the potential ﬁeld approach can be expanded to accommodate
+more lanes, additional trafﬁc members, and/or more complexroad geometries. Furthermore, the computation of potential
+ﬁelds is based on simple mathematical operations and hence
+addition of trafﬁc participants, more lanes, etc. will not result
+in any signiﬁcant computation overhead. Similarly, the design
+of collision avoidance constraints relies of basic mathemat-ical operations and thus collision avoidance constraints for
+each trafﬁc participant can be generated without any major
+computation overhead. However, the design of potential ﬁeldsfor different road types is not the primary focus of this body
+of work and hence not discussed in greater detail. Fig. 7b
+depicts the level curves of the potential ﬁeld for the same
+time instant in the R-frame along with the reachable set of the
+subject vehicle and identiﬁed target on the road computed asin (33), which also represents the output of the block Target
+Id. In Fig. 7b, the lead vehicle is depicted as red rectangle
+and the buffer zones (as triangular appendages), where thepotential ﬁeld rapidly increases to prevent the subject vehicle
+from getting too close to the lead vehicle during the different
+phases of an overtaking manoeuvre, can be easily observed.
+As the region /Gamma1
+lv(unsafe region) surrounding the lead vehicle
+moves in the R-frame with speed vLV−v, at each time
+step the local risk map of the safe reachable region and the
+reference targets change acco rdingly. Fig. 8 shows some of
+the target references selected by the subject vehicle for safelyovertaking.
+The reference points, dynamically generated, are used by
+the Trajectory Generation block in Fig. 5 the generation ofthe trajectory as described in Section VII. The results from
+2320 IEEE TRANSACTIONS ON INTELLIGENT TRANSPORTATION SYS TEMS, VOL. 21, NO. 6, JUNE 2020
+Fig. 7. Snapshot of simulation (simulation time t=14 s). (a) Cumulative
+potential ﬁeld Urfrom road, lane, and obstacle v ehicle. (b) Contour plot of
+the potential ﬁeld along with the reachab le set (yellow) and reference target
+on the road (magenta cross). Note: Blue rectangle depicts the subject vehicle
+and the rectangle in red depicts the lead vehicle.
+Fig. 8. Snapshot of simulation dem onstrating: reference targets (×)for
+different conﬁgurations of subject vehicle (/square)and lead vehicle (♦)while
+driving on a highway. Note: solid lines (–) are the road boundaries and dashed
+line (- -) is the lane marking.
+the entire simulation are depicted in Fig. 9. The trajectories
+of the subject and lead vehicles as well as the relevant statesand inputs of the subject vehicle are shown in the inertial
+frame in Fig. 9. Moreover, Gaussian noise is added to the
+lead vehicle’s velocity in an attempt to ( i) introduce sensor
+imperfections, ( ii) wireless network packet loss, and ( iii) lack
+of accurate knowledge of lead-veh icle states. Introducing this
+noisy signal in the potential ﬁeld calculation in (27) will
+help in understanding if the proposed technique is robust
+against the random variations in lead-vehicle states. The topplot shows the actual path followed by the subject and lead
+vehicles and the trajectory of the overtaking manoeuvre for
+the subject vehicle can be observed. Moreover, since theFig. 9. Simulation results: SV and LV tr ajectories, longitudinal velocity,
+heading angle, longitudinal acceleration, and steering angle for a high-speedovertaking manoeuvre. Note: (- -) are the system constraints.
+subject vehicle is travelling with a higher longitudinal velocity,
+it covers a larger portion of the road segment in the given
+time. The bottom four plots of Fig. 9 show the states andinput of the subject vehicle evolving over time. The key
+aspect about the overtaking manoeuvre is that the overtaking
+manoeuvre is initiated close to 10 s and one can observethe longitudinal velocity of the vehicle increasing while the
+ﬁrst lane change manoeuvre is being performed. The reverse
+behaviour (i.e., decreasing velocity while performing the lane
+change) is visible after 20 s. This is reminiscent of a real-world
+overtaking manoeuvre where a vehicle may accelerate ordecelerate while performing the lane change manoeuvre(s)
+thus demonstrating the efﬁcacy of the proposed controller.
+The noisy data from the lead vehicle’s velocity also doesnot have any impact on the trajectory planning process as
+both the states and input signals are devoid of high-frequency
+oscillation. Another key aspect is that the two states of SV ,
+(i) longitudinal velocity and ( ii) heading-angle show smooth
+evolution without any high-fre quency oscillation during either
+of the lane-changes. The longit udinal acceleration proﬁle is
+obtained via the tracking controller discussed above and it
+also does not demonstrate any high-frequency oscillations.
+However, it is designed using basic frequency-based tech-
+niques and is not tuned to minimize the jerk but if required
+this controller can be swapped with any preferred controltechnique available in literature. Similarly, the steering action
+for the lateral motion demonstrates smooth evolution with
+no high-frequency oscillation. Moreover, just as in the case
+of the longitudinal tracking controller, if necessary another
+controller for the steering action can be utilized with theproposed trajectory planning framework. Also, as expected the
+MPC controller respects all the system and input constraints
+which is evident from the plots in Fig. 9.
+DIXIT et al. : TRAJECTORY PLANNING FOR AUTONOMOUS HIGH-SPEED OVERTAKING IN STRUCTURED ENVIRONMENTS 2321
+Fig. 10. Simulation results: trajector y of the subject vehicle (SV) during an
+overtaking manoeuvre in the lead ve hicle (LV) frame of reference (ξo,ηo).
+To show the need of the robust MPC to tackle variations of
+the longitudinal vehicle speed while performing the overtaking
+manoeuvre, we compare the performance of the proposedframework when the robust MPC in the Trajectory Generation
+Block in Fig. 5 is replaced by the M PC strategy for disturbance
+free LTI systems proposed in [30], referred in the rest ofthe paper as nominal MPC. The LTI vehicle model for the
+design of the nominal MPC is obtained from system (13)
+based on (9), while the remaining vehicle parameters forthe control tuning are set to those listed in Table I. It is
+noted that, despite the fact th at nominal MPC is effective for
+overtaking with ﬁxed speed (see [30] for further details), its
+performance to generate feasible trajectories reduces when the
+longitudinal speed change during the overtaking manoeuvre.This is conﬁrmed in Fig. 10 where the reference and actual
+vehicle trajectories of the subject vehicle in the O-frame
+of reference are depicted both for the nominal and robustMPC. These results demonstrate the nominal MPC struggles
+to generate suitable trajectories for the overtaking manoeuvre
+with varying longitudinal velocity. The trajectories suffer from
+overshoot and also takes the subject vehicle very close to
+the lead vehicle during the initial lane change. Both thesefactors make the nominal MPC based technique unsuitable for
+planning overtaking trajectories with variable velocity. On the
+other hand, the robust MPC based trajectory generates verylittle overshoot and also maintain the safety margins to the lead
+vehicle during all three sub-manoeuvres. Furthermore, due to
+its ability to generate consistent and uniform trajectories for
+lane change while accelerating and decelerating, the controller
+proposed in this paper appeals to a wider application set(lane-change, merging into tr afﬁc, etc.). It is noted that in
+the proposed approach, the parameters of the MPC strategy
+(i.e., Q,R,P,T,and N) can be tuned for adjusting the
+aggressiveness of a manoeuvre. Additionally, at each time
+step the optimisation problem underlying the robust MPC
+techniques is always feasible according to Theorem 2 in [31].
+IX. C
+ONCLUSION
+In this paper, a modular control framework for autonomous
+high-speed overtaking was presented with ( i) Local Risk Map
+generation, ( ii) safe target identiﬁcation, and ( iii) trajectory
+planning being the different modules of the system. In this
+framework the onus of situational awareness lies with the
+local risk map and safe zone identiﬁcation sub-systems andthe onus of feasible and collisi on-free trajectory generation
+lies with the MPC controller. This modular design allows the
+framework to avoid non-convex constraints allowing for anMPC formulation that can be solved using commonly available
+optimisation solvers. Moreover, a robust tube based MPC tech-
+nique with the nonlinearities in lateral and yaw dynamics due
+to variation in longitudinal velocity being modelled as additivedisturbances has been used. Additionally, a novel technique
+for designing collision avoidance constraints based only on
+lateral position and longitudina l velocity of the subject vehicle
+was presented. This allows the trajectory planning controller to
+generate feasible and safe trajectories with admissible inputs
+even while performing lateral manoeuvres with changing
+longitudinal velocity. Numerical results in a Simulink/IPG
+CarMaker co-simulation envir onment demonstrated that the
+algorithm is able to fulﬁl the safety considerations for high
+speed overtaking manoeuvre and generate trajectories which
+are also compatible with the vehicle dynamics and safetyconsiderations. Furthermore, comparing the results of the
+technique proposed to a normal MPC demonstrated the added
+beneﬁts of the robust based approach. As future work the
+proposed framework will be extended to ( i) more challenging
+overtaking scenarios with multiple trafﬁc participants, externaldisturbances, etc. and ( ii) other manoeuvres under different
+road geometries.
+R
+EFERENCES
+[1] A. Eskandarian, Handbook of Intelligent Vehicles ,v o l .2 .B e r l i n ,
+Germany: Springer, 2012.
+[2] P. Petrov and F. Nashashibi, “Modeling and nonlinear adaptive control
+for autonomous vehicle overtaking,” IEEE Trans. Intell. Transp. Syst. ,
+vol. 15, no. 4, pp. 1643–1656, Aug. 2014.
+[3] B. Vanholme, D. Gruyer, B. Lusetti, S. Glaser, and S. Mammar, “Highly
+automated driving on highways based on legal safety,” IEEE Trans.
+Intell. Transp. Syst. , vol. 14, no. 1, pp. 333–347, Mar. 2013.
+[4] J. Baber, J. Kolodko, T. Noel, M. Parent, and L. Vlacic, “Cooperative
+autonomous driving: Intelligent vehicles sharing city roads,” IEEE
+Robot. Autom. Mag. , vol. 12, no. 1, pp. 44–49, Mar. 2005.
+[5] G. Hegeman, K. Brookhuis, and S. Hoogendoorn, “Opportunities of
+advanced driver assistance systems towards overtaking,” Eur. J. Transp.
+Infrastruct. Res. , vol. 5, no. 4, pp. 1–16, 2005.
+[6] C. Thiemann, M. Treiber, and A. Kesting, “Estimating acceleration and
+lane-changing dynamics based o n NGSIM trajectory data,” in Proc. 87th
+Transp. Res. Board Annu. , vol. 43, 2008, pp. 90–101.
+[7] T. Shamir, “How should an autonomous vehicle overtake a slower
+moving vehicle: Design and analysis of an optimal trajectory,” IEEE
+Trans. Autom. Control , vol. 49, no. 4, pp. 607–610, Apr. 2004.
+[8] E. I. Vlahogianni, “Modeling dura tion of overtaking in two lane high-
+ways,” Transp. Res. F , Trafﬁc Psychol. Behav. , vol. 20, pp. 135–146,
+Sep. 2013.
+[9] S. Glaser, B. Vanholme, S. Mamma r, D. Gruyer, and L. Nouveliére,
+“Maneuver-based trajectory planni ng for highly autonomous vehicles on
+real road with trafﬁc and driver interaction,” IEEE Trans. Intell. Transp.
+Syst. , vol. 11, no. 3, pp. 589–606, Sep. 2010.
+[10] L. Ma, J. Xue, K. Kawabata, J. Zhu, C. Ma, and N. Zheng, “A fast RRT
+algorithm for motion planning of autonomous road vehicles,” in Proc.
+17th IEEE Int. Conf. Intell. Transp. Syst. , Oct. 2014, pp. 1033–1038.
+[11] Y . Kuwata, G. A. Fiore, J. Teo, E. Frazzoli, and J. P. How, “Motion
+planning for urban driving using RRT,” in Proc. IEEE/RSJ Int. Conf.
+Intell. Robots Syst. , Sep. 2008, pp. 1681–1686.
+[12] M. Werling, J. Ziegler, S. Kammel, and S. Thrun, “Optimal
+trajectory generation for dynami c street scenarios in a Frenét
+Frame,” in Proc. IEEE Int. Conf. Robot. Autom. , May 2010,
+pp. 987–993.
+[13] W. Khaksar, K. S. M. Sahari, and T. S. Hong, “Application of sampling-
+based motion planning algorithms in autonomous vehicle navigation,”
+inAutonomous Vehicle . Rijeka, Croatia: InTech, 2016.
+[14] S. Kitazawa and T. Kaneko, “Cont rol target algorithm for direction
+control of autonomous vehicles in consideration of mutual accordance in
+mixed trafﬁc conditions,” in Proc. 13th Int. Symp. Adv. Vehicle Control ,
+Sep. 2016, p. 151.
+2322 IEEE TRANSACTIONS ON INTELLIGENT TRANSPORTATION SYS TEMS, VOL. 21, NO. 6, JUNE 2020
+[15] C. Katrakazas, M. Quddus, W.-H. Chen, and L. Deka, “Real-time motion
+planning methods for autonomous on-road driving: State-of-the-art and
+future research directions,” Transp. Res. C, Emerg. Technol. , vol. 60,
+pp. 416–442, Nov. 2015.
+[16] T. Shim, G. Adireddy, and H. Yuan, “Autonomous vehicle collision
+avoidance system using path planni ng and model-predictive-control-
+based active front steering and wheel torque control,” Proc. Inst. Mech.
+Eng., D, J. Automobile Eng. , vol. 226, no. 6, pp. 767–778, Jun. 2012.
+[17] P. Raksincharoensak, T. Ehira, K. Shimono, and Y . Tagawa,
+“Autonomous vehicle trajectory pla nning and control based on virtual
+disturbance compensation via simu lation of feedback control systems,”
+inProc. Int. Symp. Adv. Vehicle Control , Sep. 2016, p. 189.
+[18] G. Franzèand W. Lucia, “A receding horizon control strategy for
+autonomous vehicles in dynamic environments,” IEEE Trans. Control
+Syst. Technol. , vol. 24, no. 2, pp. 695–702, Mar. 2016.
+[19] N. Murgovski and J. Sjöberg, “Pred ictive cruise control with autonomous
+overtaking,” in Proc. IEEE 54th Annu. Conf. Decis. Control (CDC) ,
+Dec. 2015, pp. 644–649.
+[20] J. Karlsson, N. Murgovski, and J. Sjöberg, “Temporal vs. spatial
+formulation of autonomous overtaking algorithms,” in Proc. IEEE 19th
+Int. Conf. Intell. Transp. Syst. (ITSC) , Nov. 2016, pp. 1029–1034.
+[21] Y . Gao et al. , “Spatial predictive cont rol for agile semi-autonomous
+ground vehicles,” Proc. 11th Int. Symp. Adv. Vehicle Control ,v o l .2 ,
+Sep. 2012, pp. 1–6.
+[22] J. Nilsson, P. Falcone, M. Ali, and J. Sjöberg, “Receding horizon
+maneuver generation for automated highway driving,” Control Eng.
+Pract. , vol. 41, pp. 124–133, Aug. 2015.
+[23] J. Nilsson, Y . Gao, A. Carvalho, and F. Borrelli, “Manoeuvre generation
+and control for automated highway driving,” IFAC Proc. Volumes ,
+vol. 47, no. 3, pp. 6301–6306, 2014.
+[24] J. Jiang and A. Astolﬁ, “Shared-control for a rear-wheel drive car:
+Dynamic environments and disturbance rejection,” IEEE Trans. Human-
+Mach. Syst. , vol. 47, no. 5, pp. 723–734, Oct. 2017.
+[25] J. Jiang, P. D. Franco, and A. Astolﬁ, “Shared control for the kinematic
+and dynamic models of a mobile robot,” IEEE Trans. Contr. Sys. Techn. ,
+vol. 24, no. 6, pp. 2112–2124, Nov. 2016.
+[26] A. Gray, Y . Gao, T. Lin, J. K. Hedrick, H. E. Tseng, and F. Borrelli,
+“Predictive control for agile semi -autonomous ground vehicles using
+motion primitives,” in Proc. Amer. Control Conf. (ACC) , Jun. 2012,
+pp. 4239–4244.
+[27] G. Usman and F. Kunwar, “Autonomous vehicle overtaking-an online
+solution,” in Proc. IEEE Int. Conf. Autom. Logistics , Aug. 2009,
+pp. 596–601.
+[28] U. Ghumman, F. Kunwar, and B. Benhabib, “Guidance-based on-line
+motion planning for autonomous highway overtaking,” Int. J. Smart
+Sens. Intell. Syst. , vol. 1, no. 2, pp. 549–571, 2008.
+[29] S. Dixit et al. , “Trajectory planning and tracking for autonomous
+overtaking: State-of-the-art and future prospects,” Annu. Rev. Control ,
+vol. 45, pp. 76–86, Jan. 2018.
+[30] S. Dixit et al. , “Trajectory planning for autonomous high-speed overtak-
+ing using MPC with terminal set constraints,” in Proc. 21st Int. Conf.
+Intell. Transp. Syst. (ITSC) , Nov. 2018, pp. 1061–1068.
+[31] I. Alvarado, D. Limon, T. Alamo, M. Fiacchini, and E. F. Camacho,
+“Robust tube based MPC for tracking of piece-wise constant references,”
+inProc. 46th IEEE Conf. Decision Control , Dec. 2007, pp. 1820–1825.
+[32] D. Limon, I. Alvarado, T. Alamo, and E. F. Camacho, “Robust tube-
+based MPC for tracking of constrained linear systems with additive
+disturbances,” J. Process Control , vol. 20, no. 3, pp. 248–260, Mar. 2010.
+[33] J. M. Maciejowski, Predictive Control: With Constraints . London, U.K.:
+Pearson, 2002.
+[34] A. Fedotov, V . Patsko, and V . Turova, “Reachable sets for simple models
+of car motion,” in Recent Advances in Mobile Robotics . IntechOpen,
+2011.
+[35] T. D. Gillespie, Fundamentals of Vehicle Dynamics . Warrendale, PA,
+USA: SAE International, 1997.
+[36] V . Milanés et al. “Intelligent automatic overtaking system using vision
+for vehicle detection,” Expert Syst. Appl. , vol. 39, no. 3, pp. 3362–3373,
+Feb. 2012.
+[37] R. Rajamani, “Lateral vehicle dynamics,” in Vehicle Dynamics and
+Control . Boston, MA, USA: Springer, 2012, ch. 2, pp. 15–46.
+[38] J. Kong, M. Pfeiffer, G. Schildbach, and F. Borrelli, “Kinematic and
+dynamic vehicle models for autonomous driving control design,” in Proc.
+IEEE Intell. Vehicles Symp. (IV) , Jun. 2015, pp. 1094–1099.
+[39] P. Polack, F. Altché, B. D’Andréa-Novel, and A. de La Fortelle,
+“The kinematic bicycle model: A consistent model for planning feasible
+trajectories for autonomous vehicles,” in Proc. IEEE Intell. Vehicles
+Symp. (IV) , Jun. 2017, pp. 812–818.[40] K. Mad˙ aset al. “On path planning methods for automotive colli-
+sion avoidance,” in Proc. Intell. Vehicles Symp. (IV) , Jun. 2013,
+pp. 931–937.
+[41] A. Brown and S. Brennan, “On t he required complexity of vehicle
+dynamic models for use in simulation-based highway design,” J. Saf.
+Res., vol. 49, pp. 105.e1–112, Jun. 2014.
+[42] A. Carvalho, Y . Gao, A. Gray, H. E. Tseng, and F. Borrelli, “Predictive
+control of an autonomous ground vehicl e using an iterative linearization
+approach,” in Proc. 16th Int. IEEE Conf. Intell. Transp. Syst. (ITSC) ,
+Oct. 2013, pp. 2335–2340.
+[43] J. B. Rawlings and D. Q. Mayne, Model Predictive Control: Theory
+Design . San Francisco, CA, USA: Nob Hill, 2009.
+[44] S. V . Rakovic, E. C. Kerrigan, K. I. Kouramas, and D. Q. Mayne,
+“Invariant approximations of the minimal robust positively invariant set,”
+IEEE Trans. Autom. Control , vol. 50, no. 3, pp. 406–410, Mar. 2005.
+[45] T. Besselmann and M. Morari, “ Autonomous vehicle steering using
+explicit LPV-MPC,” in Proc. Eur. Control Conf. , Aug. 2009,
+pp. 2628–2633.
+[46] E. Semsar-Kazerooni, J. Verhaegh, J. Ploeg, and M. Alirezaei, “Coop-
+erative adaptive cruise control: An artiﬁcial potential ﬁeld approach,” inProc. IEEE Intell. Vehicles Symp. (IV) , Jun. 2016, pp. 361–367.
+[47] E. Semsar-Kazerooni, K. Elferink, J. Ploeg, and H. Nijmeijer, “Multi-
+objective platoon maneuvering using artiﬁcial potential ﬁelds,” IFAC-
+PapersOnLine , vol. 50, no. 1, pp. 15006–15011, Jul. 2017.
+[48] M. T. Wolf and J. W. Burdick, “Artiﬁcial potential functions for highway
+driving with collision avoidance,” in Proc. IEEE Int. Conf. Robot.
+Autom. , May 2008, pp. 3731–3736.
+[49] R. V olpe and P. Khosla, “Manipulat or control with superquadric artiﬁcial
+potential functions: Theory and experiments,” IEEE Trans. Syst., Man,
+Cybern. , vol. 20, no. 6, pp. 1423–1436, Nov./Dec. 1990.
+[50] J. Nilsson, “Automated driving m aneuvers-trajectory planning via
+convex optimization in the model predictive control framework,”
+Ph.D. dissertation, Dept. Signa ls Syst., Chalmers Univ. Technol.,
+Gothenburg, Sweden, 2016.
+[51] S. Ulbrich and M. Maurer, “Towa rds tactical lane change behavior
+planning for automated vehicles,” in Proc. IEEE 18th Int. Conf. Intell.
+Transp. Syst. , Sep. 2015, pp. 989–995.
+[52] J. Guanetti, Y . Kim, and F. Borrelli, “Control of connected and auto-
+mated vehicles: State of the art and future challenges,” Annu. Rev.
+Control , vol. 45, pp. 18–40, Jan. 2018.
+[53] J. L. Garriga and M. Soroush, “Mode l predictive control tuning methods:
+Ar e v i e w , ” Ind. Eng. Chem. Res. , vol. 49, no. 8, pp. 3505–3515,
+Mar. 2010.
+[54] G. A. Nery, Jr., M. A. F. Martins, and R. Kalid, “A PSO-based optimal
+tuning strategy for constrained multivariable predictive controllers withmodel uncertainty,” ISA Trans. , vol. 53, no. 2, pp. 560–567, Mar. 2014.
+[55] S. Dixit, U. Montanaro, S. Fallah, M. Dianati, and A. Mouzakitis,
+“Integral MRAC with bounded switchi ng gain for autonomous vehicle
+lateral tracking (Submitted),” IEEE Trans. Control Syst. Technol. ,t ob e
+published.
+[56] N. H. Amer, H. Zamzuri, K. Hudha, and Z. A. Kadir, “Modelling
+and control strategies in path tracking control for autonomous groundvehicles: A review of state of the art and challenges,” J. Intell. Robot.
+Syst. , vol. 86, no. 2, pp. 225–254, May 2017.
+[57] A. Sorniotti, P. Barber, and S. D. Pinto, “Path tracking for auto-
+mated driving: A tutorial on contro l system formulations and ongoing
+research,” in Proc. Autom. Driving , 2017, pp. 71–140.
+[58] J. M. Snider, “Automatic steering methods for autonomous
+automobile path tracking,” Robot. Inst., Pittsburgh, PA, USA,Tech. Rep. CMU-RITR-09-08, 2009.
+[59] A. Rupp and M. Stolz, “Survey on control schemes for automated
+driving on highways,” in Proc. Autom. Driving , 2017, pp. 43–69.
+Shilp Dixit received the M.Sc. degree in automo-
+tive technology from the Eindhoven University of
+Technology, Eindhoven, The Netherlands, in 2015.He is currently pursuing the Ph.D. degree with the
+Centre of Automotive Engineering, University of
+Surrey, Guildford, U.K. His research interests arevehicle dynamics and control, trajectory planningand tracking for autonomous vehicles, and intelligent
+vehicles.
+DIXIT et al. : TRAJECTORY PLANNING FOR AUTONOMOUS HIGH-SPEED OVERTAKING IN STRUCTURED ENVIRONMENTS 2323
+Umberto Montanaro received the Laurea (M.Sc.)
+degree (cum laude) in computer science engineering
+from the University of Napl es Federico II, Naples,
+Italy, in 2005, and the Ph.D. degrees in control
+engineering and in mechanical engineering fromthe University of Naples Federico II, in 2009 and2016, respectively. From 2010 to 2013, he was a
+Research Fellow with the Italian National Research
+Council (Istituto Motori). He served as a tempo-rary Lecturer in automation and process control
+with the University of Naples Federico II. He is
+currently a Lecturer in control systems for automotive engineering withthe Department of Mechanical Engin eering Sciences, University of Surrey,
+Guildford, U.K. The scientiﬁc results he has obtained till now have been
+the subject of more than 60 scientiﬁc articles published in peer-reviewed
+international scientiﬁc journals and conferences. His research interests rangefrom control theory to control applicatio n and include: adaptive control, with
+special care to model reference adaptive control, control of piecewise afﬁne
+systems, control of mechatronics systems, automotive systems, and connectedautonomous vehicles.
+Mehrdad Dianati was a Professor with the 5G Inno-
+vation Centre (5GIC), University of Surrey, where
+he is currently a Visiting Professor. He is also a
+Professor of autonomous and connected vehicleswith the Warwick Manufacturing Group (WMG),
+University of Warwick. He has been involved in
+a number of national and in ternational projects as
+the project leader and wor k-package leader in recent
+years. He has worked in the industry for more than
+9 years as a senior software/hardware developer
+and the director of R&D. He frequently provides
+voluntary services to the research community in various editorial roles; for
+example, he has served as an Associate Editor for the IEEE T
+RANSACTIONS
+ONVEHICULAR TECHNOLOGY ,IET Communications , and Wiley’s Journal
+of Wireless Communications and Mobile .
+David Oxtoby received the B.Eng. degree in elec-
+tronic engineering from the University of York,U.K., in 1993. He worked in the ﬁeld of telecom-munication for Nortel Networks from 1993 to
+2002, before making a career change into Auto-
+motive in 2003, ﬁrst working for Nissan onaudio/navigation, tele phone, and camera systems.
+Since 2013, he has been with Jaguar Land Rover’s
+Electrical Research Team, Jaguar Land Rover Ltd.,on a wide variety of projects and is now responsiblefor a team delivering new electrical technologies
+from initial idea to concept ready for production.
+Tom Mizutani received the M.Eng. degree in com-
+puter systems and software engineering from theUniversity of York, U.K., in 2003. From 2003 to
+2011, he was with the telecommunications industry
+in R&D for new services, before moving to JaguarLand Rover. He is currently a Lead Engineer withJLR Electrical Research, Jaguar Land Rover Ltd.,
+where he is involved in a range of projects relating
+to vehicle connectivity and autonomy.
+Alexandros Mouzakitis is currently the Head
+of the Electrical, Electronics and Software Engineer-
+ing Research Department, Jaguar Land Rover Ltd.He has over 15 years of technological and manage-rial experience especially in automotive embedded
+systems. In his current role, he is responsible
+for leading a multidiscip linary research and tech-
+nology department dedicated to deliver a port-
+folio of advanced research projects in the areas
+of human–machine interface, digital transformation,self-learning vehicle, smart/connected systems, and
+onboard/off board data platforms. In his previous position within JLR,
+he served as the Head of the Model-base d Product Engineering Department,
+responsible for model-based development, and automated testing standardsand processes.
+Saber Fallah is currently an Associate Professor
+with the University of Surrey. He is also the Directorof the Connected and Autonomous Vehicles Lab(CA V-Lab), Department of Mechanical Engineering
+Sciences. Since joining the University of Surrey,
+he has been contributing to securing research fund-ing from EPSRC, Innovate UK, EU, KTP, and
+industry.
+He has coauthored a textbook Electric and Hybrid
+Vehicles: Technologies, Modeling and Control-AMechatronics Approach (John Wiley Publishing
+Company, 2014). The book addresses the fundamentals of mechatronic design
+in hybrid and electric vehicles. His work h as contributed to the state-of-the-art
+research in the areas of connected au tonomous vehicles and advanced driver
+assistance systems. So far, his research has produced four patents and more
+than 40 peer reviewed publications in high-quality journals and well-knownconferences. He is the Co-Editor o f the book of conference proceedings
+resulted from the organization of the TAROS 2017 Conference (Springer,
+2017).

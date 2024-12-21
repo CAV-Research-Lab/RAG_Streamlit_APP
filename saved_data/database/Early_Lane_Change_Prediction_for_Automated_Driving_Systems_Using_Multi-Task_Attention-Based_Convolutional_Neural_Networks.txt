@@ -1,0 +1,1108 @@
+=== Metadata ===
+{
+    "file_name": "Early_Lane_Change_Prediction_for_Automated_Driving_Systems_Using_Multi-Task_Attention-Based_Convolutional_Neural_Networks.pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Early_Lane_Change_Prediction_for_Automated_Driving_Systems_Using_Multi-Task_Attention-Based_Convolutional_Neural_Networks.pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+758 IEEE TRANSACTIONS ON INTELLIGENT VEHICLES, VOL. 7, NO. 3, SEPTEMBER 2022
+Early Lane Change Prediction for Automated Driving
+Systems Using Multi-Task Attention-Based
+Convolutional Neural Networks
+Sajjad Mozaffari , Eduardo Arnold , Mehrdad Dianati , Senior Member, IEEE , and Saber Fallah
+Abstract —Lane change (LC) is one of the safety-critical manoeu-
+vres in highway driving according to various road accident records.
+Thus, reliably predicting such manoeuvre in advance is critical for
+the safe and comfortable operation of automated driving systems.
+The majority of previous studies rely on detecting a manoeuvre that
+has been already started, rather than predicting the manoeuvre in
+advance. Furthermore, most of the previous works do not estimate
+the key timings of the manoeuvre (e.g., crossing time), which can
+actually yield more useful information for the decision making in
+the ego vehicle. To address these shortcomings, this paper proposes
+a novel multi-task model to simultaneously estimate the likelihood
+of LC manoeuvres and the time-to-lane-change (TTLC). In both
+tasks, an attention-based convolutional neural network (CNN) is
+used as a shared feature extractor from a bird’s eye view represen-
+tation of the driving environment. The spatial attention used in the
+CNN model improves the feature extraction process by focusing on
+the most relevant areas of the surrounding environment. In addi-
+tion, two novel curriculum learning schemes are employed to train
+the proposed approach. The extensive evaluation and comparative
+analysis of the proposed method in existing benchmark datasets
+show that the proposed method outperforms state-of-the-art LC
+prediction models, particularly considering long-term prediction
+performance.
+Index Terms —Vehicle behaviour prediction, automated driving,
+multi-task learning, curriculum learning, attention mechanism.
+I. I NTRODUCTION
+ANTICIPATING the future behaviour of surrounding vehi-
+cles is a critical function of both Advanced Driving As-
+sistance Systems (ADAS) and fully automated driving systems.
+Failing to do so may lead to either hazardous driving decisions
+or forcing unduly conservative driving, compromising the safety
+or efﬁciency of the driving system, respectively.
+Manuscript received 12 February 2022; revised 7 March 2022; accepted 13
+March 2022. Date of publication 23 March 2022; date of current version 24
+October 2022. This work was supported by Jaguar Land Rover and U.K.-EPSRC
+as part of the jointly funded Towards Autonomy: Smart and Connected Con-
+trol(TASCC) Programme under Grant EP/N01300X/1. (Corresponding author:
+Sajjad Mozaffari.)
+Sajjad Mozaffari, Eduardo Arnold, and Mehrdad Dianati are with Warwick
+Manufacturing Group, University of Warwick, CV4 7AL Coventry, U.K. (e-
+mail: sajjad.mozaffari@warwick.ac.uk; e.arnold@warwick.ac.uk; m.dianati@
+warwick.ac.uk).
+Saber Fallah is with the Department of Mechanical Engineering Sciences,
+University of Surrey, GU2 7XH Guildford, U.K. (e-mail: s.fallah@surrey.
+ac.uk).
+Color versions of one or more ﬁgures in this article are available at
+https://doi.org/10.1109/TIV .2022.3161785.
+Digital Object Identiﬁer 10.1109/TIV .2022.3161785
+Fig. 1. Example of an LC scenario in a left-hand driving road system. Target
+Vehicle (TV): Green Car, Ego Vehicle(EV): Red Car, and Surrounding Vehicle
+1 (SV1): Purple Car.
+In highway driving, lane change (LC) manoeuvres are con-
+sidered to be safety-critical as they can lead to hazardous in-
+terference with the trafﬁc in other lanes. A major crash dataset
+collected between 2010 and 2017 in the United Arab Emirates
+indicates that accidents associated with unsafe LC manoeuvres
+are among the main causes of severe injuries in highway driv-
+ing [1]. Although monitoring the indicator signals can be a good
+detector of LC manoeuvres, studies in USA [2] and China [3]
+show that less than 50% of drivers are using signal indicators
+for doing an LC manoeuvre. The LC manoeuvres that occur
+without proper signalling are often the culprit in accidents. Such
+hazards can be detected by analysing the motion of the vehicles,
+which is the main focus of this paper. A reliable LC prediction
+model in such cases can provide an early warning of emerging
+LC manoeuvres of other vehicles. Such information can then
+be used by the ego-driver or the automated driving system to
+pro-actively make driving decisions and alleviate the risk of
+accidents associated with LC manoeuvres. An early manoeuvre
+prediction has a particularly higher value in highway driving
+scenarios, where the high-speed of vehicles require a more agile
+driving style and decision making.
+An example of an LC scenario in a highway driving envi-
+ronment is illustrated in Fig. 1. In this scenario, the Target
+Vehicle (TV) decides to perform a lane change manoeuvre at
+timeTintent due to the slow-moving preceding vehicle (i.e., SV1:
+Surrounding Vehicle 1). The LC manoeuvre starts at Tstart,a s
+the vehicle drifts towards the left lane marking. The TV crosses
+the lane marking at Tcross and ﬁnishes its LC manoeuvre by
+stabilizing its lateral position at the centre of the left lane at
+Tend. The Ego vehicle (EV), which is already driving on the left
+lane, is supposed to decelerate as soon as it realises the imminent
+LC manoeuvre by the TV . Therefore, the EV needs to have an
+early and reliable prediction of the LC manoeuvre and its key
+timings (e.g., Tcross) to perform a smooth and safe deceleration.
+2379-8858 © 2022 IEEE. Personal use is permitted, but republication/redistribution requires IEEE permission.
+See https://www.ieee.org/publications/rights/index.html for more information.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:31:44 UTC from IEEE Xplore.  Restrictions apply. 
+MOZAFFARI et al. : EARLY LANE CHANGE PREDICTION FOR AUTOMATED DRIVING SYSTEMS USING MULTI-TASK 759
+There have been several studies on LC prediction in the
+literature. A major group of existing studies has shown to be
+able to predict a lane crossing that occurs up to 2.5 seconds
+in the future [4], [5], while an LC manoeuvre, from Tstartto
+Tend, usually takes between 3 to 5 seconds [6]. This means
+that most existing studies can only predict an LC manoeuvre
+afterTstart, i.e., after the manoeuvre has already started. These
+studies mostly rely on detecting the lateral drift of the TV
+towards the lane marking. However, there are fewer clues in
+the past motion of the TV for predicting its future manoeuvre
+in longer horizons. Therefore, long-term prediction approaches
+need to understand the trafﬁc context around the TV , rather
+than solely analysing the recent motion of the TV . In recent
+years, some studies attempted to extend the prediction horizon
+by using deep learning-based models, mainly Long Short-Term
+Memories (LSTMs) [7], [8]. However, the use of LSTMs for
+long-term LC prediction is impeded by their shortcoming in
+extracting spatial interdependency which is required to model
+the interaction among nearby trafﬁc agents.
+In most existing studies [5], [7], [9]–[12] the problem of
+LC prediction is deﬁned as predicting the likelihood of LC
+manoeuvres over the next few seconds. In such a formulation, an
+LC manoeuvre of the TV occurring early in the future is treated
+equally as an LC manoeuvre happening farther in time. As a
+result, such an approach cannot inform the EV about the key
+timings of the TV’s manoeuvre, which is crucial for safe and
+comfortable trajectory planning in automated vehicles.
+In this paper, we address the aforementioned shortcomings
+by proposing a multi-task attention-based prediction model. We
+apply a novel Convolutional Neural Network (CNN) with spatial
+attention to a bird’s eye view representation of the trafﬁc context
+around the TV to extract relevant features. An attention module
+is employed to selectively focus on the most informative areas of
+the TV’s surroundings to improve the feature extraction process.
+The features extracted by the attention-based CNN are then
+used to simultaneously predict the likelihood of LC manoeuvre
+and the time-to-lane-change in a Multi-Task Learning (MTL)
+approach. Also, two Curriculum Learning (CL) criteria are
+introduced during the training phase to increase the generali-
+sation of the proposed model. The proposed joint LC and TTLC
+prediction model is trained and evaluated using a public large
+scale trajectory dataset collected from German highways [13].
+The contributions of this work are summarised below:rA novel multi-task formulation of lane change prediction to
+predict both the type and timing of lane change manoeuvre.rA novel spatial attention module on top of CNN-based
+feature extractor to selectively focus on informative areas
+around target vehicle.rComprehensive evaluation of the proposed model and
+some state-of-the-art prediction models in terms of pre-
+diction performance and horizon in both regression and
+classiﬁcation formulation.
+The rest of this paper is organised as follows. Section II
+reviews recent LC prediction approaches based on their input
+representation, prediction model, and output type. Section III
+discusses the system model and problem formulation.
+Section IV introduces the proposed method and its key
+components. Section V presents the experiments’ setup forevaluating the performance of the proposed method, key results
+from those evaluations and the discussions of the insights that
+can be learned from our performance evaluation. Finally, some
+key concluding remarks are given in section VI.
+II. R ELATED WORKS
+Overviews of vehicle behaviour prediction approaches are
+presented in [14], [15]. Vehicle behaviour prediction studies
+can be divided based on output type into trajectory predic-
+tion [16]–[18] and manoeuvre prediction [19]–[21]. A trajectory
+prediction model attempts to predict the continuous states of a
+vehicle (e.g., x-y location) for each timestep during a prediction
+window, while a manoeuvre prediction model anticipates the
+type of manoeuvre a vehicle is intended to perform. As a
+sub-category of manoeuvre prediction, lane change prediction
+has been widely studied in recent years. Studies on lane change
+prediction can be further divided into ego vehicle lane change
+prediction (also known as driver lane change inference) and
+surrounding vehicle lane change prediction, which are sepa-
+rately reviewed in [22] and [23], respectively. The focus of this
+paper is on lane change manoeuvre prediction of surrounding
+vehicles in highway driving scenarios. In this section, we review
+lane change manoeuvre prediction studies based on their input
+representation and prediction model and we highlight how our
+paper is differentiated from them.
+A. Input Representation
+Different input data can provide clues for an upcoming lane
+change manoeuvre. The inputs can be categorised as follow:
+1) TV’s States: The state of the TV in recent time-steps con-
+tains the main clue for a lane change manoeuvre happening
+in near future. Therefore, most lane change detection or
+short-term prediction rely only on this type of feature.
+TV’s lateral position in the lane, lateral and longitudinal
+velocity and acceleration are examples of TV states used
+as an input in previous studies [10], [24], [25].
+2) Environment States: In early lane change prediction, there
+are not enough information in recent TV’s states since this
+is the time that the driver is planning to perform a lane
+change. The intention of a lane change can form based
+on an internal driving goal (e.g., reaching an exit on a
+highway) or static environmental conditions (e.g., ending
+of a lane in merging scenario) or dynamic environment
+conditions (e.g., a slow-moving preceding vehicle). Al-
+though it is usually not possible to observe the internal
+driving goal of a vehicle’s driver, automated vehicles can
+observe the driving environment through perception sen-
+sors, V2V/V2I communication and HD maps. Therefore
+TV’s states can be augmented with a representation of
+static and dynamic environment states for longer-term pre-
+dictions. In [7], [11], [26]–[28] a list of interaction-aware
+features like relative distance to surrounding vehicles,
+relative velocity, and so on has been used to model the
+interaction between the TV and surrounding vehicles.
+Some of these studies also contain features describing
+the driving environment such as distance to the nearest
+on- or off-ramp [27] and the existence of the lanes [8],
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:31:44 UTC from IEEE Xplore.  Restrictions apply. 
+760 IEEE TRANSACTIONS ON INTELLIGENT VEHICLES, VOL. 7, NO. 3, SEPTEMBER 2022
+[26]. In [29], the features describing the lateral motion
+of vehicles have been removed from input representation
+to predict very long (5 to 10 seconds) left lane change
+manoeuvres. They argue that lateral features are not in-
+formative in very long prediction horizons. Some of the
+existing studies utilize Deep Neural Networks (DNNs)
+to learn relevant features from raw sensor data [5], [9].
+Although such a strategy leads to no information loss,
+large computational resources are required to learn rel-
+evant features from high-dimensional raw sensor data,
+which is challenging due to the limited computational
+resources of an automated vehicle. Therefore, some stud-
+ies try to learn features from a simpliﬁed bird eye view
+(BEV) representation of the driving environment instead
+of raw sensor data [4], [12], [30], [31]. This representation
+depicts vehicles as their bounding boxes and the road
+markings and it has a signiﬁcantly lower dimensionality
+compared to raw sensor data. Although a BEV repre-
+sentation has a larger dimension compared to using a
+list of interaction-aware features, it has been shown that
+representing TV and surrounding vehicles states as well
+as the static driving environment in a BEV image rep-
+resentation can facilitate joint feature learning for vehicle
+behaviour prediction using deep neural networks [4], [12],
+[30], [31]. In this paper, we adopt the same approach
+and design a simpliﬁed BEV input representation for the
+problem of lane change prediction. Section IV-A explains
+the details of the simpliﬁed BEV representation used in our
+study.
+3) Driver’s States: Driver’s states such as head position and
+gaze movement are usually used when the behaviour of
+ego vehicle is being predicted [32], [33]. Such features are
+usually not easily observable in the case of surrounding
+vehicle lane change prediction. Therefore, the driver’s
+states are not considered in our input representation.
+B. Prediction Model
+A group of existing studies utilise graphical models to predict
+LC manoeuvre. Graphical models are probabilistic models for
+which a graph, deﬁned using domain knowledge, expresses
+the conditional dependencies among input, output, and hidden
+random variables. Hidden Markov Models (HMMs), as a sub-
+class of graphical models, have been widely used in behaviour
+recognition and prediction [34]. In [20] two continuous HMMs
+are used to model lane keeping and lane changing behaviour
+separately. The model in [20] has been trained and tested on the
+NGSIM I-80 dataset with a recall rate around 85% in 0.5 seconds
+and 65% in 4 seconds prediction horizons. In [28], a Bayesian
+network is used to compute the driver’s contentedness (i.e.,
+likelihood of occupancy) for all lanes the driver could drive. The
+driver’s contentedness for each lane is then employed to predict
+the LC intentions. Their approach relies on lane change intention
+labels extracted from human driving in a simulator environment.
+In [21] a multi-agent simulation with model-based loss function
+for interaction modelling and a Bayesian network classiﬁer has
+been used as a combined model-based and learning-based ap-
+proach. They have reported the lateral motion prediction resultsfor prediction horizons up to 2.5 seconds. In [26], a hybrid
+Dynamic Bayesian Network (DBN) is adopted to predict LC
+intention using a list of interaction-aware features. The latent
+variables of the prediction model are pre-trained using simu-
+lation data, followed by training on German highway driving
+data. Since exact inference is intractable in DBNs, time-series
+information is not considered in the inference process. The Re-
+ciever Operating Characteristic (ROC) of the proposed approach
+has been reported for lane change occurring 3 seconds in the
+future. A three-layer DBN has been used in [25] to estimate the
+driver LC intention and driver characteristic. Then, a Gaussian
+process is exploited to predict trajectory based on predicted
+LC manoeuvre. The authors of [25] reported achieving 95%
+accuracy in LC prediction; however, the prediction horizon for
+this performance has not been reported.
+The advantage of graphical models lies in their ability to
+interpret the model’s prediction by examining the values of the
+graph nodes. However, the drawback of such an approach stems
+from their limited expression capabilities since no reasoning
+can be done beyond the ﬁxed relation deﬁned between the graph
+nodes. In addition, the exact inference in graphical models is
+often intractable. Therefore, most prediction approaches using
+graphical models are considered for short to medium prediction
+horizons up to 3 seconds.
+Most recent works exploit DNNs for LC prediction. For
+example, fully connected feed-forward neural networks have
+been used in [11], [24], [35], [36]. Several existing studies apply
+variants of recurrent neural networks to predict LC manoeu-
+vre [7], [8], [10], [27], [37], inspired by their success in data
+sequence analysis. In [10] and [37], a single LSTM is applied
+to TV-only and interaction-based features for LC prediction,
+respectively. In [7], a model containing several Gated Recurrent
+Unit (GRU) is proposed to model pairwise interaction between
+the TV and each of the SVs. Convolutional Neural Networks
+(CNNs) have been used in some of the existing studies mainly
+to model spatio-temporal dependencies in image-like input data
+such as simpliﬁed BEV representation [4], [12], [31] or raw
+sensor data [5], [9]. In this paper, a convolutional neural network
+is also constructed to learn lane change related features from
+stacked BEV input representation. In [27], the input features
+are categorized into TV’s motion, Right lane SVs, Left Lane
+SVs, Same lane SVs and Street features based on which part
+of the environment they represent. Then, an LSTM is used
+per feature group to create an internal representation of fea-
+tures. Finally, an attention mechanism is used to specify the
+importance of each group of features for LC prediction in each
+data sample. Attention mechanism has been also used in [18]
+to pay selective attention to a subset of surrounding vehicles
+in similar problem of trajectory prediction. Unlike [18], [27]
+where the attention mechanism is applied on each 1D vector
+of surrounding vehicles’ states, we propose a spatial attention
+mechanism on top of 2D feature maps of convolutional neural
+networks. The proposed spatial attention mechanism selectively
+focusses on different quarters of the driving environment around
+the TV . Unlike previous studies, the trafﬁc situation, including
+both static and dynamic contexts of each quarter simultaneously
+contribute to attention weights, which allows attending to free
+spaces as well as vehicles in each quarter.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:31:44 UTC from IEEE Xplore.  Restrictions apply. 
+MOZAFFARI et al. : EARLY LANE CHANGE PREDICTION FOR AUTOMATED DRIVING SYSTEMS USING MULTI-TASK 761
+Although DNNs have shown promising performance in LC
+prediction, they suffer from a lack of interpretability, which neg-
+atively affects the social acceptance, debugging, and validation
+of such approaches. The proposed spatial attention mechanism in
+this paper can increase the interpretability of our deep learning-
+based approach by providing an interpretable intermediate rep-
+resentation in the form of attention weights of each quarter area
+of the surrounding environment.
+There are a few studies that attempt to predict the timing
+of lane change manoeuvres [8], [38]. In [38], two quantile
+regression techniques, namely Linear Quantile Regression and
+Quantile Regression Forests have been compared in time to lane
+change prediction. Their approach relies on TV and environment
+states and provides probabilistic outputs. The results show that
+the Root Mean Square Error(RMSE) of prediction falls below
+1 s only in prediction horizons below 1.5 seconds. In a recent
+study [8], LSTM models have been thoroughly investigated for
+predicting the time until a vehicle changes the lane. The selected
+features are a list of interaction-aware features used in their
+previous study [39] and the problem is deﬁned as predicting
+the time to left lane change and the time to right lane change,
+separately.
+III. S YSTEM MODEL AND PROBLEM DEFINITION
+We assume a semi- or fully automated EV aims to predict
+the lane change manoeuvre of a nearby vehicle, called the
+TV . Both EV and TV are driving on a straight highway with
+an arbitrary number of lanes. There is an arbitrary number of
+surrounding vehicles (SVs) driving in the vicinity of the TV .
+Similar to most existing studies on LC prediction [4], [7], [10],
+[11], [24], [25], [27], [31], we assume a BEV camera installed
+on an infrastructure building or a drone is observing the driving
+environment, detecting the vehicles, and tracking them while
+driving on a road section. The vehicles’ tracking history, as well
+as the position of road markings, are assumed to be shared with
+the EV for the problem of LC prediction. Note that the vehicles’
+tracking data can also be obtained from egocentric perception
+sensors (instead of infrastructure sensors) with less coverage
+and accuracy due to their limited range and occlusion.We refer
+readers to [40] for a comparative study of different perception
+approaches for lane change prediction in highways.
+We divide the problem of LC prediction into a classiﬁcation
+and a regression sub-problem. The classiﬁcation problem aims
+to estimate the probability of LC manoeuvres occurring during
+a prediction window, Tpw. The LC manoeuvres are categorized
+into 1) Right Lane Change (RLC), 2) Left Lane Change (LLC),
+and 3) Lane Keeping (LK). The value of Tpwdetermines the
+maximum prediction horizon of the prediction model. In this
+study, we set Tpw=5.2sec which enables evaluating the predic-
+tion model for long prediction horizons while assures a sufﬁcient
+number of data samples to be extracted from the selected dataset
+(refer to section V-A). The regression problem aims to estimate
+the Time To Lane Change (TTLC). The TTLC is deﬁned as
+the shortest time until the centre of the TV crosses either left
+or right lane marking. Predicting TTLC is crucial since it is the
+ﬁrst time the TV interferes with the trafﬁc on adjacent lanes. The
+input data to both subproblems are the TV’s and its surroundingvehicles’ (SVs) states and the position of lane markings. during
+a temporal observation window of 2 seconds, Tobs=2 sec.
+IV . P ROPOSED METHOD
+This section presents the proposed multi-task attention-based
+LC prediction model and the curriculum learning schemes used
+in the training of the model. The processing steps in the proposed
+prediction model are summarised as follows:
+1) The observation of the TV and its SVs during Tobsare used
+to render a simpliﬁed BEV representation of the driving
+environment for each time-step of Tobs.
+2) An attention-based CNN is applied to the temporally
+stacked BEV representations to extract informative fea-
+tures for LC prediction.
+3) The features extracted from the previous step are used
+in two separate fully-connected networks to estimate the
+probability of LC manoeuvres and the TTLC.
+Fig. 2 illustrates the proposed method and its key processing
+steps.
+A. BEV Input Data Representation
+Three binary layers of information are considered in forming
+the BEV representation: (1) The vehicle layer is populated by the
+2D-bounding boxes, representing the vehicles at a single snap-
+shot of the environment, (2) lane layer depicts the lane markings,
+and (3) road layer speciﬁes the drivable area. The single-channel
+BEV representation is rendered by taking a layer-wise average
+of these three layers. Fig. 10 and 11 illustrates example of BEV
+representation in RLC and LLC scenarios. Two characteristics
+are considered in the BEV representation that facilitates the
+feature learning process. Firstly, unlike [4], [12] where the image
+is centred on the EV , we centre the BEV representation on the TV
+at each time step. This causes the position of lane markings in
+the representation to indicate the lateral position of the TV in the
+lane, which is one of the clear predictors of an LC manoeuvre.
+Centring the representation on the TV also allows encoding
+the relative states of the SVs compared to the TV which is
+informative in interaction modelling. Secondly, we use a lateral
+dimension resolution four times higher than the longitudinal
+dimension of the representation. This implies a magniﬁcation of
+lateral motions of vehicles in the representation which contains
+more informative features for the LC prediction problem. The
+size of the BEV representation in this study is considered to be
+200 by 80 pixels covering 200 meters of the road in the longi-
+tudinal direction and 20 meters in the lateral direction. The 20
+meters lateral coverage assures that the TV’s adjacent lanes are
+always included. The input to the convolutional neural network is
+a multi-channel image of size (Tobs∗FPS )×200×80, where
+each channel is a BEV representation rendered for a frame within
+observation window Tobs.
+B. Attention-Based CNN for Feature Learning
+We propose an attention-based CNN to extract relevant spatio-
+temporal features from the temporally stacked BEV representa-
+tion. Due to the sparsity of the BEV input representation, it is not
+required to use a very deep CNN, such as ResNet models [41].
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:31:44 UTC from IEEE Xplore.  Restrictions apply. 
+762 IEEE TRANSACTIONS ON INTELLIGENT VEHICLES, VOL. 7, NO. 3, SEPTEMBER 2022
+Fig. 2. Overview of key processing steps of the proposed method.
+Fig. 3. Architecture of the CNN model.
+Based on our empirical study, we consider a six-layer CNN
+including three convolution and three pooling layers. In each
+convolution layer, 16 learnable convolutional kernels are used
+with a size of 3∗3. The stride and padding of the kernels are
+set to 1 so that the size of the representation doesn’t change
+after passing a convolutional layer. Each convolutional layer is
+followed by a Maximum Pooling (Max-Pool) layer with a size of
+2∗2to reduce the dimensionality of input data and a Rectiﬁed
+Linear Unit (ReLU) activation function. Fig. 3 illustrates the
+architecture of the CNN model.
+The spatial attention mechanism is proposed to enhance the
+performance of feature learning. The attention mechanism, in-
+spired by the human brain, tries to selectively focus on a few
+relevant parts of the input data to estimate each output. In
+this study, the goal of employing an attention mechanism is
+to identify and focus on parts of the environment around the
+TV that have the most impact on the future behaviour of the
+TV . In a driving environment, normally only some part of the
+surrounding vehicles are contributing to the next manoeuvre of
+a vehicle. For example, a slow-moving vehicle in front usually
+leads to an RLC if there is a suitable gap in the right lane. In this
+example, the behaviour of SVs driving on the left lane does not
+inﬂuence the RLC decision made by the TV . Focusing on the
+relevant areas of the environment around the TV is expected to
+increase the performance of LC prediction. Therefore, we divide
+the input representation into four areas, namely, 1) TV’s Front
+Right (FR), 2) TV’s Front Left (FL), 3) TV’s Back Right(BR),
+and 4) TV’s Back Left (BL). Since the input images are centred
+on the TV and vehicles are driving from right to left in input
+images, these four areas correspond to top-left, bottom-left,
+top-right, and bottom-right of the input images, respectively,
+as illustrated in Fig. 4. The local connections in convolution and
+pooling layers of the CNN preserve the spatial location of the
+extracted features. Hence, the corresponding four areas in the
+Fig. 4. Four areas of input representation and their corresponding areas in the
+CNN feature map.
+CNN feature map, hare selected as the hidden representations
+of the respective four areas in the TV’s surrounding environment,
+namely,hFR,hFL,hBR, andhBL(see Fig. 4). Note that these
+feature maps represents the TV’s surrounding areas for all frames
+in the observation window. The attention weight for each area is
+estimated using a linear layer with softmax activation function
+as follows:
+αi=Softmax (Wˆhi+b), (1)
+where ˆhiis the ﬂattened vector of hi. The attention weight for
+areaiis used to create a mask miwith the same size as h.miis
+ﬁlled with values αiin the regions corresponding to hiand zero
+elsewhere. The output of feature learning model is computed as
+the context vector c:
+c=n/summationdisplay
+i=1mih, (2)
+C. Multi-Task Prediction (MTL)
+We leverage MTL in training our proposed prediction model
+for both future LC manoeuvre classiﬁcation and TTLC regres-
+sion tasks. Although it is possible to derive the classiﬁcation in-
+formation from TTLC estimates [8], we adopt an MTL approach
+to beneﬁt the generalisation gained by training the model on a
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:31:44 UTC from IEEE Xplore.  Restrictions apply. 
+MOZAFFARI et al. : EARLY LANE CHANGE PREDICTION FOR AUTOMATED DRIVING SYSTEMS USING MULTI-TASK 763
+similar parallel task. In addition, since the TTLC regression is
+more difﬁcult than the three-class classiﬁcation of future LC
+manoeuvres, the regressor performance can be enhanced by
+eavesdroping on features learnt by the classiﬁer.
+Fig. 2 provides an overview of the proposed model. The output
+of the attention-based CNN feature extractor is shared among
+the classiﬁer and the regressor sub-networks. Each of these
+sub-networks is a two-layer fully-connected neural network with
+ReLU activation function and dropout with a ratio of 0.5. The
+classiﬁer network has 128 hidden neurons with 3 outputs each
+corresponding to one of the LC manoeuvres. These outputs
+are followed by a softmax activation function to decode their
+values as probabilities of LC manoeuvres. The regressor network
+has 512 hidden neurons with single output that speciﬁes the
+predicted TTLC. A ReLU activation function is used at the
+output layer of the regression network as negative values are
+not accepted for the TTLC. We consider a Cross-Entropy (CE)
+and Mean-Squared Error (MSE) loss functions for the classiﬁer
+and regressor sub-networks as bellow:
+LCE=−1
+nn/summationdisplay
+i=13/summationdisplay
+c=1yi,clog ˆyi,c (3)
+LMSE =1
+nn/summationdisplay
+i=1(xi−ˆxi)2(4)
+In the above equations, nis the number of the training samples.
+yi,cand ˆyi,care the ground truth and predicted probability of
+sampleibelonging to class c, respectively. The ground-truth and
+predicted TTLC for the sample iare denoted as xiandhatxi,
+respectively. The proposed multi-task model is trained based on
+the summation of the classiﬁer and regressor losses as bellow:
+L=LCE+γLMSE (5)
+whereγdeﬁnes the ratio between the regressor and classiﬁer
+losses.
+D. Curriculum Learning (CL)
+We utilise curriculum learning based on two criteria speciﬁc to
+the LC prediction problem. First, predicting the LC manoeuvre
+in samples with smaller TTLC is generally easier compared
+to samples with larger TTLC. The reason is that as we get
+closer to the time when the TV crosses the lane marking, more
+explicit predictors can be found in the TV’s motion. As the
+TTLC increase, the chance of mistakenly predicting an LC as an
+LK manoeuvre increases, until TTLC>T pwwhere the future
+manoeuvre is actually considered as LK. Therefore, we start
+training the network with samples with near-zero TTLC and
+gradually expose samples with larger TTLC to the prediction
+model. Second, predicting a class within a three-class classiﬁ-
+cation task is normally considered easier than regressing a con-
+tinuous variable. Hence, we start the training process by giving
+more importance to the classiﬁcation task and gradually shift
+the focus to the regression task. This is achieved by increasing
+the loss ratio γin (5) from 0 to 1 during the training phase.
+Table I shows the TTLC and the loss ratio proﬁle used during
+the training process.TABLE I
+VALUES OF CL P ARAMETERS DURING INITIAL TRAINING EPOCHS AND
+REMAINING TRAINING EPOCHS
+Max included TTLC determines the maximum TTLC of included data samples
+in a epoch.
+V. P ERFORMANCE EVA L UAT I O N
+This section describes the evaluation of the proposed LC pre-
+diction method. First, the dataset and the LC scenario extraction
+steps are presented. Then, the implementation details of the
+proposed method are explained, followed by a discussion of the
+evaluation metrics. Next, the quantitative results comparing the
+proposed method with SOTA baseline models and the qualitative
+results are presented. Finally, an ablation study is performed on
+key components of our proposed method.
+A. Dataset and LC Scenario Extraction
+The Highway Drone Dataset (highD) [13] consists of natural-
+istic vehicle trajectory data recorded at German highways using
+a drone. It contains the trajectories of 110500 vehicles observed
+over a highway segment of 420 meters at six different locations.
+We extract the LC and LK scenarios from the highD dataset
+to train and evaluate our proposed LC prediction method. An
+LC scenario is a group of data samples from a single vehicle
+with TTLC values ranging from 0 to Tpw. Each data sample
+in an LC scenario at a given time t0contains the observation
+of the vehicles’ trajectories in the driving environment during
+[t0−Tobs,t0−1]. To have a balanced number of data samples
+per each value of TTLC, we do not consider LC scenarios where
+the corresponding trajectory data is not available for the full
+duration of Tobs+Tpwsec before the lane crossing. All the
+samples within an LC scenario are labelled as RLC or LLC
+according to the direction of the manoeuvre at the end of the
+scenario. An LK scenario is deﬁned as a group of data samples
+from a single vehicle with TTLC>T pw. Fig. 5 illustrates an
+example of LC and LK scenarios. Similar to LC scenarios, we
+considerTpw∗FPS data samples within an LK scenario. In the
+highD dataset, the number of LK scenarios are much higher than
+LC scenarios. However, to keep the dataset balanced, we under-
+sample the LK class so that the number of LK samples is equal
+to the average between the number of RLC and LLC samples.
+The challenging LK scenarios for training the prediction model
+are the ones that the TV changes its lane shortly after Tpw, since
+they can be easily misclassiﬁed as LC. Therefore, it is desirable
+to have more number of such challenging samples. However,
+there is not a sufﬁcient number of such LK samples in the highD
+dataset due to the limited length of the covered road section. The
+highD dataset is published as 60 spreadsheets, from which we
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:31:44 UTC from IEEE Xplore.  Restrictions apply. 
+764 IEEE TRANSACTIONS ON INTELLIGENT VEHICLES, VOL. 7, NO. 3, SEPTEMBER 2022
+Fig. 5. Examples of (a) RLC and (b) LK scenarios. In LK scenarios, the TV
+may change its lane after the Tpwcut-off.
+select the data in the ﬁrst 50 ﬁles as training data, the next 5 ﬁles
+as validation data, and the remaining 5 ﬁles as test data. In total,
+we have extracted 7487, 932, and 698 LC/LK scenarios from
+training, validation, and test data, respectively.
+B. Implementation Details
+We train the proposed model and the re-implemented models
+from the literature on extracted LC/LK scenarios in the train-
+ing set of the highD dataset. To train our proposed prediction
+model, Adam optimiser [42] is used with a learning rate of
+0.001 and a maximum of 20 training epochs. The early-stopping
+technique on validation loss function is used to avoid over-ﬁtting.
+All the models have been implemented using the PyTorch frame-
+work [43] and are trained and evaluated on a single GeForce
+RTX 2080 Ti GPU. We use a batch size of 64 during the
+training period. The source code of this study is available at
+https://github.com/SajjadMzf/EarlyLCPred.
+C. Evaluation Metrics
+In this subsection we discuss the metrics we used in evaluation
+of the future LC classiﬁer and TTLC regressor.
+1) Classiﬁcation Metrics: Similar to previous studies, we
+report accuracy, precision, recall and F1 score over all data sam-
+ples in the test dataset. However, relying on such metrics is not
+sufﬁcient for a comprehensive evaluation of a prediction model,
+especially for applications in automated driving. A reliable LC
+predictor is expected to have high recall particularly in samples
+with short TTLC since missing such LC samples can create
+safety-related issues for the EV and the surrounding trafﬁc. To
+this end, we measure the recall (a.k.a. True Positive Rate) of the
+prediction model with respect to the actual TTLC of the data
+samples.
+Precision, recall, and F1 score are usually deﬁned for a binary
+classiﬁer. To extend them to a multi-class problem, one can use
+the “one-vs-all” approach. However, we consider both the RLC
+and LLC classes as positive classes (similar to [26]), since bothTABLE II
+CONFUSION MATRIX USED FOR LC P REDICTION
+*TN: True Negative, TP: True Positive, FP: False Positive, FN:
+False Negative
+are the rarely occurring manoeuvres that we are interested in
+predicting. Therefore, we consider the confusion matrix for the
+LC prediction problem as Table II. Note that the data samples
+with RLC or LLC labels which are classiﬁed incorrectly in LLC
+or RLC classes, respectively, are considered in both FN and FP.
+The reason is that in such cases the prediction model misses
+the prediction of the type of LC and generates an incorrect LC
+alarm.
+In addition to having a high recall, an LC prediction model is
+expected to have a low rate of false LC alarms (False Positive).
+Although False alarms may not create safety issues, they de-
+crease the comfortability of the driving system because the high
+rate of false alarms causes frequent, unnecessary slow-downs
+by the EV . The trade-off between the False Positive Rate (FPR)
+and True Positive Rate (TPR) of a classiﬁer is reported in terms
+of the Receiver Operating Characteristic (ROC) Curve and the
+Area Under the ROC Curve (AUC) of the prediction model.
+To measure the average prediction horizon of a prediction
+model, we report the following two metrics, similar to [36].rFirst prediction time, denoted by τf: is the time between
+the ﬁrst correct prediction of the manoeuvre class and the
+Tcross, averaged on all data samples.rRobust prediction time, denoted by τc: is the time between
+the ﬁrst moment when the model starts to continuously pre-
+dict correctly and the Tcross, averaged on all data samples.
+2) Regression Metrics: Although we use the MSE loss func-
+tion in the training phase, we adopt the RMSE metric to evaluate
+the performance of the TTLC prediction. The reason is that
+RMSE is more understandable than MSE since it has the same
+physical unit as the output data (i.e., seconds). To evaluate the
+performance of the prediction model for different TTLCs, we
+use the box plot of the predicted TTLC for each actual TTLC,
+specifying the median values of the predicted TTLC.
+D. Quantitative Results
+The results of an LC prediction model depends on the selected
+dataset and preprocessing steps used for training and evaluation
+of the model. Factors such as the size of the dataset, the level of
+noisiness, trafﬁc density, and LC scenario extraction steps can
+impact the prediction model’s results. In addition, parameters
+of the problem deﬁnition can inﬂuence the overall performance
+reported for a prediction model. For example, selecting a smaller
+prediction window Tpwresults in better overall prediction per-
+formance since it is generally easier to predict manoeuvres with
+shorter TTLC. To do a fair comparison among our proposed
+model and the existing solutions, we re-train and evaluate some
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:31:44 UTC from IEEE Xplore.  Restrictions apply. 
+MOZAFFARI et al. : EARLY LANE CHANGE PREDICTION FOR AUTOMATED DRIVING SYSTEMS USING MULTI-TASK 765
+TABLE III
+COMPARISON OF THE PROPOSED LC P REDICTION MODEL WITHSOTA ON THE TESTSET OF HIGHDD ATASET
+baseline models from the literature on the same dataset, using
+the same preprocessing steps and parameters of the problem
+deﬁnition used in this study. We select the following SOTA
+approaches, where an implementation code or details of im-
+plementation are provided:rMLP: Multi-Layer Perceptrons (MLPs) have been used in
+some existing studies [24], [29], [35], [36]. Here, we re-
+implement a two-layer MLP with 512 hidden neurons and
+a ReLU activation function. We consider two sets of input
+features for the MLP model:
+1) MLP1: In [8], [39], a study has been performed on
+a large-scale dataset to select informative features for
+MLP and LSTM networks (see Table V in [8]). The
+study in [8] provides 21 features from which we select
+18. The authors did not provide the details of how to
+extract the other 3 features from highD dataset.
+2) MLP2: In [29], MLPs are used to predict left lane
+changes. The authors argue that not including lateral
+distance features results in better performance in very
+long prediction horizons ( >5sec). In [29], they have
+only considered relative features of the TV w.r.t. pre-
+ceding vehicle, left preceding vehicle (PV), and left
+following vehicle (LFV). In our comparison, the same
+set of relative features is used also for the right preceding
+vehicle (RPV) and right following vehicle (RFV) to
+extend their study to both right and left lane change
+prediction.rLSTM: Several existing studies on LC prediction [7],
+[8], [27] have used LSTM due to its power in processing
+data sequences. A single-layer LSTM model is used with
+a hidden state size of 512 followed by a two-layer fully
+connected neural network with a hidden state of 128 and
+512 for classiﬁcation and regression tasks, respectively.
+Two different set of input features are used for the LSTM
+model:
+1) LSTM1: Similar to the MLP model, we adopt the fea-
+ture list used in [8].
+2) LSTM2: The rationale behind this feature set is to:
+(1)describe TV’s motion (Features 1 to 5), (2) detect
+slow-moving preceding vehicle (Features 6 and 7), (3)
+high-speed following vehicle (Features 8 and 9), and
+(4) detect the gap in right/left lane (Features 10 to 18)rCS-LSTM: Convolutional social pooling LSTM developed
+by Deo and Trivedi [31] combines the power of CNNs in
+Fig. 6. Terminology of the TV’s surrounding vehicle.
+spatial interaction modelling with the power of LSTMs in
+modelling dynamics of each vehicle. The code published
+by the authors is used to re-train and evaluate their model
+with our preprocessed dataset and the parameters used in
+our problem deﬁnition.
+Table IV contains the lists of features used for each baseline
+prediction model. The terminology on the TV’s surrounding
+vehicles used in the feature lists is illustrated in Fig. 6. Table III
+shows the results of the selected models for both classiﬁcation
+and regression tasks and the results of the proposed model in the
+dual-task. In the classiﬁcation task, the proposed model outper-
+forms SOTA approaches with an increase of 4% in accuracy and
+3% in F1-score. The LSTM1 and LSTM2 models achieve the
+second-best performance in classiﬁcation with 0.82 F1-score.
+Although the MLP1 and LSTM1 models achieve best precision
+and recall, respectively, in total they achieve lower F1-scores
+compared to proposed approach. In regard to the prediction
+horizon, the LSTM2 model ranks ﬁrst among selected models
+from the literature by 3.76 seconds robust prediction time.
+Nevertheless, the proposed model outperforms CSLSTM by 0.3
+seconds in the robust prediction time metric. In the regression
+task, the proposed model improves the RMSE metric by around
+0.2 seconds compared to the LSTM network used in [8].
+To evaluate the LC prediction performance at different like-
+lihood thresholds, we plotted the ROC curve in Fig. 7. The area
+under the curve (AUC) is reported in Table III. The proposed
+method outperforms SOTA by around 2% in AUC and has a
+higher True Positive Rate (TPR) for different thresholds com-
+pared to SOTA. Note that even with 100% False Positive Rate
+(FPR), none of the models achieves 100% TPR. The reason
+is that there still might be some samples within the positive
+classes that are classiﬁed in wrong positive classes (i.e., RLC
+data classiﬁed as LLC data and vice versa). As we mentioned
+earlier such samples are reported as both FP and FN of the
+prediction model. The proposed model, compared to the reported
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:31:44 UTC from IEEE Xplore.  Restrictions apply. 
+766 IEEE TRANSACTIONS ON INTELLIGENT VEHICLES, VOL. 7, NO. 3, SEPTEMBER 2022
+TABLE IV
+LIST OF FEATURES FOR BASELINE MODELS IN COMPARITIVE STUDY
+Fig. 7. Receiver Operating Characteristics (ROC) Curve of the proposed
+method and SOTA on highD dataset with prediction window Tpwof 5 seconds.
+SOTA models, reduces the number of such samples by more than
+half, as indicated in Fig. 7.
+Fig. 8 reports the recall (a.k.a. TPR) vs the TTLC. Both the
+proposed and the CSLSTM models have close to 100% recall in
+predictions with TTLC less than 1.5 seconds, while the MLPs
+and LSTMs miss at least 10% of LC manoeuvres occurring
+in less than 1.5 seconds. As discussed previously, any missed
+short-term predictions can lead to safety-related issues. In terms
+of long term prediction, the proposed method signiﬁcantly out-
+performs the SOTA methods. For instance, in samples with
+TTLC equals 5.2 seconds, which is the maximum prediction
+horizon, the proposed method achieves 60% recall which is an
+improvement of around 50% compared to the SOTA models.
+Note that improving the performance of long-term predictionsFig. 8. Percentages of Recall vs TTLC of the proposed method and SOTA on
+the test set of highD dataset.
+is challenging because generally there is no explicit change in
+the TV’s behaviour for LCs that occur far in the future (i.e.,
+more than 3 seconds). Therefore, the prediction model needs
+to infer the occurrence of an LC by extracting clues from the
+trafﬁc context around the TV , which makes long-term predic-
+tion more challenging. The MLP1 [29], which relies only on
+longitudinal features,achieves comparative long-term prediction
+performance compared to other baseline models, while performs
+poorly in short-term prediction. This can be because of not using
+lateral features which contains clear clues for short-term lane
+change predictions.
+To evaluate the TTLC regression performance, we report the
+box plot for all TTLC prediction errors on the test dataset in
+Fig. 9. The results show that samples with a higher TTLC
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:31:44 UTC from IEEE Xplore.  Restrictions apply. 
+MOZAFFARI et al. : EARLY LANE CHANGE PREDICTION FOR AUTOMATED DRIVING SYSTEMS USING MULTI-TASK 767
+TABLE V
+PREDICTION PERFORMANCE AND ATTENTION WEIGHTS FOR THE EXAMPLE RLC S CENARIO IN FIG.1 0
+TABLE VI
+PREDICTION PERFORMANCE AND ATTENTION WEIGHTS FOR THE EXAMPLE LLC S CENARIO IN FIG.1 1
+Fig. 9. Box plot of the TTLC predictions error ( TTLC predicted−
+TTLC ground truth ) on test data of highD.
+generate predictions with higher median error and variance. In
+addition, for TTLC greater than 3.2 seconds the model tends to
+predict TTLCs less than actual values of TTLC with a median of
+error greater than 0.5 seconds. This can be explained by the fact
+that samples with TTLC greater than 3 seconds do not exhibit
+any explicit change in lateral movement of the TV . Therefore,
+it is not possible to estimate the lane crossing time using the
+information in lateral speed and distance to lane marking.
+E. Qualitative Results
+Two examples of RLC and LLC scenarios are represented in
+Figs. 10 and 11. The model’s predictions and estimated attention
+weights in frame 10, 20, and 30 of these example scenarios are
+provided in Tables V and VI.
+In Fig. 10, the TV (i.e., the blue truck) is going to complete
+an overtake of a slow-moving truck on the right lane (i.e., the
+red truck) by performing an RLC manoeuvre. At frame 10, the
+model predicts a 50% chance for LK in the next 5.2 seconds
+and a 48% chance for an RLC. The TV starts to move towards
+the right lane marking at frame 16. The prediction performance
+at frame 20 shows that the estimated likelihood of an RLC
+manoeuvre is increased to 85%. The clues of such a manoeuvre
+can be found in the available gap in the right lane in front of the
+slow-moving truck. At frame 10, where the prediction modelTABLE VII
+RESULTS OF ABLATION STUDIES ON KEYCOMPONENTS OF THE PROPOSED
+METHOD USING THE VALIDATION SET OF THE HIGHD DATASET
+0* C: Classiﬁcation, ** R: Regression
+gives almost equal possibilities to the LK and RLC manoeuvres,
+the most attention is given almost equally to the front right
+and back right of the TV . However, as the model becomes
+more conﬁdent in predicting the RLC manoeuvre the attention
+mechanism increases its focus on the back right area, where the
+slow-moving vehicle is located.
+Fig. 11 shows the emergence of an LLC manoeuvre by
+the TV due to a slow-moving vehicle in front of the TV . In
+frame 10, the model conﬁdently predicts the LLC manoeuvre
+5.2 seconds before crossing the left lane marking, despite no
+lateral movement of the TV within frames 0 to 10. The model
+continues to predict the LLC manoeuvre correctly as the TV gets
+closer to the slow-moving proceeding vehicle and ﬁnally starts
+to move toward the left lane markings. The focus of the attention
+mechanism during these frames are on the trafﬁc on the left lane,
+with more focus on the front left area. This could be explained
+by the higher information in the left lane for the predicted LLC
+manoeuvre. The video uploaded in [44] explains more examples
+of LK and LC scenarios and the model performance.
+F . Ablation Study
+In this subsection, we investigate the impact of the key compo-
+nents of the proposed prediction model by evaluating the model
+performance with different combination of these components.
+We use the AUC and RMSE on the validation data as evaluation
+metrics of classiﬁcation and regression tasks, respectively.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:31:44 UTC from IEEE Xplore.  Restrictions apply. 
+768 IEEE TRANSACTIONS ON INTELLIGENT VEHICLES, VOL. 7, NO. 3, SEPTEMBER 2022
+Fig. 10. Example of RLC scenario. Four attention areas are speciﬁed in BEV image at frame 2 as an example. In visualisations at frame 10,20, and 30, the TV
+is depicted with blue, the vehicles within the cropped BEV image are depicted with red, and remaining vehicles are depicted with gray colours.
+Fig. 11. Example of LLC scenario. Four attention areas are speciﬁed in BEV image at frame 2 as an example. In visualisations at frame 10,20, and 30, the TV is
+depicted with blue, the vehicles within the cropped BEV image are depicted with red, and remaining vehicles are depicted with gray colours.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:31:44 UTC from IEEE Xplore.  Restrictions apply. 
+MOZAFFARI et al. : EARLY LANE CHANGE PREDICTION FOR AUTOMATED DRIVING SYSTEMS USING MULTI-TASK 769
+Table VII shows the results of the ablation study on Multi-Task
+Learning (MTL), Attention Mechanism, and Curriculum learn-
+ing based on MTL loss and TTLC order. In this study, the CNN
+model (see Fig. 3) is used as a baseline and we gradually add the
+components to investigate their impact in both future LC clas-
+siﬁcation and TTLC regression tasks. The results in Table VII
+shows that using the attention mechanism can enhance the AUC
+of the classiﬁer by around 3% and slightly decrease the error of
+the regressor. On the other hand, the MTL when used without
+attention and curriculum learning, can degrade the performance
+of the classiﬁcation task and does not provide improvements for
+the regression task. However, the MTL is capable of improving
+the results and achieving the best performance when combined
+with other key components of the prediction model.
+VI. C ONCLUSION
+This paper proposed a multi-task attention-based CNN model
+for the early prediction of LC manoeuvres in highway driv-
+ing scenarios. The prediction model was trained and evaluated
+using a large-scale naturalistic trajectory dataset. The results
+shows that the attention-based CNN is capable of extracting
+interaction-aware features from the surrounding trafﬁc required
+for long-term prediction. The multi-task approach, boosted by
+two novel curriculum learning schemes, enables TTLC and ma-
+noeuvre likelihood prediction using shared extracted features.
+Furthermore, the proposed model outperforms selected SOTA
+LC prediction approaches, demonstrating a reliable short-term
+prediction and 1.5 times better long-term prediction perfor-
+mances.
+In this study, we trained and tested our model on a naturalistic
+trajectory dataset recorded using a camera installed on a drone.
+Such a camera provides a wide and unobstructed view of the en-
+vironment, while the on-board perception of automated vehicles
+is impaired with occlusion, sensor noise and limited ﬁeld of view,
+which can create uncertainties in observing surrounding vehi-
+cles. Our future research will focus on quantifying the impact of
+these input uncertainties on the lane change prediction problem.
+REFERENCES
+[1] M. Shawky, “Factors affecting lane change crashes,” Int. Assoc. Trafﬁc
+Saf. Sci. Res. , vol. 44, no. 2, pp. 155–161, 2020. [Online]. Available: http:
+//www.sciencedirect.com/science/article/pii/S0386111219300020
+[2] E. C. B. Olsen, S. E. Lee, W. W. Wierwille, and M. J. Goodman, “Analysis
+of distribution, frequency, and duration of naturalistic lane changes,” in
+Proc. Hum. Factors Ergonom. Soc. Annu. Meeting , 2002, pp. 1789–1793.
+[Online]. Available: https://doi.org/10.1177/154193120204602203
+[3] R. Dang, F. Zhang, J. Wang, S. Yi, and K. Li, “Analysis of chinese driver’s
+lane change characteristic based on real vehicle tests in highway,” in Proc.
+16th Int. IEEE Conf. Intell. Transp. Syst. , 2013, pp. 1917–1922.
+[4] J. Mänttäri, J. Folkesson, and E. Ward, “Learning to predict lane changes
+in highway scenarios using dynamic ﬁlters on a generic trafﬁc representa-
+tion,” in Proc. IEEE Intell. Veh. Symp. , 2018, pp. 1385–1392.
+[5] D. Fernández-Llorca, M. Biparva, R. Izquierdo-Gonzalo, and J. K. Tsotsos,
+“Two-stream networks for lane-change prediction of surrounding vehi-
+cles,” in Proc. IEEE 23rd Int. Conf. Intell. Transp. Syst. , 2020, pp. 1–6.
+[6] T. Toledo and D. Zohar, “Modeling duration of lane changes,” Transp.
+Res. Rec. , vol. 1999, no. 1, pp. 71–78, 2007. [Online]. Available: https:
+//doi.org/10.3141/1999-08
+[7] W. Ding, J. Chen, and S. Shen, “Predicting vehicle behaviors over an
+extended horizon using behavior interaction network,” in Proc. Int. Conf.
+Robot. Automat. , 2019, pp. 8634–8640.[8] F. Wirthmüller, M. Klimke, J. Schlechtriemen, J. Hipp, and M. Reichert,
+“Predicting the time until a vehicle changes the lane using LSTM-based
+recurrent neural networks,” IEEE Robot. Automat. Lett. , vol. 6, no. 2,
+pp. 2357–2364, Feb. 2021.
+[9] R. Izquierdo, A. Quintanar, I. Parra, D. Fernández-Llorca, and M. A.
+Sotelo, “Experimental validation of lane-change intention prediction
+methodologies based on cnn and LSTM,” in Proc. IEEE Intell. Transp.
+Syst. Conf. , 2019, pp. 3657–3662.
+[10] V . Mahajan, C. Katrakazas, and C. Antoniou, “Prediction of lane-changing
+maneuvers with automatic labeling and deep learning,” Transp. Res. Rec. ,
+vol. 2674, no. 7, pp. 336–347, 2020. [Online]. Available: https://doi.org/
+10.1177/0361198120922210
+[11] Y . Hu, W. Zhan, and M. Tomizuka, “Probabilistic prediction of vehicle
+semantic intention and motion,” in Proc. IEEE Intell. Veh. Symp. , 2018,
+pp. 307–313.
+[12] D. Lee, Y . P. Kwon, S. McMains, and J. K. Hedrick, “Convolution neural
+network-based lane change intention prediction of surrounding vehicles
+for acc,” in Proc. IEEE 20th Int. Conf. Intell. Transp. Syst. , 2017, pp. 1–6.
+[13] R. Krajewski, J. Bock, L. Kloeker, and L. Eckstein, “The highd dataset: A
+drone dataset of naturalistic vehicle trajectories on german highways for
+validation of highly automated driving systems,” in Proc. 21st Int. Conf.
+Intell. Transp. Syst. , 2018, pp. 2118–2125.
+[14] S. Lefèvre, D. Vasquez, and C. Laugier, “A survey on motion prediction
+and risk assessment for intelligent vehicles,” ROBOMECH J. , vol. 1, no. 1,
+pp. 1–4, Jul. 2014. [Online]. Available: https://doi.org/10.1186/s40648-
+014-0001-z
+[15] S. Mozaffari, O. Y . Al-Jarrah, M. Dianati, P. Jennings, and A. Mouzakitis,
+“Deep learning-based vehicle behavior prediction for autonomous driving
+applications: A review,” IEEE Trans. Intell. Transp. Syst. , vol. 23, no. 1,
+pp. 33–47, Aug. 2020.
+[16] R. Greer, N. Deo, and M. Trivedi, “Trajectory prediction in autonomous
+driving with a lane heading auxiliary loss,” IEEE Robot. Automat. Lett. ,
+vol. 6, no. 3, pp. 4907–4914, Mar. 2021.
+[17] M. Koschi and M. Althoff, “Set-based prediction of trafﬁc participants
+considering occlusions and trafﬁc rules,” IEEE Trans. Intell. Veh. ,v o l .6 ,
+no. 2, pp. 249–265, Aug. 2021.
+[18] K. Messaoud, I. Yahiaoui, A. Verroust-Blondet, and F. Nashashibi, “Atten-
+tion based vehicle trajectory prediction,” IEEE Trans. Intell. Veh. ,v o l .6 ,
+no. 1, pp. 175–185, May 2021.
+[19] A. Zyner, S. Worrall, and E. Nebot, “Naturalistic driver intention and path
+prediction using recurrent neural networks,” IEEE Trans. Intell. Transp.
+Syst. , vol. 21, no. 4, pp. 1584–1594, May 2020.
+[20] Y . Zhang, Q. Lin, J. Wang, S. Verwer, and J. M. Dolan, “Lane-change
+intention estimation for car-following control in autonomous driving,”
+IEEE Trans. Intell. Veh. , vol. 3, no. 3, pp. 276–286, Jun. 2018.
+[21] M. Bahram, C. Hubmann, A. Lawitzky, M. Aeberhard, and D. Wollherr,
+“A combined model- and learning-based framework for interaction-aware
+maneuver prediction,” IEEE Trans. Intell. Transp. Syst. , vol. 17, no. 6,
+pp. 1538–1550, Jan. 2016.
+[22] Y . Xing et al. , “Driver lane change intention inference for intelligent
+vehicles: Framework, survey, and challenges,” IEEE Trans. Veh. Technol. ,
+vol. 68, no. 5, pp. 4377–4390, May 2019.
+[23] R. Song and B. Li, “Surrounding vehicles’ lane change maneu-
+ver prediction and detection for intelligent vehicles: A comprehen-
+sive review,” IEEE Trans. Intell. Transp. Syst. , to be published,
+doi:10.1109/TITS.2021.3076164 .
+[24] S. Yoon and D. Kum, “The multilayer perceptron approach to lateral
+motion prediction of surrounding vehicles for autonomous vehicles,” in
+Proc. IEEE Intell. Veh. Symp. , 2016, pp. 1307–1312.
+[25] J. Liu, Y . Luo, H. Xiong, T. Wang, H. Huang, and Z. Zhong, “An
+integrated approach to probabilistic vehicle trajectory prediction via driver
+characteristic and intention estimation,” in Proc. IEEE Intell. Transp. Syst.
+Conf. , 2019, pp. 3526–3532.
+[26] T. Rehder, A. Koenig, M. Goehl, L. Louis, and D. Schramm, “Lane change
+intention awareness for assisted and automated driving on highways,”
+IEEE Trans. Intell. Veh. , vol. 4, no. 2, pp. 265–276, Jun. 2019.
+[27] O. Scheel, N. S. Nagaraja, L. Schwarz, N. Navab, and F. Tombari,
+“Attention-based lane change prediction,” in Proc. Int. Conf. Robot. Au-
+tomat. , 2019, pp. 8655–8661.
+[28] T. Rehder, W. Muenst, L. Louis, and D. Schramm, “Learning lane change
+intentions through lane contentedness estimation from demonstrated driv-
+ing,” in Proc. IEEE 19th Int. Conf. Intell. Transp. Syst. , 2016, pp. 893–898.
+[29] Z. Shou, Z. Wang, K. Han, Y . Liu, P. Tiwari, and X. Di, “Long-term
+prediction of lane change maneuver through a multilayer perceptron,” in
+Proc.IEEE Intell. Veh. Symp. , 2020, pp. 246–252.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:31:44 UTC from IEEE Xplore.  Restrictions apply. 
+770 IEEE TRANSACTIONS ON INTELLIGENT VEHICLES, VOL. 7, NO. 3, SEPTEMBER 2022
+[30] H. Cui et al. , “Multimodal trajectory predictions for autonomous driving
+using deep convolutional networks,” in Proc. Int. Conf. Robot. Automat. ,
+2019, pp. 2090–2096.
+[31] N. Deo and M. M. Trivedi, “Convolutional social pooling for vehicle
+trajectory prediction,” in Proc. IEEE Conf. Comput. Vis. Pattern Recognit.
+Workshops , 2018, pp. 1468–1476.
+[32] Z. Yan, K. Yang, Z. Wang, B. Yang, T. Kaizuka, and K. Nakano, “Time
+to lane change and completion prediction based on gated recurrent unit
+network,” in Proc. IEEE Intell. Veh. Symp. , 2019, pp. 102–107.
+[33] N. Khairdoost, M. Shirpour, M. A. Bauer, and S. S. Beauchemin, “Real-
+time driver maneuver prediction using LSTM,” IEEE Trans. Intell. Veh. ,
+vol. 5, no. 4, pp. 714–724, Dec. 2020.
+[34] Q. Deng and D. Soeffker, “A review of the current HMM-based approaches
+of driving behaviors recognition and prediction,” IEEE Trans. Intell. Veh. ,
+to be published, doi: 10.1109/TIV .2021.3065933 .
+[35] M. Krüger, A. S. Novo, T. Nattermann, and T. Bertram, “Probabilistic lane
+change prediction using Gaussian process neural networks,” in Proc. IEEE
+Intell. Transp. Syst. Conf. , 2019, pp. 3651–3656.
+[36] F. Wirthmüller, J. Schlechtriemen, J. Hipp, and M. Reichert, “Teaching
+vehicles to anticipate: A systematic study on probabilistic behavior pre-
+diction using large data sets,” IEEE Trans. Intell. Transp. Syst. , vol. 22,
+no. 11, pp. 7129–7144, Nov. 2020.
+[37] Q. Zou, Y . Hou, and Z. Wang, “Predicting vehicle lane-changing behavior
+with awareness of surrounding vehicles using LSTM network,” in Proc.
+IEEE 6th Int. Conf. Cloud Comput. Intell. Syst. , 2019, pp. 79–83.
+[38] C. Wissing, T. Nattermann, K.-H. Glander, and T. Bertram, “Probabilistic
+time-to-lane-change prediction on highways,” in Proc. IEEE Intell. Veh.
+Symp. , 2017, pp. 1452–1457.
+[39] F. Wirthmüller, J. Schlechtriemen, J. Hipp, and M. Reichert, “Towards in-
+corporating contextual knowledge into the prediction of driving behavior,”
+inProc. IEEE 23rd Int. Conf. Intell. Transp. Syst. , 2020, pp. 1–7.
+[40] S. Mozaffari, E. Arnold, M. Dianati, and S. Fallah, “A comparative study
+of ego-centric and cooperative perception for lane change prediction in
+highway driving scenarios,” in Proc. 2nd Int. Conf. Robot., Comput.
+Vis. Intell. Syst., ROBOVIS 2021, Online Streaming , P. Galambos and E.
+Kayacan, Eds., 2021, pp. 113–121. [Online]. Available: https://doi.org/10.
+5220/0010655700003061
+[41] K. He, X. Zhang, S. Ren, and J. Sun, “Deep residual learning for im-
+age recognition,” in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. ,
+pp. 770–778, 2016.
+[42] D. P. Kingma and J. Ba, “Adam: A Method for Stochastic Optimization,”
+2017, arXiv:1412.6980 .
+[43] A. Paszke et al. , “Pytorch: An imperative style, high-performance deep
+learning library,” Adv. Neural Inf. Process. Syst. , vol. 32, 2019.
+[44] S. Mozaffari, “Earlylcprediction- youtube,” Sep. 2021. [Online]. Avail-
+able: https://youtu.be/uFwp8_-VDhw
+Sajjad Mozaffari received the B.Sc. and M.Sc. de-
+grees in electrical engineering from the University of
+Tehran, Tehran, Iran, in 2015 and 2018, respectively.
+He is currently working toward the Ph.D. degree
+with the Warwick Manufacturing Group, University
+of Warwick, Coventry, U.K. His research interests
+include machine learning, computer vision, and con-
+nected and autonomous vehicles.
+Eduardo Arnold received the B.S. degree in elec-
+trical engineering from the Federal University of
+Santa Catarina, Florianopolis, Brazil, in 2017. He is
+currently working toward the Ph.D. degree with the
+Warwick Manufacturing Group (WMG), University
+of Warwick, Coventry, U.K. He was also an exchange
+Student with the University of Surrey, Guildford,
+U.K., through the Science without Borders program
+in 2014. His research interests include machine learn-
+ing, computer vision, connected and autonomous ve-
+hicles. He is currently working on perception for
+autonomous driving applications with Intelligent Vehicles Group, WMG.
+Mehrdad Dianati (Senior Member) is currently the
+Head of Intelligent Vehicles Research Department
+and Technical Research Lead in the area of Net-
+worked Intelligent Systems with Warwick Manufac-
+turing Group, University of Warwick, Coventry, U.K.
+His research interests include application of digital
+technologies, including information and communi-
+cation technologies and artiﬁcial intelligent for the
+development of future mobility and transport systems.
+He has more than 29 years of combined industrial
+and academic experience, with 20 years in various
+leadership roles in multi-disciplinary collaborative R&D projects. He works
+closely with the Automotive and ICT industries as the primary application
+domains of his research. He is also the Director of Warwick’s Centre for Doctoral
+Training on Future Mobility Technologies, training doctoral researchers in the
+areas of intelligent and electriﬁed mobility systems in collaboration with the
+experts in the ﬁeld of electriﬁcation from the Department of Engineering,
+University of Warwick. He was the Editor of the IEEE T RANSACTIONS ON
+VEHICULAR TECHNOLOGY and several other international journals, including
+IET Communications . He is currently the Field Chief Editor of Frontiers in
+Future Transportation.
+Saber Fallah is currently the Director of the Con-
+nected Autonomous Vehicles Lab (CA V-Lab), De-
+partment of Mechanical Engineering Sciences, Uni-
+versity of Surrey, Guildford, U.K., where he leads
+several research activities funded by the U.K. and Eu-
+ropean governments, such as EPSRC, Innovate U.K.,
+H2020, KTP in collaboration with major companies
+active in autonomous vehicle and robot technologies.
+CA V-Lab provides a unique laboratory to design,
+develop and test the next generation of robotics and
+autonomous systems used for remote assembly and
+manufacture, highly automated transportation systems and missions in haz-
+ardous environments including space. CA V-Lab also provides expertise in
+distributed control systems, AI and machine learning, and predictive optimi-
+sation techniques. Prior to joining the University of Surrey, he was part of a
+cross-disciplinary team in Green Intelligent Transportation Systems Research,
+University of Waterloo, Waterloo, ON, Canada. His research interests include
+reinforced deep learning, advanced control and prediction and their application
+to autonomous robot systems.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:31:44 UTC from IEEE Xplore.  Restrictions apply. 

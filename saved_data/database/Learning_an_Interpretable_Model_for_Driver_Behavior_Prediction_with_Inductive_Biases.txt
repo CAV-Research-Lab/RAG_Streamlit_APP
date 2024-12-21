@@ -1,0 +1,832 @@
+=== Metadata ===
+{
+    "file_name": "Learning_an_Interpretable_Model_for_Driver_Behavior_Prediction_with_Inductive_Biases.pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Learning_an_Interpretable_Model_for_Driver_Behavior_Prediction_with_Inductive_Biases.pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+Learning an Interpretable Model for Driver Behavior Prediction
+with Inductive Biases
+Salar Arbabi, Davide Tavernini, Saber Fallah and Richard Bowden
+Abstract — To plan safe maneuvers and act with foresight,
+autonomous vehicles must be capable of accurately predicting
+the uncertain future. In the context of autonomous driving, deep
+neural networks have been successfully applied to learning pre-
+dictive models of human driving behavior from data. However,
+the predictions suffer from cascading errors, resulting in large
+inaccuracies over long time horizons. Furthermore, the learned
+models are black boxes, and thus it is often unclear how they ar-
+rive at their predictions. In contrast, rule-based models—which
+are informed by human experts—maintain long-term coherence
+in their predictions and are human-interpretable. However,
+such models often lack the sufficient expressiveness needed to
+capture complex real-world dynamics. In this work, we begin
+to close this gap by embedding the Intelligent Driver Model, a
+popular hand-crafted driver model, into deep neural networks.
+Our model’s transparency can offer considerable advantages,
+e.g., in debugging the model and more easily interpreting its
+predictions. We evaluate our approach on a simulated merging
+scenario, showing that it yields a robust model that is end-to-
+end trainable and provides greater transparency at no cost to
+the model’s predictive accuracy.
+I. INTRODUCTION
+In a future society where autonomy becomes ubiqui-
+tous, one can imagine robots operating in complex, human-
+dominated environments, such as self-driving cars driving
+amidst human-driven vehicles on the road. Safe and reliable
+integration of robots into daily life demands that they account
+for the potential impact of their actions on the world. As
+an example, consider merging into a high-density lane of
+slow-moving traffic. In the same scenario, an autonomous car
+may deem all paths forward as unsafe and become unable to
+progress if it cannot anticipate that due to its actions, other
+drivers might cooperate and yield. To this end, a robot should
+have a mental model of the world through which it can
+explore a set of possible decision options in its imagination,
+and learn how to act from the imagined outcomes [1].
+We posit that a predictive model should exhibit several
+characteristics, which in turn will drive the choice of model
+architecture and model learning strategy. First, in highly
+dynamic environments, actions may have long-term conse-
+quences that must be considered by the robot; being reactive
+to immediate situations may yield a “myopic” robot that
+lacks foresight. Thus, the model predictions should maintain
+long-term coherence, such that the robot can imagine conse-
+quence of its actions on distant futures. Second, given that
+Salar Arbabi, Davide Tavernini and Saber Fallah are with the Centre for
+Automotive Engineering, University of Surrey, Guildford, GU2 7XH, U.K.
+(e-mail: {s.arbabi, d.tavernini, s.fallah }@surrey.ac.uk).
+Richard Bowden is with the Centre for Vision, Speech and Signal
+Processing, University of Surrey, Guildford GU2 7XH, U.K. (e-mail:
+r.bowden@surrey.ac.uk).
+Merge zone Fig. 1: Example of a merging scenario. The merging vehicle
+(orange) is an autonomous car. The vehicles on the main
+road can yield to the autonomous car, or they can ignore it.
+We develop a driver model to predict the future behavior of
+the vehicles on the main road.
+future is often riddled with uncertainty, the model should
+capture the uncertainty about the world. Finally, given the
+safety-critical nature of many tasks involving human-robot
+interactions, interpretable representations that can explain the
+model and its predictions and help to identify failure modes
+are crucial.
+In this paper, we use autonomous driving as our use case,
+where the mental model constitutes driving agents whose
+behavior we aim to predict. We develop our approach around
+a merging scenario (see Fig. 1), where we aim to predict the
+behavior of the drivers driving on the main road. The main-
+road drivers can choose whether to attend and yield to the
+approaching vehicles on the on-ramp and as a result, it is
+necessary for us to estimate their driving intent.
+Deep neural networks (DNNs) have shown great potential
+in modeling complex dynamics and enabling the learning
+of driver models from naturalistic driving data. Although
+the successful application of DNNs to driver behavior mod-
+eling has been demonstrated [2]–[8], substantial challenges
+remain. One major problem is distribution shift : the tendency
+of such models to produce increasingly suboptimal actions, at
+times expressing dangerous behaviors (e.g., driving off the
+road, colliding with others, or braking too hard [5]) when
+exposed to scenarios with insufficient training data. This
+problem is exacerbated in model-based planning, as an agent
+is likely to imagine itself in novel states when exploring
+different decision options [9].
+In addition to the problem of distribution shift, the strength
+of DNNs comes at the cost of the low interpretability of
+their black-box representations. The learned models can have
+many thousands of parameters, offering little to no expla-
+nation/visibility into how they arrive at their predictions.
+While research on model interpretability has been growing
+rapidly in recent years [10], most methods are confined
+to domains with data types that are easily interpretable to2022 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)
+October 23-27, 2022, Kyoto, Japan
+978-1-6654-7927-1/22/$31.00 ©2022 IEEE 39402022 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) | 978-1-6654-7927-1/22/$31.00 ©2022 IEEE | DOI: 10.1109/IROS47612.2022.9981142
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:36:28 UTC from IEEE Xplore.  Restrictions apply. 
+humans: image and natural language processing. In contrast,
+driver behavior models derive their predictions from noisy
+numeric observations of the environment, which are hardly
+human-interpretable.
+In this paper, we embed a task-specific structure in deep
+networks that is amenable to gradient-based optimization.
+The imposed structure captures domain knowledge and man-
+ifests as a semantic layer at the output of the network, map-
+ping arbitrary outputs of previous layers to driver actions.
+One domain knowledge with regards to driving is that human
+drivers tend to avoid collisions, something difficult to reason
+about for classic imitation learning, as such rare cases are
+under-represented in training data. In addition to structure
+embedding, we leverage the framework of conditional vari-
+ational autoencoders (CV AE) [11] to infer the unobserved
+(latent) states (e.g., intentions and dispositions) of drivers
+from their past motion; this enables our model to output
+driver actions that are conditioned on sampled latent states,
+capturing the variation in drivers’ behavior and providing
+uncertainty estimates for the predictions.
+II. RELATED WORKS
+A. Inductive Biases in Deep Learning
+Recent works have shown that imposing well-motivated
+inductive biases on neural network architectures can help
+with learning more interpretable representations [12] and
+facilitate generalization [13]. In addition to the network ar-
+chitecture, inductive biases can also be incorporated through
+the learning objective and structure embeddings. Some works
+related to learning driver models include expert-informed
+terms in the objective, such as loss penalties for causing
+collisions [4]–[7]. There have also been several attempts at
+directly imposing the structure of a dynamical system on
+DNNs for robot control [14], [15]. Unlike the dominant
+paradigm of learning policies in raw action spaces, they pro-
+pose the re-parameterization of the robot’s system dynamics
+via deep neural network-based policies, achieving significant
+gains in policy performance.
+B. Interpretable Driver Models
+One commonly used driver model is the Intelligent Driver
+Model (IDM) [16], which predicts the longitudinal acceler-
+ation of a vehicle based on the traffic state. The design of
+IDM is motivated by the knowledge that a typical driver’s
+goal is to drive safely and efficiently. Rule-based models
+such as IDM generate plausible traffic flow and have a few
+interpretable parameters that determine the model’s output.
+Offline calibration of IDM parameters has been performed in
+existing work [17]. However, these methods yield “average”
+parameters for a population of drivers, and as such cannot
+capture the idiosyncrasies of individual drivers present in
+real-world driving. Existing work has also performed on-
+line parameter estimation for the IDM using an Extended
+Kalman filter [18], nonlinear least squares [19] and particle
+filtering [20], [21]. Put simply, they treat the problem of
+behavior prediction as an online learning problem, stating:
+what are the IDM parameters that best describe the observedvehicle trajectory? The particle filtering approach proposed
+by Bhattacharyya et al. [21] was evaluated on a real-world
+driving dataset, achieving superior performance compared
+to several deep-learning-based models. While the approach
+takes advantage of the IDM’s model structure, it requires ex-
+plicit knowledge of the observation and motion models; this
+restricts the application of their approach to car-following
+scenarios, where an IDM vehicle is assumed to always pay
+attention to its front neighbor.
+III. M ODEL FORMULATION
+We follow the structure imposed by IDM to determine
+a driver’s longitudinal acceleration. Given a set of driver
+parameters and the traffic state xt, IDM outputs the driver
+accelerations over time that provide a trade-off between a
+driver’s goal of reaching a desired speed and keeping a safe
+distance from the vehicle ahead. The set of driver parameters
+θIDM={vdes, dmin, Tdes, amax, bmax}represent the driver’s
+disposition which consists of the driver’s desired speed vdes,
+the minimum separation distance dmin, the time gap Tdes, the
+ideal maximum acceleration amax and the ideal maximum
+deceleration bmax.
+A driver’s longitudinal acceleration is determined by
+fIDM=amax 
+1−vt
+vdes4
+−ddes(vt,∆vt)
+dt2!
+(1)
+where vtis the vehicle speed, and ∆vtanddtare the relative
+speed (approach rate) and distance headway to the vehicle
+ahead, respectively. The desired distance ddesis given by
+ddes(vt,∆vt) =dmin+Tdesvt+vt∆vt
+2√amaxbmax(2)
+We additionally introduce the attention parameters wl
+andwmto model the degree of a driver’s attentiveness
+towards its front neighbor and a vehicle on the on-ramp,
+respectively. For a driver who is attending to the vehicle on
+the on-ramp and is being cooperative, wm≈1, while wm
+approaches zero for a non-cooperative driver. We will refer
+to the parameters {θIDM, wl, wm}as the driver’s internal
+state, emphasizing that they are not directly observable and
+can only be estimated. We note that our formulation can be
+extended to accommodate scenarios with more interacting
+vehicles by considering additional attention parameters. We
+next describe how to combine the IDM’s dynamic structure
+within a deep network as a way of incorporating inductive
+biases in the learned model.
+IV. N EURAL INTELLIGENT DRIVER MODEL
+In this section, we introduce a policy network called the
+Neural Intelligent Driver Model (NIDM) that, given the
+vehicles’ motion history, produces distributions over their
+sequence of future actions.3941
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:36:28 UTC from IEEE Xplore.  Restrictions apply. 
+𝑄𝜙𝑍ℎ𝑥,ℎ𝑦ℎ𝑦ℎ𝑥
+TraintimeonlyTesttimeonly
+𝑓𝑙 𝑓𝑚
+(𝜃𝐼𝐷𝑀,𝑥𝑡+𝑇)𝑓𝑒ො𝑎𝑡+𝑇
+(𝑎𝑡+𝑇−1,𝑥𝑡+𝑇,ℎ𝑥,መ𝑍)ො𝑎𝑡𝑥𝑡
+𝑇𝑟𝑎𝑛𝑠𝑖𝑡𝑖𝑜𝑛
+𝐷𝑦𝑛𝑎𝑚𝑖𝑐
+ො𝑎𝑡+1𝑇𝑟𝑎𝑛𝑠𝑖𝑡𝑖𝑜𝑛
+𝐷𝑦𝑛𝑎𝑚𝑖𝑐
+ො𝑎𝑡+𝑇𝑇𝑟𝑎𝑛𝑠𝑖𝑡𝑖𝑜𝑛
+𝐷𝑦𝑛𝑎𝑚𝑖𝑐
+……… 𝑥𝑡+1𝑥𝑡+𝑇
+𝑏𝑚𝑎𝑥𝑤𝑙𝑡+𝑇𝑤𝑚𝑡+𝑇Time step t
+ℎ𝑥
+Future encoder
+Φ𝑤 Φ𝐼𝐷𝑀Time step 𝑡+1 Time step 𝑡+𝑇
+MLP(𝜃𝐼𝐷𝑀,𝑥𝑡+𝑇)X
+Y
+sampleመ𝑍
+መ𝑍History encoder
+Policy𝑃𝜃𝑍ℎ𝑥
+concat .𝜃𝐼𝐷𝑀Policy PolicyFig. 2: Overview of the architecture for NIDM. During model training, we draw samples ˆZ∼Qϕ(Z|hx, hy). At test time,
+we draw samples ˆZ∼Pθ(Z|hx)instead. The part of the model denoted by ΦIDM reasons in the lower dimensional space
+of parameters θIDM which are then used within the unrolled policy to predict driver actions.
+A. Neural Network Parameterization of NIDM
+We consider a ramp merging scenario, where we assume
+that driver behavior is influenced by the drivers’ internal
+states. With θIDM,wlandwm, a driver’s acceleration can
+be determined by computing fNIDM =flwl+fmwm,
+where flandfmare calculated using (1) as if the driver
+is attending to its front neighbor and the vehicle on the on-
+ramp, respectively. As shown in Fig. 2, NIDM first estimates
+θIDM, which is then used by the policy to output the driver’s
+actions over a sequence of Tfuture time steps. This is in
+contrast to existing imitation learning settings where the
+policy is trained in raw action spaces and directly maps
+observations to actions [2]–[8].
+In some traffic states and for some values of internal states,
+the magnitude of the output from (1) can become exponen-
+tially large, leading to unstable training dynamics. We aid
+model training by constraining the space of parameters to
+plausible values. This yields more stable gradient descent
+dynamics at training time and ensures that an estimated in-
+ternal state is consistent with the driver attributes it represents
+(e.g., desired speed vdesand distance ddes). To this end, we
+apply clipping min{fIDM,−6}to the output of (1) and apply
+the ReLU operator to (2),
+ddes(vt,∆vt) =dmin+ ReLU
+Tdesvt+vt∆vt
+2√amaxbmax
+(3)
+We additionally define the parameters in θIDM based on
+the generalized logistic function [22]. For a given driver
+parameter ˆλ, we define the logistic function as
+ˆλ=λtim+λagg−λtim
+1 + exp−δ(ˆx)(4)
+where ˆxis specified by the neural network, δis a tunable hy-
+perparameter that controls the slope of the logistic function,
+andλaggandλtimare the parameter bounds corresponding to
+the most aggressive and timid drivers, respectively. Finally,
+we apply a softmax activation to the attention parameters wl
+andwm, where the operator acts as a gating function, indicat-
+ing to whom a driver is attending at any given moment. Wenote that all the operations in (1) preserve differentiability,
+which is required for gradient-based learning methods such
+as ours.
+B. NIDM Architecture
+LetX= (a0:t, x0:t)denote the vehicles’ motion history,
+where a0:tandx0:tare the past sequence of the vehicles’
+joint actions and states, respectively. The future motion is
+denoted as Y= (at:t+T, xt:t+T). We extract information
+from XandYusing long short-term memory (LSTM)
+networks [23]. We use two LSTM-based encoders to turn
+XandYinto representations hxandhy, respectively. To
+obtain a generative model of driver behavior, we employ the
+framework of the conditional variational auto-encoder [11],
+which encodes probability distributions in terms of a latent
+variable Zsuch that P(Y|X) =R
+ZP(Y|X, Z)P(Z|X),
+where P(Y|X)represents the conditional distribution over
+future trajectories and the variable Zcaptures the unobserved
+and uncertain latent factors such as a driver’s disposition
+and attentiveness. Since integration over Zis intractable,
+we exploit amortized variational inference [11], [24], which
+introduces a neural network approximation of the posterior
+Qϕ(Z|hx, hy)and prior Pθ(Z|hx)to reformulate the model
+learning problem as maximizing the evidence lower bound
+(ELBO) on logP(Y|X).
+C. Training NIDM
+We train NIDM end-to-end in an imitation learning setup.
+It is important to note that since we do not consider the
+drivers’ internal states to be known a priori, it is not pos-
+sible to parameterize the probability distribution over them
+using approaches (e.g., Gaussian mixture models or mixture
+density networks [8], [25]) that rely on the availability of
+ground truth values for model learning.
+For a given training example, a single sample ˆZ∼
+Qϕ(Z|hx, hy)is drawn and used to infer the driver’s internal
+state. We then roll out the policy (i.e., in closed-loop) during
+training to encourage the learning of a decoder θIDM =
+ΦIDM(Z)that yields improved long-term predictions. Start-
+ing from the vehicle’s initial state, we roll out the policy3942
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:36:28 UTC from IEEE Xplore.  Restrictions apply. 
+and use the following discrete-time equations to propagate
+the vehicle’s state forward in time:
+xt+1≈xt+vt∆t+1
+2ˆat∆t2(5)
+vt+1≈vt+ ˆat∆t (6)
+where ˆatis the driver’s estimated longitudinal acceleration,
+xtis the vehicle’s longitudinal position, vtis the vehicle’s
+speed, and ∆tis a small time interval. Note that since the
+transition model (5) is composed of differentiable elementary
+operations, gradients remain well-defined—gradient informa-
+tion can be back-propagated through the simulated trajectory
+and the driver’s internal state.
+In this paper, we have followed existing works [18]–
+[21] in making the simplifying assumption that θIDM, which
+represents drivers’ disposition, does not vary during a policy
+rollout. In some cases, this assumption may not be realistic,
+given that human behavioral patterns are often inconsistent
+across time. Relaxation of this assumption would require us
+to track the change in driver disposition over time, which
+has been left to future work. However, the same assumption
+does not apply to driver attention, as we consider a driver’s
+attention to be dependent on the traffic state (e.g., the position
+and acceleration profile of a vehicle on the on-ramp). As
+illustrated in Fig. 2, we estimate driver attention sequentially
+at every step of the policy rollout.
+As the training procedure, we adapt the variational learn-
+ing objective of CV AE [11] to maximize the ELBO of
+logP(Y|X). In total, the loss consists of three terms
+LTotal =La+Lx+βLKL, where the first two terms
+are the vehicle acceleration and position error, respectively,
+between the ground truth values and those generated by the
+model. The last term is the Kullback-Liebler (KL) divergence
+weighted by the scalar parameter β. Concretely, the loss
+terms are defined as:
+La=1
+TTX
+i=0Lδ(at+i−ˆat+i) (7)
+Lx=1
+TTX
+i=0Lδ(xt+i+1−ˆ xt+i+1) (8)
+LKL=KL(Qϕ(Z|hx, hy)||Pθ(Z|hx)) (9)
+where Lδstands for the Huber loss.
+We implement NIDM using the TensorFlow library [26]
+and train it with the Adam optimizer [27] with a learning rate
+of0.001. In addition to hyperparameter annealing, we found
+standardization of both input and target values leads to faster
+convergence. We ran experiments with 3, 6, and 9 latent
+variables, and found that for our dataset, all model variants
+provide comparable validation errors upon convergence. We
+use 6 latent variables for the rest of our analyses. We found
+that setting δ= 4/(λagg−λtim)in (4) provides a good
+solution quality. We also found that setting β= 0.02yields
+a good trade-off between the loss terms, without one loss
+component overpowering the others. The loss statistics are
+shown in Figure 3. As shown, all the loss terms decrease
+0.0000.0050.010Lx
+0.250.75LKL
+0 4000 8000
+Iterations0.00.1La
+0 4000 8000
+Iterations0.00.1LTotalTraining set Validation setFig. 3: Convergence of our model training on the training
+(red) and validation (blue) data. Loss statistics are obtained
+from 10 differently seeded NIDM models and the curves are
+smoothed over 10 iterations.
+rapidly before converging to a relatively low value for both
+the training and validation sets.
+V. S IMULATION SETUP
+A. Driving Strategy
+Within the simulation environment, the longitudinal ac-
+celeration of vehicles is determined by IDM and their merge
+decisions are determined by MOBIL [28], which is a rule-
+based strategy that determines a vehicle’s decision with the
+goal of maximizing the longitudinal acceleration for the
+vehicle and its neighboring cars. A decision to merge is
+considered if the induced acceleration of the immediate rear
+car on the main lane fulfills the safety criterion an> bsafe.
+Given that the safety criterion is met, a lane merge is
+performed if,
+˜ac−ac+C((˜an−an) + (˜ao−ao))> ath (10)
+where ac,anandaoare the actions of the vehicle making
+the merge decision, the rear car in the new lane and the rear
+car in the current lane, respectively. The accelerations with
+tildes are calculated as if a lane merge has been initiated.
+The parameter C∈[0,1]is a politeness factor which
+represents the degree to which the speed gains and losses of
+the surrounding vehicles are valued over that of the vehicle
+wanting to merge.
+B. Driver Disposition
+The ranges of possible values for the driver parameters are
+listed in Table I. At the start of a driving episode, we populate
+the road with drivers that have aggressiveness levels ranging
+from the most aggressive to the most timid. The roadway
+consists of a 500 m main road and a 100 m on-ramp. To
+expose the model to a diverse range of traffic conditions, we
+populate the road with n={n1, n2, ..., n N}vehicles where
+N∈R{4,5,6,7}is the total number of vehicles on the road
+for a given episode.3943
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:36:28 UTC from IEEE Xplore.  Restrictions apply. 
+TABLE I: IDM AND MOBIL DRIVER PARAMETER RANGE.
+Driver ParameterAggressive
+(λagg)Timid
+(λtim)
+Desired speed ( m s−1) vdes 25 15
+Desired time gap ( s) Tdes 0.5 2
+Min separation distance ( m) dmin 1 5
+Max acceleration ( m s−2) amax 4 2
+Max deceleration ( m s−2) bmax 4 2
+Safe braking ( m s−2) bsafe -5 -3
+Acceleration threshold ath 0 0.2
+The driver parameters are assigned as follows. For each
+driver, we first draw a sample from a uniform distribution
+ψ∼U(0,1), where ψrepresents the driver’s aggressive-
+ness level . Drivers with larger ψexpress more aggressive
+tendencies, such as driving close to their front neighbor
+(tailgating) or not being cognizant of the vehicles on the on-
+ramp. Given ψ, each driver parameter in θIDM is considered
+to be distributed according to a Beta distribution Beta( α, β)
+with the shape factors α=ϕψandβ=ϕ(1−ψ), where
+ϕis a precision coefficient that alters the variance of a
+given beta density. For each driver parameter λ, we draw a
+sample ˜ψ∼Beta( α, β)to calculate the parameter value λ=
+λtim+˜ψ(λagg−λtim). This way, drivers with a wide range
+of parameter values can be created while the parameters for
+an individual driver remain correlated, hence maintaining the
+notion of driver aggressiveness. In our experiments, we use
+a precision value ϕ= 15 .
+C. Driver Attention
+We adapt the Cooperative Intelligent Driver Model (C-
+IDM) proposed in [29] for modeling driver attention. C-IDM
+uses estimates of time to reach the merge point (TTM )for
+the vehicle on the main road (TTM a)and the vehicle on
+the on-ramp (TTM b). Within the simulator, the attention of
+a vehicle is assigned as follows:
+•IfTTM b< C ·TTM a, the vehicle on the main
+lane follows IDM by considering the projection of the
+merging vehicle on the main lane as its front neighbor,
+therefore exhibiting a yielding behavior.
+•IfTTM b≥C·TTM a, the vehicle on the main lane
+follows the standard IDM, therefore exhibiting a passing
+behavior.
+•In the absence of any vehicles on the on-ramp, the
+vehicle on the main lane follows the standard IDM.
+•In the case that a vehicle on the on-ramp decides to
+merge but TTM b≥C·TTM a, the vehicle on the
+main lane yields to the merging car when an< bsafeto
+avoid a collision.
+D. Training Features
+We train NIDM and other evaluation baselines on a
+synthetic dataset collected from the simulated ramp merging
+scenario. The synthetic dataset contains 500 driving episodes
+which amount to roughly three hours of driving by 1500
+drivers, each with unique driver parameters. A set of features
+are chosen to represent the local traffic context from eachdriver’s viewpoint. In addition to the joint vehicle state and
+action, a feature vector contains the Euclidean distance of
+the on-ramp vehicles to the merging point and a Boolean
+feature to indicate whether there is a vehicle present on the
+on-ramp. We set the feature values of the missing vehicles
+to dummy values equal to their mean value across all the
+training examples.
+VI. EXPERIMENTS AND RESULTS
+A. Baseline Policies
+We compare the performance of NIDM to the follow-
+ing baselines:
+•Multilayer perceptron ( MLP ) policy. The MLP is a 4-
+layer, fully connected architecture composed of ReLU
+activation functions similar to that proposed in [25].
+•LSTM policy. This is similar to MLP but it also
+maintains an internal state that conditions the policy on
+the vehicles’ motion history.
+•Latent-MLP policy. This is a policy from [8], which
+was originally evaluated on a straight roadway.
+•CV AE . This is a simplified setting of our model, where
+we remove the IDM layer so that the decoder directly
+maps its inputs to driver actions.
+The MLP receives the current traffic state as input to param-
+eterize the distribution over driver actions, with the training
+objective of maximizing the log-likelihood of true driver
+actions. Similar to our approach, Latent-MLP can learn a
+latent, low-dimensional representation of driving trajectories.
+Latent-MLP uses a normal prior distribution N(0,1)(while
+the prior in NIDM is approximated by a neural network)
+and GMMs are used to characterize the distribution over
+driver actions. For both NIDM and CV AE models, we use
+the same experimental protocol, where the dataset is split
+into 70% training and 30% validation. With a time interval
+of∆t= 0.1 s, we extract 8 seconds (80 time steps) of
+trajectories, using the first 3 seconds as motion history to
+predict the next 5 seconds. The same dataset is used for
+other baselines, although their training involves predicting
+actions for one step at a time as opposed to generating full
+trajectories through policy rollouts.
+B. Evaluation Procedure
+The models are evaluated within the same simulation envi-
+ronment we use to collect the training data. Each simulation
+episode lasts for 10 s, corresponding to 100 time steps at
+a simulation frequency of 10 Hz . The procedure we use to
+generate vehicle trajectories proceeds as follows:
+1) For a given episode, the road is populated with sim-
+ulated drivers with randomly assigned initial speeds,
+initial positions and driver parameters.
+2) The simulation is run for 3 sto obtain sufficient motion
+history for feeding each driver policy.
+3) After 3 s, the policies take over to predict the longitu-
+dinal acceleration of each vehicle on the main road.
+4) Equation (5) is applied to estimate the vehicles’ position
+at the next time step.3944
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:36:28 UTC from IEEE Xplore.  Restrictions apply. 
+(a) CV AE
+ (b) NIDM
+Fig. 4: Visualization of the three-dimensional latent space
+with coloring according to driver aggressiveness.
+5) In the new traffic state, a feature vector (see Section V-
+D for details) for every driver is obtained to sequentially
+feed their policies.
+6) Steps 3, 4 and 5 are repeated to propagate the traffic
+state forward in time.
+Upon the completion of the procedure above, we can
+compare the generated vehicle trajectories to the ground truth
+trajectories for the performance evaluation and comparison
+of different policies. We note that although the vehicles share
+the neural network parameters of a single policy, the policies
+are able to produce a diverse range of driving behaviors as
+they receive different observation sequences.
+C. Evaluation Metric
+We use Root-Weighted Square Error (RWSE) as the per-
+formance metric, which captures the deviation of the model’s
+probability mass from ground truth trajectories [8]. We note
+that data likelihood, which is a measure for the goodness-of-
+fit of the model to data, is not a sufficient metric to assess
+model performance, as it only captures similarity at the level
+of individual data points. The RWSE for mtrajectories,
+nsampled traces per true trajectory, and for the predicted
+variable ris:
+RWSEt=vuut1
+mnmX
+i=1nX
+j=1(rt
+(i)−ˆrt
+(i,j))2(11)
+where ˆrt
+(i,j)is the predicted variable at time tand under
+the sample j. For the quantitative results presented in this
+section, we generate m= 210 trajectories and n= 10
+sampled traces, resulting in a total of 2100 policy rollouts.
+D. Qualitative Evaluation
+1) Latent Space Visualization: Fig. 4 shows the projection
+of three of the six latent variables for NIDM and CV AE.
+The plot was generated using 5000 trajectories that were
+randomly extracted from the validation dataset and the points
+in the plot are colored according to driver aggressiveness
+(ranging from purple (most timid) to red (most aggressive)).
+It should be noted that the latent samples shown are from the
+prior network Pθ(Z|hx). We observe that NIDM successfully
+clusters together drivers according to their aggressiveness.
+Compared to CV AE, NIDM appears to significantly improvethe information content of the latent embedding, as illus-
+trated by a more semantic latent representation. Intuitively,
+the lowest training loss can be achieved by arranging the
+nearby trajectories in data space (which carry cues about
+the drivers’ internal state) closer together in the latent space.
+We conjecture that the discrepancy between the two models
+is caused by the decoder’s ability in the CV AE model to
+sequentially map its inputs directly to driver actions over
+time. In contrast, for NIDM, the parameter set θIDM is
+inferred once at the start of a given policy rollout and used
+repeatedly to propagate the vehicle’s state forward in time.
+This constraint on NIDM establishes a strong driving factor
+for shaping the latent space, encouraging the learning of
+an informative embedding by exploiting the gradient paths
+through the state transitions over time.
+2) Ramp Merging Scenario: Fig. 5 gives a qualitative
+impression of the NIDM’s predictions for an example sce-
+nario. The scenario involves a vehicle merging in front of a
+relatively aggressive driver with an aggressiveness level of
+ψ= 0.9. Given 3 sof motion history as input, NIDM is
+tasked with estimating the unknown parameters θIDM and
+predicting the driver’s future behavior. It is important to
+note that the input to NIDM contains no explicit information
+(such as labels) about the driver’s internal state. After about
+4 s, the driver starts to attend to the on-ramp vehicle, as
+indicated by the sharp deceleration actions shown in Fig. 5a.
+This behavior is typical of aggressive drivers in our traffic
+simulator, who would not brake until a car merges in front
+of them, by which time the available gap has closed so much
+that abrupt braking becomes necessary to avoid a collision.
+We observe that NIDM has correctly anticipated the driver’s
+hard braking (marked gray), with the model predictions being
+distributed around the true driver actions (marked red).
+Fig. 5d shows the estimated driver parameter values, where
+the true values are marked by the dashed vertical lines.
+The generated samples are colored in blue, which we fit
+with three-mode Gaussian mixtures using the expectation-
+maximization (EM) algorithm to aid with visualization. We
+observe that NIDM is able to correctly identify the unknown
+parameters vdes,Tdesandbmax, as indicated by the large
+probability mass over the true parameter values. There are
+larger probability mass offsets for parameters dminandamax.
+We have found that these offsets can be justified by the very
+nature of the IDM’s structure in (1), which depending on
+the traffic state, can be more or less sensitive to different
+driver parameters. The output of (1) is most sensitive to
+vdesandTdes, hence the model is severely penalized for
+having poor estimates for these parameters. Conversely, dmin
+is only relevant in a traffic jam situation, and hence has
+little impact on the output of (1) in this traffic instance.
+As such, the model does not incur large loss penalties for
+making poor estimates of dmin. Intuitively, this result is to
+be expected, since we do not explicitly train the model to
+predict the driver parameter values (as they are considered to
+be unknown). Instead, the model’s objective while training is
+to minimize the loss function LTotal , towards which inferring
+the unknown θIDM is merely an intermediate step.3945
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:36:28 UTC from IEEE Xplore.  Restrictions apply. 
+0 2 4 6 8
+Time (s)3
+0
+−3
+−6Long. Accel ( m/s2)
+Action history
+NIDM
+Ground-truth(a)
+4 6 8
+Time (s)0.00.51.0Ego attentionTruewl
+Truewm
+NIDMwl
+NIDMwm (b)
+ (c)
+24 26
+vdes(m/s)0510Probability Density
+0.5 1.0
+Tdes(s)
+0.5 1.0 1.5
+dmin(m)
+3 4
+amax(m/s2)
+3.5 4.0
+bmax(m/s2)
+(d)
+Fig. 5: Sample predictions (100 samples) for a scenario in which an on-ramp vehicle decides to merge in front of a vehicle
+on the main road. (a) True and predicted driver action profiles. (b) Anticipated driver attention with its mean and standard
+errors. (c) Visualization of the two-dimensional latent space for the validation set with coloring according to the ground truth
+driver aggressiveness; the black crosses are samples from the latent space that were generated for this specific scenario. (d)
+Sampled values for the driver parameters θIDM (marked blue) fitted with Gaussian mixtures (marked red) for clarity.
+01020RWSE position (m)MLP
+LSTM
+Latent-MLP
+CVAE
+NIDM
+0 2 4 6 8 10
+Time horizon (s)024RWSE speed (m/s)
+Fig. 6: Root weighted square error values for the trajectories
+generated through 2100 policy rollouts.
+In Fig. 5c, a visualization of the latent space for NIDM is
+shown, where the black crosses are samples for this specific
+scenario. By inspecting the latent space, we can observe
+that the driver expresses aggressive driving tendencies. With
+the addition of the estimated driver attention values shown
+in Fig. 5b, we can interpret how the anticipated driver
+accelerations were derived.
+E. Quantitative Evaluation
+Fig. 6 shows the RWSE values against the prediction
+horizon for vehicle speed and position. NIDM and CV AE
+yield a greater generalization capability, as indicated by the
+lower RWSE values. The performance discrepancy becomes
+MLP LSTM Latent-MLP CVAE NIDM0.000.020.040.060.08Headway
+Speed
+Long. AccelFig. 7: Summary of KL divergence values for trajectories
+generated using each model.
+more pronounced further into the future, where both NIDM
+and CV AE are found to be less prone to degrading accuracy
+compared to other baselines. In Fig. 7 we use KL-divergence
+to quantify the degree of similarity between the distributions
+over the emergent vehicle state and action values encountered
+during the policy rollouts. NIDM yields lower KL-divergence
+values, with CV AE showing comparable results.
+In Table II, we report the resulting collision counts and
+collision rates from the policy rollouts. We find that NIDM
+has the lowest collision rate out of the evaluated baselines,
+followed by CV AE with a collision rate of 2.4%. This result
+empirically demonstrates that NIDM is less likely to lead
+vehicles into collisions. A plausible explanation for NIDM’s
+lower collision rate is that the IDM’s dynamic equation has
+been designed to express stability properties that constrain
+the long-term behavior of the NIDM drivers. As such,
+prediction errors are prevented from severely cascading into
+the future due to distribution shift.3946
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:36:28 UTC from IEEE Xplore.  Restrictions apply. 
+TABLE II: EV ALUATION RESULTS FOR RAMP MERGING SCENARIO
+MLP LSTMLatent-
+MLPCV AE NIDM
+Collision Count 132 193 220 50 19
+Collision Rate (%) 6.3 9.1 10.5 2.4 0.9
+VII. CONCLUSIONS
+We have introduced a new approach for learning a driver
+model with strong inductive biases which are imposed
+through an expert-informed dynamic structure and that add
+a degree of interpretability to the black-box nature of deep
+networks. We show that the model can accurately replicate
+ground truth driver behavior over longer horizons than those
+experienced by the model during training. Additionally, our
+model includes a generative component to capture uncer-
+tainty and generate a diverse range of driver behaviors.
+The use of IDM in this work was a design choice; in
+practice, other forms of inductive biases can be utilized in
+its place, as long as they are amenable to gradient-based
+optimization. While our results demonstrate the potential
+of the proposed approach, it remains to be explored to
+what degree the performance gains extend to real-world
+driving datasets. We aim to use the proposed model for
+model-based planning, framing autonomous driving as a
+Partially Observable Markov Decision Process (POMDP)
+[20] with drivers’ internal states modeled as the partially
+observable state variables. The source code for the simulator
+and the results associated with this paper are available at
+https://github.com/saArbabi/DriverActionEstimators.
+ACKNOWLEDGMENT
+This work was supported by Jaguar Land Rover and
+EPSRC projects ROSSINI (EP/S016317/1) and TASCC
+(EP/N01300X/1).
+REFERENCES
+[1] D. Hafner, T. Lillicrap, M. Norouzi, and J. Ba, “Mastering atari with
+discrete world models,” arXiv preprint arXiv:2010.02193 , 2020.
+[2] S. Casas, C. Gulino, S. Suo, K. Luo, R. Liao, and R. Urtasun, “Implicit
+latent variable model for scene-consistent motion forecasting,” in
+Computer Vision–ECCV 2020: 16th European Conference, Glasgow,
+UK, August 23–28, 2020, Proceedings, Part XXIII 16 . Springer, 2020,
+pp. 624–641.
+[3] S. Casas, C. Gulino, R. Liao, and R. Urtasun, “Spatially-aware graph
+neural networks for relational behavior forecasting from sensor data,”
+arXiv preprint arXiv:1910.08233 , 2019.
+[4] S. Casas, C. Gulino, S. Suo, and R. Urtasun, “The importance of
+prior knowledge in precise multimodal prediction,” in 2020 IEEE/RSJ
+International Conference on Intelligent Robots and Systems (IROS) .
+IEEE, 2020, pp. 2295–2302.
+[5] R. P. Bhattacharyya, D. J. Phillips, C. Liu, J. K. Gupta, K. Driggs-
+Campbell, and M. J. Kochenderfer, “Simulating emergent properties
+of human driving behavior using multi-agent reward augmented im-
+itation learning,” in 2019 International Conference on Robotics and
+Automation (ICRA) . IEEE, 2019, pp. 789–795.
+[6] M. Henaff, A. Canziani, and Y . LeCun, “Model-predictive policy
+learning with uncertainty regularization for driving in dense traffic,”
+arXiv preprint arXiv:1901.02705 , 2019.
+[7] S. Suo, S. Regalado, S. Casas, and R. Urtasun, “Trafficsim: Learning
+to simulate realistic multi-agent behaviors,” in Proceedings of the
+IEEE/CVF Conference on Computer Vision and Pattern Recognition ,
+2021, pp. 10 400–10 409.[8] J. Morton and M. J. Kochenderfer, “Simultaneous policy learning and
+latent state inference for imitating driver behavior,” in 2017 IEEE
+20th International Conference on Intelligent Transportation Systems
+(ITSC) . IEEE, 2017, pp. 1–6.
+[9] J. Kober, J. A. Bagnell, and J. Peters, “Reinforcement learning in
+robotics: A survey,” The International Journal of Robotics Research ,
+vol. 32, no. 11, pp. 1238–1274, 2013.
+[10] L. H. Gilpin, D. Bau, B. Z. Yuan, A. Bajwa, M. Specter, and L. Kagal,
+“Explaining explanations: An overview of interpretability of machine
+learning,” in 2018 IEEE 5th International Conference on data science
+and advanced analytics (DSAA) . IEEE, 2018, pp. 80–89.
+[11] K. Sohn, H. Lee, and X. Yan, “Learning structured output represen-
+tation using deep conditional generative models,” Advances in neural
+information processing systems , vol. 28, pp. 3483–3491, 2015.
+[12] M. Cranmer, A. Sanchez Gonzalez, P. Battaglia, R. Xu, K. Cranmer,
+D. Spergel, and S. Ho, “Discovering symbolic models from deep
+learning with inductive biases,” Advances in Neural Information
+Processing Systems , vol. 33, pp. 17 429–17 442, 2020.
+[13] A. G. Wilson and P. Izmailov, “Bayesian deep learning and
+a probabilistic perspective of generalization,” arXiv preprint
+arXiv:2002.08791 , 2020.
+[14] S. Bahl, M. Mukadam, A. Gupta, and D. Pathak, “Neural dy-
+namic policies for end-to-end sensorimotor learning,” arXiv preprint
+arXiv:2012.02788 , 2020.
+[15] J. K. Gupta, K. Menda, Z. Manchester, and M. Kochenderfer, “Struc-
+tured mechanical models for robot learning and control,” in Learning
+for Dynamics and Control . PMLR, 2020, pp. 328–337.
+[16] M. Treiber, A. Hennecke, and D. Helbing, “Congested traffic states in
+empirical observations and microscopic simulations,” Physical review
+E, vol. 62, no. 2, p. 1805, 2000.
+[17] V . Punzo, M. Montanino, and B. Ciuffo, “Do we really need to
+calibrate all the parameters? variance-based sensitivity analysis to
+simplify microscopic traffic flow models,” IEEE Transactions on
+Intelligent Transportation Systems , vol. 16, no. 1, pp. 184–193, 2014.
+[18] J. Monteil, N. O’Hara, V . Cahill, and M. Bouroche, “Real-time
+estimation of drivers’ behaviour,” in 2015 IEEE 18th International
+Conference on Intelligent Transportation Systems . IEEE, 2015, pp.
+2046–2052.
+[19] E. Ward, N. Evestedt, D. Axehill, and J. Folkesson, “Probabilistic
+model for interaction aware planning in merge scenarios,” IEEE
+Transactions on Intelligent Vehicles , vol. 2, no. 2, pp. 133–146, 2017.
+[20] Z. Sunberg and M. Kochenderfer, “Improving automated driv-
+ing through planning with human internal states,” arXiv preprint
+arXiv:2005.14549 , 2020.
+[21] R. P. Bhattacharyya, R. Senanayake, K. Brown, and M. J. Kochender-
+fer, “Online parameter estimation for human driver behavior predic-
+tion,” in 2020 American Control Conference (ACC) . IEEE, 2020, pp.
+301–306.
+[22] F. Richards, “A flexible growth function for empirical use,” Journal
+of experimental Botany , vol. 10, no. 2, pp. 290–301, 1959.
+[23] S. Hochreiter and J. Schmidhuber, “Long short-term memory,” Neural
+computation , vol. 9, no. 8, pp. 1735–1780, 1997.
+[24] I. Higgins, L. Matthey, A. Pal, C. Burgess, X. Glorot, M. Botvinick,
+S. Mohamed, and A. Lerchner, “beta-vae: Learning basic visual
+concepts with a constrained variational framework,” 2016.
+[25] J. Schulz, C. Hubmann, N. Morin, J. L ¨ochner, and D. Burschka,
+“Learning interaction-aware probabilistic driver behavior models from
+urban scenarios,” in 2019 IEEE Intelligent Vehicles Symposium (IV) .
+IEEE, 2019, pp. 1326–1333.
+[26] M. Abadi, P. Barham, J. Chen, Z. Chen, A. Davis, J. Dean, M. Devin,
+S. Ghemawat, G. Irving, M. Isard et al. , “Tensorflow: A system
+for large-scale machine learning,” in 12th {USENIX }symposium on
+operating systems design and implementation ( {OSDI }16), 2016, pp.
+265–283.
+[27] D. P. Kingma and J. Ba, “Adam: A method for stochastic optimiza-
+tion,” arXiv preprint arXiv:1412.6980 , 2014.
+[28] A. Kesting, M. Treiber, and D. Helbing, “General lane-changing model
+mobil for car-following models,” Transportation Research Record , vol.
+1999, no. 1, pp. 86–94, 2007.
+[29] M. Bouton, A. Nakhaei, K. Fujimura, and M. J. Kochenderfer,
+“Cooperation-aware reinforcement learning for merging in dense
+traffic,” in 2019 IEEE Intelligent Transportation Systems Conference
+(ITSC) . IEEE, 2019, pp. 3441–3447.3947
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:36:28 UTC from IEEE Xplore.  Restrictions apply. 

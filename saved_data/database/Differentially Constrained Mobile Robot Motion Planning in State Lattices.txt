@@ -1,0 +1,1417 @@
+=== Metadata ===
+{
+    "file_name": "Differentially Constrained Mobile Robot Motion Planning in State Lattices.pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Differentially Constrained Mobile Robot Motion Planning in State Lattices.pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+••••••••••••••••• ••••••••••••••Differentially Constrained
+Mobile Robot Motion Planning
+in State Lattices
+Mihail Pivtoraiko, Ross A. Knepper,
+and Alonzo Kelly
+Robotics Institute
+Carnegie Mellon University
+Pittsburgh, Pennsylvania 15213e-mail: mihail@cs.cmu.edu, rak@ri.cmu.edu,
+alonzo@ri.cmu.edu
+Received 6 August 2008; accepted 4 January 2009
+We present an approach to the problem of differentially constrained mobile robot mo-
+tion planning in arbitrary cost ﬁelds. The approach is based on deterministic search in aspecially discretized state space. We compute a set of elementary motions that connects
+each discrete state value to a set of its reachable neighbors via feasible motions. Thus, this
+set of motions induces a connected search graph. The motions are carefully designed toterminate at discrete states, whose dimensions include relevant state variables (e.g., posi-
+tion, heading, curvature, and velocity). The discrete states, and thus the motions, repeat at
+regular intervals, forming a lattice. We ensure that all paths in the graph encode feasiblemotions via the imposition of continuity constraints on state variables at graph vertices
+and compliance of the graph edges with a differential equation comprising the vehicle
+model. The resulting state lattice permits fast full conﬁguration space cost evaluation andcollision detection. Experimental results with research prototype rovers demonstrate that
+the planner allows us to exploit the entire envelope of vehicle maneuverability in rough
+terrain, while featuring real-time performance.
+C/circlecopyrt2009 Wiley Periodicals, Inc.
+1. INTRODUCTION
+Capable motion planners are important for enabling
+ﬁeld robots to perform reliably, efﬁciently, and intelli-
+gently. Despite decades of signiﬁcant research effort,
+today the majority of ﬁeld robots still exhibit variousfailure modes due to motion planning deﬁciencies.
+These failure modes range from computational inef-
+ﬁciencies to frequent resort to operator involvementwhen the autonomous system takes unnecessary
+risks or fails to make adequate progress. On the
+basis of our extensive ﬁeld robotics experience, we
+have developed a motion planning method that
+addresses the drawbacks of leading approaches. Wehave demonstrated it here to be superior to state of
+the art. It is a deterministic, sampling-based methodthat features a particular sampling of robot state
+space, which lends itself well to enabling an array of
+performance capabilities.
+Discrete representation of robot state is a well-
+established method of reducing the computational
+complexity of motion planning. This reduction comesat the expense of sacriﬁcing feasibility and optimality ,
+the notions denoting the planner’s capacity to com-
+pute a motion that satisﬁes given constraints and to
+minimize the cost of the motion, respectively. The
+proposed method is based on a particular discretiza-tion of robot state space, the state lattice .I ti su s e dt o
+Journal of Field Robotics 26(3), 308–333 (2009) C/circlecopyrt2009 Wiley Periodicals, Inc.
+Published online in Wiley InterScience (www.interscience.wiley.com). •DOI: 10.1002/rob.20285
+Pivtoraiko et al.: Differentially Constrained Robot Motion Planning in State Lattices •309
+formulate the problem of motion planning as graph
+search, and so it will be referred to as a search space .I n
+computing motions, we seek to satisfy two types ofconstraints: avoiding the features of the environment
+that limit the robot’s motion ( obstacles ) and the limita-
+tion of the robot’s mobility due to the constrained dy-namics of its motion ( differential constraints ). Motions
+that satisfy both types of constraints will be referred
+to as feasible motions.
+The state lattice is a regular sampling of the state
+space. It encodes a graph whose vertices are a dis-
+cretized set of all reachable states of the system and
+whose edges are feasible motions, controls , which
+connect these states exactly. The motions encoded inthe edges of the state lattice form a repeating unit
+that can be copied to every vertex, while preserving
+the property that each edge joins neighboring verticesexactly. This property of the search space will be de-
+noted regularity . The canonical set of repeating edges
+will be called the control set . The number of edges
+in the control set is exactly the branching factor, out-
+degree , of each vertex in the reachability graph.
+1.1. Motivation
+This work is motivated by a number of robotics
+applications. In the context of terrestrial unmanned
+ground vehicles, competence in motion planning in
+dense obstacle ﬁelds demands the use of sufﬁciently
+high-ﬁdelity, constrained-motion models, at least in
+the near ﬁeld. Repeated attempts to get by with lesshave not been particularly successful (Kelly et al.,
+2004). A classic case is that of a vehicle with Acker-
+man (or car-like) steering that drives into a windingcorridor only to ﬁnd it closed off. In this case, the
+robot must turn around using many velocity rever-
+sals while avoiding the obstacles surrounding it. Thisapplication motivates high-ﬁdelity representation of
+robot maneuverability.
+Another case of contemporary interest is that of
+a planetary rover surveying a rocky ﬁeld. It is often
+necessary to approach a target rock in a particular
+conﬁguration and with high precision, in order todeploy onboard instruments. The capacity of the
+motion planner to enable the accomplishment of
+this mission depends on generating a path thatcan be followed reliably with precision. As above,
+understanding and utilizing robot maneuverability
+while minimizing computational requirements is
+critical to accomplishing such missions. Failure of the
+robot to compute its own motion is likely to lead tosystem failure that requires operator involvement to
+resolve. Human participation, even via teleoperation,
+signiﬁcantly reduces the utility of the robotic system.
+Practical approaches to motion planning in dif-
+ﬁcult ﬁeld applications differ from the focus of con-
+temporary theoretical research in several signiﬁcantways. Difﬁcult three-dimensional (3D) environments
+such as rolling vegetated terrain, boulder ﬁelds, and
+forests cannot usually be partitioned into obstaclesand nonobstacles because the system must reason
+about the relative risk of candidate paths, rather
+than which physical objects will prevent motion. A
+workspace (i.e., x,y) cost map has been a preferred
+environmental map representation for us and oth-ers since the 1980s. This is a discrete ﬁeld of cost
+data whose continuously varying magnitude is repre-
+sented in a dense spatial array. The cost of each pointin robot conﬁguration space, also denoted as Cspace ,
+can be computed as the sum of all cost cells (area in-
+tegral) occupied by the “footprint” area of the vehiclewhen it is projected onto the same horizontal plane
+as the workspace cost map. In the cost map approach,
+the cost of a path is the line integral of the cost ﬁeldalong the path in conﬁguration space. In such contin-
+uous cost ﬁelds, Cspace obstacles cannot be deﬁned,
+because there are no obstacle boundaries.
+Difﬁcult environments are usually at least
+partially unknown, and the topology of naviga-
+ble regions can be maze-like even on the scale of
+kilometers. Hence, ﬁelded systems emphasize the
+use of both a perception system to understand theimmediate environment and a deliberative global
+planning system operating on the kilometer scale.
+Such planners must replan long paths very regularlyin response to incoming perception information.
+Such perception updates might cause a signiﬁcant
+modiﬁcation of the motion plan. For example, it maybe revealed that a predicted ravine leading to the
+goal is actually a blocked box canyon, or that an
+unanticipated exit from a dry riverbed has just beendiscovered.
+For the above reasons, ﬁelded systems often
+use variants of the D
+∗planning algorithm, which
+was invented to address this core problem in ﬁeld
+robotics (Stentz, 1995). In this case, perception causes
+continuous changes to the cost map that eliminatemuch of the opportunity to precompute the intersec-
+tion calculations characteristic of a Cspace obstacle
+representation. Rather, uniform cost ﬁeld planners
+must recompute the cost of each Cspace point every
+time the underlying workspace cost ﬁeld changes,
+Journal of Field Robotics DOI 10.1002/rob
+310 •Journal of Field Robotics—2009
+so an explicit computation of Cspace obstacles is
+not commonly performed. However, we will see
+later (Section 3.3) that our approach permits a partialrecovery of the advantages of an explicit Cspace
+representation.
+Difﬁcult environments can also be characterized
+by dense obstacles through which maneuvering a real
+vehicle can be a difﬁcult challenge. In cost ﬁelds, an
+obstacle can be identiﬁed as a region of high cost. Thesatisfaction of the differential constraints of a real ve-
+hicle adds to the computational complexity of plan-
+ning. Indoor applications with sparse obstacles may
+be able to ignore vehicle differential constraints at
+planning time in favor of smoothing the path at exe-cution time. Another approach is to use a second local
+planner that satisﬁes differential constraints but only
+in the region near the present vehicle location. Ourﬁeld work has moved into environments for which
+all of the above smoothing techniques fail utterly be-
+cause the smoothed path inevitably intersects obsta-cles, which leads to collision, exceptions, or a basic
+disagreement in the autonomy system for which we
+have never found a universal solution. This motivatesour premise that effective motion planning in difﬁcult
+environments requires the satisfaction of differential
+constraints at planning time.
+Our approach in this paper is rooted in the theo-
+retical aspects of the problem, but it also puts a sig-
+niﬁcant emphasis on applications. The approach pre-
+sented here has been conceived through work with
+off-road mobile robots, and its development has beendriven by failure modes in the ﬁeld with which we
+have struggled for some time. The question of ef-
+ﬁciency has received considerable attention, even iftrade-offs of other motion planning qualities such as
+completeness and optimality are necessary.
+1.2. Related Work
+A signiﬁcant amount of work has been dedicated in
+recent years to the problem of smooth trajectory gen-
+eration for differentially constrained vehicles: ﬁnd-
+ing a smooth and feasible path given two end-pointconﬁgurations. Although in general this is a difﬁ-
+cult problem, recent work in this area has produced
+a variety of fast algorithms. The groundbreakingwork in analyzing the paths for differentially con-
+strained vehicles was done by Dubins (1957) and
+Reeds and Shepp (1990). Their ideas were further
+developed in algorithms proposed by Scheuer and
+Laugier (1998), Fraichard and Ahuactzin (2001), andFraichard and Scheuer (2004), where smoothness
+of paths was achieved by introducing segments of
+clothoids (curves whose curvature is a linear functionof their length) along with arcs and straight-line seg-
+ments. Somewhat different approaches by Scheuer
+and Fraichard (1997) and Lamiraux and Laumond(2001), among others, have also been shown to solve
+the generation problem successfully and quite ef-
+ﬁciently. On the other hand, Frazzoli, Dahleh, andFeron (2001) and Bicchi, Marigo, and Piccoli (2002)
+suggest that there are many cases in which efﬁcient,
+obstacle-free paths may be computed analytically.
+The cases that do not admit closed-form solutions
+can be approached numerically by solving appropri-ate optimal control problems (e.g., Anisi, Hamberg, &
+Hu, 2003; Fernandes, Gurvits, & Li, 1991). A fast dif-
+ferentially constrained trajectory generator by Kellyand Nagy (2002) and Howard and Kelly (2007) gen-
+erates polynomial spiral trajectories using parametric
+optimal control.
+Some of the methods described above also
+proposed applications to planning among obstacles.
+Since the early stages of modern motion planningresearch (Lozano-Perez, 1983; Lozano-Perez &
+Wesley, 1979; Reif, 1979), there has been interest in
+the planning methods that construct boundary repre-sentations of conﬁguration space obstacles (Agarwal,
+Amenta, Aronov, & Sharir, 1996; Agarwal, Aronov, &
+Sharir, 1999; Canny, Rege, & Reif, 1991, and others).
+The complexity of motion planning algorithms has
+also been studied (Alt et al., 1990; Canny, 1988; Jean,2001; Natarajan, 1988). With the advent of efﬁcient
+Cspace sampling methods (Barraquand et al. 1996;
+Gottschalk, Lin, & Manocha, 1996), there has beeninterest in algorithms that sample the space in a
+deterministic fashion (Barraquand & Latombe, 1991;
+Latombe, 1991). Lacaze, Moscovitz, DeClaris, andMurphy (1998) utilized these ideas to propose a
+method for planning over rough terrain using gener-
+ation of motion primitives by integrating the forwardmodel. Cherif (1999) advanced these concepts by
+basing planning on physical modeling. One novelty
+of our approach relative to the prior work is thegeneration of motion primitives that are forced to
+comply with a convenient state discretization.
+Also in the early 1990s, randomized sampling
+was introduced to motion planning (Barraquand
+& Latombe, 1990, among others). The probabilis-
+tic roadmap (PRM) methods were shown to be
+well-suited for path planning in Cspaces with
+many degrees of freedom (Hsu, 2000; Kavraki,
+Journal of Field Robotics DOI 10.1002/rob
+Pivtoraiko et al.: Differentially Constrained Robot Motion Planning in State Lattices •311
+1994; Kavraki, Svestka, Latombe, & Overmars, 1996)
+and with complex constraints, e.g., nonholonomic
+and kinodynamic (Casal, 2001; Hsu, 2000; Kindel,2001; Kuffner, 1999). Another type of probabilistic
+planning was rapidly-exploring random trees (RRT)
+introduced by LaValle and Kuffner (2001). RRTswere originally developed for handling differential
+constraints, although they have also been widely
+applied to the piano mover’s problem (Lavalle2006). Randomized approaches are understood to
+be incomplete, strictly speaking, but capable of
+solving many challenging problems quite efﬁciently
+(Branicky, LaValle, Olson, & Yang, 2001).
+As the randomized planners became increasingly
+well understood in recent years, it was suggested that
+their efﬁciency was not due to randomization itself.
+LaValle, Branicky, and Lindemann (2004) suggest anintuition that real random number generators always
+have a degree of determinism. In fact, Branicky et al.
+(2001) show that quasi-random sampling sequencescan accomplish similar or better performance than
+their random counterparts. The improvements in
+performance are primarily attributed to the more uni-form sampling by quasi-random methods, and hence
+Lavalle et al. (2004) suggest that a carefully designed
+low-discrepancy incremental deterministic sequencewould be able to do just as well (Lindemann &
+Lavalle, 2003, 2004). For these reasons, Branicky et al.
+(2001) introduced quasi-PRM and lattice roadmap
+(LRM) algorithms that use low-discrepancy Halton/
+Hammersley sequences and a regular lattice, re-spectively, for sampling. Both methods were shown
+to be resolution-complete, although the LRM ap-
+peared especially attractive due to its properties ofoptimal dispersion and near-optimal discrepancy.
+In this light, our approach of sampling on a regular
+lattice can be considered to be one of building onthe LRM idea and extending it to allow the state
+lattice to represent the differential constraints of the
+robot.
+Recent works have also discussed “lazy” vari-
+ants of the roadmap planning methods that avoid
+collision checking during the roadmap constructionphase (e.g., Bohlin, 2001; Bohlin & Kavraki, 2000;
+Branicky et al., 2001; Sanchez & Latombe, 2001, 2002).
+In this manner the same roadmap could be used in avariety of settings, at the cost of performing collision
+checking during the search. An even “lazier” version
+is suggested, in which “the initial graph is not even
+explicitly represented” (Branicky et al., 2001). In this
+regard, the principle of using an implicit lattice andsearching it by means of a precomputed control set
+that captures only local connectivity is similar to the
+lazy LRM.
+In the development of rapidly exploring dense
+trees for motion planning with differential con-
+straints, the importance of designing ofﬂine a fam-ily of motion primitives that captures the speciﬁcs
+of the system under consideration is noted (LaValle,
+2006). In this light, our proposed control set is pre-cisely the set of primitives that reﬂects symmetries
+of wheeled vehicles and encodes differential con-
+straints via ofﬂine reachability analysis. Our work
+is therefore aligned with recent trends in differen-
+tially constrained motion planning research, whilecontinuing the study of deterministic sampling meth-
+ods and the efﬁciencies of “lazy” exploration of state
+space.
+Initial concepts of this work were validated in
+a successful ﬁeld implementation of a differentially
+constrained motion planner built using an earlier ver-sion of the state lattice of limited size represented ex-
+plicitly (Kelly et al., 2004). In this article, we propose
+signiﬁcant improvements in efﬁciency and generality,while recasting the approach to generate the reacha-
+bility graph online as it is searched.
+1.3. Problem Statement
+The basic problem we address here is that of ﬁnd-
+ing a feasible path between two given robot states(e.g., consisting of position, heading, and curvature)
+for a differentially constrained vehicle in the pres-
+ence of arbitrary obstacles. If no path exists betweenthe states, the system should indicate failure, and
+otherwise it must ﬁnd a path. Our objective is a
+resolution-complete path planner, so this rule mustbe satisﬁed as the sampling resolution approaches
+inﬁnity. We also desire the solution to be optimal,
+up to the chosen sampling policy, with respect to anarbitrary but well-behaved notion of a path’s cost
+(e.g., path length, traversal time, and energy expen-
+diture). Further, the planner must be able to han-dle frequent changes in the environment (e.g., due
+to noisy and limited perception information). In this
+setting, the motion plan must be updated frequentlyenough (e.g., many times per second) to enable efﬁ-
+cient operation of the robot. The solution must oper-
+ate on relevant scales (kilometers of unknown or par-
+tially known terrain) while satisfying all of the above
+constraints.
+Journal of Field Robotics DOI 10.1002/rob
+312 •Journal of Field Robotics—2009
+1.4. Approach
+Our approach builds upon a long heritage and many
+strengths of earlier motion planning techniques. Our
+aim is to combine the previous results in a noveland unique manner. In particular, our method builds
+upon the previous introduction of implicit repre-
+sentations of regular search spaces (Branicky et al.,
+2001; Donald & Xavier, 1995), methods of sampling
+of relevant state variables of the robot (Barraquand &Latombe, 1991), and recent research on inverse trajec-
+tory generation (Frazzoli et al., 2001; Howard & Kelly,
+2007; Scheuer and Laugier, 1998). Our approach in-corporates efﬁcient replanning by reusing previous
+computation via the D
+∗search algorithm and its vari-
+ants (Koenig & Likhachev, 2002; Stentz, 1995).
+In general terms, the crux of our proposal is a
+particular sampling of robot state and control (input)
+spaces. This sampling subdivides the state space intoa set of subregions, cells. Each cell is identiﬁed with
+a canonical value of state space that represents the
+cell. These canonical values are arranged in a regu-lar structure in the state space. A precise trajectory
+generation algorithm is used that is equipped with a
+mobility model of the vehicle—including differential
+constraints and perhaps many other relevant aspects
+such as steering rate limits, propulsion dynamics,and wheel slip predictions. This trajectory generator
+is used to compute the controls that precisely con-
+nect the states in the above regular arrangement. Thissetup allows the following:
+•generation of a search space (a graph) that sat-
+isﬁes differential constraints by construction
+(Section 2),
+•development of an ideal search heuristic
+(a precomputed lookup table; Section 3.2),
+•introduction of fast and accurate evaluation
+of cost of motions (replacement for Cspace
+expansion with precomputed path swaths;
+Section 3.3),
+•adaptation of existing techniques of efﬁcient
+replanning (Section 3.4), and
+•enhancement of efﬁciency via a dynamic,
+multiresolution search space (Section 3.5).
+The proposed state lattice reduces the problem
+of motion planning under differential constraints to
+unconstrained, replanning heuristic search. It allows
+ofﬂine precomputation of aspects of the problem to
+enable fast online planning performance.1.5. Outline
+The paper is organized in six sections. In Section 2 we
+carefully construct the search space upon which our
+solution is based; we discuss its features and require-ments. Section 3 is dedicated to the details of adapt-
+ing standard search algorithms to this search space.
+Section 4 provides further details that may help in im-
+plementing and evaluating the presented approach.
+In Section 5, we demonstrate the performance of theplanner in simulated and real robot experiments us-
+ing planetary rover prototype robots. We conclude in
+Section 6 with closing remarks and future plans forthis research.
+2. SEARCH SPACE DESIGN
+This section presents a progression of design princi-ples that results in the creation of the proposed searchspace. It satisﬁes the robot’s differential constraints
+by construction, thereby eliminating the need to con-
+sider them explicitly during planning. In this sense,our solution does not consider differential constraints
+at planning time—a desirable property that was cited
+earlier. Instead, it considers them ofﬂine, during the
+design of a vehicle-speciﬁc search space, which is
+an even better approach from the perspective of en-abling multiple additional efﬁciencies.
+2.1. Regular Lattices
+Beneﬁcial state sampling policies include regular lat-
+tice sampling, in which a larger volume of the state
+space is covered with fewer samples, while minimiz-ing the dispersion or discrepancy (LaValle, 2006). It
+is natural to extend the concept of regular sampling
+from individual values of state to sequences of states(i.e., paths). As for state space, the function contin-
+uum of feasible motions can also be sampled to make
+computation tractable. The effective lattice state spacesampling, developed in this work, induces a related
+effective sampling of motions.
+Suppose that discrete states are arranged in a
+regular pattern. Besides sampling efﬁciency bene-
+ﬁts, an important advantage of regular sampling of
+state space is (quantized) translational invariance.Any motion that joins two given states will also join
+all other pairs of identically arranged states. By ex-
+tension, the same set of controls emanating from a
+given state can be applied at every other instance of
+the repeating unit. Therefore, in this regular lattice
+Journal of Field Robotics DOI 10.1002/rob
+Pivtoraiko et al.: Differentially Constrained Robot Motion Planning in State Lattices •313
+Figure 1. Regular lattices. Top: rectangular, diamond, and
+triangular (hexagonal) lattices. Bottom left: Discrete mo-tions in a four-connected lattice. Bottom right: Discontin-uous heading change in a path.
+arrangement, the information encoding the connec-
+tivity of the search space (ignoring obstacles) can beprecomputed, and it can be stored compactly in terms
+of a canonical set of repeated primitive motions, the
+control set.
+The simplest case of a regular lattice is a rectan-
+gular grid, depicted in Figure 1. The bottom left of
+the ﬁgure illustrates a popular discretization of mo-tions that corresponds to a four-connected grid. As
+shown in the bottom right, in the illustrated motion
+discretization, heading change across a vertex in agenerated path can be discontinuous. Following this
+path implies an instantaneous (and therefore impos-
+sible) heading change.
+We use this observation to develop two proper-
+ties of lattice search spaces that are necessary condi-tions for satisfying differential constraints:
+1. enforcing continuity of relevant robot state
+variables across the vertices
+2. ensuring that the edges between the ver-
+tices of the search space represent feasible
+motions
+The ﬁrst condition can be satisﬁed by adding the rel-
+evant dimensions to the search space, in order to rep-
+resent the continuity of state variables explicitly. Forexample, if a heading dimension is added to the state
+space in the ﬁgure, then ( x,y,n o r t h )a n d( x,y,e a s t )
+become distinct states. Absence of an edge between
+them makes the above path illegal, and it will not be
+generated. To satisfy the second condition, we requirea method of discretizing the robot control space to
+force its reachability tree to be a regular lattice in state
+space. We identify two methods of achieving this:
+•Forward : For certain systems, there are meth-
+ods of sampling the control space that result
+in a state lattice (Bicchi, Marigo, & Piccoli,
+2002; Frazzoli et al., 2001).
+•Inverse : A desired state sampling can be cho-
+sen ﬁrst, and boundary value problem solvers
+can be used to ﬁnd the feasible motions (steer-
+ing functions) that drive the system from one
+state value to another (e.g., Howard & Kelly,2007; Kelly & Nagy, 2002).
+We prefer the inverse approach because it permits
+the choice of state discretization to be driven by the
+application—including the vehicle and the environ-ment. Smaller state spacing is desired for denser ob-
+stacles or smaller vehicles. Note that in the state
+lattice, if state separations are small relative to the dis-tance required to change vehicle heading by the dis-
+tance to the next heading sample, the edges in such a
+structure can span many state separations.
+Fortunately, the work of constructing the state
+lattice can be performed ofﬂine, without affecting
+planner run time. Once it is constructed and rep-
+resented as a directed graph (compactly speciﬁed
+with a control set), the state lattice can be searchedwith standard algorithms. Two examples of simpli-
+ﬁed state lattices are shown in Figures 2 and 3.
+2.2. Desiderata and Design Approach
+Typically, trade-offs exist among the criteria in any
+design problem. For the sake of generality, no opti-
+mal design of the state lattice will be attempted here,
+because the basis of its optimality would require as-suming a particular application. Instead, we describe
+the aspects of the state lattice design that inﬂuence
+the performance of a planner built using it, with re-spect to the following important properties:
+1. Optimality: how close the cost of an opti-
+mal (e.g., shortest) path in the lattice is to the
+truly optimal path in the continuum
+2. Completeness: the degree to which a given
+search space approaches the capacity to ex-
+press all available motions
+3. Complexity: how much computation is re-
+quired to solve a particular planning query
+Journal of Field Robotics DOI 10.1002/rob
+314 •Journal of Field Robotics—2009
+Figure 2. A 3D search space, consisting of position and
+heading ( x,y,θ). The Reeds–Shepp car can move forward
+and backward. It can drive straight or turn left or right at aﬁxed curvature. Left: The designed control set precisely hitsvertices in a rectangular grid. It was derived from the car’sbasic motions by carefully choosing their length. Center:The reachability tree to depth 2. Right: The reachability tree
+(search space) obtained by copying the control set at ev-
+ery vertex in a Cspace with four headings. Each dot repre-
+sents four distinct vertices overlaid on each other, each rep-resenting different values of heading. Although this searchspace will not generate a turn of less than the chosen cur-vature, and although heading is continuous across vertices,the instantaneous transitions of curvature at the vertices donot respect steering rate limitations. Moreover, consideringonly four different heading values typically is impractical.
+Figure 3. An example state lattice. A repeated and regu-
+lar pattern of vertices and edges comprises the state lattice.The inset shows the control set, the motions leading to somenearby neighbors of a vertex. The overall motion plan (thickblack curve) is simply a sequence of such edges. Here,a greater number of headings was used than in Figure 2.Reverse motions were omitted for clarity.Enabling a planner to be well positioned with respect
+to properties 1 and 2 is related to the problem of
+sampling in the space of motions, and it remainsan active area of our related work (Green & Kelly,
+2007; Pivtoraiko, Knepper, & Kelly, 2007). One of
+the beneﬁts of the state lattice approach is that itperforms planning strictly in state space, which is
+easy to sample effectively. Regular lattice sampling
+features minimum dispersion and discrepancy,which allows the search to proceed effectively. Con-
+versely, achieving effective sampling in control space
+is hard in general. However, the state lattice induces
+a convenient sampling in control space, as motions
+that ﬁt the lattice are found a posteriori. Thus, mo-tion sampling inherits sampling effectiveness from
+the state lattice. An approach to satisfying proper-
+ties 1 and 2 in state lattice design is presented inPivtoraiko and Kelly (2005b). A simpliﬁed state
+lattice design, described in Section 4.2, can also be
+used as a departing point in evaluating the statelattice concept with a particular motion planner.
+The general principle to address property 3 is to
+reduce the number of motions in the control set as faras possible. In the case of deterministic planning, the
+size of the control set deﬁnes the branching factor of
+the search space and, thus, signiﬁcantly affects plan-ning complexity.
+3. MOTION PLANNING USING STATE LATTICES
+This section is devoted to a discussion of constrainedmotion planning using state lattices. Here we uti-
+lize the search space, developed in the preceding sec-
+tions, and discuss the algorithmic details of enabling
+planning and efﬁcient replanning under differential
+constraints.
+3.1. Search Algorithm
+Because the state lattice is a directed graph, any sys-tematic graph search algorithm is appropriate for
+ﬁnding a path in it. It is typically desired that a plan-
+ner return optimal paths with respect to the desiredcost criterion (e.g., time, energy, or path length) and
+that it be efﬁcient. The A
+∗(Hart, Nilsson, & Raphael,
+1968) and D∗Lite (Koenig & Likhachev, 2002) heuris-
+tic search algorithms were used in this work because
+they satisfy these requirements.
+Let the term ﬁdelity refer to the resolution of
+both the state samples and its connecting controls.
+If, hypothetically, the ﬁdelity of the state lattice were
+Journal of Field Robotics DOI 10.1002/rob
+Pivtoraiko et al.: Differentially Constrained Robot Motion Planning in State Lattices •315
+allowed to increase without limit, it is not hard to
+see that the state lattice and the corresponding con-
+trol set, when recomputed at each resolution level,would approach the continuum. Therefore, motion
+planning based on systematic search of the state lat-
+tice is resolution-complete.
+Many sequential motion planners can compute
+the optimal path in the discrete space searched.
+Hence, as the ﬁdelity of the state lattice is allowedto approach the continuum, it is possible, in princi-
+ple, to plan paths that approach optimal paths in the
+continuum arbitrarily closely.
+3.2. Heuristic Cost Estimate
+Heuristic estimates of the remaining cost in a partialplan are well known to have the potential to focusthe search enough to eliminate unnecessary compu-
+tation while preserving the quality of the solution. In
+many cases, remaining path length can be used to es-timate remaining cost, so path length heuristics are
+commonly used. Among the simplest options for a
+heuristic estimate of path length in the state lattice isthe Euclidean distance metric. This function is com-
+putationally efﬁcient, and it satisﬁes the admissibility
+requirement of A
+∗(Pearl, 1984). However, for dif-
+ferentially constrained planning, it is not a well-
+informed heuristic and, in many cases, it vastly
+underestimates the true path length, resulting in
+inefﬁcient search.
+A heuristic for a vehicle with limited turning ra-
+dius moving in the plane could be derived from the
+methods of Reeds and Shepp (1990). However, the
+Reeds–Shepp paths are discontinuous in curvature(i.e., infeasible to execute without stopping), and they
+do not account for discretization, so even these paths
+are underestimates. To generate the perfect heuris-tic distance function for the state lattice, it is neces-
+sary to incorporate information about the structure
+of its control set. Given ample ofﬂine computationalresources, a straightforward and effective way to pre-
+dict path lengths is to precompute and store the ac-
+tual cost heuristics that a planner will need, using theplanner itself. Such a heuristic lookup table (HLUT)
+can be implemented as a database of real-valued
+query costs. Under this approach, the computationof the heuristic becomes a simple table dereference
+(Knepper & Kelly, 2006; Pivtoraiko & Kelly, 2005a).
+Note that the regularity of the state lattice is a nec-
+essary condition for this heuristic to be admissible.
+Otherwise, the stored free-space costs of motions arenot invariant with respect to (w.r.t.) translation, and
+they cannot be applied throughout the state lattice.
+3.3. Computing Edge Costs
+The regularity of the state lattice allows an efﬁ-
+cient optimization in evaluation of the cost of graphedges during planning with continuous cost maps,
+which is roughly equivalent in computational terms
+to precomputing Cspace obstacles. Recall that the
+cost of a conﬁguration is computed as the sum of
+the workspace cell costs occupied by the vehicle vol-
+ume [i.e., area in two-dimensional (2D) workspacecost ﬁelds]. We denote the set of map cells occupied
+by the vehicle volume during execution of a particu-
+lar motion as the swath of this motion. Because lattice
+edges repeat regularly, so do their associated swaths.
+Thus, it is possible to precompute the swaths for all
+elements of the control set. When costs change in theworkspace cost map, the only computation required
+to update the cost of an edge (motion) is to add the
+costs of the cells in the swaths.
+The top of Figure 4 depicts a motion of a tractor-
+trailer vehicle, along with the swath of this motion.To evaluate the cost of a motion, the costs of map
+cells in the swath (reproduced on the bottom of
+Figure 4) are simply summed up—an operation typi-cally much more efﬁcient than simulating the motion
+of the system. The simpler alternative of low-pass ﬁl-
+tering the workspace cost map by a circular vehicle
+Figure 4. An example of a precomputed swath of a path
+for a tractor-trailer vehicle. Bottom: The swath allows com-puting the cost of a motion w.r.t. a cost map, without explic-itly considering the motion itself (top).
+Journal of Field Robotics DOI 10.1002/rob
+316 •Journal of Field Robotics—2009
+approximation will be signiﬁcantly less accurate for
+systems with elongated shapes.
+3.4. Processing Edge Cost Updates
+in Replanning
+The design described so far allows creating a motion
+planner using A∗or any other search algorithm that
+ﬁnds optimal paths in a graph. However, in ﬁeldrobotics applications, efﬁcient replanning (achieved
+by reusing previous computation) can be a critical
+design criterion. Because the state lattice is a directed
+graph, the variants of the D
+∗replanning algorithm
+can be adapted naturally. Regularity allows D∗
+replanning in the state lattice to be signiﬁcantly more
+efﬁcient, thanks to precomputation as described
+below.
+D∗variants were originally applied to grids
+(Koenig & Likhachev, 2002; Stentz, 1995). The funda-
+mental capacity of such planning algorithms is that ofefﬁcient repair of a plan given a set of workspace cell
+cost changes that have been created by perception. In
+general, the workspace cost ﬁeld need not have thesame resolution as the planning search space, and the
+connectivity of the latter can be arbitrary. The earliest
+work on D
+∗used the same resolution for both the cost
+map and the search space and implicit “edges” that
+connected states only to their nearest eight neighbors.
+In this case, the mapping from a modiﬁed map cell to
+the affected search space edges and vertices is trivial.
+More generally, workspace cell cost changes
+induce changes in perhaps several search space
+edge costs that, in turn, induce changes in search
+space vertex (edge endpoint) costs. For a state latticewhose edges may span several map cells, the above
+historical simpliﬁcations of these issues are no longer
+feasible.
+Suppose that the replanner uses a priority queue
+to ensure optimality of the solution. For every change
+in the cost of the directed edge from the vertex x
+ito
+xj,c(xi,xj), a replanning algorithm requires recom-
+puting the cost of xjand potentially inserting it into
+the priority queue. Assuming that a map cell mij∈N2
+changes cost, the planner needs to know the set of
+vertices Vcthat potentially need to be reinserted into
+the priority queue with new priority. Thus, the plan-ner requires a mapping Y:N
+2→Vc.
+To develop this mapping, we use the concept of
+swath, introduced in Section 3.3. More formally, we
+consider the swath a set Cs⊂N2of cost map cells that
+are occupied by the robot as it executes a motion. Thecost of an edge that represents this motion is directly
+dependent on the costs of map cells in Cs. Recall that
+once we precompute the control set of a regular lat-tice, it is possible to precompute the swaths of the
+edges in it.
+Because the mapping between edges and their
+terminal vertices is trivial, it is easier ﬁrst to develop
+the mapping Y
+/prime:N2→Ec, where Ecis the set of
+edges that are affected by mij(i.e., the set of edges
+whose swaths pass through the cell). Determining Y/prime
+may still appear as a formidable task, given the high
+density of edges in the multidimensional state lattice.
+However, we again exploit the regularity of the lattice
+to simplify the problem. If we have Y/prime/prime:O→Ec,
+where Ois the map origin, then Y/prime=Y/prime/prime+n,∀n∈N2.
+In other words, the set of edges affected by mij=Ois
+identical for any other cell, up to the translation coor-dinates. Further, recall that the swath C
+sof each edge
+inEcis known. In principle, Eccontains all edges uc,
+such that mijbelongs to Csofuc. Hence, the map-
+pingY/prime/primeis exactly the set of edges whose swaths pass
+through the 2D origin. Figure 5 illustrates this idea.
+Like the control set and path swaths, the resultingset of edges can be precomputed due to the regular-
+ity of the state lattice. An example of the V
+cfor the
+implementation described in Section 5 is shown inFigure 6.
+3.5. Graduated Fidelity of Representation
+By virtue of the state lattice’s general representationas a directed graph, it can be naturally extended with
+multiresolution enhancements. Signiﬁcant planning
+run time improvement was achieved in the literaturevia a judicious use of the quality of representation
+of the planning problem (e.g., Bohlin, 2001; Ferguson
+& Stentz, 2006; Pai & Reissell, 1998, among others).In ﬁeld robotics, it is frequently beneﬁcial to utilize
+a high ﬁdelity of representation in the immediate
+vicinity of the robot (perhaps within its sensor range)and reduce the ﬁdelity in the areas that are either
+less known or less relevant for the planning problem.
+Lower ﬁdelity of representation is designed to in-crease search speed, whereas higher ﬁdelity provides
+better quality solutions. Because grids have tradition-
+ally been utilized in replanning, the notion of varyingthe quality of problem representation has been identi-
+ﬁed with varying the resolution of the grid. However,
+our method varies the discretization of both the state
+and motions. We refer to managing the ﬁdelity of
+state lattice representation as graduated ﬁdelity .
+Journal of Field Robotics DOI 10.1002/rob
+Pivtoraiko et al.: Differentially Constrained Robot Motion Planning in State Lattices •317
+a c
+d e fb
+Figure 5. The ﬁrst several steps of precomputing the list
+of graph vertices that are affected by a change in cost of amap cell. (a) A single element of a control set is chosen forthis example. It emanates from the origin of the state lattice(thick square) and connects it to another graph vertex (thickcircle). Gray cells are the swath of this motion. Suppose thata map cell, located at the origin of the state lattice (thicksquare), changes cost. We attempt to ﬁnd all translationalversions of the chosen motion whose swaths are affectedby the changed map cell. (b)–(e) We iterate through sev-eral such translational versions of the motion. The result-ing (edge end-point) vertices that are considered for inser-tion to the priority queue are shown in (f). Typically, manymore such vertices are processed for each edge [as sug-gested by ellipsis in (f)]. The process repeats for all edgesin the control set. Precomputation allows eliminating anyredundancy by generating a unique list of such vertices.
+In designing the connectivity of search space
+regions of different ﬁdelities, care must be taken toensure that all regions consist of motions that are
+feasible with respect to the robot’s mobility model. If
+this rule is violated, mission failures become possibledue to the differences in the representation of vehicle
+mobility. Figure 7 illustrates this situation using
+a simple example. Suppose that a search space isused in which a high-ﬁdelity region of ﬁnite size
+surrounds and moves with the vehicle, and a disjoint
+lower ﬁdelity grid is used beyond that. Suppose that
+the A
+∗algorithm is used to plan paths in this hybrid
+graph. A car-like robot attempts to travel to a goal on
+Figure 6. A 2D projection of an example of Vc, the set of
+lattice states that are to be reconsidered for every updatedmap cell. The units in the plot are state lattice cells. For thepurposes of exposition, here the size of map cells is set to beequal to the size of state lattice ( x,y) cells. For each map cell,
+m
+ij, that changes cost, we place the set of vertices above in
+this ﬁgure onto mij[i.e., the origin of the set of vertices, de-
+noted with coordinates (0 ,0), is identiﬁed with mij]. Next,
+we iterate through the depicted list of the vertices and placeeach one on the priority queue, if it was indeed affected bythe cost change of m
+ij.
+the other side of a collection of obstacles that forms
+a narrow corridor. As long as the low-ﬁdelity region
+includes the corridor (black line), the planner will
+ﬁnd a solution in the graph. However, the 90-deg
+turn in the path is actually infeasible, because the car-
+like robot cannot turn in place. As the vehicle moves,the high-ﬁdelity region will eventually include the
+turn in the corridor and the planner will then fail
+to ﬁnd a solution. The only viable alternative willbe to back up, thereby moving the corridor to the
+low-ﬁdelity region once again. Because the original
+Goal
+Figure 7. A simple example of a motion planning prob-
+lem, in which a car-like robot that attempts to follow theinfeasible path (black line) experiences a failure.
+Journal of Field Robotics DOI 10.1002/rob
+318 •Journal of Field Robotics—2009
+state of the scenario has now been achieved, it is
+easy to see that this behavior will repeat forever. To
+avoid such difﬁculties, it is necessary to ascertainthat all levels of ﬁdelity include feasible motions. In
+particular, the connectivity of low-ﬁdelity regions
+must be a subset of that of the higher ﬁdelity regions.
+To implement graduated ﬁdelity planning, the
+above A
+∗planner-based design requires only a minor
+modiﬁcation. Once the state lattice graph is separatedinto subgraphs of different ﬁdelities as desired, each
+subgraph uses its own control set to achieve the cho-
+sen ﬁdelity. Each control set deﬁnes the successors of
+a vertex being expanded during search. Care must be
+taken to design the control sets such that they ade-quately span the boundaries between the subgraphs.
+Note that control set design is the sole procedure
+needed to enable graduated ﬁdelity. Replanning al-gorithms require no changes and will achieve the de-
+sired effects automatically.
+It can be useful to enable a high-ﬁdelity subgraph
+to move along with the mobile robot as described
+in the example above. As shown in Pivtoraiko and
+Kelly (2008), such ﬂexibility can be accomplished byundoing the effects of previous expansions of the
+vertices on the perimeter of the moving subgraph.
+Accomplishing this once again requires no change tothe actual replanning algorithm. The change of graph
+connectivity that occurs between replans is presented
+to the planning algorithm as a change in cost of the
+affected graph vertices. Such topology-based cost
+changes appear to replanning algorithms to be iden-tical in nature to perception-based cost changes. If
+the vertex expansion step is considered to be part of
+an external search space module, the planner actuallycannot tell that the graph topology is changing.
+More generally, it is straightforward to extend the
+concept of graduated ﬁdelity to allow multiple sub-graphs of different ﬁdelity to move or change shape
+between replans. Such ﬂexibility results in a dynamic
+search space , which complements dynamic replanning
+algorithms to improve planning efﬁciency. Thus, the
+graduated ﬁdelity extension of state lattice planning
+is conceptually simple and straightforward to imple-ment, and it can be designed to result in signiﬁcant
+savings in run time and memory usage in replanning.
+HLUT that stores vehicle-speciﬁc optimal path
+costs can be very effective in the case of gradu-
+ated ﬁdelity, because D
+∗is typically conﬁgured to
+plan backward from the goal to the robot. The dis-
+tance in the search space from topology-induced
+cost updates (typically perimeter of ﬁdelity subgrapharound the robot) to the robot is therefore limited
+enough to make it possible to store a HLUT for even
+multidimensional state spaces on contemporary com-puters. In this case, the perception and topology up-
+dates generated during operation can be propagated
+toward the vehicle with the efﬁciency of an ideallyinformed heuristic.
+4. IMPLEMENTATION DETAILS
+4.1. Sampling the Heading Dimension
+If the position variables of the state lattice are sam-
+pled as a square grid, and there are more than eight
+samples of the heading dimension, regular sampling
+in heading leads to incapacity to generate straightpaths in any direction other than the cardinal and or-
+dinal ones. An irregular sampling of heading is a bet-
+ter solution from the perspective of encoding morestraight-line paths. Generally, a line at orientation θ
+will intersect a vertex if it satisﬁes θ=arctan( i,j)f o r
+any two integers iandj. Hence, an irregular sam-
+pling of heading is preferred for a lattice with this
+arrangement.
+4.2. Control Sets with Shortest Edges
+Algorithm 1 is a simple inverse method for gener-ating a control set, as introduced in Section 2.1. Re-
+ferred to as the shortest edges algorithm, it may serve
+as a departing point to evaluate our proposed ap-
+proach to search space design. To better illustratethe algorithm, in this section we assume a four-
+dimensional (4D) state lattice that consists of 2D
+translation, heading, and curvature. Suppose that /Theta1
+andKare user-deﬁned subsets of discrete values of
+Algorithm 1 . A simple method of generating a control set
+Input : State discretization in the state lattice: position,
+discrete values of heading ( /Theta1)a n dc u r v a t u r e( K)
+Output : A control set, Ex
+Ex=∅;
+foreach θi,θj∈/Theta1andκi,κj∈Kdo
+foreach xf,yfs.t.L∞(O,[xf,yf])=[1···∞ )do
+ui=trajectory([0 ,0,θi,κi], [xf,yf,θf,κf]);
+ifui/negationslash=∅then
+Ex←ui;
+break;
+end
+end
+end
+Journal of Field Robotics DOI 10.1002/rob
+Pivtoraiko et al.: Differentially Constrained Robot Motion Planning in State Lattices •319
+heading and curvature in the state lattice, respec-
+tively. By exploiting rotational symmetries in the state
+lattice, these sets can be convenient strict subsets ofall possible discrete values of these states variables.
+The outer for-loop selects the permutations of dis-
+crete values of initial and ﬁnal heading and curva-ture. The inner for-loop cycles through all discrete
+value pairs of xandy, such that the maximum norm
+1
+L∞between the origin Oand (xf,yf)g r o w sf r o m1t o
+inﬁnity. For each value of L∞, if the trajectory gener-
+ator ﬁnds a solution to the boundary value problem,
+a feasible trajectory ui, we add it to the control set.
+At this point we break from the inner for-loop and
+proceed with another choice of terminal heading andcurvature values. The algorithm terminates when a
+trajectory is generated for every permutation of head-
+ing and curvature values.
+The sets of motion primitives generated by
+Algorithm 1 have a number of attractive properties:
+•this is the minimal set that contains primitives
+that concatenate at all discrete values of head-
+ing and curvature in the state lattice
+•the primitives in the set are minimum length,
+given terminal constraints and discretization,
+so they encode locally optimal solutions
+•they encode aggressive maneuvers that will
+result in plans that exploit the entire maneu-verability envelope of the robot
+•the computed controls exhibit some work-
+space separation by construction, thereby re-ducing dispersion in motion sampling
+4.3. Application Speciﬁc Planner
+Conﬁgurations
+In very difﬁcult environments, feedback control may
+not be an adequate solution to compensating for un-
+modeled terrain following or disturbances such as
+well slip. On the contemporary Mars rovers, for ex-ample, wheel slip is high enough to cause complete
+mobility failure and only infrequent visual odome-
+try updates are available to observe the slip that oc-curs. If the 3D terrain shape is known sufﬁciently
+well at planning time, a terrain-aware version of our
+trajectory generator (Howard & Kelly, 2007) can be
+used to generate appropriate edges that ﬁt the ter-
+rain spanned during the search. This is more compu-
+1L∞norm of a vector x=[x1,x2,...,x n]i sm a x i|xi|.tationally expensive than assuming ﬂat terrain and
+using the precomputed, terrain-independent control
+set. However, this is an important extension that al-lows the planner to consider rough 3D terrain explic-
+itly. An edge that was created for ﬂat terrain may
+become infeasible in a particular location in roughterrain. However, this case is no different from the
+appearance of an unknown obstacle, and a replan-
+ning strategy would presumably already be in placeto handle such events.
+Additional state variables can be added to the
+state lattice. In particular, the addition of velocity
+can enable a planner to compute feasible robot mo-
+tions at various speeds that satisfy vehicle propulsiondynamics.
+5. RESULTS
+A differentially constrained motion planner was im-plemented based on the state lattice and tested in avariety of scenarios, including in simulation and on
+real robots. In the sequel, we will refer to this imple-
+mentation as the lattice planner . In this section, we of-
+fer the quantitative results of our evaluation.
+A representative lattice control set was used in
+all tests. Its state space consisted of 2D positionand heading ( x,y,θ ). This control set, depicted in
+Figure 8(a), was generated using the shortest edges
+algorithm (Section 4.2). A trajectory generator in
+Kelly and Nagy (2002) was used to generate the mo-
+tions between the given values of robot state. Motionswere parameterized as cubic polynomial curvature,
+κ, functions of path length s, as shown in Eq. (1):
+κ(s)=a+bs+cs
+2+ds3. (1)
+Subsection 5.1 is devoted to comparing the lat-
+tice planner to popular motion planning approaches.
+This subsection focuses on single static invocation of
+all considered planners; replanning and graduated ﬁ-delity were not used, because not all evaluated plan-
+ners support such capabilities. The goal of fair com-
+parison also inﬂuenced the chosen conﬁguration ofthe lattice planner. A 4D state lattice that considers
+curvature in addition to position and heading was
+also implemented and successfully validated. It al-lows explicit goal speciﬁcation in all four dimensions
+but none of the other evaluated planners support
+such capability. Subsection 5.2 presents the results of
+testing state lattice replanning and graduated ﬁdelity
+in a realistic setting.
+Journal of Field Robotics DOI 10.1002/rob
+320 •Journal of Field Robotics—2009
+(a) (b)
+Figure 8. Differentially constrained control sets used in experiments. (a) The state lattice control set selected for testing has
+16 discrete headings, a minimum turning radius of 8 cells (i.e., maximum curvature 1/8), and an average out degree of 12,for a total of 192 controls. The straight-line controls cannot be seen because they are obscured by the longer curved ones.(b) The chosen BL control set consists of 96 controls, each of length 4.
+5.1. Comparison of the State Lattice
+to Other Search Spaces
+In this section, we discuss a comparison of the
+state lattice to several leading search spaces in mo-
+tion planning. The state lattice is compared to thefollowing:
+•2D grid (4-, 8-, and 16-connected grids)
+•search space used in the well-known
+Barraquand and Latombe (BL) differen-
+tially constrained planner (Barraquand &
+Latombe, 1991) [Figure 8(b)]
+We have adopted a notion of a generalized control
+set: for the 2D grid, it is simply a grid-based vertex
+expansion (straight paths), whereas for the BL plan-
+ner, it is the vertex expansion as described in that
+work. A planner based on each search space was im-
+plemented by running the identical implementationof the A
+∗search algorithm using the corresponding
+generalized control set. An overview of the control
+sets that are considered here is presented in Table I.
+5.1.1. Experimental Setup
+In the presented experiments, we generated a list of
+10,000 random queries, each consisting of an initialand ﬁnal state, expressed as position and heading.
+The set of queries was engineered to induce the plan-
+ner to generate paths ranging from simple (nearly
+straight paths) to complex (e.g., parallel parking orn-point turn maneuvers).
+In the case of a grid, Euclidean distance between
+start and goal is an appropriate estimate of free-spaceplanning difﬁculty. As argued in Section 3.2, it can be
+an unacceptable underestimate of the true planning
+difﬁculty under differential constraints. To quan-tify the complexity of a particular query, we distin-
+guish between absolute and relative difﬁculty. Figure 9
+illustrates the two concepts. Absolute difﬁculty is
+Table I. A quantitative look at the control sets. Parameters
+of each control set have a strong inﬂuence on how a planner
+performs while using it. (Units are 2D grid cells.)
+Total Avg. edge Avg. out
+Control set edges length degree
+Lattice control set 192 8.72 12Lattice with turn in place 224 7.47 14
+BL 96 4.00 6
+Grid-4 4 1.00 4Grid-8 8 1.21 8
+Grid-16 16 1.72 16
+Journal of Field Robotics DOI 10.1002/rob
+Pivtoraiko et al.: Differentially Constrained Robot Motion Planning in State Lattices •321
+Figure 9. Absolute and relative planning difﬁculty. The difﬁculty of a planning query can be quantiﬁed in two dimensions.
+Each of three paths to endpoints A,B,a n dCstarts at O.Q u e r y Ais high in absolute difﬁculty as well as relative difﬁculty
+because it is long and has multiple cusps. Bis simple in both measures. Query Chas the same absolute difﬁculty as A(same
+length) but the same relative difﬁculty as B.
+measured here by the path length. For relative dif-
+ﬁculty, the ratio of Euclidean distance (between start
+and goal) to the length of a differentially constrained
+path is used. With this scale, a value of unity meansthat the resulting path is a straight line, whereas val-
+ues near zero indicate that a series of reversal maneu-
+vers is necessary to reach the ﬁnal pose.
+In the analyzes below, start and goal states were
+sampled randomly within a rectilinear grid whose
+resolution matched that of the state lattice. The goalposes were sampled relative to the start state using
+a polar coordinate system. We took this approach in
+order to restrict the length of queries presented to the
+planner to a desired range from 0 to 10 turning radii
+(80 cells). For this study, we chose queries with abso-lute difﬁculty of 40 cells. This number was chosen ar-
+bitrarily for clarity of presentation. Experimentation
+showed that other values of absolute difﬁculty con-vey similar results. Initial and ﬁnal headings were
+randomly selected.
+Each query was tested using each generalized
+control set in a variety of settings, in particular withdifferent choices:
+•obstacle ﬁelds
+free space (no obstacles)
+single map-cell obstacles, uniformlydistributed with 5% density in the plane
+(Figure 10)
+•heuristic functions
+zero heuristic (constant value of 0)
+Euclidean distance
+HLUT
+Free space experiments were conducted in order
+to review planner performance independent of any
+Figure 10. World with obstacles. A portion of the world with point obstacles used in the experiments is shown here. Two
+plans are shown that solve the same query. The black line shows the plan generated by the state lattice, and the gray linetraces the path returned by the BL planner.
+Journal of Field Robotics DOI 10.1002/rob
+322 •Journal of Field Robotics—2009
+Figure 11. Grid control sets. Three different grid control sets were tested. A point is connected to the 4, 8, or 16 nearest
+neighbors that have unique headings.
+particular obstacle arrangement. Path cost was set
+to distance traveled; cost to traverse free space was
+held constant at 1 unit per cell of free space. The de-
+pendent (observed) variable in this study is plannerrun time, which we veriﬁed to be proportional to the
+omitted second dependent variable, memory usage.
+5.1.2. Comparison to a Grid Search Space
+2D grid search spaces comprise possibly the sim-
+plest and oldest mobile robot planning context. It
+may seem inappropriate to compare lattice and gridplanners because a grid does not permit us to en-
+force full state continuity across graph vertices. How-
+ever, part of our aim in comparing the two is to
+make the case that the computational cost of enforc-
+ing differential constraints at planning time is not ashigh as might be assumed by many readers. Grid-
+based paths do not ensure feasibility of execution
+by mobility-constrained vehicles. Nevertheless, gridplanners have often been employed to ﬁnd approxi-
+mate solutions for differentially constrained vehicles
+despite their incapacity to follow the solution pathexactly. In such applications, a path tracker is typi-
+cally employed to smooth out the corners and follow
+the path inexactly. Indeed, it was our implementationof this approximate mobility approach that the lattice
+planner was developed to replace.
+An important question is, “Is the grid approach
+inherently faster than searching in a full-dimensional
+state space?” Differential constraints actually reduce
+the number of paths encoded, whereas the extra di-mensions of state space increase the number. The
+answer is not immediately obvious. To ﬁnd it, we
+ran the A
+∗planner with four different control sets,
+in each case using the appropriate heuristic func-
+tion that returns the exact distance to the goal. Thebasic state lattice was matched with a large HLUT.
+Three grid control sets were tested, in which each
+state is connected to its 4, 8, and 16 nearest neighbors
+(Figure 11), using a perfect heuristic for each level ofconnectivity.
+Performance of the control sets in the absence of
+obstacles is shown in Figure 12. The data are pre-sented across a spectrum of relative difﬁculty. In the
+absence of obstacles, the lattice generally performs on
+par with basic grid search. For only the most difﬁ-cult queries does the lattice consume more CPU time
+than a grid control set. This disparity occurs because
+the differentially constrained path solution divergesmore dramatically from a straight-line solution. For
+such problems, the answer returned by the grid is in-
+creasingly difﬁcult to execute on a real vehicle, evenif a path tracker is used. In essence, the extra effort on
+the part of the lattice planner is compulsory to obtain
+a feasible path. Hence, for our test setup, in the ab-
+sence of obstacles, a state lattice is just as efﬁcient as
+a grid on easy problems and an order of magnitudeslower on hard problems.
+Results in the presence of obstacles are shown in
+Figure 13. It is intuitive that the grid should outper-form the lattice in this obstacle ﬁeld for any class of
+query. If an obstacle appears in the path of a grid
+plan, that plan is often displaced by only a few cellsin order to circumvent the obstacle. In the case of
+the lattice under test, however, only smooth contin-
+uous paths are considered. These requirements sub-stantially limit the planner’s options, making it more
+difﬁcult to ﬁnd a satisfactory path through an obsta-
+cle ﬁeld, as shown in Figure 14. So while the gridpath deviates slightly in the cluttered environment,
+paths generated by the state lattice often must be
+much more complex in order to plan around ob-stacles. However, the difﬁculty experienced by the
+Journal of Field Robotics DOI 10.1002/rob
+Pivtoraiko et al.: Differentially Constrained Robot Motion Planning in State Lattices •323
+ 1e-05 0.0001 0.001
+ 0  0.2  0.4  0.6  0.8  1Planner Runtime (sec)
+Relative DifficultyLattice
+16-Grid
+8-Grid
+4-Grid
+Figure 12. Lattice vs. grid without obstacles. Queries with an absolute difﬁculty of 40 cells are shown. The lattice performs
+similarly to the grid planners overall. Only for the greatest relative difﬁculty (nearest zero) does the lattice require moreCPU cycles. Of course, the beneﬁt of this extra computation is a plan that is feasible.
+lattice planner reﬂects the true mobility limits of the
+vehicle, rather than some inadequacy relative to agrid search space.
+In plain terms, a grid planner produces faster
+answers, but they are usually wrong. Despite theincreased search requirements, the lattice planner
+remains consistently only one order of magnitude
+slower than the grid planner, returning on average in
+less than 0.1 s for all classes of query.
+5.1.3. Comparison to Full CSpace and Differentially
+Constrained Search Space
+The above comparison between the state lattice plan-
+ner and grid-based planner is intended to evaluate
+the search spaces, not the identical planning algo-rithms. Of course, paths planned in the grid cannot
+be traversed by curvature-constrained vehicles with-out postprocessing. However, the BL planner is well
+known and has been a popular differentially con-
+strained planner for more than a decade. It has alsobeen used in real mobile robot applications (Morris,
+Silver, Ferguson, & Thayer, 2005). As described by the
+authors, the BL planner runs A
+∗with a zero heuris-
+tic, resulting in a breadth-ﬁrst graph traversal. Each
+graph edge has equal cost and represents one of sixpossible controls combining forward/reverse with
+hard left/straight/hard right. To limit the exponen-
+tial growth in reachable states, BL treats the least-costly method of reaching a given discrete state as
+the canonical route. Costlier paths terminating in the
+same Cspace cell are discarded.
+Journal of Field Robotics DOI 10.1002/rob
+324 •Journal of Field Robotics—2009
+ 1e-05 0.0001 0.001 0.01 0.1
+ 0  0.2  0.4  0.6  0.8  1Planner Runtime (sec)
+Relative DifficultyLattice
+16-Grid
+8-Grid
+4-Grid
+Figure 13. Lattice vs. grid with 5% obstacle density. Queries of length 40 cells are shown. The grid outperforms the lattice,
+but it usually returns infeasible solutions. Lattice planner run time is still acceptably fast.
+On careful examination, it is clear that a com-
+parison to the search space of the BL planner is also
+not as clearly meaningful as one would hope, be-cause the state lattice supports much more sophisti-
+cated planning algorithms (in particular, D
+∗replan-
+ning). Speciﬁcally, the original BL planner searchspace uses the number of reversals of velocity as edge
+cost. For example, as conﬁgured in the original paper,
+the BL planner may choose a shorter path througha high-cost area instead of a longer path through alower cost area. To render this algorithm more suit-
+able for ﬁeld applications, the breadth-ﬁrst algorithm
+must be replaced with one that is optimal for graphswith variable cost of edges embedded in continuous
+cost ﬁelds—such as A
+∗implemented with a priority
+queue. A heuristic to guide the search was also nec-essary in our experiments to achieve acceptable run
+times.
+In this section, several different variants of the
+BL planner are examined. In all cases, an identical
+Figure 14. Obstacle avoidance with two control sets. Grid planners can easily avoid small isolated obstacles, as shown by
+the black path. By contrast, the gray path has limited curvature and so can be feasibly traversed by a constrained vehicle.
+Journal of Field Robotics DOI 10.1002/rob
+Pivtoraiko et al.: Differentially Constrained Robot Motion Planning in State Lattices •325
+Figure 15. Reachability trees for the state lattice and BL. At left, the ﬁrst 1,400 expansions of the basic state lattice control
+set in best-ﬁrst order. At right, the ﬁrst 1,400 expansions of the BL control set were generated using the same algorithm.Darker edges indicate greater depth in the tree.
+A∗algorithm was applied, but the heuristic cost es-
+timate was altered to produce a fair comparison. Inthe ﬁrst case, the algorithm was run as documented in
+Barraquand and Latombe (1991), with a zero heuristic
+applied. In the second case, Euclidean distance wasused as the heuristic.
+To make the BL control set work in a fashion com-
+patible with the state lattice test framework, sometuning was necessary. Barraquand and Latombe de-
+scribe the edge lengths as being the L
+1diameter
+of a cell and assert that their planner requires thediscretization of the search parameters to be “ﬁne
+enough.” We set the BL curve length to four di-
+ameters of our cost map cells because a Cspace
+cell spans four discretized unit dimensions in our
+cost map. To ensure fairness, several other curve
+lengths were tried, but the original length of four was
+found to be the best match with our standard lat-
+tice discretization. This basic BL control set is shownin Figure 8(b), and the resulting reachability tree is
+shown in Figure 15 along with the standard state lat-
+tice tree. Reverse edges were omitted from both treesin the ﬁgure for clarity.
+The performance of the lattice planner is com-
+pared to BL with two different heuristics in Figure 16(no obstacles, free space) and in Figure 17 (with
+obstacles, per Section 5.1.1). In a fair matchup us-
+ing the Euclidean distance heuristic, the two plan-ners perform comparably. The Euclidean heuristic
+was used for the lattice-based planner only for fair-
+ness of the comparison. The lattice planner using theHLUT signiﬁcantly outperforms our implementation
+of BL.5.1.4. State Lattice with Turn-in-Place Motions
+Finally, we tested an alternative lattice control set. It
+is identical to the baseline lattice control set, except
+that it includes two extra controls—each representing
+an incremental turn in place left and right (change ofheading to the two nearest discrete values). We com-
+puted the cost of these additional edges based on the
+aggregate distance of travel of each of the wheels ofa planetary rover, capable of turning in place. The ef-
+fect of this capability on resulting plans is depicted
+in Figure 18, where the path is substantially short-
+ened by avoiding tortuous maneuvering. These ad-
+ditional controls have no signiﬁcant effect on overallplanner run time performance (Figures 19 and 20),
+but they provide valuable added ﬂexibility in ne-
+gotiating dense obstacle ﬁelds. Moreover, for prac-tical applications, the state lattice allows tuning the
+robot’s preference for performing point turns versus
+smooth maneuvers by assigning appropriate costs tothe turn-in-place edges.
+5.2. Autonomous Navigation
+Here we present the results of experiments, simulatedand real, that demonstrate planner performance us-ing replanning and graduated ﬁdelity in a realistic
+setting, where the robot moves through a challenging
+environment toward a distant target.
+The rover size is approximately 1 ×0.8 m. Its mo-
+bility is characterized by a minimum turning radius
+of 0.5 m and a capacity of point turns, which bear
+a high cost due to the time and energy required for
+Journal of Field Robotics DOI 10.1002/rob
+326 •Journal of Field Robotics—2009
+ 0.0001 0.001 0.01 0.1 1 10 100
+ 0  0.2  0.4  0.6  0.8  1Planner Runtime (sec)
+Relative DifficultyBL with Zero Heuristic
+BL with Euclidean Heuristic
+Lattice with Euclidean Heuristic
+Lattice with HLUT
+Figure 16. Lattice vs. BL without obstacles. Queries with an absolute difﬁculty of 40 cells are shown. Various heuristics are
+considered for each planner.
+ 0.0001 0.001 0.01 0.1 1 10 100
+ 0  0.2  0.4  0.6  0.8  1Planner Runtime (sec)
+Relative DifficultyBL with Zero Heuristic
+BL with Euclidean Heuristic
+Lattice with Euclidean Heuristic
+Lattice with HLUT
+Figure 17. Lattice vs. BL in a world with uniformly distributed single map-cell obstacles of density 5%. Queries with an
+absolute difﬁculty of 40 cells are shown. Various heuristics are considered for each planner.
+Journal of Field Robotics DOI 10.1002/rob
+Pivtoraiko et al.: Differentially Constrained Robot Motion Planning in State Lattices •327
+Figure 18. Lattice control set with and without the abil-
+ity to turn in place. In black, the aforementioned state lat-tice control set is used. In gray, the same control set is aug-mented by two additional controls that allow the vehicleto turn in place at a cost equal to traversing ﬁve cells. Thisplan performs the turn-in-place maneuver twice in order toexecute a sharp turn.
+reorienting wheels. Both cost map cells and ( x,y) cells
+of the state lattice are square with 20-cm side length;
+both types of cells coincide in position.In the simulated experiment, the robot has a per-
+ception region limited to 21 ×21 cells ( L∞-radius of
+2 m), centered around the robot. No perception infor-mation is available outside this horizon. The size of
+the high-ﬁdelity region, centered about the robot, is
+the same as that of the perception region. Otherwise,the setup is the same as above. For clarity, Figure 21
+shows a 40-m subset of a 500-m path, traversed in
+this setting. Gray cells are obstacles that have not yetcome into view of the robot and are unknown to it.
+Black cells (and gray cells in the insets) are obsta-
+cles that were seen by the robot. The dark-gray line
+is the path the robot traveled. Note that it entered
+many cul-de-sacs due to the limited perception (suchas replan cycles 39 and 53), and the planner was effec-
+tive at guiding the robot out of all of them by exploit-
+ing the robot’s maneuverability. Replanning occurredcontinuously due to both obstacle discovery and ﬁ-
+delity modiﬁcation in the search space. This experi-
+ment was performed on a conventional laptop com-puter with 2-GHz CPU and 2 GB of RAM.
+The lattice planner was integrated with research
+prototype rovers at the NASA/Caltech Jet PropulsionLaboratory (JPL). It enabled the rovers to navigate
+ 0.0001 0.001 0.01 0.1 1
+ 0  0.2  0.4  0.6  0.8  1Planner Runtime (sec)
+Relative DifficultyStandard Lattice with Euclidean heuristic
+TIP Lattice with Euclidean heuristic
+Standard Lattice with HLUT
+TIP Lattice with HLUT
+Figure 19. Lattice vs. turn-in-place lattice without obstacles. Queries with an absolute difﬁculty of 40 cells are shown.
+Computational cost for the two lattices is not signiﬁcantly different despite the extra turn-in-place maneuvers.
+Journal of Field Robotics DOI 10.1002/rob
+328 •Journal of Field Robotics—2009
+ 0.0001 0.001 0.01 0.1 1
+ 0  0.2  0.4  0.6  0.8  1Planner Runtime (sec)
+Relative DifficultyStandard Lattice with Euclidean heuristic
+TIP Lattice with Euclidean heuristic
+Standard Lattice with HLUT
+TIP Lattice with HLUT
+Figure 20. Lattice vs. turn-in-place lattice in a world with obstacles. Queries with an absolute difﬁculty of 40 cells are
+shown. Computational cost for the two lattices is not signiﬁcantly different despite the extra turn-in-place maneuvers.
+efﬁciently in rough rocky terrain in the JPL Mars
+Yard. Figure 22 shows the results of a typical experi-
+ment with the FIDO rover running the lattice planner
+onboard to navigate autonomously amid dense rocks.In this experiment, the rover was given a command to
+drive to a goal 15 m directly in front of it, as shown
+by the black line in the top of the ﬁgure. This motionwas infeasible due to large rock formations. However,
+the rover, under guidance of the lattice planner, ne-
+gotiated this maze-like and previously unknown en-vironment and found a feasible path (white dots) to
+accomplish its mission, despite a very limited per-
+ception horizon of 3 m and ±40-deg ﬁeld of view.
+The lattice planner was conﬁgured as above, includ-
+ing a high-ﬁdelity region of 21 ×21 map cells ( L
+∞-
+radius of 2 m), centered around the rover. The rovertraversed approximately 30 m during this mission
+and achieved the goal successfully (only the ﬁrst two-
+thirds of the rover path are shown in the photograph
+due to the limited ﬁeld of view of the camera). No
+path tracking was used, and the rover executed ver-batim the smooth and feasible motion computed by
+the lattice planner.
+The rover used a single 1.6-GHz CPU and 512 MB
+of RAM, shared among all processes of the rover,including state estimation, stereo vision perception,
+and communication systems. The planner was ported
+to the VxWorks
+TMhard real-time operating system
+that runs on the rover’s computer. We have not had achance to optimize memory usage of our planner im-
+plementation; nevertheless, the peak memory usage
+of the lattice planner over all our experiments withthe FIDO rover was less than 100 MB. The bottom
+part of Figure 22 shows the semilog plot of the on-
+board lattice planner run time per replan cycle, aver-aging at approximately 10 Hz. This plot serves well
+to illustrate two points regarding typical planner run
+time onboard FIDO: the computation time per replan-ning operation can vary greatly (depending on the
+difﬁculty of the problem at hand), and the replanning
+run time was frequently lower than the time resolu-tion of the rover’s operating system (5 ms), which
+is observed via the bottom-limited segments of the
+plot.
+Owing to limited perception and previously un-
+known environment, the rover entered into a num-ber of difﬁcult planning scenarios during its mission.
+First, the rover steered out of the potential cul-de-sac
+by exploiting a high-curvature maneuver. Next, aftergoing around the bend in the hope of resuming its
+Journal of Field Robotics DOI 10.1002/rob
+Pivtoraiko et al.: Differentially Constrained Robot Motion Planning in State Lattices •329
+Figure 21. A simulated experiment of traversing about 500 m among previously unknown obstacles. Top: The ﬁrst 40 m
+of the path are shown for clarity. Note that all motions generated by the planner were globally feasible, and backing-upmaneuvers were generated automatically when necessary. Bottom: Planner run times.
+Journal of Field Robotics DOI 10.1002/rob
+330 •Journal of Field Robotics—2009
+Figure 22. A ﬁeld experiment in the JPL Mars Yard. Top:
+The FIDO rover was commanded to go straight 15 m(black line). The rover navigated autonomously among pre-viously unknown maze-like obstacles, while running thegraduated ﬁdelity lattice planner onboard. White dottedline is the path traversed by FIDO. The rover encounteredmultiple difﬁcult planning scenarios due to the very lim-ited perception. It traveled approximately 30 m in order toachieve its goal. Bottom: Throughout numerous ﬁeld exper-iments, the lattice planner onboard FIDO averaged replan-ning frequency of approximately 10 Hz.
+course along the straight line, it arrived at a narrow
+cul-de-sac. At this point, a portion of the previously
+computed rover path was invalidated as soon as the
+rover’s perception system recognized that the pas-sage was closed off. However, thanks to D
+∗capacity
+to repair the plan efﬁciently, a new plan was found
+that guided the rover through an n-point U-turn to
+resume its course. Shortly afterward, the rover ap-
+peared in another tricky situation (bottom right of
+the path), where it had to back out in order to con-
+tinue navigating. Throughout the experiment, the lat-
+tice planner regularly updated the smooth and feasi-ble motion plan of the rover, despite many challenges
+during its mission.
+6. CONCLUSION AND FUTURE WORK
+This work has been motivated by a fairly acute need
+to endow our ﬁeld robots with sufﬁcient understand-ing of their own mobility to allow them to efﬁciently
+plan correct and intricate paths in response to their
+challenging surroundings. Our efforts have produced
+a search space designed for differentially constrained
+motion planning in the continuous cost ﬁelds used inthe ﬁeld robot applications of today.
+Our approach inherits its understanding of mo-
+bility from a competent and high-ﬁdelity, real-timetrajectory generator. It uses this module to construct
+what amounts to an ideal discrete search space:
+•it is of high enough dimension to enforce rel-
+evant state continuity
+•its controls acquire goal states exactly
+•its controls satisfy arbitrary differential con-
+straints, so they encode only feasible motions
+•its controls are a reduced set in a path sam-
+pling sense, meaning unnecessary computa-
+tion is avoided
+This search space can be generated ofﬂine, and be-
+cause of this property, many planning computations
+peculiar to differentially constrained motion plan-
+ning in continuous cost ﬁelds can also be precom-puted ofﬂine to enhance efﬁciency. This ideal search
+space can be searched using an ideal heuristic, con-
+structed by a heuristic planner itself, from a worldfree of obstacles.
+With all of the above elements in place, the daunt-
+ing problem of optimal, efﬁcient, smooth differen-tially constrained motion planning in the presence of
+obstacles is reduced to an implementation of heuris-
+tic search of a graph. We have shown that the A
+∗al-
+gorithm and even the D∗algorithm can be conﬁgured
+to run on this search space even while the topology of
+the space is dynamically changing.
+State lattice planners (planners based on the state
+lattice search space) are resolution complete because
+the control set can be automatically adjusted to gener-ate new controls as resolution increases and the space
+is searched systematically. Such planners are both op-
+timal and smooth because precision controls that ac-
+quire states exactly permit the redirection of back-
+pointers without introducing discontinuities in the
+Journal of Field Robotics DOI 10.1002/rob
+Pivtoraiko et al.: Differentially Constrained Robot Motion Planning in State Lattices •331
+solution path. In algorithms derived from dynamic
+programming, such redirection is fundamental to op-
+timal sequential search with nonuniform edge costs.The completeness, smoothness, satisfaction of differ-
+ential constraints, and optimality of state lattice plan-
+ners result from the precision of the trajectory gener-ator used to create the control set.
+State lattice planners are also efﬁcient due to a
+principled implementation of a path sampling policy.We have shown that they are up to two orders of mag-
+nitude faster than our best-effort BL planner, while
+remaining optimal and smooth, while also allowing
+efﬁcient replanning and signiﬁcant precomputation.
+They are not as fast as a grid planner when obsta-cles are present—being roughly an order of magni-
+tude slower than a 16-connected grid. However, se-
+vere problems with grid planners producing infeasi-ble plans motivated the work to start with. According
+to our results, a mere 3 years of operation of Moore’s
+law should have been enough to allow grids to beabandoned long ago, at least for near-ﬁeld planning,
+so the common use of infeasible grid search spaces is
+difﬁcult to justify on computational grounds.
+The contribution of this work is not a planning al-
+gorithm. The contribution is a principled mechanism
+to construct an efﬁcient, precision, differentially con-strained search space upon which any planner may
+operate. We have also presented a compelling case for
+why it is superior to prevailing alternatives.
+Future work includes further research in optimal
+sampling in the space of motions to further increasethe effectiveness of search spaces. Further, the state
+lattice planning approach appears to lend itself well
+to other applications, including mobile manipulation,and we hope to explore these ideas in the future.
+ACKNOWLEDGMENTS
+This research was conducted at the Robotics Insti-tute of Carnegie Mellon University, sponsored by
+NASA/JPL as part of the Mars Technology Program.
+REFERENCES
+Agarwal, P ., Amenta, N., Aronov, B., & Sharir, M. (1996,
+August). Largest placements and motion planning ofa convex polygon. In Proceedings 2nd Annual Work-shop Algorithmic Foundations of Robotics, Toulouse,France (pp. 143–154).
+Agarwal, P ., Aronov, B., & Sharir, M. (1999). Motion plan-
+ning for a convex polygon in a polygonal environment.GEOMETRY: Discrete and Computational Geometry,
+22(2), 201–221.
+Alt, H., Fleischer, R., Kaufmann, M., Mehlhorn, K., Naher,
+S., Schirra, S., & Uhrig, C. (1990, June). Approximatemotion planning and the complexity of the boundaryof the union of simple geometric ﬁgures. In Proceed-ings of the ACM Symposium on Computational Ge-ometry, Berkeley, CA (pp. 281–289).
+Anisi, D. A., Hamberg, J., & Hu, X. (2003). Nearly time-
+optimal paths for a ground vehicle. Journal of ControlTheory and Applications, 1(1), 2–8.
+Barraquand, J., Kavraki, L., Latombe, J.-C., Li, T.-Y.,
+Motwani, R., & Raghavan, P . (1996, October). Arandom sampling scheme for robot path planning.In G. Giralt & G. Hirzinger (Eds.), Proceedingsof the 7th International Symposium on RoboticsResearch, Osaka, Japan (pp. 249–264). New York:Springer.
+Barraquand, J., & Latombe, J.-C. (1990, May). A Monte-
+Carlo algorithm for path planning with many degrees
+of freedom. In Proceedings of the IEEE International
+Conference on Robotics and Automation, Cincinnati,OH (pp. 1712–1717).
+Barraquand, J., & Latombe, J.-C. (1991, April). Nonholo-
+nomic multibody mobile robots: Controllability andmotion planning in the presence of obstacles. In Pro-ceedings of the IEEE International Conference onRobotics and Automation, Sacramento, CA (vol. 3,pp. 2328–2335).
+Bicchi, A., Marigo, A., & Piccoli, B. (2002). On the reachabil-
+ity of quantized control systems. IEEE Transactions onAutomatic Control, 47(4), 546–563.
+Bohlin, R. (2001, November). Path planning in practice;
+Lazy evaluation on a multi-resolution grid. In Proceed-ings of the IEEE/RSJ International Conference on Intel-ligent Robots & Systems, Maui, HI (pp. 49–54).
+Bohlin, R., & Kavraki, L. (2000, April). Path planning us-
+ing lazy PRM. In Proceedings of the IEEE InternationalConference on Robotics & Automation, San Francisco,CA (pp. 521–528).
+Branicky, M., LaValle, S., Olson, S., & Yang, L. (2001, May).
+Quasi-randomized path planning. In Proceedings ofthe International Conference on Robotics and Automa-tion, Seoul, Korea (pp. 1481–1487).
+Canny, J., Rege, A., & Reif, J. (1991). An exact algorithm for
+kinodynamic planning in the plane. Discrete and Com-
+putational Geometry, 6, 461–484.
+Canny, J. F. (1988). The complexity of robot motion plan-
+ning. Cambridge, MA: MIT Press.
+Casal, A. (2001). Reconﬁguration planning for modular
+self-reconﬁgurable robots. Ph.D. thesis, Aeronauticsand Astronautics Department, Stanford University,Stanford, CA.
+Cherif, M. (1999, May). Kinodynamic motion planning
+for all-terrain wheeled vehicles. In Proceedings of theIEEE International Conference on Robotics & Automa-tion, Detroit, MI (pp. 317–322).
+Donald, B., & Xavier, P . (1995). Provably good approxi-
+mation algorithms for optimal kinodynamic planning:Robots with decoupled dynamics bounds. Algorith-mica, 14(6), 443–479.
+Journal of Field Robotics DOI 10.1002/rob
+332 •Journal of Field Robotics—2009
+Dubins, L. E. (1957). On curves of minimal length with a
+constraint on average curvature, and with prescribedinitial and terminal positions and tangents. AmericanJournal of Mathematics, 79, 497–516.
+Ferguson, D., & Stentz, A. (2006, March). Multi-resolution
+Field D*. In Proceedings International Conference onIntelligent Autonomous Systems (IAS), Tokyo, Japan(pp. 65–74).
+Fernandes, C., Gurvits, L., & Li, Z. X. (1991, April). A varia-
+tional approach to optimal nonholonomic moton plan-ning. In Proceedings of the IEEE International Con-ference on Robotics and Automation, Sacramento, CA(pp. 680–685).
+Fraichard, T., & Ahuactzin, J.-M. (2001, May). Smooth path
+planning for cars. In Proceedings IEEE InternationalConference on Robotics and Automation, Seoul, Korea(pp. 3722–3727).
+Fraichard, T., & Scheuer, A. (2004). From Reeds and Shepp’s
+to continuous-curvature paths. IEEE Transactions onRobotics, 20(6), 1025–1035.
+Frazzoli, E., Dahleh, M., & Feron, E. (2001, June). Real-
+time motion planning for agile autonomous vehicles.In Proceedings of the American Control Conference,Arlington, VA (pp. 43–49).
+Gottschalk, S., Lin, M., & Manocha, D. (1996, August). OBB-
+tree: A hierarchical structure for rapid interferencedetection. In Proceedings of ACM SIGGRAPH, NewOrleans, LA (pp. 171–180).
+Green, C., & Kelly, A. (2007, November). Toward opti-
+mal sampling in the space of paths. In Proceedingsof the International Symposium of Robotics Research,Hiroshima, Japan (pp. 171–180).
+Hart, P ., Nilsson, N., & Raphael, B. (1968). A formal basis
+for the heuristic determination of minimum cost paths.IEEE Transactions on Systems Science and Cybernet-ics, 4(2), 100–107.
+Howard, T., & Kelly, A. (2007). Optimal rough terrain tra-
+jectory generation for wheeled mobile robots. Interna-tional Journal of Robotics Research, 26(2), 141–166.
+Hsu, D. (2000). Randomized single-query motion planning
+in expansive spaces. Ph.D. thesis, Computer ScienceDepartment, Stanford University, Stanford, CA.
+Jean, F. (2001). Complexity of nonholonomic motion plan-
+ning. International Journal of Control, 74(8), 776–782.
+Kavraki, L. (1994). Random networks in conﬁguration
+space for fast path planning. Ph.D. thesis, Computer
+Science Department, Stanford University, Stanford,CA.
+Kavraki, L., Svestka, P ., Latombe, J.-C., & Overmars,
+M. (1996). Probabilistic roadmaps for path plan-ning in high-dimensional conﬁguration spaces. IEEETransactions on Robotics & Automation, 12(4), 566–580.
+Kelly, A., Amidi, O., Happold, M., Herman, H., Pilarski,
+T., Rander, P ., Stentz, A., Vallidis, N., & Warner, R.(2004, June). Toward reliable off-road autonomous ve-hicle operating in challenging environments. In Pro-ceedings of the International Symposium on Experi-mental Robotics, Singapore (pp. 599–608).
+Kelly, A., & Nagy, B. (2002). Reactive nonholonomic tra-
+jectory generation via parametric optimal control. In-ternational Journal of Robotics Research, 22(7/8), 583–
+601.
+Kindel, R. (2001). Motion planning for free-ﬂying robots
+in dynamic and uncertain environments. Ph.D. thesis,Aeronautics and Astronautics Department, StanfordUniversity, Stanford, CA.
+Knepper, R., & Kelly, A. (2006, October). High perfor-
+mance state lattice planning using heuristic look-up ta-bles. In Proceedings of the IEEE International Confer-ence on Intelligent Robots and Systems, Beijing, China(pp. 3375–3380).
+Koenig, S., & Likhachev, M. (2002, March). D
+∗Lite. In Pro-
+ceedings of the AAAI Conference of Artiﬁcial Intelli-gence (AAAI), Edmonton, AB, Canada (pp. 476–483).
+Kuffner, J. (1999). Autonomous agents for real-time ani-
+mation. Ph.D. thesis, Computer Science Department,Stanford University, Stanford, CA.
+Lacaze, A., Moscovitz, Y., DeClaris, N., & Murphy, K.
+(1998, September). Path planning for autonomous ve-hicles driving over rough terrain. In Proceedings of the
+IEEE International Symposium on Intelligent Control,
+Gaithersburg, MD (pp. 50–55).
+Lamiraux, F., & Laumond, J.-P . (2001). Smooth motion
+planning for car-like vehicles. IEEE Transactions onRobotics and Automation, 17(4), 498–501.
+Latombe, J.-C. (1991). Robot motion planning. Boston:
+Kluwer.
+LaValle, S., Branicky, M., & Lindemann, S. (2004). On the
+relationship between classical grid search and proba-bilistic roadmaps. International Journal of Robotics Re-search, 23(7/8), 673–692.
+LaValle, S. M. (2006). Planning algorithms. Cambridge, UK:
+Cambridge University Press.
+LaValle, S. M., & Kuffner, J. J. (2001). Rapidly-exploring
+random trees: Progress and prospects. In B. Donald,K. M. Lynch, & D. Rus (Eds.), Algorithmic and Com-putational Robotics: New Directions (pp. 293–308).Wellesley, MA: AK Peters, Ltd.
+Lindemann, S., & LaValle, S. (2003, October). Current is-
+sues in sampling-based motion planning. In Proceed-ings of the International Symposium of Robotics Re-search, Siena, Italy (pp. 36–54).
+Lindemann, S., & LaValle, S. (2004, June). Steps toward de-
+randomizing RRTs. In Proceedings of the Fourth In-ternational Workshop on Robot Motion and Control,
+Puszczykowo, Poland (pp. 271–277).
+Lozano-Perez, T. (1983). Spatial planning: A conﬁgura-
+tion space approach. IEEE Transactions on Computers,C-32(2), 108–120.
+Lozano-Perez, T., & Wesley, M. A. (1979). An algorithm
+for planning collision-free paths among polyhedralobstacles. Communications of the ACM, 22(10), 560–570.
+Morris, A., Silver, D., Ferguson, D., & Thayer, S. (2005,
+April). Towards topological exploration of abandonedmines. In Proceedings of the IEEE International Con-ference on Robotics, Barcelona, Spain (pp. 2117–2123).
+Natarajan, B. K. (1988). The complexity of ﬁne motion plan-
+ning. International Journal of Robotics Research, 7(2),36–42.
+Journal of Field Robotics DOI 10.1002/rob
+Pivtoraiko et al.: Differentially Constrained Robot Motion Planning in State Lattices •333
+Pai, D., & Reissell, L.-M. (1998). Multiresolution rough ter-
+rain motion planning. IEEE Transactions on Roboticsand Automation, 14(1), 19–33.
+Pearl, J. (1984). Heuristics: Intelligent search strategies for
+computer problem solving. Boston: Addison-WesleyLongman Publishing Co.
+Pivtoraiko, M., & Kelly, A. (2005a). Constrained motion
+planning in discrete state spaces. In Field and servicerobotics (vol. 25, pp. 269–280). Berlin: Springer.
+Pivtoraiko, M., & Kelly, A. (2005b, August). Differentially
+constrained motion replanning using state lattices withgraduated ﬁdelity. In Proceedings of the IEEE/RSJ In-ternational Conference on Intelligent Robots and Sys-tems, Edmonton, AB, Canada (pp. 2611–2616).
+Pivtoraiko, M., & Kelly, A. (2008, September). Differentially
+constrained motion replanning using state lattices withgraduated ﬁdelity. In Proceedings of the IEEE/RSJ In-ternational Conference on Intelligent Robots and Sys-tems, Nice, France (pp. 2611–2616).
+Pivtoraiko, M., Knepper, R. A., & Kelly, A. (2007). Opti-
+mal, smooth, nonholonomic mobile robot motion plan-
+ning in state lattices (Tech. Rep. CMU-RI-TR-07-15).Pittsburgh, PA: Robotics Institute, Carnegie MellonUniversity.
+Reeds, J. A., & Shepp, L. A. (1990). Optimal paths for a car
+that goes both forwards and backwards. Paciﬁc Journalof Mathematics, 145(2), 367–393.Reif, J. (1979, October). Complexity of the mover’s problem
+and generalizations. In Proceedings of IEEE Sympo-sium on Foundations of Computer Science, San Juan,PR (pp. 421–427).
+Sanchez, G., & Latombe, J.-C. (2001, November). A single-
+query bi-directional probabilistic roadmap plannerwith lazy collision checking. In Proceedings of In-ternational Symposium on Robotics Research, Lorne,Victoria, Australia (pp. 403–417).
+Sanchez, G., & Latombe, J.-C. (2002). On delaying colli-
+sion checking in PRM planning: Application to multi-robot coordination. International Journal of RoboticsResearch, 21(1), 5–26.
+Scheuer, A., & Fraichard, T. (1997, April). Collision-free
+and continuous-curvature path planning for car-likerobots. In Proceedings of the IEEE International Con-ference on Robotics and Automation, Albuquerque,NM (pp. 867–873).
+Scheuer, A., & Laugier, C. (1998, October). Planning sub-
+optimal and continuous-curvature paths for car-like
+robots. In Proceedings of the International Conference
+on Robotics and Automation, Victoria, BC, Canada(pp. 25–31).
+Stentz, A. (1995, August). The focussed D
+∗algorithm
+for real-time replanning. In Proceedings of the Four-teenth International Joint Conference on Artiﬁcial In-telligence, Edinburgh, Scotland (pp. 1652–1659).
+Journal of Field Robotics DOI 10.1002/rob

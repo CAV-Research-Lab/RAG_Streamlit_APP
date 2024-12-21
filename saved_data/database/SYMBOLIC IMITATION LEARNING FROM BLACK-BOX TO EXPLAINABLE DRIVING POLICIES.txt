@@ -1,0 +1,602 @@
+=== Metadata ===
+{
+    "file_name": "SYMBOLIC IMITATION LEARNING FROM BLACK-BOX TO EXPLAINABLE DRIVING POLICIES.pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/SYMBOLIC IMITATION LEARNING FROM BLACK-BOX TO EXPLAINABLE DRIVING POLICIES.pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+SYMBOLIC IMITATION LEARNING : FROM BLACK -BOX
+TOEXPLAINABLE DRIVING POLICIES
+Iman Sharifi and Saber Fallah∗
+ABSTRACT
+Current methods of imitation learning (IL), primarily based on deep neural net-
+works, offer efficient means for obtaining driving policies from real-world data but
+suffer from significant limitations in interpretability and generalizability. These
+shortcomings are particularly concerning in safety-critical applications like au-
+tonomous driving. In this paper, we address these limitations by introducing
+Symbolic Imitation Learning (SIL), a groundbreaking method that employs In-
+ductive Logic Programming (ILP) to learn driving policies which are transparent,
+explainable and generalisable from available datasets. Utilizing the real-world
+highD dataset, we subject our method to a rigorous comparative analysis against
+prevailing neural-network-based IL methods. Our results demonstrate that SIL
+not only enhances the interpretability of driving policies but also significantly im-
+proves their applicability across varied driving situations. Hence, this work offers
+a novel pathway to more reliable and safer autonomous driving systems, under-
+scoring the potential of integrating ILP into the domain of IL.1
+1 I NTRODUCTION
+The development of autonomous driving (AD) technologies has brought the transportation systems
+to the next level, promising safer and more efficient roadways. Among the various techniques used to
+enable autonomous vehicles (A Vs), imitation learning (IL) has emerged as a promising approach due
+to its ability to learn complex driving behaviors from expert demonstrations. By leveraging large-
+scale driving datasets and deep neural networks (DNNs), IL has demonstrated remarkable success
+in training autonomous agents to emulate humans’ driving behaviors (Pan et al., 2017; 2020; Zhang
+& Cho, 2016).
+Despite its impressive performance, DNN-based IL (DIL) inherits the critical limitations of DNNs,
+hindering its widespread adoption in real-world autonomous systems. A prominent drawback is
+the lack of interpretability in the learned driving policies due to the black-bax nature of DNNs
+(Zhang et al., 2021), making the decision-making process of AD challenging to understand. This
+lack of interpretability not only limits our ability to diagnose failures or errors but also hampers
+the trust and acceptance of autonomous systems by society and regulatory bodies (Kim & Canny,
+2017). Moreover, the generalizability of DIL driving policies remains a concern. Although they
+can learn to imitate expert drivers in specific scenarios (with a given state distribution), adapting
+these policies to unseen situations (out of state distribution) can be problematic since DIL can just
+learn the demonstrated behaviors (Ghasemipour et al., 2020), thereby having little knowledge about
+novel situations when mismatching test and train state distributions (Zhu et al., 2020). The rigid
+nature of learned policies often leads to suboptimal or unsafe behavior when encountering unfamiliar
+conditions, such as adverse weather or complex traffic scenarios. Finally, though more somple-
+efficient as compared to reinforcement learning, DIL methods still suffer from sample-inefficiency
+since they need millions of state-action pairs to learn efficiently (Fang et al., 2019; Yu et al., 2023).
+Recently, state-of-the-art explainable AI (XAI) methods seek to improve the transparancy and inter-
+pretability of DNNs by providing various criteria (Do ˇsilovi ´c et al., 2018; Tjoa & Guan, 2020), most
+∗I. Sharifi and S. Fallah {i.sharifi, s.fallah }@surrey.ac.uk are with the Connected and Au-
+tonomous Vehicles Lab ( www.cav-lab.io ) at the Department of Mechanical Engineering Sciences, Uni-
+versity of Surrey, Guildford, UK.
+1The source code and data are available on this link: https://github.com/iman-sharifi/SIL .
+1arXiv:2309.16025v1  [cs.LG]  27 Sep 2023
+cutting-edge criterion of which is a neuro-symbolic learning method aiming at combining the learn-
+ing capabilities of DNNs with symbolic reasoning (Sarker et al., 2021; Hitzler & Sarker, 2022).
+Since most neuro-symbolic methods employ symblic logic-based reasoning to extract domain-
+specific first-order logical (FOL) rules using different rule-generation techniques (Kimura et al.,
+2021; Zimmer et al., 2021), they are identified as sample-efficient techniques that have a credible
+sense of generalizability (Hitzler & Sarker, 2022). For instance, Zimmer et al. (2021) proposed a
+differentiable logic machine (DLM), as a neural-logic approach, to extract FOL rules using induc-
+tive logic programming (ILP) (Cropper & Duman ˇci´c, 2022), as a technique aiming at inducing new
+rules from human-provided examples. Similarly, DLM was employed by Song et al. (2022) to learn
+an interpretable controller for AD in the form of a first-order program. Likewise, our work aims to
+replace DIL with ILP-based programs, proposing a sample-efficient and transparent method while
+transferable to unseen scenarios.
+In this paper, we propose a novel solution to address the challenges of the current DIL methods
+by introducing the concept of SIL, as an approach aiming to convert black-box driving policies
+into explainable policies by incorporating ILP to extract symbolic rules from humans’ background
+knowledge. Using ILP, we seek to unlock the potential for transparent, interpretable, and adaptive
+driving policies, laying the foundation for safer and more reliable AD systems. The primary ob-
+jective of this paper is twofold: first, to enhance the transparency of learned driving policies by
+inducing human-readable and interpretable rules that capture essential safety, legality, and smooth-
+ness aspects of driving behavior. Second, we strive to improve the generalizability of these policies,
+enabling A Vs to handle diverse and challenging driving scenarios with reliability.
+The rest of the paper is divided into several sections. Section II introduces the prerequisites of the
+method. Section III describes the proposed method in general and sention IV particularly discusses it
+for the AD system. Section V presents the simulation environment, results, and discussion. Finally,
+section VI draws a conclusion.
+2 P RELIMINARIES
+In this section, we provide the necessary background for the proposed method.
+2.1 F IRST-ORDER LOGIC
+FOL is a formalism that uses facts and rules to represent knowledge and perform logical inferences
+(Yu et al., 2023). Rules in this framework consist of a head and a body like the following format:
+head :- body. (1)
+where :-indicates entailment operator ( ⊨) in this context (Cropper & Duman ˇci´c, 2022). head
+signifies an output predicate expressing a relationship between concepts, and body outlines condi-
+tions for the head predicate’s validity. Predicates consist of a functor and a number of arguments,
+depicted as functor(arg 1,arg 2, ...,arg n)orfunctor/n , where arguments are variables or
+constants, and nis an arity. FOL rules usually follow Horn clause patterns, having a single head
+literal and zero or more literals in the body:
+H :- B 1,B2, ...,Bn. (2)
+Bi, i= 1, nshow premises in body where comma ( ,) stands for conjunction ( ∧) in Prolog pro-
+gramming. Also, H, the head, serves as a conclusion for the rule. This rule implies that if B1toBn
+conjunctively hold, then Histrue ; otherwise, Hisfalse . FOL-based rules enable the definition
+of intricate relationships and logical inferences by employing the existing knowledge.
+2.2 I NDUCTIVE LOGIC PROGRAMMING (ILP)
+ILP is a machine learning paradigm that combines FOL with inductive reasoning to learn symbolic
+rules from examples, including a set of positive examples and, optionally, negative examples (Crop-
+per & Duman ˇci´c, 2022). These examples are typically represented as tuples of ground literals, where
+a ground literal is an atom with all its variables instantiated to constants.
+The ILP setting involves three key components: language bias set B, background knowledge set BK,
+and a set of examples E. SetBspecifies the space of possible hypotheses which are rules that the
+2
+ILP system considers during learning. Using a desired head predicate and multiple potential body
+predicates, it guides the search for candidate rules that could potentially explain the given examples.
+Being domain-specific, set BKprovides additional information about the domain in which the ILP
+operates. This knowledge may include known relationships, constraints, or regularities that can be
+used to infer new rules. Examples E, including positive examples E+and negative examples E−,
+are the observed instances that the ILP system aims to learn from.
+The main goal of an ILP system is to discover hypotheses Hthat explain E+while avoiding E−.
+ILP scans E+and attempts to match them with all b∈ B. Ifbcan cover an example based on BK, it
+is added to the list of learned hypotheses. In the second step, hypotheses that cover E−are removed
+from the original hypotheses list. Next, the algorithm refines hypotheses based on E+andBK. For
+each hypothesis that covers a positive example e+∈ E+, refinement is done by generating a more
+specific hypothesis with new literals, extending its coverage on examples.
+ILP leverages the power of FOL and inductive reasoning to learn interpretable and generalizable
+symbolic rules from a small example space E, even a single example (Cropper et al., 2020). By
+iteratively refining candidate rules, guided by E+andBK, ILP offers a principled approach for
+learning explainable policies in complex domains like AD.
+2.3 I MITATION LEARNING
+IL is a prominent technique in the field of machine learning and robotics, which enables an agent
+to learn complex behaviors by imitating expert demonstrations. In DIL, the agent employs DNNs
+to learn from a rich dataset Dcontaining expert demonstrations, represented as state-action pairs:
+{(s1, a1),(s2, a2), . . . , (sT, aT)}. Here, stdenotes the state of the environment at time step t, and
+atrepresents the action taken by the expert in that state. The goal of DIL is to learn a policy πθ(a|s),
+parameterized by θ, that can map states to appropriate actions in a manner consistent with the expert
+behavior. One common approach to train the imitation policy is through supervised learning. The
+learning process involves minimizing the discrepancy between the actions selected by the learned
+policy and the actions taken by the expert in the demonstration data. This discrepancy is usually
+measured using a mean squared error (MSE) loss function, as shown in Eq. 3. The objective is to
+find the optimal parameters θ∗that minimize the loss over the dataset D:
+θ∗= arg min
+θX
+(s,a)∈D(πθ(a|s)−a)2(3)
+DIL has shown remarkable success in various domains, including AD. By learning from expert
+drivers’ demonstrations, DIL can effectively navigate complex traffic scenarios. However, one sig-
+nificant challenge with DIL approaches is the lack of interpretability. As the policies are typically
+encoded in DNNs, understanding the decision-making process of the autonomous agent becomes
+difficult. Additionally, DIL cannot perform well out of the state distribution, thereby lacking gener-
+alization in unseen situations.
+3 M ETHODOLOGY : SYMBOLIC IMITATION LEARNING
+In this section, we introduce the fundamental concept of the SIL framework, which represents
+a novel approach leveraging ILP to extract symbolic policies from human-generated background
+knowledge. This process aims to replicate human behaviors by uncovering explicit rules governing
+complex actions demonstrated by humans.
+As illustrated in Fig. 1, the SIL framework includes three main components: knowledge acquisition,
+rule induction, and rule aggregation. In the knowledge acquisition phase, we provide essential inputs
+using our background knowledge about the environment for ILP, including B,BK, andE, facilitating
+the induction of a single rule in the rule induction phase. For all required rules, this process is
+repeated to accumulate all necessary rules induced by ILP, gradually assembling individual rules at
+each stage to constitute Hset. Finally, the rule aggregation component employs and supplements
+these rules to extract desired actions. These actions are inherently human-like and interpretable since
+the logical rules are derived from human demonstrations in the rule induction phase. Leveraging
+3
+ILP’s ability to deduce logical rules from examples, SIL effectively captures intricate human-like
+behaviors, a task that conventional DIL methods often struggle to achieve.
+SIL offers several advantages, notably its capacity for sample-efficient learning. It demonstrates
+the ability to construct a set of interpretable rules with a relatively small number of expert demon-
+strations. These rules not only enhance human-comprehensible decision-making but also contribute
+to the model’s overall generalizability. The explicit nature of these symbolic rules equips SIL-
+based agents to adapt more effectively to previously unseen scenarios, surpassing the performance
+of black-box policies, which lack transparency and struggle with generalization.
+Figure 1: Decision-making using symbolic imitation learning framework in autonomous driving
+4 SIL FOR AUTONOMOUS DRIVING
+In this section, we employ SIL to derive unknown rules for autonomous highway driving, a use-case
+scenario. Our objective is to imitate the behaviors of human drivers by utilizing SIL using multiple
+sets of provided examples. Firstly, we provide the reader with the necessary context about the high-
+way environment by introducing useful predicates. Then, we delve into the essential components of
+the SIL framework within the context of autonomous highway driving, explaining how we abtain
+the desired actions in various states.
+It is noted that the primary goal of employing SIL in autonomous highway driving is to find rules
+from human-derived background knowledge and extract actions that emulate human-like behavior.
+These actions include lane changes and adjustments of the A V’s longitudinal velocity, all of which
+are employed to ensure safe, efficient, and smooth driving. Keep note that when the A V executes
+lane changes, it typically employs one of three actions: lane keeping (LK), right lane change (RLC),
+or left lane change (LLC).
+Introduction: human drivers frequently change their vehicle’s lane and velocity based on the po-
+sitions and speeds of neighboring vehicles, also known as target vehicles (TVs). Accordingly, we
+leverage the relative positions and velocities of TVs around the A V to make informed decisions
+regarding lane changes and velocity adjustments. To achieve this, we define the sections surround-
+ing the A V where vehicles may be present, dividing the vicinity into 8 distinct sector s:front ,
+frontRight ,right ,backRight ,back ,backLeft ,left , andfrontLeft . Each of these
+sectors can either be occupied by a vehicle, denoted by the sector_isBusy predicate set to
+true , or unoccupied, where the predicate is set to false . For instance, right_isBusy is
+true if the there is a vehicle in the right section, otherwise, it is set to false .
+In terms of the relative longitudinal velocities of the TVs, we calculate the difference between their
+velocities and that of the A V , then assigning predicates accordingly. Three predicates are consid-
+ered for relative velocity within each sector. When the relative velocity is a positive (negative)
+value more than a predefined threshold, bigger (lower ) is used in the corresponding predi-
+cate. Also, when the absolute value of the relative velocity falls below the threshold, the velocities
+are categorized as equal . For example, frontVel_isBigger ,frontVel_isEqual , and
+frontVel_isLower show the relative velocity between the front TV and the A V . In addition,
+human drivers should stay between the highway lanes (valid sections) and avoid driving in off-road
+areas (invalid sections). To incorporate this contextual knowledge, each sector is marked as either
+valid ( sector_isValid is set to true ) or invalid ( sector_isValid is set to false ).
+4
+4.1 K NOWLEDGE ACQUISITION
+AD systems need various rules to perform well on the roads, and each rule requires identical settings
+and examples. Thus, to extract diverse rules, it is necessary to define distinct settings and employ
+unique examples for each rule. Thus, we start with a process that defines the scope of each desired
+rule by defining their head and candidate body predicates in a specific Bset. The selection of
+candidate body predicates depends on their potential influence on the accuracy of the head predicate.
+So, we remove the body predicates that have no effects on the head predicats, thereby reducing the
+dimension of Bset, which could otherwise lead to long processing times.
+Generally, our objective revolves around the identification of unsafe, dangerous, and efficient lane
+change actions, coupled with effective adjustments in longitudinal acceleration (smoothness). As
+shown in Table 1, our aim is to find rules associated with unsafe ,dangerous ,efficient , and smooth
+actions relating to both lane and acceleration changes. Each rule, similar to the rule form in Eq. 2,
+owns an exclusive head predicate defined in Busing head_pred/1 and a set of candidate body
+predicates specified with the body_pred/1 predicate. Candidate body predicates include all liter-
+als having an impact on the head predicate. ILP should find the best body predicates that satisfy all
+e+∈ E+while simultaneously rejecting all e−∈ E−. To achieve this, we define multiple possible
+states using our background knowledge and assign a unique ID to each state. Based on our knowl-
+edge about each action, we categorize each state as either e+using the pos/1 predicate or e−using
+theneg/1 predicate. This process is repeated for each rule to collect sufficient knowledge-based
+data for inducting previously-unknown logical rules. Therefore, it becomes necessary to provide
+specific B,BK, andEfor the effective acquisition of each rule.
+The knowledge acquisition process creates various real-world states that include all possible driving
+scenarios. Each state consists of an A V surrounded by 8 sections, each of which categorized as
+either occupied by a TV or vacant. Thus, we add 8 sector_isBusy literals to the candidate body
+predicates ( sector is a representative for 8 sections around the A V). Furthermore, we consider
+the relative velocity of each TV concerning the A V within each state, adding 24 relative velocity
+literals (3 for each sector ) to candidate body predicates. Additionally, we incorporate the validity
+of the right and left sections in each state to ensure compliance with legal driving areas, adding 2
+literals accordingly. Table 1 indicates the total number of candidate body predicates for each head
+predicate. After the definition of states, we assign positive or negative labels to the head predicates of
+the unknown rules, according to our driving expertise and corresponding to the rule being extracted.
+For instance, to instruct an ILP program in deriving unsafe RLC rules, states wherein taking RLC
+action is unsafe receive positive labels; otherwise, such scenarios receive negative labels.
+The quantity of positive examples ( NE+) and negative examples ( NE−) have a big impact on rule
+accuracy and robustness. While the inclusion of E−is optional, its presence improve the robustness
+and generalizability of the derived rules across a broader distribution of states. Notably, as defined
+in Table 1, distinct values for NE+andNE−are assigned to each rule.2
+4.2 R ULE INDUCTION
+After obtaining sufficient amount of knowledge-driven data for each unknown rule, we elaborate
+on the rule induction stage of the SIL framework, discussing the extracted rules for autonomous
+highway driving. Notably, we extract the desired rules using Popper, a powerful ILP system that
+combines answer set programming3(ASP) (Lifschitz, 2019; Corapi et al., 2011) and Prolog to en-
+hance the learning accuracy and speed. One of the main advantages of Popper is the ability to
+learn from failures (LFF) by defining, constraining, and searching the hypothesis space using ASP
+(generate stage), testing hypotheses against E+andBKusing Prolog (test stage), and pruning the
+hypothesis space using the failed hypotheses (constrain stage) (Cropper & Morel, 2021).
+Due to the dynamic nature of driving decision-making, various rules can be induced for different
+tasks. According to what we need for the highway driving task, we just induce the required general
+rules using ILP, of which safety ,efficiency , and smoothness ones are discussed.
+2All knowledge-based data are available at github.com/iman-sharifi-ghb/Symbolic-Imitation-
+Learning/tree/main/SIL/data
+3Being particularly useful for solving combinatorial and knowledge-intensive problems, ASP is a declara-
+tive programming paradigm that allows encoding complex problems as logic-based rules and constraints.
+5
+Table 1: Important information about the rules in the knowledge acquisition and rule induction
+components
+ACTION HEAD PREDICATE NBP NE+NE−Rule Acc Te(sec)
+UNSAFErlc_isUnsafe 38 768 256 h1 1.00 0.365
+llc_isUnsafe 38 768 256 h2 1.00 0.345
+DANGEROUSlk_isDangerous 43 87 937 h3 1.00 0.762
+rlc_isDangerous 38 320 704 h4 1.00 0.416
+llc_isDangerous 38 308 717 h5 1.00 1.007
+EFFICIENCYrlc_isBetter 25 32 992 h6 1.00 4.108
+llc_isBetter 25 128 896 h7 1.00 0.892
+SMOOTHNESSreachDesiredSpeed 43 512 512 h8 1.00 0.336
+reachFrontSpeed 43 253 771 h9 1.00 0.703
+brake 43 253 771 h10 1.00 0.326
+4.2.1 S AFETY
+We predominantly focus on safety rules concerning lane change scenarios, which can be categorized
+into two primary parts: unsafe rules and dangerous rules. Each of the actions, RLC and LLC, can
+potentially fall into the categories of unsafe or dangerous in various states, while LK is generally
+considered safe, except for situations where it could pose potential danger.
+Unsafe Actions: the objective here is to reveal previously unknown rules by employing relevant
+examples for states where taking RLC or LLC would be unsafe and lead to collisions or crashes.
+Employing ILP, we have deduced two rules, one relating to unsafe RLC (rule h1) and the other to un-
+safe LLC (rule h2). For instance, rule h1indicates when taking RLC is unsafe ( rlc_isUnsafe ):
+%% Rule h1: unsafe RLC
+rlc_isUnsafe:- right_isBusy; not(right_isValid).
+where ;(∨) and not (⌝) represent disjunction and negation operators in FOL formalism, respec-
+tively. Similarly, rule h2stands for the moments that taking LLC ( llc_isUnsafe ) is unsafe for
+the A V:
+%% Rule h2: unsafe LLC
+llc_isUnsafe:- left_isBusy; not(left_isValid).
+To elaborate, in a given state, if a TV is present in the right (left ) side of the A V or the right
+(left ) section is invalid, taking the RLC (LLC) action is considered unsafe, as it would lead to
+collisions. Therefore, it is essential to avoid taking RLC (LLC) action in such states.
+Dangerous Actions: dangerous actions include situations where the A V takes actions that poten-
+tially jeopardize the safety of its passengers. For instance, consider a state where a car occupies
+thebackRight (backLeft ) section of the A V , and its velocity surpasses that of the A V . In such
+scenarios, taking RLC (LLC) action is permissible but may result in an accident with the car in the
+backRight (backLeft ) section. While not completely unsafe, it is advisable to avoid taking
+dangerous actions in these circumstances.
+Using the Popper ILP system, we have derived three rules for dangerous actions in each state. The
+first one (rule h3) indicates that if there is a vehicle in the backRight section with a velocity
+exceeding that of the A V , or if there is a vehicle in the frontRight section with a velocity lower
+than that of the A V , then executing the RLC action is dangerous:
+%% Rule h3: dangerous RLC
+rlc_isDangerous:-
+backRight_isBusy,backRightVel_isBigger;
+frontRight_isBusy,frontRightVel_isLower.
+Similarly, rule h4has been established for the LLC action:
+6
+%% Rule h4: dangerous LLC
+llc_isDangerous:-
+backLeft_isBusy,backLeftVel_isBigger;
+frontLeft_isBusy,frontLeftVel_isLower.
+Lastly, rule h5takes into account scenarios in which LK may pose danger:
+%% Rule h5: dangerous LK
+lk_isDangerous:-
+back_isBusy, not(backDist_isSafe),backVel_isBigger.
+This rule asserts that if there is a TV in the back section, the distance between the A V and the TV is
+critical, and the TV’s velocity exceeds that of the A V , staying in the current lane (LK) is considered
+dangerous and could lead to a collision.
+4.2.2 E FFICIENCY
+Safety rules identify lane change actions that are either unsafe or dangerous in specific states. How-
+ever, they do not provide guidance on which action is efficient when none of them are unsafe or
+dangerous. To enhance the decision-making process, we introduce prioritization for actions. Gener-
+ally, to create time-efficient driving scenarios, it is necessary to change lanes appropriately in order
+to minimize the driving time. Yet it is important to avoid unnecessary and sudden lane changes to
+otherwise cause health-related issues for passengers. Therefore, the first priority is to avoid chang-
+ing lanes unless it is necessary. If the A V needs to change lanes or overtake a vehicle in the front
+section, we introduce another priority. When the A V intends to change lanes and has the option to
+choose either RLC or LLC, it is preferable to choose the LLC action, as the left lane typically has
+a higher speed. Additionally, RLC should be chosen when LLC is not allowed. Overall, LLC takes
+precedence over RLC, helping to prioritize actions when both are equally safe. Following these
+priorities, we label scenarios extracted from knowledge-driven data, with the aim of determining the
+preferable actions using ILP. Rule h6indicates a scenario where LLC takes precedence over RLC:
+%% Rule h6: efficient LLC
+llc_isBetter:-
+front_isBusy, not(left_isBusy), not(frontLeft_isBusy).
+This rule states that when there is a vehicle in front of the A V , and the left as well as frontLeft
+sections are not occupied (free), then LLC is better than RLC. Conversely, rule h7represents situa-
+tions where the RLC action is preferable:
+%% Rule h7: efficient RLC
+rlc_isBetter:-
+front_isBusy, left_isBusy,
+frontLeft_isBusy, not(right_isBusy), not(frontRight_isBusy).
+This rule specifies that if the front ,left , and frontLeft sections are occupied, and the
+right andfrontRight sections are not occupied, then RLC is favored over LLC. Notably,
+rlc_isBetter andllc_isBetter are mutually exclusive, meaning that if RLC is better, then
+LLC cannot be better, thereby preventing conflicts among the rules.
+4.2.3 S MOOTHNESS
+To make sure about passengers’ health and overall safety, the A V , similar to human drivers, must
+change their vehicles’ velocity smoothly. Human drivers typically employ a limited set of actions
+to control their vehicle’s velocity while experiencing smooth driving. One such action involves in-
+creasing their velocity to reach their desired speed slowly, while another is to adjust their speed
+according to the lead vehicle ( front TV) while closing the distance between them. In emergency
+situations, such as when the distance between their vehicle and the front TV is unsafe and their
+vehicle’s velocity exceeds that of the front TV , they resort to brake pedal to avoid potential colli-
+sions. Based on these real-world driving experiences, our aim is to identify three fundamental rules
+that significantly impact driving safety and smoothness.
+7
+Figure 2: Acceleration phases: catch-up (for reaching driver’s desired speed), follow-up (for adjust-
+ing speed the front TV’s speed), and brake (for necessary deceleration).
+Similar to Sharifi et al. (2023) work, we introduced a rule-based acceleration methodology for ve-
+locity control in autonomous vehicles (A Vs). The results were promising, with the A V success-
+fully avoiding collisions with the front TV while maintaining smooth velocity adjustments. We
+achieved this by employing a low-level controller to ensure velocity commands lack discontinuities.
+As represented in Eq. 4, our approach includes three distinct phases, inspired by human driver
+behavior when driving in a lane, similar to Sun et al. (2021) work. As illustrated in Fig. 2, the
+catch-up phase corresponds to scenarios where the front section is unoccupied by a TV . In
+such cases, each driver has the freedom to decide whether to accelerate, decelerate, or maintain their
+current velocity. To calculate the required acceleration in this scenario, we incorporate a desired lon-
+gitudinal velocity term ( Vd
+x), which may vary among individual drivers, to determine the necessary
+acceleration for reaching the desired velocity. When a vehicle is present in front of human drivers’
+vehicles, they often adjust their velocities to match the front TV’s speed, thereby avoiding colli-
+sions. The follow-up phase applies to situations where a TV occupies the front section of the
+A V and the distance is safe. As shown in Eq. 4, the follow-up equation adjusts the A V’s velocity
+to the front TV’s velocity ( vx,TV ) while reducing the distance ( D) between them. Finally, as
+shown in Fig. 2, when drivers find themselves at an unsafe distance (the distance that is less than a
+critical distance C) from the front TV and at a high speed, they must decelerate to avoid collision
+with the lead vehicle. In such cases, they utilize the brake pedal to decelerate until a safe following
+distance is achieved. The brake condition in Eq. 4 associates with the scenarios wherein braking
+is the best policy for velocity control.
+ax=
+
+Vd
+x−vx,AV
+∆tcatch-up
+v2
+x,TV−v2
+x,AV
+2(D−C)follow-up
+−v2
+x,AV
+2Dbrake(4)
+As stated before, we aim to find rules to formulate accelerations in Eq. 4. Since existing ILP
+methods cannot directly capture literals with numerical values (except for 0 and 1), the extraction
+of rules represented in Eq. 4 poses a challenge. However, we can identify the true phase among
+catch-up ,follow-up , and brake . Using the identified phase, we can determine the desired
+acceleration and then the velocity for each state. To establish corresponding rules to each phase,
+we consider the relative distance between the A V and the front TV and classify states as positive
+or negative examples for each rule, as the rules specifications shown in Table 1. This approach
+enables us to extract an unknown rule for each phase using Popper. Three rules have been induced
+for adjusting axin each phase; the first rule, for instance, indicates that when the front section is
+unoccupied (free), accelerations should be adjusted to obtain the desired velocity.
+%% Rule h8: Catch-up
+reachDesiredSpeed:-not(front_isBusy).
+The second rule indicates that when the front section is busy and the relative longitudinal distance
+between the two vehicles is safe, then the A V should change the acceleration to reach the front
+TV’s speed.
+%% Rule h9: Follow-up
+reachFrontSpeed:- front_isBusy, frontDist_isSafe.
+8
+Finally, the third extracted rule indicates that when there is a vehicle in front of the A V and the
+relative distance between them is lower than the allowed distance, then the A V should brake to avoid
+collision with the front TV .
+%% Rule h10: Brake (deceleration)
+brake:- front_isBusy, frontVel_isLower, not(frontDist_isSafe).
+As shown in Table 1, we have used an accuracy criterion to show how rules fit on the corresponding
+E+andE−.Accuracy is the average of precision andrecall . According to the Acc column in the
+table, accuracy of all rules is 1,00, meaning that all rules fit the data in the best manner. Moreover,
+the execution time ( Te), also known as the processing time, for each rule presented in Table 1.
+Needless to say, Teis very short for each rule, meaning that the rule induction process is fast in the
+SIL framework.
+4.3 R ULE AGGREGATION
+In the previous section, we induced the desired driving rules using Popper, forming a set of hy-
+potheses from h1toh10. However, these induced rules are raw and require processing to yield
+human-like actions for lane changes and velocity adjustments. Thus, after extracting the desired
+driving rules, we feed them into the rule aggregation component. The primary goal here is to post-
+process these rules to extract the best lane change and velocity actions for each specific state. Within
+this component, the extracted rules are integrated with provided background knowledge to construct
+a comprehensive decision-making program. Additionally, we introduce supplementary rules to es-
+tablish strong connections between the induced rules, facilitating the extraction of the desired actions
+and enabling A V control with a low-level controller.
+To identify the best action for state St, we initially employ h1toh5rules to eliminate unsafe or
+dangerous actions, thereby reducing the action space. Then, we determine the best action from the
+remaining options using h6andh7, which assess the quality of each action. Ultimately, we extract
+the best action at, which can be LK, LLC, or RLC. As illustrated in Fig. 1, once atis determined, the
+A V’s lane ID adjusts accordingly using a switch box (Fig. 1), defining a pre-defined lateral position
+for the new lane yNL
+d. We then employ a low-level controller to generate a lateral acceleration
+command ay.
+To derive the desired velocity command ( vd
+x) for the A V at each time step (see Fig. 1), we utilize the
+current state Stto identify the rule among h8,h9, and h10 rules where the head predicate holds
+true . Using the identified rule and Eq. 4, we calculate the longitudinal acceleration ax. Afterward,
+we determine the desired velocity using vd
+x=vx+ax∆t. This desired velocity is then fed to a
+low-level controller as the input for the velocity controller. The controller, in turn, adjusts the thrust
+to obtain the desired velocity in a continuous and smooth manner. In summary, the SIL framework
+employs the learned hypotheses to determine high-level control commands and send them to the
+low-level controller component. This process yields human-like actions while adhering to safety,
+efficiency, and smoothness rules.
+5 R ESULTS AND DISCUSSIONS
+In this section, we discuss the results of the proposed method and compare them with a DIL baseline.
+HighD dataset (Krajewski et al., 2018) is used to indicate the implementations for both methods.
+5.1 B ASELINE : DIL
+We utilized a fully-connected black-box DNN as the basis for DIL, with the hyperparameters deter-
+mined through preliminary tests on the data. The network was structured with three fully-connected
+layers: the first two layers held 128 nodes each, while the final layer contained three nodes, im-
+plementing softmax activation functions to represent the action space. The PyTorch library was
+employed for neural network computations, and the ADAM algorithm was utilized for the opti-
+mization process. The learning rate and state-action batch size were set to α= 1e−4and 256,
+respectively.
+9
+Table 2: Comparison of both methods in 50 test episodes
+DIRECTION LEFT -TO-RIGHT RIGHT -TO-LEFT
+METHOD DIL SIL DIL SIL
+NLC 3 40 4 38
+Nhits 6 0 8 0
+Tavg(sec) 65.28 64.84 65.13 64.93
+Davg(m) 1,998 2,100 1,976 2,100
+Vavg(km/h )110.18 116.59 109.22 116.43
+To provide enough data for the network, we gathered over 160,000 state-action pairs from the highD
+dataset by tracking all vehicles from the initial frames to the final ones. Each state included 8 nor-
+malized relative positions of the TVs around the A V , in addition to the A V’s velocity divided by
+a predefined maximum velocity. Within each frame, we detected lane-change actions of different
+vehicles using their initial and final lane positions. After action detection in a given state, we as-
+signed a binary list, consisting of 0s and 1s, as a representative for the action. Finally, the network
+was trained on these state-action pairs, with the loss function converging to its minimal point. It
+is important to note that we solely considered imitating the lane-change actions, thus avoiding the
+imitation of the velocity of each vehicle. Instead, we employed rule-based methods to control the
+A V’s velocity in the DIL framework.
+5.2 SIL I MPLEMENTATION
+In contrast to the DIL method, we employed a small number of positive and negative examples to
+learn unknown rules, as displayed in Table 1. Following the construction of the SIL framework, it
+can make interpretable decisions in each state thanks to symbolic FOL. They are also generalizable,
+as they are not limited to specific circumstances. Moreover, as shown in Table 1, this method is
+fast since each rule can be induced in a fraction of a second (see Tecolumn). We implemented the
+SIL framework using the highD dataset, where a virtual A V agent with an arbitrary initial lane and
+velocity is considered. The objective is to drive safely, efficiently, and smoothly on the highway.
+It’s important to note that, like DIL, the SIL training process is conducted offline and should be
+completed before the commencement of the driving adventure. Again, the process does not require
+much time to extract the rules, compared to DIL to learn a policy, as ILP programs are typically
+sample-efficient and can operate effectively even with just one sample.
+5.3 C OMPARISON
+We implemented both methods in similar situations to draw an analogy between their overall perfor-
+mance. Both DIL and SIL agents start with similar locations, velocities, and directions. To compare
+their performance, we established certain criteria that compare safety, efficiency, and smoothness in
+both methods. Safety is indicated by the number of collisions ( Nhits), while efficiency and smooth-
+ness are assessed by the number of lane changes ( NLC). Moreover, average velocity is used as an
+efficiency measure, calculated as Vavg=Davg
+Tavg, where DavgandTavgrepresent the average traveled
+distance and time per episode, respectively.
+Using the highD dataset, we tested both methods in 50 episodes, each consisting of a track with a
+length of 2,100 meters. In each scenario, the A V drove either in the left-to-right (L2R) direction
+or in the right-to-left (R2L) direction. We trained the DIL agent in the L2R direction and aimed to
+assess its generalizability to the opposite direction. However, the proposed SIL method is inherently
+generalizable, as it uses general knowledge-based examples from the environment’s domain to find
+rules. Table 2 presents the results of each method after completing the test scenarios. According to
+this table, the SIL agent successfully completed the scenarios without a single collision, while the
+DIL agent collided with other vehicles in 12% of the test episodes at best. Furthermore, when we
+employed the DIL agent in the R2L direction, the number of collisions increased, and the agent could
+not perform lane changes effectively. In contrast, the performance of the SIL agent did not degrade
+10
+in the this direction, demonstrating better generalizability. Additionally, the number of lane changes
+(NLC) was near zero for the DIL agent, indicating that it struggled to learn lane changes efficiently.
+Though the DIL agent drives very smoothly, it cannot change lane efficiently and waste time staying
+in a single lane, causing traffic congestion on the road. Using a large amount of data, this lack of lane
+change efficiency reflects the sample-inefficiency nature of DIL methods. In contrast, the proposed
+SIL changed the lane approximately one time per episode due to the presence of efficiency rules,
+aiding the agent in making effective lane changes and reducing driving time. To further evaluate
+the performance of both methods, we leveraged Vavg, which represents the average speed of each
+vehicle per episode, indicating lane change efficiency. We computed this value for each agent in
+both directions, and then considered the average value for comparison. Accordingly, Vavgof DIL
+and SIL methods was 109.7 and 116.51 km/h , respectively, showing that Vavgof the SIL agent was
+higher than that of the DIL agent, which implies that the SIL agent was successful at finding free
+lanes by changing lanes. This resulted in a freedom to increase the velocity, reducing driving time.
+It’s worth noting that learning each rule in the SIL framework takes a relatively short time, as shown
+in Table 1, while training a DIL neural network over a large dataset demands significant time and
+computational resources. Furthermore, a large amount of data may not be available for different
+tasks, whereas the proposed method can learn effectively with just a few examples derived from
+human expertise. However, we should not overlook the drawbacks of the proposed method, one
+of which is that most ILP systems, including Popper, struggle with noise handling. If some pos-
+itive and negative examples are mislabeled, it can be challenging for these systems to reject such
+noise. Moreover, to extract each unknown rule, we need to define specific settings and examples, as
+mentioned in subsection 4.1. Therefore, we encourage future research to address these issues and
+develop new methods based on this novel research line.
+6 C ONCLUSION
+In this paper, we proposed a novel symbolic imitation learning method which takes advantage of
+humans’ driving background knowledge and examples to extract new rules for autonomous driving
+using inductive logic programming. This method consists of three main components: knowledge
+acquisition, rule induction, and rule aggregation, all of which are closely connected to each other.
+Using the highD dataset, we have shown that our method outperforms the DNN-based imitation
+learning method in the case of safety, efficiency, and smoothness. Moreover, the proposed method
+offers a completely interpretable approach using first-order logics and can perform well in unseen
+environments, making it generalizable as well. Furthermore, our method is more sample-efficient as
+compared to the DIL since we use significantly fewer state-action pairs for learning rules.
+REFERENCES
+Domenico Corapi, Alessandra Russo, and Emil Lupu. Inductive logic programming in answer set
+programming. In International conference on inductive logic programming , pp. 91–97. Springer,
+2011.
+Andrew Cropper and Sebastijan Duman ˇci´c. Inductive logic programming at 30: a new introduction.
+Journal of Artificial Intelligence Research , 74:765–850, 2022.
+Andrew Cropper and Rolf Morel. Learning programs by learning from failures. Machine Learning ,
+110:801–856, 2021.
+Andrew Cropper, Sebastijan Duman ˇci´c, and Stephen H Muggleton. Turning 30: New ideas in
+inductive logic programming. arXiv preprint arXiv:2002.11002 , 2020.
+Filip Karlo Do ˇsilovi ´c, Mario Br ˇci´c, and Nikica Hlupi ´c. Explainable artificial intelligence: A survey.
+In2018 41st International convention on information and communication technology, electronics
+and microelectronics (MIPRO) , pp. 0210–0215. IEEE, 2018.
+Bin Fang, Shidong Jia, Di Guo, Muhua Xu, Shuhuan Wen, and Fuchun Sun. Survey of imitation
+learning for robotic manipulation. International Journal of Intelligent Robotics and Applications ,
+3:362–369, 2019.
+11
+Seyed Kamyar Seyed Ghasemipour, Richard Zemel, and Shixiang Gu. A divergence minimization
+perspective on imitation learning methods. In Conference on Robot Learning , pp. 1259–1277.
+PMLR, 2020.
+Pascal Hitzler and Md Kamruzzaman Sarker. Neuro-symbolic artificial intelligence: The state of
+the art. 2022.
+Jinkyu Kim and John Canny. Interpretable learning for self-driving cars by visualizing causal atten-
+tion. In Proceedings of the IEEE international conference on computer vision , pp. 2942–2950,
+2017.
+Daiki Kimura, Masaki Ono, Subhajit Chaudhury, Ryosuke Kohita, Akifumi Wachi, Don Joven Agra-
+vante, Michiaki Tatsubori, Asim Munawar, and Alexander Gray. Neuro-symbolic reinforcement
+learning with first-order logic. arXiv preprint arXiv:2110.10963 , 2021.
+Robert Krajewski, Julian Bock, Laurent Kloeker, and Lutz Eckstein. The highd dataset: A drone
+dataset of naturalistic vehicle trajectories on german highways for validation of highly automated
+driving systems. In 2018 21st International Conference on Intelligent Transportation Systems
+(ITSC) , pp. 2118–2125. IEEE, 2018.
+Vladimir Lifschitz. Answer set programming . Springer Heidelberg, 2019.
+Yunpeng Pan, Ching-An Cheng, Kamil Saigol, Keuntaek Lee, Xinyan Yan, Evangelos Theodorou,
+and Byron Boots. Agile autonomous driving using end-to-end deep imitation learning. arXiv
+preprint arXiv:1709.07174 , 2017.
+Yunpeng Pan, Ching-An Cheng, Kamil Saigol, Keuntaek Lee, Xinyan Yan, Evangelos A Theodorou,
+and Byron Boots. Imitation learning for agile autonomous driving. The International Journal of
+Robotics Research , 39(2-3):286–302, 2020.
+Md Kamruzzaman Sarker, Lu Zhou, Aaron Eberhart, and Pascal Hitzler. Neuro-symbolic artificial
+intelligence. AI Communications , 34(3):197–209, 2021.
+Iman Sharifi, Mustafa Yildirim, and Saber Fallah. Towards safe autonomous driving policies using
+a neuro-symbolic deep reinforcement learning approach. arXiv preprint arXiv:2307.01316 , 2023.
+Zhihao Song, Yunpeng Jiang, Jianyi Zhang, Paul Weng, Dong Li, Wulong Liu, and Jianye Hao. An
+interpretable deep reinforcement learning approach to autonomous driving. In IJCAI Workshop
+on Artificial Intelligence for Automous Driving , 2022.
+Jiankai Sun, Hao Sun, Tian Han, and Bolei Zhou. Neuro-symbolic program search for autonomous
+driving decision module design. In Conference on Robot Learning , pp. 21–30. PMLR, 2021.
+Erico Tjoa and Cuntai Guan. A survey on explainable artificial intelligence (xai): Toward medical
+xai.IEEE transactions on neural networks and learning systems , 32(11):4793–4813, 2020.
+Chao Yu, Xuejing Zheng, Hankz Hankui Zhuo, Hai Wan, and Weilin Luo. Reinforcement learning
+with knowledge representation and reasoning: A brief survey. arXiv preprint arXiv:2304.12090 ,
+2023.
+Jiakai Zhang and Kyunghyun Cho. Query-efficient imitation learning for end-to-end autonomous
+driving. arXiv preprint arXiv:1605.06450 , 2016.
+Yu Zhang, Peter Ti ˇno, Ale ˇs Leonardis, and Ke Tang. A survey on neural network interpretability.
+IEEE Transactions on Emerging Topics in Computational Intelligence , 5(5):726–742, 2021.
+Zhuangdi Zhu, Kaixiang Lin, Bo Dai, and Jiayu Zhou. Off-policy imitation learning from observa-
+tions. Advances in Neural Information Processing Systems , 33:12402–12413, 2020.
+Matthieu Zimmer, Xuening Feng, Claire Glanois, Zhaohui Jiang, Jianyi Zhang, Paul Weng, Li Dong,
+Hao Jianye, and Liu Wulong. Differentiable logic machines. arXiv preprint arXiv:2102.11529 ,
+2021.
+12

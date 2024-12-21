@@ -1,0 +1,754 @@
+=== Metadata ===
+{
+    "file_name": "TOWARDS SAFE AUTONOMOUS DRIVING POLICIES USING A NEURO-SYMBOLIC DEEP REINFORCEMENT LEARNING APPROACH.pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/TOWARDS SAFE AUTONOMOUS DRIVING POLICIES USING A NEURO-SYMBOLIC DEEP REINFORCEMENT LEARNING APPROACH.pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+TOWARDS SAFE AUTONOMOUS DRIVING POLICIES
+USING A N EURO -SYMBOLIC DEEP REINFORCEMENT
+LEARNING APPROACH
+Iman Sharifi, Mustafa Yildirim, and Saber Fallah∗
+ABSTRACT
+The dynamic nature of driving environments and the presence of diverse road
+users pose significant challenges for decision-making in autonomous driving.
+Deep reinforcement learning (DRL) has emerged as a popular approach to tackle
+this problem. However, the application of existing DRL solutions is mainly con-
+fined to simulated environments due to safety concerns, impeding their deploy-
+ment in real-world. To overcome this limitation, this paper introduces a novel
+neuro-symbolic model-free DRL approach, called DRL with Symbolic Logics
+(DRLSL) that combines the strengths of DRL (learning from experience) and
+symbolic first-order logics (knowledge-driven reasoning) to enable safe learning
+in real-time interactions of autonomous driving within real environments. This
+innovative approach provides a means to learn autonomous driving policies by ac-
+tively engaging with the physical environment while ensuring safety. We have im-
+plemented the DRLSL framework in autonomous driving using the highD dataset
+and demonstrated that our method successfully avoids unsafe actions during both
+the training and testing phases. Furthermore, our results indicate that DRLSL
+achieves faster convergence during training and exhibits better generalizability to
+new driving scenarios compared to traditional DRL methods.1
+1 I NTRODUCTION
+Deep reinforcement learning (DRL) is a deep learning technique that involves training an agent to
+make decisions in an environment by learning from feedback in the form of rewards or penalties
+(Sutton & Barto, 2018). From the perspective of autonomous driving (AD), DRL can be used to en-
+able an autonomous vehicle (A V) to make decisions, such as lane changes, merging, and maintaining
+a safe following distance from other vehicles, based on inputs from sensors, such as cameras and li-
+dar. One of the advantages of using DRL for AD is its ability to learn from experience. By repeatedly
+interacting with the environment and receiving feedback, the A V can improve its decision-making
+ability over time. This makes DRL a promising approach for developing policies for AD that can
+adapt to the changes of driving conditions and learn from their mistakes. However, a primary chal-
+lenge of DRL is ensuring the safety of AD, as a safety-critical system, during the exploration phase
+(Gu et al., 2022). In an online setting, exploratory A Vs may take actions that lead to disastrous
+consequences, potentially endangering passengers’ lives. Additionally, DRL often requires a large
+amount of training data (Sutton & Barto, 2018), which can be challenging to acquire for AD (Kiran
+et al., 2021). These challenges limit the training process of A Vs to simulation environments and
+render their transfer to real-world driving scenarios impractical. Therefore, there is a need for DRL
+algorithms that can facilitate safe and efficient learning in AD.
+Safe DRL techniques aim to prevent unsafe outcomes by employing various safety representations
+(Garcıa & Fern ´andez, 2015). There are multiple approaches to achieve this objective. One approach
+is to impose constraints on the expected cost (Achiam et al., 2017), while another approach involves
+∗I. Sharifi, M. Yildirim, and S. Fallah {i.sharifi,m.yildirim,s.fallah }@surrey.ac.uk are
+with the Connected and Autonomous Vehicles Lab ( www.cav-lab.io ) at the Department of Mechanical
+Engineering, University of Surrey, Guildford, UK.
+1We have made the source code and data available on the following GitHub repository link:
+https://github.com/CAV-Research-Lab/DRL-with-Symbolic-Logics .
+1arXiv:2307.01316v2  [cs.RO]  13 Jul 2023
+maximizing the satisfiability of safety constraints through a loss function (Xu et al., 2018). Addi-
+tionally, penalties can be introduced to discourage the agent from violating safety constraints (Pham
+et al., 2018; Tessler et al., 2018; Memarian et al., 2021). Alternatively, a more intricate reward
+structure can be created using temporal logic (De Giacomo et al., 2019; Camacho et al., 2019; Jiang
+et al., 2021; Hasanbeig et al., 2019; den Hengst et al., 2022). These approaches incorporate all of
+the safety concerns into a loss function, making the optimization problem more complicated, while
+shielding (Alshiekh et al., 2018) utilizes a shield to directly prevent the agent from taking actions
+that may potentially lead to safety violations during the exploration of model-based DRL (Yang
+et al., 2023; Jansen et al., 2020) and model-free DRL (Kimura et al., 2021a). A shield is a logical
+component that takes the safety constraints into account in order to gaurantee safety when exploring
+an environment (Yang et al., 2023). Shielding employs rejection-based or suggestion-based shields,
+often based on formal verification, to provide strong safety guarantees compared to other safe explo-
+ration techniques (Yang et al., 2023). Kimura et al. (2021a) employed a shielding method based on
+logical neural networks (LNNs) (Riegel et al., 2020) to suggest safe actions and avoid useless ones.
+They have shown that employing external knowledge using logic-driven neural networks (NNs) to
+suggest the proper action list is a promising shielding approach that reduces the training trials while
+ensuring safety.
+One interesting and effective way to enhance the safety of DRL systems is through injecting human-
+like reasoning into training process of DRL systems using symbolic logical rules (Cropper & Du-
+manˇci´c, 2022). Symbolic logic-based methods (Calegari et al., 2020) are well-suited for integrating
+human external knowledge (De Raedt et al., 2019; Sarker et al., 2021) into the learning process
+using logical rules (Riegel et al., 2020). In fact, Neuro-symbolic approaches aim to integrate NNs
+with symbolic reasoning techniques to leverage the statistical learning capabilities of NNs with
+the interpretability and knowledge driven reasoning abilities of symbolic methods (Yu et al., 2021;
+Dong et al., 2019). Symbolic logics provide transparent and interpretable knowledge representation
+(Hazra & De Raedt, 2023), aiding in understanding and validating agent’s actions. The encoding of
+domain-specific rules enhances generalization across different tasks, improving the transferability of
+learned policies and reducing the need for extensive retraining in new scenarios (Belle, 2020). Prior
+knowledge incorporation for guiding the agent reduces sample complexity, leading to data efficiency
+and faster convergence (Kimura et al., 2021b). Moreover, symbolic logics enable specifying safety
+constraints, thereby enforcing the constraints during the learning process and preventing the agent
+from taking unsafe actions.
+Similar to the neuro-symbolic approach proposed by Kimura et al. (2021a) and Hazra & De Raedt
+(2023), our method utilizes symbolic logics to represent human background knowledge (BK) about
+the environment in order to suggest the safe action space in each state. We directly reject unsafe
+actions based on symbolic logic representations and force the model-free DRL to take a safe action
+among the suggested safe actions, helping DRL to learn the safe policies and complying with the
+defined rules simultaneously. Taking the advantage of symbolic logics, DRL performs in the safety
+boundaries, learns safe human-like behaviors in a fast manner, and follows the rules. By employing
+intricate well-defied rules, we assist DRL in learning complex relational rules in the environment,
+leading to agility and better performance in different unseen environments.
+In this paper, we aim to enhance the performance of DRL in AD using a state-of-the-art approach
+to ensure the safety of taken actions during the exploration phase. We introduce a neuro-symbolic
+framework, called DRL with Symbolic Logics (DRLSL), by incorporating first-order logics (FOLs)
+into DRL, which can be an effective technique in A Vs by restricting the action space to enable faster
+learning and complying with the safety rules. This approach benefits several advantages over the
+constraint-based (Achiam et al., 2017; Xu et al., 2018; Pham et al., 2018) and existing shielding
+methods (Yang et al., 2023); First, the use of symbolic logics allows for the explicit specification of
+safety rules, enabling precise control over the agent’s behavior in different driving scenarios. The
+employment of FOLs fosters clear-cut reasoning concerning safety constraints and the range of safe
+actions. This level of transparency simplifies understanding and troubleshooting the system. Sec-
+ond, our method ensures flexibility and adaptability by allowing easy modifications to safety rules
+without extensive changes to the underlying learning algorithms. This enables quick adjustments to
+establishing safety requirements and the incorporation of new knowledge. Moreover, the symbolic
+logics framework refines the action space by eliminating dangerous actions, assisting DRL in finding
+the optimal policy faster than the traditional DRL. Finally, the DRLSL method enables generaliza-
+2
+tion of learned safe behaviors to new environments. This scalability is crucial for the deployment of
+A Vs in diverse and unpredictable driving conditions.
+The main contributions of this paper are as following:
+1. We introduce a model-free DRLSL framework that integrates symbolic FOLs with tradi-
+tional DRL techniques. This approach ensures the safety of AD systems during the explo-
+ration phase of DRL.
+2. We compare our proposed method with vanilla DRL methods, discussing the benefits of our
+approach which include assured safety, improved learning efficiency, and generalizability.
+Overall, we argue that the combination of model-free DRL and symbolic logics can provide a
+promising avenue for developing safe and reliable AD policies. By leveraging the strengths of
+both approaches, we can benefit from the adaptability and generalization capabilities of model-free
+DRL, while also incorporating the explicit rule-based reasoning of symbolic logics. This integration
+enables the system to handle complex and uncertain driving scenarios, while ensuring compliance
+with predefined safety rules and constraints.
+To the best knowledge of the authors, this is the first time such a hybrid approach has been proposed
+in the context of autonomous driving. By fusing the power of DRL with logical reasoning, we be-
+lieve that this novel methodology holds significant potential for addressing the safety and reliability
+challenges in A Vs. Further research and experimentation are needed to explore the full capabilities
+and limitations of this approach, but early results are promising and suggest that it could pave the
+way for more robust and trustworthy autonomous driving systems in the future.
+The rest of the paper is divided into several sections. Section II introduces the background on
+DRL. Section III describes the proposed method in general and sention IV particularly discusses the
+method for the AD system. Section V presents the simulation environment, results, and discussion.
+Finally, section VI draws a conclusion.
+2 P RILIMINARIES
+In this section, we introduce the essential background for the proposed method.
+2.1 D EEPREINFORCEMENT LEARNING
+Generally, a DRL scenario can be demonstrated using a markov decision process (MDP) set
+(S,A,R,P, γ)consisting of a set of states, actions, rewards, state transitions, and a discount factor,
+respectively. At each time step, the agent observes the current state s∈ S, selects an action afrom
+the set of available actions A, and receives a reward R(s, a, s′)after transitioning to the next state
+s′. The reward function Rassigns a numerical reward to each state-action pair, which reflects the
+desirability of that action. The goal of the agent is to learn a policy π(s)that maps each state sto an
+action ain order to maximize the expected cumulative reward.
+Deep Q-network (DQN) is a popular model-free DRL algorithm for solving MDPs. It uses a neural
+network to estimate the Q-function, which represents the expected total reward for taking a particular
+action ain a particular state s, and then following the optimal policy thereafter. The Q-function is
+defined as Q(s, a) =E[P∞
+t=0γtrt], where γ∈[0,1]is the discount factor, and rtis the reward
+obtained at time step due to action ataken in state s. The DQN algorithm uses experience replay and
+target networks to improve the stability and convergence of the Q-function estimates. Specifically,
+it maintains a replay buffer Dof past experiences, and periodically updates a target network ˆQwith
+the current network Q. The agent’s loss function is defined as the mean-squared error between the
+Q-values predicted by Qand the target Q-values computed using ˆQ, as shown in the following:
+Li(θi) =E(s,a,r,s′)∼D[(r+γmax
+a′ˆQ(s′, a′;θ−
+i)−Q(s, a;θi))2] (1)
+where θiandθ−
+iare the parameters of QandˆQ, respectively, and the expectation is taken over a
+random minibatch of experiences from D. Also, a′is the action by which the ˆQvalue is maximized.
+In this scenario, the DQN agent would receive the current state stas input and output the Q-values
+3
+for each possible action a∈ A. The agent would then select the action with the highest Q-value and
+execute it in the environment.
+2.2 F IRST-ORDER LOGIC
+FOL is a knowledge representation and reasoning (KRR) formalism (Yu et al., 2023) that employs
+facts and rules to represent knowledge and make logical inferences. In this formalism, a rule consists
+of a head and a body, following the format:
+head :- body.
+where head denotes an output predicate, expressing a relationship between objects or concepts, and
+body specifies the conditions under which the head predicate holds. Each predicate comprises
+a functor and arguments, written as functor(arg 1,arg 2, ...,argn), where arguments can be
+constants or variables. Typically, rules in FOL programs are formulated as Horn clauses, logical
+implications with a single positive literal2(head) and zero or more literals in the body, taking the
+form:
+H :- B 1,B2, ...,Bn.
+where Bi, i= 1, nrepresent premises forming the rule body, and H, the rule head, represents a
+conclusion. This rule implies that if the conjunction of B1toBnis true, then His also true; otherwise,
+His false. FOL-based rules can define complex relationships and facilitate logical inferences based
+on available knowledge. They serve as a powerful tool for KRR, finding applications in various
+fields, including artificial intelligence (Zhang et al., 2023) and natural language processing (Gaur
+et al., 2022).
+3 P ROPOSED METHOD : DRLSL
+An symbolic logical program (SLP) employs FOLs by manipulating symbolic expressions to rep-
+resent and reason about knowledge and logical relationships. One of the main benefits of using an
+SLP is its ability to provide guarantees of correctness and safety. By encoding logical rules and
+constraints, the system can be designed to obey specific safety rules, such as maintaining a safe fol-
+lowing distance or avoiding collisions in AD systems. Additionally, an SLP can enable the system
+to reason about the consequences of its actions, such as the potential impact of a lane change on
+other vehicles, and make decisions based on its understanding of the environment. The main goal
+of using SLP in our proposed DRLSL method is to eliminate unsafe actions from the entire action
+space in exploration phase for a given state by using symbolic FOLs and then give the safe action
+set (Asafe
+t) to the DRL agent to ensure safety.
+In order to filter unsafe actions, the first step is to define the environment settings and human BK
+about the environment. To do so, we employ a set of facts that represent the state of the system,
+including information such as the position, velocity, and acceleration of the agent, as well as those
+of other objects in the environment. Once the state is defined, the existing logical rules, governed in
+the environment and known by human-beings, can be defined to determine which actions are safe
+and which are unsafe, assisting in eliminating the unsafe actions. For example, if the agent is in a
+certain state and there is another object in the environment that is close to the agent, some actions
+may be unsafe because the agent could collide with the object if those actions are taken. In this case,
+the rule would define which actions are unsafe based on the relative distance between the agent and
+the other object.
+Once the SLP determines Asafe
+t at each time step, the DRL agent employs the ϵ-greedy method to
+select a safe action asafe
+t fromAsafe
+t. This means the agent explores the environment by randomly
+selecting asafe
+t fromAsafe
+t with probability ϵ, or it selects asafe
+t fromAsafe
+t that maximizes the
+Q-value, with probability 1−ϵ. After obtaining asafe
+t, it is executed by the agent. Subsequently,
+we calculate the loss function using Eq. 1, and update the weights of the Q-network using the Back
+2In logic, a literal is a basic atomic statement that can be either true or false. It represents a single proposi-
+tional variable or its negation. It is the smallest unit of logic that can be evaluated independently.
+4
+Algorithm 1 Deep Q-Network with Symbolic Logics (DQNSL)
+1:Initialize replay buffer Dwith capacity N
+2:Initialize action-value function Qwith random weights θ
+3:Initialize target action-value function ˆQwith weights θ−=θ
+4:Set learning rate αand exploration rate ϵ
+5:forepisode = 1, Mdo
+6: Initialize state s1
+7: fort= 1, Tdo
+8: SLP extracts Asafe
+t inst→(Section 4.2)
+9: With probability ϵ, select a random action from Asafe
+t asasafe
+t;
+Otherwise, select asafe
+t= max aQ(st, a|Asafe
+t;θ)
+10: Execute action asafe
+t and observe reward rtand next state st+1
+11: Store transition (st, asafe
+t, rt, st+1)inD
+12: Sample random minibatch of transitions (sj, asafe
+j, rj, sj+1)fromD
+13: Set target value for minibatch transition j:
+yj=rj for terminal sj+1
+rj+γmax a′ˆQ(sj+1, a′;θ−)for non-terminal sj+1
+14: Update Qby minimizing the loss:
+L(θ) =1
+NX
+j(yj−Q(sj, aj;θ))2
+15: Every Csteps, update the target network: θ−←θ
+16: Decrease αandϵlinearly over time until reaching the minimum values
+17: end for
+18:end for
+Propagation algorithm (Lillicrap et al., 2020). This process is repeated in different training episodes
+to find the optimal policy. Referred to as DRLSL, this approach ensures safety during the agent’s
+exploration phase. Algorithm 1 presents the pseudo-code for deep Q-network with symbolic logics
+(DQNSL), which is an instance of DRLSL, and guarantees that the agent only selects actions from
+the safe action set, preventing the execution of unsafe actions.
+4 S AFE LEARNING OF AUTONOMOUS DRIVING
+In this section, we implement the proposed DRLSL method on the AD system to show its superior
+performance and effectiveness on safe exploration. An SLP can be used to ensure the safety of the
+AD system by encoding FOL-based rules and constraints related to driving behavior. For example,
+the system can be designed to follow traffic rules, maintain a safe following distance, or avoid
+collisions. Also, an SLP can be integrated with DRL techniques by incorporating logical driving
+constraints into the policy optimization process of the DRL agent. By incorporating safety rules as
+constraints, the system can be trained to optimize its behavior while still obeying the rules.
+4.1 H IGHWAY DRIVING ENVIRONMENT
+In this section, we define the states, actions, and reward function for the AD system to prepare the
+environment for the DRLSL agent.
+4.1.1 S TATE SPACE
+State space Sconsists of the distances between the A V and each target vehicle (TV), including
+{d1, d2, ..., d 8}, as shown in Fig. 1, and also the A V longitudinal velocity ( vx). After computing
+the required parameters for the state of the system, they are normalized between 0 and 1. This is
+5
+the data preprocessing step and required for better convergence of the DRL network. To normalize
+the distance between the A V and TVs, we divide each distance by the radar range R, as shown in
+Fig. 1. Also, we divide the velocity of the A V by the maximum value in each time step. Thus, the
+state can be represented as st={¯d1,¯d2, ...,¯d8,¯l,¯vx}, where ¯di=di
+Rand¯vx=vx
+vmax.vmax is the
+maximum the maximum allowed speed in the highway. We extract the state, from the sorrounding
+vehicles information, using the logical rules defined in the SLP core, as shown in Fig. 2.
+Figure 1: The distances between the A V (green vehicle) and each TV (red vehicles)
+4.1.2 A CTION SPACE
+The action space Aincludes the set of possible actions that the A V agent can take. Since the main
+goal is to avoid collisions by efficiently changing the lane, the action space includes three symbolic
+actions, called lane_keeping ,left_lane_change , andright_lane_change which are
+converted to [0, 1, 2] in the DRL neural network, respectively. Unlike Baheri et al. (2020) and Wang
+et al. (2019), we removed vxfrom the action space since we employed a rule-based longitudinal
+velocity scheme to produce the favorable acceleration, creating a smooth driving.
+4.1.3 R EWARD FUNCTION
+We make use of a pre-defined reward function to help DRL to find the optimal policy. Reward
+function exerts a big impact on the training of DRL policy. Before introducing the reward structure,
+let’s assume the agent moves from the state sto the next state s′by taking action aat a given time
+step. The reward function for the A V is defined as follows:
+R(s, a, s′) =wlcrlc(s, a) +wvrv(s, a) +wcrc(s, a) +woutrout(s, a) (2)
+where rlc(s, a),rv(s, a),rc(s, a), and rout(s, a)are the lane-change reward, velocity reward, col-
+lision reward, and off-road reward, respectively, and wlc,wv,wc, and woutare the correspondent
+weights. To take the safety of passengers into account, the smoothness of the A V’s path on the road
+should be high. Therefore, the A V should not change the lane except for necessary times. That is
+why we devised the following lane-change reward:
+rl(s, a) =−1if A V changed the lane
+0 otherwise(3)
+To make the agent agile, we must consider a velocity reward. We devised a reward function for
+the A V’s velocity in order to drive in the lanes with maximum allowed speed. Since we control the
+velocity of the A V using the rule-based methods, the A V does not have any control over the velocity.
+However, it can change the lane to find the maximum allowed velocity. Generally, the velocity
+reward is equal to vxwith a correspondent weight, as rv(s, a) =vx. To avoid collision, the collision
+reward is defined as follows:
+rc(s, a) =−(1−0.8x
+X)if collision occured
+0 otherwise(4)
+where xis the longitudinal position of the point where a collision happens and Xis the total road
+length. The A V must not drive out of the legal lanes of the highway. Thus, as same as the collision
+reward, the lane deviation penalty reward function is given by:
+rout(s, a) =−(1−0.8x
+X)if A V drives off the road
+0 otherwise(5)
+6
+We have considered the weights for each reward subfunction through trial and error. Considering
+their importance, we assigned 5, 0.01, 100, and 100 to wlc,wv,wc, and wout, respectively.
+After defining the environment components, we can define the governing rules for the highway
+driving to generate Asafe
+t, as presented in the following subsection.
+4.2 SLP FOR AD
+In order to extract Asafe
+t for the A V in each step, an SLP uses all important information of the
+A V and TVs which received by the installed radar on the A V . We employ Prolog (K ¨orner et al.,
+2022), as a symbolic logical programming language to define the desired safety rules in a highway
+environment. The useful data are vehicles’ IDs, lanes, dimensions, as well as longitudinal and
+lateral positions and velocities. Vehicles’ data is saved in each step and sent to the SLP core with
+the following fact clause:
+vehicle(ID,Lane,(P x,Py),(W,H),(V x,Vy)).
+where IDshows the identity code of a given vehicle, Lane is the vehicle lane, (Px,Py)are the
+logitudinal and lateral positions, (Vx,Vy)are the longitudinal and lateral velocities, and (W,H)
+are the length and width of the vehicle, respectively.
+Afterward, we utilize human BK to shield unsafe actions from A. Finding the target vehicles
+using the installed radar on the A V , the ralative positions of the TVs respect to the A V are de-
+scribed using their distance and the lanes. To do so, we divide the area around the A V to eight
+distinct sections; front ,front_right ,right ,back_right ,back ,back_left ,left ,
+andfront_left . This will assist us in finding the relative positions of each target vehicle in
+respect to the A V location. Knowledge of the relative positions of each TV helps us to find the
+busy sections around the A V , thereby making the decision-making process straight-forward. As an
+example, let’s consider this rule, ”If there is a TV in front of the A V and it has a similar lane to the
+A V lane, then the front of the A V is busy ( front_is_busy ).” We can show this rule using the
+following rule clause:
+front_is_busy:-
+lane(ego,Lane 1), position_x(ego,P1
+x),
+target_vehicle(Car), lane(Car,Lane 2), position_x(Car,P2
+x),
+Lane 1is Lane 2, direction(ego,Dir), distance(ego,Car,D), D>0,
+(Dir=right_to_left, P2
+x<P1
+x; Dir=left_to_right, P2
+x>P1
+x).
+where ego andCar represent the A V’s and front TV’s ID, Lane 1andLane 2indi-
+cate their lanes, and P1
+xandP2
+xindicate their longitudinal positions, respectively. Pred-
+icate target_vehicle(Car) identifies the TVs using the euclidean distance from the
+A V , and the A V identifies the front TV using the relative longitudinal position in each di-
+rection. Thus, front_is_busy is a predicate with boolean values to show when the
+front of the A V is busy. If a location is busy, then it is not free, as indicated in
+front_is_free:- not(front_is_busy) . Similarly, we repeat the procedure for the rest
+of the sections around the A V to find the busy ones. When the A V knows about the busy and free
+sections, it can change the lane to the free lanes and avoid busy ones.
+In the next step, a set of logical rules is applied to determine Asafe
+t. For example, the rule ”if there is
+no vehicle in the left sections, either keep your lane with a safe velocity or go to the left one,” or ”if
+the right and left sections are busy, then keep the lane” can be used to extract Asafe
+t for lane changes.
+To implement the safety module, we have written an FOL program that consists of a set of rules that
+encode safety constraints. The following rule encodes the constraint that left_lane_change is
+safe only if going to the left section is valid ( left_is_valid ) and is safe ( left_is_safe ) at
+the same time, as shown in the following rule:
+safe_actions(Action):-
+left_is_valid, left_is_safe, Action=left_lane_change.
+The predicate left_is_valid is unified with one if and only if the A V does not drive off
+the road by choosing the left_lane_change action. Likewise, the left_is_safe pred-
+7
+icate is true when there is no TV in the left sections and the A V does not involve in collisions
+by taking the left_lane_change action. Similarly, if there is no vehicle in the right side
+of the A V ( right_is_safe ) and the right sections are valid ( right_is_valid ), then the
+right_lane_change action is safe, as shown in the following rule:
+safe_actions(Action):-
+right_is_valid, right_is_safe, Action=right_lane_change.
+Furthermore, lane_keeping is always available for the autonomous vehicle to take. Since we
+design a velocity control scheme for the autonomous vehicle using an SLP in the next sections, the
+A V can take lane_keeping in each state and ensure avoiding collision with the front vehicle.
+After generating all required rules, if the predicate safe_actions/1 succeeds, it means that
+the taken action is safe, and the Action variable is unified with the corresponding action. The
+safe_actions predicate returns each asafe
+t seperately, but in order to find Asafe
+t, we need to
+backtrack (Ciatto et al., 2021) all individual safety rules and save their outputs to a list. This
+process can be performed using a built-in predicate named findall/3 which takes three argu-
+ments, including the Action variable, the safe_actions functor, and an orbitrary list name
+likeActions . Using the input arguments, this predicate will find all of the safe actions individu-
+ally and save them to the Actions list.
+4.3 DRLSL FOR AD
+As shown in Fig. 2, once Asafe
+t is determined using the FOL-based rules in the SLP core, we use
+PySwip library, as an interface between Prolog and Python, to connect the SLP core to the DRL
+agent. Thus, Asafe
+t is passed to the DQN network as the available actions for the current state.
+When DQN agent employs symbolic logics (DQNSL), it chooses the best action from Asafe
+t based
+on the ϵ-greedy method, as shown in Algorithm 1. By restricting the entire action space to the Asafe
+t,
+we ensure that the DQN network learns only the safe actions and comply with the safety rules.
+Integrating the SLP into DRL can lead to DRLSL, which considers safety constraints in addition to
+the policy of maximizing reward. The advantages of this approach include the ability to extract safe
+actions, which can reduce the risk of accidents and increase the reliability of the AD system. An
+SLP can also provide a transparent and interpretable framework for reasoning about safety, making
+it easier to verify and certify the system.
+Figure 2: DQNSL using a SLP
+It is worth noting that after finding Asafe
+t, DQNSL picks asafe
+t from it. According to the taken
+action and the would-be lane, we find the lateral center of the next lane ( yNL
+d). The process of
+finding the desired lateral center of each lane is performed using a Switch box, as indicated in Fig.
+2. According to Fig. 3, for example, assume the A V is driving in the left-to-right direction and the
+middle lane (the fifth lane from top) and DQNSL commands to take the right_lane_change
+action. Thus, the sixth lane is the next lane, meaning that the yNL
+disy6
+d. Taking the y6
+das the
+desired output, a Proportional-Integral (PI) controller, as a low-level controller, produces a lateral
+acceleration ayto control the lateral position yof the A V , as shown in Fig. 2.
+8
+5 P ERFORMANCE EVALUATION
+In this section, firstly, we describe the simulation settings and DRLSL agent’s network structure.
+Afterward, we discuss the longitudinal velocity control scheme. Finally, we elaborate upon the
+implementation of the proposed method and discuss the results.
+5.1 D ATASET
+Numerous open-source platforms, including Carla (Dosovitskiy et al., 2017) and AirSim (Shah et al.,
+2018), exist to simulate traffic environments. However, it was difficult to implement simulated traffic
+based on actual data on these platforms. Our goal was to simulate a real-world agent by predicting
+drivers’ intentions, which made these platforms inappropriate. As a result, we created a Pygame-
+based traffic simulation environment (McGugan, 2007), as shown in Fig. 3.
+Figure 3: Highway driving environment in Pygame (left-to-right direction). Green rectangle, red
+and white rectangles are A V , TVs, and other vehicles on the road, respectively.
+Several studies (Ji et al., 2023; Chen et al., 2023; Tang et al., 2022) have examined highway driving
+by utilizing the NGSim (Yeo et al., 2008) and HighD (Krajewski et al., 2018) datasets. Both collec-
+tions provide information regarding the lateral and longitudinal position, velocity, and acceleration
+of each vehicle on the road. The HighD dataset, in particular, is filmed using a drone camera that
+captures a 420-meter section of a German highway, offering accurate data even in situations where
+traffic is obstructed. The current research relies on the HighD dataset for both training and testing,
+using one of the most dense tracks for each stage of the study from a total of 60 tracks in the dataset,
+as depicted in Fig. 3. Although this method of studying traffic provides realistic results, it carries
+some limitations. Since we add a virtual A V to learn to drive efficiently among other vehicles, those
+vehicles are not aware the A V’s presence. In some situations, this leads to unavoidable accidents
+of whom the A V is not the cause. For example, when the A V is driving in a lane, another vehicle
+collides with it from back since the vehicle does not know the A V is on the road.
+Accroding to the highD dataset, we assume an A V is driving on a two-directional, three-lane high-
+way, as shown in Fig. 3. To clarify the position of each vehicle, we assign 1 to 6 to the highway
+lanes from top to buttom of Fig. 3. In the first three lanes, vehicles move in the right-to-left direction
+and in the rest, vehicles move in the left-to-right direction.
+5.2 N ETWORK AND HYPERPARAMETERS
+Initially, we conducted assessments to identify hyperparameters that would ensure optimal and swift
+convergence. We determined the parameters after running preliminary tests. The network consisted
+of three fully connected layers, with the first two layers consisting of 256 nodes and the final layer
+consisting of three nodes to represent the action space. We employed the PyTorch library for neural
+network computations. Moreover, the ADAM algorithm, which is computationally efficient and
+rapidly converges, was used to optimize the networks. The discount factor was assigned a value of
+γ= 0.95, while the learning rate was initially set as αi= 0.01and decays over each episode to
+reach the final value αe= 1e−4. The experience replay memory Dsize is 100,000, and stochastic
+gradient descent batch size is 128. Except for the noisy networks, an epsilon-greedy exploration
+policy was implemented with a starting value of ϵi= 0.1and decreasing to a minimum value of
+ϵe= 0.001. To stabilize the Q-network in the case of convergence, we updated the target network
+after 1,000 iterations. After describing the simulation settings, the defined reward function and the
+way we control vxto avoid collision with the front vehicle will be taken into account.
+5.3 L ONGITUDINAL VELOCITY CONTROL
+In this section, we explain how the desired velocity of the A V is obtained in each state. We have
+written FOL-based rules for determining the longitudinal acceleration axof the A V , which takes into
+9
+account the current lane, maximum speed limit of the lane, the distance and speed of the front TV .
+The goals of the designed rules are collision avoidance with the front TV , making the driving smooth,
+as well as reducing the duration of driving along the track in the highway. The rules consider three
+scenarios; firstly, if there is no vehicle in front of the A V ( front_is_free ), then the desired
+velocity is set to the maximum speed limit of the current lane, reducing the time needed for moving
+along the highway and, at the same time, obeying the speed limit rules. Accordingly, axis defined
+as following:
+ax=vmax−vx,AV
+∆t(6)
+where ∆t,vmax, andvx,AV are the time step, the maximum allowed velocity in a given lane and the
+current velocity of the A V , respectively. As the second scenario, if there is a vehicle in front of the
+A V (front_is_busy ), the desired velocity is calculated based on the distance and speed of that
+vehicle. In this case, we use the critical distance and actual distance to calculate the acceleration
+of the A V . If the distance is greater than the critical distance, axis calculated using the following
+equation.
+ax=v2
+x,TV−v2
+x,AV
+2(D−C)(7)
+where vx,TV is the longitudinal velocity of the front TV . Also, DandCare the actual distance and
+the critical distance between the A V and the TV . Here, we assume that Dis bigger than C. As the
+third scenario, when Dis lower than C, the A V must decelerate to avoid collision with the front TV ,
+as shown in the following equation.
+ax=−v2
+x,AV
+2D(8)
+After obtaining the desired acceleration, we update the desired velocity of the A V using vd
+x=vx+
+ax∆tand after validating the velocity magnitude, it will be sent to a low-level controller, as shown
+in Fig. 2. Indeed, if the calculated velocity is greater than the maximum speed limit of the lane,
+the desired velocity is set to the maximum speed limit. Therefore, we make sure the A V follows the
+speed limit rule. Using a PI controller, as a low-level controller, helps to produce a continious and
+smooth axand avoid collision with the front vehicle.
+5.4 R ESULTS AND DISCUSSION
+In this section, we present the results of our experiments using the proposed DQNSL approach. The
+experiments are divided to two main parts; training and test. Firstly, we evaluate the performance
+of the proposed method and compare the results of the DQNSL with those of DQN. We discuss
+the convergence of the reward function and the comparison of rewards between our method and the
+standard DQN algorithm. Additionally, we analyze the implications of our approach in terms of
+safety, rule adherence, and training efficiency. Then, we test the extracted RL models in different
+scenarios and evaluate each model performance.
+5.4.1 T RAINING
+We trained both methods for 1,500 episodes using similar parameters for the reward function and
+the DQN network. Taking the advantage of the volocity control scheme, each agent was tasked with
+driving along an 840-meter track to reach the end of each episode. If a collision occurred or the
+agent deviated from the legal lanes, the episode was terminated. The results, as shown in Fig. 4,
+reveal that the DQNSL agent learns efficiently, while the DQN agent’s learning is highly unstable.
+This instability can be attributed to the fact that the DQN agent selects actions randomly from the
+entire action space, whereas the DQNSL agent selects actions only from the safe action set.
+Furthermore, the reward results have multiple implications, particularly in terms of safety and re-
+liability. The DQNSL agent consistently receives bigger rewards, indicating that it avoids unsafe
+actions such as collisions, lane violations, and dangerous maneuvers. On the other hand, during
+the initial stages of training, the DQN agent incurs significant negative rewards due to frequent lane
+violations and collisions.
+Another notable difference is the speed of training. As observed in Fig. 4, the reward for the DQNSL
+agent converges after 500 episodes, whereas the DQN agent’s reward converges in an unstable man-
+ner after 970 episodes. The removal of unsafe actions plays a crucial role in this disparity. By
+10
+ 
+Figure 4: cumulative reward received by agents in each episode
+ 
+Figure 5: Lane-change reward per episode
+ 
+ Figure 6: Velocity rewards received by agents
+ 
+Figure 7: Collision rewards received by agents
+ 
+ Figure 8: Off-road rewards received by agents
+constraining the action space and eliminating dangerous actions, we create a more favorable envi-
+ronment for the agent to discover the optimal policy. Restricting the dimensions of the action space
+simplifies the process of finding the best policy.
+As mentioned in earlier sections, the reward function comprises four subfunctions: collision, off-
+road, lane change, and velocity rewards. We will now delve into each subfunction, compare the
+results, and discuss their implications. Figure 7 demonstrates that the DQNSL agent receives no
+penalties for collisions, indicating its successful avoidance of such incidents. Conversely, the DQN
+agent incurs an average penalty of -10.65 per episode. A similar trend can be observed for the off-
+road reward, as shown in Fig. 8. The DQN agent receives an average penalty of -60.1, while the
+DQNSL agent incurs no penalties since it remains within the legal lanes.
+The lane change reward and velocity reward are the most important components of the DQNSL
+agent’s reward function, as the other rewards remain consistently at zero. As depicted in Fig. 5
+and Fig. 6, the lane change reward and velocity exhibit convergence similar to the overall reward
+function, reaching optimal values at the same episode milestones. At the beginning of the learning
+process, the DQNSL agent receives negative rewards for lane changes as it explores safe state-
+action pairs by changing lanes. However, it gradually learns to avoid frequent lane changes and
+maintains a smoother trajectory. While the lane change reward continues to increase throughout the
+learning episodes, its negative value remains larger than that of the DQN agent. Since the DQN agent
+terminates episodes more quickly than the DQNSL agent, it does not have sufficient opportunities
+to engage in long maneuvers or lane changes.
+11
+Similarly, the DQNSL agent optimizes the velocity reward and reaches the maximum threshold
+within a given episode, as observed in Fig. 6. The DQNSL agent’s ability to regulate velocity
+enables it to achieve higher rewards compared to the DQN agent. The DQN agent, terminating
+episodes earlier, does not have the chance to fine-tune its velocity and consistently receives lower
+rewards.
+In summary, our results demonstrate that the DQNSL approach significantly enhances safety during
+the exploration phase. The DQNSL agent outperforms the traditional DQN agent by avoiding unsafe
+actions and converging more quickly. The filtering of unsafe actions using SLP ensures a higher level
+of safety and facilitates a faster learning process for A Vs in complex environments.
+5.4.2 T EST
+In the test scenario, we conducted 50 episodes with a track length similar to the training scenario.
+However, unlike the training scenario, the test scenario featured a varying number of vehicles on the
+highway in each episode. Additionally, we deliberately excluded the safety module during testing
+to ensure fair comparison of results. According to Table 1, the findings demonstrate that both agents
+successfully learned to drive within the legal lanes. However, the DQN agent exhibited a signifi-
+cantly higher lane change frequency, averaging 5 lane changes per episode, which poses safety risks
+for the passengers. In contrast, the DQNSL model limited lane changes to an average of 1 time per
+episode, prioritizing a smoother driving experience while avoiding unnecessary lane changes.
+Figure 9: Right-to-left driving test scenario.
+To compare the results of the velocity reward in the test scenarios, we assessed the performance of
+each agent by measuring the number of time steps required to reach the end of the track. A shorter
+time indicates a higher velocity reward. Table 1 shows that the DQNSL agent achieved this goal
+in 598 time steps on average, whereas the DQN agent required 670 time steps. Once again, the
+DQNSL agent outperformed the other agent, showcasing its efficiency in completing the task within
+a shorter duration.
+We also examined the incidence of collisions across all episodes. As indicated in Table 1, the results
+revealed that the DQN agent collided with other vehicles on the road at a rate of 28%, while the
+collision rate for the DQNSL agent was reduced to 4%. It is worth noting that most of the collisions
+involving the DQNSL agent were unavoidable, as the other vehicles were unaware of the A V’s
+presence, thereby forcing it to take evasive maneuvers.
+Table 1: Test results for 50 episodes
+Direction Left-to-Right Right-to-Left
+Agent DQN DQNSL DQN DQNSL
+Lane changes 204 43 115 38
+Collisions 14 2 5 3
+Off road 0 0 33 0
+Time step 657 592 684 603
+Furthermore, we assessed the performance of both models when the autonomous vehicle traveled
+in the right-to-left direction, as shown in Fig. 9, in order to evaluate the generalizability of the
+defined rules on the highway. According to Table 1, the DQN agent struggled in this scenario,
+frequently veering out of the highway. In contrast, the DQNSL agent consistently remained within
+the confines of the highway, highlighting the effectiveness of the symbolic rules defined in the
+SLP core. The symbolic nature of these rules allows for easy generalization to new environments,
+enabling the seamless transfer and utilization of the defined rules in similar environments, ensuring
+broader applicability.
+12
+In summary, we have improved the safety of the DQN agent during the exploitation phase as well by
+eliminating dangerous actions from the set of possible actions during this phase. This enhancement
+brings DRL algorithms closer to the realities of AD systems. Moreover, we have shown that our
+method is able to perform well in the right-to-left driving scenario, indicating the generalizability of
+the symbolic rules which improves the transferability of the model to the new environments.
+6 CONCLUSION
+In conclusion, this article proposed a novel approach for model-free deep reinforcement learning
+with symbolic logics (DRLSL) for safe autonomous driving. The main contribution of this approach
+is to ensure safety during the exploration phase of DRL by filtering out unsafe actions from the
+action set in a given state. The proposed method was evaluated on the HighD dataset, and the
+results showed a significant improvement in the safety level of the DRL algorithm. We trained the
+autonomous vehicle agent without any collisions, assisting the DRL agents to come to reality when
+training. Moreover, we significantly improved the stability and convergence speed of DRL during
+training. The result of the test scenarios indicated that our method is capable of driving with far less
+collision rates and lane violations. Moreover, in contrast to DRL only, DRLSL was able to drive in
+other side of the highway, placing emphasis on the generalizability of our algorithm. This approach
+has great potential to enhance the safety of autonomous driving systems, and it can be extended to
+other domains of DRL where safety is a critical concern.
+REFERENCES
+Joshua Achiam, David Held, Aviv Tamar, and Pieter Abbeel. Constrained policy optimization. In
+International conference on machine learning , pp. 22–31. PMLR, 2017.
+Mohammed Alshiekh, Roderick Bloem, R ¨udiger Ehlers, Bettina K ¨onighofer, Scott Niekum, and
+Ufuk Topcu. Safe reinforcement learning via shielding. In Proceedings of the AAAI Conference
+on Artificial Intelligence , volume 32, 2018.
+Ali Baheri, Subramanya Nageshrao, H Eric Tseng, Ilya Kolmanovsky, Anouck Girard, and Dimitar
+Filev. Deep reinforcement learning with enhanced safety for autonomous highway driving. In
+2020 IEEE Intelligent Vehicles Symposium (IV) , pp. 1550–1555. IEEE, 2020.
+Vaishak Belle. Symbolic logic meets machine learning: A brief survey in infinite domains. In
+Scalable Uncertainty Management: 14th International Conference, SUM 2020, Bozen-Bolzano,
+Italy, September 23–25, 2020, Proceedings 14 , pp. 3–16. Springer, 2020.
+Roberta Calegari, Giovanni Ciatto, Enrico Denti, and Andrea Omicini. Logic-based technologies
+for intelligent systems: State of the art and perspectives. Information , 11(3):167, 2020.
+Alberto Camacho, Rodrigo Toro Icarte, Toryn Q Klassen, Richard Anthony Valenzano, and Sheila A
+McIlraith. Ltl and beyond: Formal languages for reward function specification in reinforcement
+learning. In IJCAI , volume 19, pp. 6065–6073, 2019.
+Jing Chen, Cong Zhao, Shengchuan Jiang, Xinyuan Zhang, Zhongxin Li, and Yuchuan Du. Safe,
+efficient, and comfortable autonomous driving based on cooperative vehicle infrastructure system.
+International journal of environmental research and public health , 20(1):893, 2023.
+Giovanni Ciatto, Roberta Calegari, and Andrea Omicini. Lazy stream manipulation in prolog via
+backtracking: The case of 2p-kt. In Logics in Artificial Intelligence: 17th European Conference,
+JELIA 2021, Virtual Event, May 17–20, 2021, Proceedings , pp. 407–420. Springer, 2021.
+Andrew Cropper and Sebastijan Duman ˇci´c. Inductive logic programming at 30: a new introduction.
+Journal of Artificial Intelligence Research , 74:765–850, 2022.
+Giuseppe De Giacomo, Luca Iocchi, Marco Favorito, and Fabio Patrizi. Foundations for restrain-
+ing bolts: Reinforcement learning with ltlf/ldlf restraining specifications. In Proceedings of the
+international conference on automated planning and scheduling , volume 29, pp. 128–136, 2019.
+13
+Luc De Raedt, Robin Manhaeve, Sebastijan Dumancic, Thomas Demeester, and Angelika Kimmig.
+Neuro-symbolic= neural+ logical+ probabilistic. In NeSy’19@ IJCAI, the 14th International
+Workshop on Neural-Symbolic Learning and Reasoning , 2019.
+Floris den Hengst, Vincent Franc ¸ois-Lavet, Mark Hoogendoorn, and Frank van Harmelen. Planning
+for potential: efficient safe reinforcement learning. Machine Learning , 111(6):2255–2274, 2022.
+Honghua Dong, Jiayuan Mao, Tian Lin, Chong Wang, Lihong Li, and Denny Zhou. Neural logic
+machines. arXiv preprint arXiv:1904.11694 , 2019.
+Alexey Dosovitskiy, German Ros, Felipe Codevilla, Antonio Lopez, and Vladlen Koltun. Carla: An
+open urban driving simulator. In Conference on robot learning , pp. 1–16. PMLR, 2017.
+Javier Garcıa and Fernando Fern ´andez. A comprehensive survey on safe reinforcement learning.
+Journal of Machine Learning Research , 16(1):1437–1480, 2015.
+Manas Gaur, Kalpa Gunaratna, Shreyansh Bhatt, and Amit Sheth. Knowledge-infused learning: A
+sweet spot in neuro-symbolic ai. IEEE Internet Computing , 26(4):5–11, 2022.
+Shangding Gu, Long Yang, Yali Du, Guang Chen, Florian Walter, Jun Wang, Yaodong Yang, and
+Alois Knoll. A review of safe reinforcement learning: Methods, theory and applications. arXiv
+preprint arXiv:2205.10330 , 2022.
+Mohammadhosein Hasanbeig, Yiannis Kantaros, Alessandro Abate, Daniel Kroening, George J Pap-
+pas, and Insup Lee. Reinforcement learning for temporal logic control synthesis with probabilistic
+satisfaction guarantees. In 2019 IEEE 58th conference on decision and control (CDC) , pp. 5338–
+5343. IEEE, 2019.
+Rishi Hazra and Luc De Raedt. Deep explainable relational reinforcement learning: A neuro-
+symbolic approach. arXiv preprint arXiv:2304.08349 , 2023.
+Nils Jansen, Bettina K ¨onighofer, JSL Junges, AC Serban, and Roderick Bloem. Safe reinforcement
+learning using probabilistic shields. 2020.
+Kyoungtae Ji, Nan Li, Matko Orsag, and Kyoungseok Han. Hierarchical and game-theoretic
+decision-making for connected and automated vehicles in overtaking scenarios. Transportation
+research part C: emerging technologies , 150:104109, 2023.
+Yuqian Jiang, Suda Bharadwaj, Bo Wu, Rishi Shah, Ufuk Topcu, and Peter Stone. Temporal-logic-
+based reward shaping for continuing reinforcement learning tasks. In Proceedings of the AAAI
+Conference on Artificial Intelligence , volume 35, pp. 7995–8003, 2021.
+Daiki Kimura, Subhajit Chaudhury, Akifumi Wachi, Ryosuke Kohita, Asim Munawar, Michiaki
+Tatsubori, and Alexander Gray. Reinforcement learning with external knowledge by using logical
+neural networks. arXiv preprint arXiv:2103.02363 , 2021a.
+Daiki Kimura, Masaki Ono, Subhajit Chaudhury, Ryosuke Kohita, Akifumi Wachi, Don Joven Agra-
+vante, Michiaki Tatsubori, Asim Munawar, and Alexander Gray. Neuro-symbolic reinforcement
+learning with first-order logic. arXiv preprint arXiv:2110.10963 , 2021b.
+B Ravi Kiran, Ibrahim Sobh, Victor Talpaert, Patrick Mannion, Ahmad A Al Sallab, Senthil Yoga-
+mani, and Patrick P ´erez. Deep reinforcement learning for autonomous driving: A survey. IEEE
+Transactions on Intelligent Transportation Systems , 23(6):4909–4926, 2021.
+Philipp K ¨orner, Michael Leuschel, Joao Barbosa, Vitor Santos Costa, Ver ´onica Dahl, Manuel V
+Hermenegildo, Jose F Morales, Jan Wielemaker, Daniel Diaz, Salvador Abreu, et al. Fifty years
+of prolog and beyond. Theory and Practice of Logic Programming , 22(6):776–858, 2022.
+Robert Krajewski, Julian Bock, Laurent Kloeker, and Lutz Eckstein. The highd dataset: A drone
+dataset of naturalistic vehicle trajectories on german highways for validation of highly automated
+driving systems. In 2018 21st International Conference on Intelligent Transportation Systems
+(ITSC) , pp. 2118–2125. IEEE, 2018.
+14
+Timothy P Lillicrap, Adam Santoro, Luke Marris, Colin J Akerman, and Geoffrey Hinton. Back-
+propagation and the brain. Nature Reviews Neuroscience , 21(6):335–346, 2020.
+Will McGugan. Beginning game development with Python and Pygame: from novice to professional .
+Apress, 2007.
+Farzan Memarian, Wonjoon Goo, Rudolf Lioutikov, Scott Niekum, and Ufuk Topcu. Self-supervised
+online reward shaping in sparse-reward environments. In 2021 IEEE/RSJ International Confer-
+ence on Intelligent Robots and Systems (IROS) , pp. 2369–2375. IEEE, 2021.
+Tu-Hoa Pham, Giovanni De Magistris, and Ryuki Tachibana. Optlayer-practical constrained opti-
+mization for deep reinforcement learning in the real world. In 2018 IEEE International Confer-
+ence on Robotics and Automation (ICRA) , pp. 6236–6243. IEEE, 2018.
+Ryan Riegel, Alexander Gray, Francois Luus, Naweed Khan, Ndivhuwo Makondo, Ismail Yunus
+Akhalwaya, Haifeng Qian, Ronald Fagin, Francisco Barahona, Udit Sharma, et al. Logical neural
+networks. arXiv preprint arXiv:2006.13155 , 2020.
+Md Kamruzzaman Sarker, Lu Zhou, Aaron Eberhart, and Pascal Hitzler. Neuro-symbolic artificial
+intelligence. AI Communications , 34(3):197–209, 2021.
+Shital Shah, Debadeepta Dey, Chris Lovett, and Ashish Kapoor. Airsim: High-fidelity visual and
+physical simulation for autonomous vehicles. In Field and Service Robotics: Results of the 11th
+International Conference , pp. 621–635. Springer, 2018.
+Richard S Sutton and Andrew G Barto. Reinforcement learning: An introduction . MIT press, 2018.
+Xiaolin Tang, Kai Yang, Hong Wang, Jiahang Wu, Yechen Qin, Wenhao Yu, and Dongpu Cao.
+Prediction-uncertainty-aware decision-making for autonomous vehicles. IEEE Transactions on
+Intelligent Vehicles , 7(4):849–862, 2022.
+Chen Tessler, Daniel J Mankowitz, and Shie Mannor. Reward constrained policy optimization. arXiv
+preprint arXiv:1805.11074 , 2018.
+Junjie Wang, Qichao Zhang, Dongbin Zhao, and Yaran Chen. Lane change decision-making through
+deep reinforcement learning with rule-based constraints. In 2019 International Joint Conference
+on Neural Networks (IJCNN) , pp. 1–6. IEEE, 2019.
+Jingyi Xu, Zilu Zhang, Tal Friedman, Yitao Liang, and Guy Broeck. A semantic loss function for
+deep learning with symbolic knowledge. In International conference on machine learning , pp.
+5502–5511. PMLR, 2018.
+Wen-Chi Yang, Giuseppe Marra, Gavin Rens, and Luc De Raedt. Safe reinforcement learning via
+probabilistic logic shields. arXiv preprint arXiv:2303.03226 , 2023.
+Hwasoo Yeo, Alexander Skabardonis, John Halkias, James Colyar, and Vassili Alexiadis. Oversat-
+urated freeway flow algorithm for use in next generation simulation. Transportation Research
+Record , 2088(1):68–79, 2008.
+Chao Yu, Xuejing Zheng, Hankz Hankui Zhuo, Hai Wan, and Weilin Luo. Reinforcement learning
+with knowledge representation and reasoning: A brief survey. arXiv preprint arXiv:2304.12090 ,
+2023.
+Dongran Yu, Bo Yang, Dayou Liu, Hui Wang, and Shirui Pan. Recent advances in neural-symbolic
+systems: A survey. arXiv e-prints , pp. arXiv–2111, 2021.
+Zheng Zhang, Levent Yilmaz, and Bo Liu. A critical review of inductive logic programming tech-
+niques for explainable ai. IEEE Transactions on Neural Networks and Learning Systems , 2023.
+15

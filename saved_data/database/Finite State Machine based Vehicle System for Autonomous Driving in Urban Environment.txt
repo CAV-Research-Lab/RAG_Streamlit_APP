@@ -1,0 +1,379 @@
+=== Metadata ===
+{
+    "file_name": "Finite State Machine based Vehicle System for Autonomous Driving in Urban Environment.pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Finite State Machine based Vehicle System for Autonomous Driving in Urban Environment.pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+2020 20th International Conference on Control, Automation and Systems (ICCAS 2020)
+Oct. 13∼16, 2020; BEXCO, Busan, Korea
+Finite State Machine based Vehicle System for Autonomous Driving in Urban
+Envir onments
+Sang-Hyeon Bae1, Sung-Hyeon Joo1, Jung-Won Pyo1, Jae-Seong Yoon1, Kwanghee Lee2and
+Tae-Y ong Kuc1∗
+1College of Information and Communication Engineering, Sungkyunkwan University,
+Suwon, 16419, Korea (shbae.skku@skku.edu, sh.joo@skku.edu, jungwon900@skku.edu, along893@skku.edu)
+College of Information and Communication Engineering, Sungkyunkwan University,
+Suwon, 16419, Korea (tykuc2015@skku.edu)∗Corresponding author
+2Robot R&D Group, Korea Institute of Industrial Technology, Ansan, 15588, Korea
+(leekh@kitech.re.kr)
+Abstract: In autonomous driving systems, many approach have been developed based on high-precision sensors, high
+computing power, development of various networks in academia and industry. The key point of an autonomous car is that
+it needs to know what is happening in the driving situation and an action corresponding to this situation must be created
+and operated. In this paper, we propose the system structure and method of a autonomous driving car consisting of three
+main parts:perception, planning, control. Each main part is designed to recognize the real-time driving environment, make
+action plan based on ﬁnite state machine, and activate kinematic model based control. The proposed vehicle system copes
+with six major situations of urban environment driving, and we veriﬁed system through the simulation.
+Keywords: Autonomous Vehicle System, Action Planning, Finite State Machine
+1. INTRODUCTION
+Vehicles are the most used transportation in the world.
+Value and necessity of vehicle has led to rapid indus-
+trial and technological development. In particular, the
+autonomous vehicle occupy a core ﬁelds of robotics re-
+search, and many academia, research institutes, and com-
+panies are now advancing autonomous driving technol-
+ogy. In the past, various methods for autonomous driv-
+ing in urban environments have been proposed from
+the past[[1]][[6]]. Moreover various methodologies and
+functions for autonomous vehicle systems have been pro-
+posed by the advancement of technology[[3]][[4]]. How-
+ever in the well-known and successful autonomous vehi-
+cle project, relatively simple and sometimes naive con-
+trol strategies and system models are used for vehicle
+control[[1]]. A general autonomous vehicle system con-
+sists of perception, planning, and control. Perception part
+recognizes information about the driving environment,
+and planning part makes plans to achieve goals through
+the recognized information. Control part implement the
+planned action. All of these ﬂow constitute the vehicle’s
+autonomous driving system.
+The proposed vehicle system also includes the basic
+structure of the vehicle system, but we differently de-
+signed a motion ﬁnite state machine(M-FSM) and a con-
+trol ﬁnite state machine(C-FSM). These FSMs provide a
+ﬂexible response to driving situations in urban environ-
+ments. We verify the versatility of the vehicle system by
+creating a simulation environment based on the proposed
+autonomous vehicle system and testing various driving
+situations.
+The paper is organized as follows. In Section 2, we de-
+scribe the proposed autonomous driving vehicle system
+and the method for each part of the system. In section 3,the proposed system is implemented and veriﬁed through
+simulation, and in section 4, we ﬁnally discuss with con-
+clusion and future works.
+2. SYSTEM OVERVIEW
+In this paper we propose vehicle system which con-
+sists of three parts: perception, planning and control. The
+architecture of each part and relation is as shown in Fig.
+1.
+Fig. 1 Architecture of Autonomous Driving Vehicle Sys-
+tem
+ 
+ 
+978-89-93215-19-9/20/$31.00 $ÒICROS
+1181
+Authorized licensed use limited to: University of Surrey. Downloaded on March 24,2023 at 09:38:36 UTC from IEEE Xplore.  Restrictions apply. 
+2.1 Perception
+Perception, the ﬁrst part of the system, acquires infor-
+mation about the driving environment. The information
+of the sensor attached to the vehicle is processed and used
+to plan behavior of a vehicle. Lane detector, part of per-
+ception, use images obtained from the camera sensor to
+recognize the lane in front-side of the vehicle. we use
+Wang et al. Lanenet[[7]] to extract the lane, and calcu-
+late the lane width, center, curvature and heading angle
+from the extracted lane. Object detector use pointcloud
+data obtained from the 3D lidar sensor to recognize the
+object in all-side of the vehicle. We detect object using
+Euclidean clustering method by Lin et al.[[2]] And we are
+tracking the object in surrounding environment by Yan et
+al.[[8]] Through this process, we ﬁnally calculate the rel-
+ative position and velocity of the object using the kalman
+ﬁlter.
+2.2 Planning
+Planning is a part that derives the state of a vehicle
+based on the recognized environmental information. And
+we plan action based on Motion Finite State Machine(M-
+FSM) and Control Finite State Machine(C-FSM) for au-
+tonomous driving.
+Fig. 2 Driving Sequence
+Fig. 2 shows the driving sequence of the vehicle based
+on recognized information. This ﬂow corresponds to the
+driving situation in the urban driving environment, and
+an action plan was created based on the information ob-
+tained from the driving environment such as recognized
+vehicles, objects, and lanes.
+In Fig. 3, ﬁgure(a) represent a C-FSM structure and
+ﬁgure(b) represent a M-FSM structure. Each FSM has an
+independent state structure, which is designed to be com-
+patible with the various actions of the vehicle. The black
+line means a one-way state change, and the red line means
+a two-way state change. Each state machine changes
+Fig. 3 Control and Motion Finite State Machine
+state based on the vehicle’s status and recognized infor-
+mation each time. C-FSM expresses control action:stop,
+emergency stop, acceleration, deceleration, and speed-
+keeping state change direction. The major state change
+rules of C-FSM were based on recognized information
+such as objects, trafﬁc lights, and trafﬁc signs in the driv-
+ing environment. M-FSM expresses motion action:lane-
+keeping, lane-changing, u-turn, right-turn, and left-turn
+state change direction. The main state change rule of M-
+FSM is to select an action based on the road node and line
+information of the HD map.
+2.3 Control
+Control part ﬁnally generates path and controls the
+steering and velocity of the vehicle to perform the
+planned action.
+Fig. 4 Path Coordination
+In Fig. 4, (a) shows the lane path generation for lane
+keeping action. It shows a path generation by the rec-
+ognized lane information(track-off, heading angle, cur-
+vature). The path has average value of the heading angle
+and curvature between the red line on the left-side and
+the green line on the right-side, and the distance error be-
+tween the vehicle center and the path track is calculated
+also. (b) shows the lane path generation for lane changing
+action. Main path points of the lane changing are gener-
+ated according to the recognized lane information(track-
+off, heading angle, lane width), and then a curved path is
+generated based on the hermite cubic spline curve func-
+tion.
+We uses stanley model[[5]], as shown in Fig 5, based
+steering controller with PID, like Eq. (1), for the steering
+control about the desired path.
+1182
+Authorized licensed use limited to: University of Surrey. Downloaded on March 24,2023 at 09:38:36 UTC from IEEE Xplore.  Restrictions apply. 
+In equation, θpis the tangent of the path point closest to
+the
+front wheel of the vehicle, θis the heading angle of
+the vehicle, δis the current steering angle of the vehicle,
+andefais the distance between the front wheel and the
+closest
+path point. The distance value is negative or posi-
+tive value depending on direction of vehicle v. The vehi-
+cle controls speed which is desired from speed planning
+through the PID controller. The ﬁnally, target steering
+and speed values are transmitted to the vehicle’s lower
+controller.
+Fig. 5 Stanley Model
+δ(t) =θp(t)−θ(t)
++
+tan−1/parenleftBigg
+kpefa(t) +/integraltext
+kiefa(t)d t+kd˙efa(t)
+vx(t)/parenrightBigg
+(1)
+3.
+EXPERIMENT
+In this section, we will describe the environment built
+in the simulation and six test situations. And we discuss
+simulation result to verify the proposed autonomous driv-
+ing vehicle system.
+3.1 Environment Modeling
+We created a simulation environment using Gazebo9
+on Linux 16.04 LTS. Fig. 6 (a) is a bird eye view of
+simulation. We designed a general driving environment
+including static and dynamic objects such as roads, build-
+ings, and vehicles. (b) shows lidar sensor data and recog-
+nized object information. 3D lidar pointcloud is visual-
+ized by Red dots and green color 3d Box is object bound-
+ing box which include ID and velocity. (c) shows view of
+each camera and the results of lane recognition from bird
+eye view of the front camera image.
+The vehicle model is shown in Fig. 7. The vehicle
+model used has a distance of 2.7 m between the front and
+rear wheels, a total length of 4.8 m and a width of 1.6
+m. The picture on the right, that shows the position of
+the sensor attached to the vehicle and the sensor view of
+a lidar and cameras. We controlled the vehicle with max
+15m/s velocity, and max 5m/s2acceleration. The used
+lidar
+spec is 16-channel, 360-degree and 100m measure
+range. The used camera spec is 1280 x 960 pixels, 80◦
+FOV and each observe the front and side.
+Fig. 6 Simulation Environment
+Fig. 7 Vehicle Model
+3.2 Driving Evaluation Situations
+In order to verify the designed vehicle system, we test
+the autonomous driving for each vehicle driving situation
+in Fig. 8. Six situations must be required for autonomous
+driving licenses.
+•Normal Driving
+In
+this driving situation, the vehicle need to keep a lane
+and drive in straight and curved road. In this case, the
+evaluation criteria are that the tires should not leav-
+ing the lanes and driving speed changes more than two
+types.
+•Lane Changing
+In
+this driving situation, the vehicle need to change the
+lane according to the presence or absence of obstacles
+in the side of vehicle. In this case, the evaluation crite-
+ria are that the vehicle should not bump into other ve-
+hicles when changing lanes, and tires should not leave
+the lane after changing lanes.
+•Cut In & Out
+In
+this driving situation, when another car which has
+lower speed cuts in, our vehicle need to decelerate
+speed, and when the car cuts out, vehicle returns to
+the original driving speed. In this case, the evaluation
+criterion are that the tire should not leave the lane and
+should not bump into other vehicles.
+•Trafﬁc Jam
+1183
+Authorized licensed use limited to: University of Surrey. Downloaded on March 24,2023 at 09:38:36 UTC from IEEE Xplore.  Restrictions apply. 
+Fig. 8 Six Driving Situations
+In this driving situation, when occurs congestion situ-
+ation, the vehicle maintains a safe distance in front of
+car and returns to the original speed when the conges-
+tion is canceled. At this time, the condition for releas-
+ing the congestion is when vehicle have sufﬁciently far
+distance from the car in front. In this case, the evalu-
+ation criteria are that the tire should not leave the lane
+and should not bump into other vehicles.
+•Sudden Stop
+In
+this driving situation, if the car in front stops sud-
+denly, our vehicle also stops suddenly. In this case, the
+evaluation criteria are that vehicle don’t bump into the
+car in front and don’t leave the lane.
+•External Disturbance
+In
+this driving situation, when an external acceleration
+command is issued by a gas pedal or a control device,
+vehicle need to limit the maximum speed. In this case,
+the evaluation criterion are that the desired speed is
+limited and the vehicle keep a lane properly.
+3.3 Experiment Result
+•Normal Driving
+Fig. 9 Lane Keeping Test Result
+As a result of normal driving situation test in simu-lation, we proved that the vehicle was driving along
+the path, as shown in Fig. 9. (a) is lane tracking for
+a straight lane, and (b) is lane tracking for a curved
+lane. To verify our tracking performance, we evalu-
+ated controllers based on vehicle kinematics. The plot
+on the right is the steering control result that control
+the track-off error for straight and curved lanes. In the
+plot, the blue dotted line represents the path, the red
+line vehicle trajectory is our proposed steering control
+method, and the green line vehicle trajectory is method
+by Snider[ref]. Through the plot, we conﬁrmed that
+the our steering control method quickly converged with
+low track-off error.
+•Lane Changing
+Fig. 10 Lane Changing Test Result
+As a result of lane changing situation test in simulation,
+we proved that the vehicle has successfully performed
+lane change action, as shown in Fig. 10. The vehicle
+followed the lane change path designed in the hermite
+cubic spline method, and we conﬁrmed that the vehicle
+was driving without leaving the lane even after the lane
+change.
+•Cut In & Out
+Fig. 11 Cut In&Out Test Result
+As a result of cut in&out situation test in simulation,
+we proved that the vehicle has responded appropriately
+to the situation, as shown in Fig. 11. When entering an
+external car, the vehicle speed was decelerated to main-
+tain a safe distance, and when the external car exited,
+we conﬁrmed to accelerate to the original speed.
+•Trafﬁc Jam
+As
+a result of trafﬁc jam situation test in simulation, we
+proved that the vehicle was driving while maintaining
+a safe distance, as shown in Fig. 12. We conﬁrmed that
+while the vehicle maintains a safe distance, when the
+vehicle is able to drive at its original speed, the conges-
+tion situation is released and vehicle accelerate to the
+original speed.
+1184
+Authorized licensed use limited to: University of Surrey. Downloaded on March 24,2023 at 09:38:36 UTC from IEEE Xplore.  Restrictions apply. 
+Fig. 12 Trafﬁc Jam Test Result
+•Sudden Stop
+Fig. 13 Sudden Stop Test Result
+As a result of sudden stop situation test in simulation,
+we proved that the vehicle stopped equally, as shown
+in Fig. 13. When the relative speed of the front car de-
+creases rapidly, our perception part calculates the rel-
+ative velocity and distance. Finally we conﬁrmed that
+our vehicle stops the same when the deceleration value
+exceeds a certain threshold.
+•External Disturbance
+Fig. 14 External Disturbance Test Result
+As a result of external disturbance situation test in sim-
+ulation, we proved that the vehicle speed was not dis-
+turbed by external inputs, as shown in Fig. 14. As
+shown in the graph shown in the plot, the red line that
+maintains the limit speed without checking the target
+speed of the blue dotted line that exceeds the threshold
+of the green line due to disturbance.4. CONCLUSION
+We veriﬁed the autonomous driving ability in various
+urban driving situations using the proposed system. Plan-
+ning using two Finite state machines derive the suitable
+action for the driving situation. In the future, we will im-
+prove our skills to respond to complex situations that oc-
+cur when autonomous driving of vehicles, such as human
+presence and confrontation. To this end, we will design a
+perception part that deals with various semantic informa-
+tion of HD map and a high-level planning part using it. In
+addition, we will develop an extended state machine that
+acquires and responds to real-time wide-area city driving
+information using V2V and V2X. Based on this, we will
+solve core issues of autonomous vehicles such as safety,
+reliability and social issues of autonomous driving.
+ACKNOWLEDGEMENT
+This research was supported by Korea Evaluation In-
+stitute of Industrial Technology(KEIT) funded by the
+Ministry of Trade, Industry Energy (MOTIE) (No.
+1415166803) and (No. 1415168187).
+REFERENCES
+[1] Stefan F. (Stefan Forrest) Campbell. Steering con-
+trol of an autonomous ground vehicle with applica-
+tion to the DARPA Urban Challenge. 84(2005):487–
+492, 2007.
+[2] Tzu-chieh Lin, Daniel Stanley Tan, Hsueh-ling Tang,
+Shih-che Chien, and Feng-chia Chang. PEDES-
+TRIAN DETECTION FROM LIDAR DATA VIA
+COOPERATIVE DEEP AND HAND-CRAFTED
+FEATURES National Taiwan University of Science
+and Technology , Taipei , Taiwan National Chung-
+Shan Institute of Science and Technology , Taiwan
+National Taipei University of Techn. 2018 25th
+IEEE International Conference on Image Processing
+(ICIP), pages 1922–1926, 2018.
+[3] Caroline Bianca Santos Tancredi Molina, Jorge
+Rady De Almeida, Lucio F. Vismari, Rodrigo Igna-
+cio R. Gonzalez, Jamil K. Naufal, and Joao Batista
+Camargo. Assuring Fully Autonomous Vehicles
+Safety by Design: The Autonomous Vehicle Con-
+trol (A VC) Module Strategy. Proceedings - 47th
+Annual IEEE/IFIP International Conference on De-
+pendable Systems and Networks Workshops, DSN-W
+2017, pages 16–21, 2017.
+[4] Scott Drew Pendleton, Hans Andersen, Xinxin Du,
+Xiaotong Shen, Malika Meghjani, You Hong Eng,
+Daniela Rus, and Marcelo H. Ang. Perception, plan-
+ning, control, and coordination for autonomous vehi-
+cles. Machines, 5(1):1–54, 2017.
+[5] Jarrod M Snider. Automatic Steering Methods for
+Autonomous Automobile Path Tracking. Work,
+(February):1–78, 2009.
+[6] Chris Urmson. A robust approach to high-speed navi-
+gation for unrehearsed desert terrain. Journal of Field
+Robotics, 23(8):467–508, 2006.
+1185
+Authorized licensed use limited to: University of Surrey. Downloaded on March 24,2023 at 09:38:36 UTC from IEEE Xplore.  Restrictions apply. 
+[7] Ze Wang, Weiqiang Ren, and Qiang Qiu. LaneNet:
+Real-Time Lane Detection Networks for Au-
+tonomous Driving. 2018.
+[8] Zhi Yan, Tom Duckett, and Nicola Bellotto. On-
+line learning for 3D LiDAR-based human detec-
+tion: experimental analysis of point cloud cluster-
+ing and classiﬁcation methods. Autonomous Robots,
+44(2):147–164, 2020.
+1186
+Authorized licensed use limited to: University of Surrey. Downloaded on March 24,2023 at 09:38:36 UTC from IEEE Xplore.  Restrictions apply. 

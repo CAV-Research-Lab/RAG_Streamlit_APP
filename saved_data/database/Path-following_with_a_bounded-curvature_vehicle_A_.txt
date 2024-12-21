@@ -1,0 +1,1561 @@
+=== Metadata ===
+{
+    "file_name": "Path-following_with_a_bounded-curvature_vehicle_A_.pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Path-following_with_a_bounded-curvature_vehicle_A_.pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+See discussions, st ats, and author pr ofiles f or this public ation at : https://www .researchgate.ne t/public ation/228716984
+Path-following with a bou nded-cu rvatu re vehicle: A hybrid control approach
+Article    in  International Journal of Contr ol · Oct ober 2005
+DOI: 10.1080/00207170500275096
+CITATIONS
+21READS
+527
+3 author s, including:
+Andr ea Balluchi
+Pure Power Contr ol S.r .l.
+113 PUBLICA TIONS    2,390  CITATIONS    
+SEE PROFILE
+Antonio Bic chi
+IIT Geno va and Univ . Pisa
+687 PUBLICA TIONS    26,006  CITATIONS    
+SEE PROFILE
+All c ontent f ollo wing this p age was uplo aded b y Andr ea Balluchi  on 06 July 2015.
+The user has r equest ed enhanc ement of the do wnlo aded file.
+Path–Following with a Bounded–Curvature Vehicle:
+a Hybrid Control Approach.
+Andrea Balluchi†,A n t o n i o B i c c h i§, Philippe Sou` eres‡
+†PARADES, Via di S.Pantaleo, 66, 00186 Roma, Italy. balluchi@parades.rm.cnr.it
+§Centro Interdipartimentale di Ricerca “Enrico Piaggio”. Universit` a di Pisa, 56100 Pisa, Italy, bicchi@ing.unipi.it
+‡Laboratoire d’Analyse et d’Architecture des Syst` emes – LAAS,
+CNRS, 7, Avenue du Colonel Roche, 31077 Toulouse, France. soueres@laas.fr
+Abstract
+In this paper, we consider the problem of stabilizing the kinematic model of a car to a path in the plane
+under rather general conditions. The path is subject to very mild restrictions, while the car model, although
+rather simpliﬁed, contains the most relevant limitations inherent in wheeled robots kinematics. Namely,
+the car can only move forward, its steering radius is lower bounded and a limited sensory information onlyprovides a partial knowledge of some state parameters. In particular, we consider the case that the current
+distance and the heading angle error with respect to the closest point on the reference path can be measured
+but only the sign of the path curvature is detected. These constraints are such to make classical controltechniques ineﬃcient. As the feedback information is both continuous and discrete, the hybrid systemsformalism turns out to be well appropriate to model the problem. The proposed approach is based on
+optimal control techniques successfully applied in a previous work for following rectilinear path. We propose
+here an extension to the tracking of more general paths with moderate curvature. The stability of the closed-loop system is proved by means of the hybrid system formalism and hybrid formal veriﬁcation techniques.
+Finally, the practicality of the proposed approach, in spite of non–idealities in real-world applications, is
+discussed by reporting experimental results.
+Keywords: nonholonomic vehicles, path–following, hybrid systems.
+1 Introduction
+In this paper we consider the design of a path–following controller for the so–called Dubins’ model of a car.
+Dubins’ car is the kinematic model of a nonholonomic wheeled vehicle that moves only forwards in a plane, and
+possesses a lower–bounded turning radius. The model is relevant to the kinematics of road vehicles as well as
+aircraft cruising at constant altitude, or sea vessels.
+The design of control techniques for nonholonomic veh icles has been the subject of extensive research works
+for the past ﬁfteen years. Three diﬀerent problems are commonly considered: path–following, trajectory–
+tracking and point–stabilization (see [9], [8] or [11] for surveys). Since the proof by Brockett [7] that nonholo-
+nomic systems cannot be stabilized to a ﬁxed point by means of a pure state-feedback, the point-stabilization
+problem has proven to be the most constrained one. To answer this problem, two kinds of alternative solutionshave been proposed which consist in designing either time-varying [19] or discontinuous feedback controls [2].
+In particular, the application of optimal control techniques [18], [6], [24] has lead to the determination of the
+synthesis of minimal-length trajectories for a car [23] (problems of Dubins and Reeds and Shepp) which provides
+a canonical example of discontinuous stabilizing feedback.
+Brockett’s limitation no more occurs when considering the dynamics of the robot’s conﬁguration error with
+respect to a nominal path (i.e. a geometric curve) or a time-indexed trajectory. For this reason, many authors
+have addressed the remaining two problems by considering classical techniques of automatic control such that,
+tangent linearization [9], Lyapunov analysis [13], or sliding-mode [12]. However, though the model of a car witha bound on the steering wheel angle has been deeply studied for the point-stabilization problem, it has been less
+considered when dealing with path–following or trajectory tracking. Such a steering constraint appears yet to
+be crucial in making a kinematic model of a car relevant to real–world vehicles encountered in most applications.
+1
+Another important assumption which is commonly made in the path–following literature is that the full
+state of the system is available for measurement, and that the path to be tracked is entirely known in advance.
+Instead, we consider in this paper the more realistic and less demanding case that the robot can only measureits current distance and heading angle error with respect to the closest point on the reference path in the plane,
+and that only the sign of the path curvature is detected.
+The approach we follow here to make the Dubins’ car follow a general path is based on a previous work
+involving optimal control techniques which has lead to th e characterization of minimum-length trajectories
+to track rectilinear paths [22]. Due to both the nature of the problem, the type of sensors, and the solution
+technique used, the analysis of the controlled system invol ves a rather complex switching logic. Hybrid formalism
+(see [14, 26, 3]) and veriﬁcation techniques (see [17, 16, 1]) are extremely useful in this context to formally proof
+stability of the resulting system.
+This paper is organized as follows. In Section 2, a hybrid automaton that describes the motion of the vehicle
+with respect to the path is introduced and the path–follo wing control problem is form alized. The model is based
+on the use of a moving reference frame that gives the relat ive position of the vehicle with respect to the desired
+path, with the interesting novelty that the moving reference frame switches its orientation according to the sign
+of the curvature of the reference path. This simple trick greatly simplify the design and formal veriﬁcation of
+the proposed controller. In Section 3, the path–following controller is developed. Such controller, described
+in detail in Section 3.2, is obtained by considering a local approximation of the desired path with the tangent
+line, and by using a feedback controller designed for stabilization on straight paths (reported in Section 3.1).The advantages of the novel hybrid path–following formalization are exploited in Section 4, where the stability
+properties of the proposed controller are investigated. By a reachability analysis in the continuous state space,
+a ﬁnite state abstract representation of the hybrid closed–loop automaton is derived. Then, using the ﬁnitestate abstraction, it is shown that the proposed hybrid feedback controller achieves stabilization of Dubins’ car
+on a generic reference path and suﬃcient conditions for global attractivity are derived. Finally, experimental
+results obtained by the proposed control law on a laboratory vehicle are presented in Section 5, along with a
+discussion of practical issues in application of our algorithms.
+2 Hybrid path–following modeling using switching Frenet’s frames
+We consider the kinematic model of a car moving forwards in an horizontal plane, which was introduced byDubins in [10]. Considering a frame R(O,x,y ) attached to the plane of the robot’s motion, a conﬁguration of
+the vehicle is deﬁned by an ordered pair ( M(x, y),θ)∈IR
+2×S1,w h e r e( x, y) are the coordinates of a reference
+point Mof the robot with respect to Randθis the angle made by the direction of the car with respect to the
+x-axis of frame R. The kinematics of the car is described by
+
+
+˙x=Vcosθ
+˙y=Vsinθ
+˙θ=ωwith |ω|≤V
+R, (1)
+where Vis the constant forward velocity, ωthe is turning velocity and the input constraint models a lower
+bound R>0 on the turning radius of the Dubins’ car. The problem we are concerned with is that of steering
+the vehicle to a given feasible path Γ, deﬁned by an arc–length parameterization as
+Γ=/braceleftbig
+γ(s)=(xγ(s),yγ(s))∈IR2|s∈IR/bracerightbig
+, (2)
+with the following conditions:
+A)γ(·)i sac l a s s C1mapping from I R to I R2and the orientation of γis that induced by increasing s.
+B)Letκ(s) denote the extension by continuity from the left1of the curvature of Γ, expressed as a function of the
+curvilinear abscissa s. There exists a positive real RΓsuch that the normalized curvature κ(s)≡Rκ(s)
+satisﬁes
+|κ(s)|=R|κ(s)|≤R
+RΓ≡C<1. (3)
+1By deﬁnition, κ(β) = lims→β−κ(s), at points γ(β) where the curvature of Γ is not deﬁned.
+2
+2 y 
+y 1 2 
+x 1 ~~θ
+θ
+x
+x 21 ~
+(s )
+γ γ 
+(s )1 y  x
+y  2
+~~~θθ
+Figure 1: Frenet’s frame and transformed coordinates for κ<0( l e f t )a n d κ>0 (right).
+C) Considering the open neighborhood of the path
+TΓ=/braceleftbig
+x∈IR2:∃s∈IR,/bardblx−γ(s)/bardbl<RΓ/bracerightbig
+⊂IR2, (4)
+for all x∈TΓthere exists a unique nearest point on Γ.
+In order to describe the motion of the vehicle with re spect to the reference path Γ a mobile Frenet’s frame
+is introduced. Given a vehicle position M(x, y)∈TΓ, the Frenet’s frame F(s) is deﬁned by the tangent, the
+principal normal and the binormal axes of the curve at the point ( xγ(s),yγ(s)) of Γ which is at minimum
+distance2fromM(x, y) (see Figure 1). As the vehicle moves with velocity V, the Frenet’s frame F(s) follows
+its motion so as to keep it on the principal normal axis. The arc–length parameter slocates the current
+position of the Frenet’s frame on the path Γ. The tangent and the principal normal axes of F(s)r e m a i nw i t h i n
+the plane containing the curve, while the binormal axis points either upwards, if the local curvature of Γ iscounterclockwise (i.e. κ(s)>0), or downwards, if the local curvature is clockwise (i.e. κ(s)<0). Without loss
+of generality, we assume that the Frenet’s frame does not switch orientation when entering a rectilinear segment
+of the path Γ (for which κ(s)=0 ) .
+Introduce the transformed coordinates ( s,˜y,˜θ), where:
+•sis the arc–length parameter which deﬁnes the position of the Frenet’s frame along the curve;
+•˜ydenotes the position of the car along the principal normal of F(s) (lateral distance) normalized with
+respect to the minimum turning radius R;
+•˜θdenotes its orientation with respect to the tangent axis of F(s) (heading angle error), with sign taken
+according to the local direction of the binormal axis (see Figure 1).
+The use of a mobile frame to state the path–following problem is rather usual in the literature (see e.g. [20]).
+However, an interesting novelty of the proposed modeling is that the orientation of the moving reference frame
+is switched according to the sign of the reference path cu rvature. This simple requirement allows us to simplify
+the design and formal veriﬁcation of the proposed hybrid controller. Indeed, it allows to express canonically
+two kinds of behavior depending on which side the robot approaches the path with respect to its convexity. Inthe (˜y,˜θ)–plane, the change of curvature along the path produces a jump of the representative point (˜ y,˜θ)t oi t s
+symmetric with respect to the origin. This discontinuity allows us to express the change in the dynamics of the
+error term (˜ y,˜θ) which results from the constraint on the vehicle’s turning radius and the local path curvature.
+Roughly speaking, the vehicle can approach the path more easily if it lies on the opposite side of the osculating
+circle with respect to the path
+3. This formulation will turn out to be useful in the veriﬁcation of the proposed
+path–following controller.
+The motion of the car in the transformed state ( s,˜y,˜θ) can be described by using the formalism of hybrid
+automata (see [14, 4]). The discrete nature of the model arises from the fact that the Frenet’s frame F(s) changes
+its orientation during the motion, depending on the sign of the curvature κ(s). A discrete state, referred to as
+2Note that, by A),B)a n d C), the Frenet’s frame is well-deﬁned along Γ for any vehicle position M(x, y)∈TΓ.
+3For instance, if the vehicle is required to approach a circle with curvature 1 /R, then it can approach it only from outside.
+3
+˙˜y=s i n ( ˜θ)V
+R
+˙˜θ=−cos(˜θ)d
+1−˜ydV
+R+ωσr=switch
+˜y:=−˜y,˜θ:=−˜θ
+σr=switch
+˜y:=−˜y,˜θ:=−˜θup down
+σr=/epsilon1 σr=/epsilon1˙˜y=s i n ( ˜θ)V
+R
+˙˜θ=−cos(˜θ)d
+1−˜ydV
+R−ω
+Figure 2: Hybrid automaton HΓmodeling the motion of the vehicle with respect to the reference path Γ, in
+the case of unmeasurable curvature amplitude.
+bin, models the two possible orientations of the binormal axis of F(s(t)) at time t, assuming either the value
+up(when κ(s(t))>0o rκ(s(t)) = 0 after an arc with positive curvature) or the value down (when κ(s(t))<0
+orκ(s(t)) = 0 after an arc with negative curvature). Its initial value is either up,i fκ(s(0))>0, or down,i f
+κ(s(0))≤0. The complete hybrid automaton modeling the mo tion of the vehicle with respect to the reference
+path Γ is reported in [5].
+Notice that, for the so obtained hybrid model, the path–following problem reduces to that of stabilizing
+the evolutions in the hybrid state space ( bin,(s,˜y,˜θ)) to the axis (˜ y,˜θ)=( 0 ,0). However, the evolutions of ˜ y
+and˜θdepend on the path curvature κ(s), which forces the model to include the dynamics of the arc–length
+parameter s. On the other hand, we should like to design a control law without resorting to the practically
+unlikely assumption that the path curvature at a generic point on the path is known beforehand or can be
+measured. We instead assume that only the sign of κ(s), and not its amplitude, is available to the controller.
+To model such a case,
+1. In the dynamics of ˜ yand˜θ, the absolute value of the local curvature |κ(s)|is replaced by an unknown
+but bounded input disturbance d(t) with respect to which the path–following controller has to be robust.
+By (3), the disturbance d(t)s a t i s ﬁ e s
+0≤d(t)≤C<1. (5)
+2. The switching conditions κ(s)>0a n d κ(s)<0, which trigger the transitions of the discrete state variable
+binbetween the states down and up, are replaced by a discrete uncontrollable input σr, assuming either
+the value switch (when a change of curvature sign occurs) or the silent move /epsilon1(otherwise).
+With the two modiﬁcations above, the hybrid automaton HΓ, with reduced state space ( bin,(˜y,˜θ)), reported in
+Figure 2 is obtained. The path–following problem for the model of the Dubin’s car (1) and a given a feasible
+reference path Γ as in (2), satisfying conditions A),B)a n d C), can be reformulated as follows:
+Problem 1 Given the hybrid automaton HΓ, ﬁnd a feedback control law ω(bin,(˜y,˜θ))satisfying the curvature
+constraint (1) such that, from any initial state (bin0,(˜y0,˜θ0))the continuous trajectory (˜y(t),˜θ(t))converges to
+the origin under the action of any unknown disturbance d(t), bounded as in (5), and any sequence of uncontrol-
+lable events σr.
+3 Hybrid path–following feedback controller
+In this section, the proposed path–following controller is presented. The controller, described in details in
+Section 3.2, is obtained by applying a feedback controller designed for stabilization on straight paths (reported
+in Section 3.1) to the tangent line local approximation of the desired path.
+3.1 Optimal feedback control for straight line following
+In [22], the problem of driving a Dubins’ car to a straight path has been considered. An optimal feedback
+control that minimizes the length traveled by the vehi cle to reach the speciﬁed path was devised. The method
+4
+4 2 −2 −4 0
+σ
+Rσ
+σπ
+π−.rsl
+. .
+lsl.
+lsr.rsr
+.lr
+.
+LPN
+σ.θ
+~~
+y
+other boundariesrl 
+lr
+rl(2)(1)(2)
+(1)
+slsr
+Figure 3: Shortest paths synthesis for straight lines (i.e. for d=0 ) .
+is brieﬂy reported in this section to make this paper self-contained and more understandable. The optimal
+feedback control presented in [22] is deﬁned inside the region
+D(˜y,˜θ)=
+
+˜y<−1−cos(˜θ)∧˜θ∈[π,
+3
+2π)
+˜y≤+1 + cos( ˜θ)∧˜θ∈(π
+2,π)
+˜y∈IR ∧˜θ∈[−π
+2,π
+2]
+˜y≥−1−cos(˜θ)∧˜θ∈[−π,−π
+2)
+˜y>+1 + cos( ˜θ)∧˜θ∈(−3
+2π,−π)(6)
+in the state space (˜ y,˜θ), which, modulo 2 πangles on ˜θ, corresponds to the whole space (see Figure 3). The
+optimal controller is described by three modes
+•straight :w h e r e ω=0;
+•right :w h e r e ω=−V
+R;
+•left :w h e r e ω=+V
+R.(7)
+The controller mode is chosen as follows
+[straight ,if (˜y,˜θ)∈Ω0]∧[right,if (˜y,˜θ)∈Ω−]∧[left,if (˜y,˜θ)∈Ω+]( 8 )
+where the partition Ω0∪Ω−∪Ω+of domain the D(˜y,˜θ)is deﬁned as in Table 1 and
+σN(˜y,˜θ)=˜ y+1+c o s ( ˜θ), (9)
+σP(˜y,˜θ)=˜ y−1−cos(˜θ), (10)
+σR(˜y,˜θ)=˜ y+1−cos(˜θ), (11)
+σL(˜y,˜θ)=˜ y−1+c o s ( ˜θ). (12)
+In Figure 3, the boundaries between the subsets of the partition Ω0∪Ω−∪Ω+are represented by dotted lines
+and the direction of motion, when the r eference path is a straight line i.e. d= 0, is represented by directed
+curves.
+3.2 Feedback control for generic path following
+In this section a hybrid feedback controller that solves P roblem 1 is derived from the one reported in the previous
+section. The hybrid model of the vehicle HΓis characterized by the two modes: upand down.I n m o d e down
+5
+O={(0,0)}
+Ω0=sr∪sl∪O
+Ω−=r∪rsr∪rsl∪rl(1)∪rl(2)
+Ω+=l∪lsr∪lsl∪lr(1)∪lr(2)
+r=r(1)∪r(2)∪r(3)
+lr(1)=lr(1.1)∪lr(1.2)∪lr(1.3)
+lsr=lsr(1)∪lsr(2)
+rsr =rsr(1)∪rsr(2)
+l=l(1)∪l(2)∪l(3)
+rl(1)=rl(1.1)∪rl(1.2)∪rl(1.3)
+rsl=rsl(1)∪rsl(2)
+lsl=lsl(1)∪lsl(2)
+σN(˜y,˜θ)=˜y+1+c o s ( ˜θ)
+σP(˜y,˜θ)=˜y−1−cos(˜θ)
+σR(˜y,˜θ)=˜y+1−cos(˜θ)
+σL(˜y,˜θ)=˜y−1+c o s ( ˜θ)
+r(1)={(˜y,˜θ)|˜θ∈(0,π
+2),σR(˜y,˜θ)=0}
+l(1)={(˜y,˜θ)|˜θ∈(−π
+2,0),σL(˜y,˜θ)=0}
+r(2)={(˜y,˜θ)|˜θ∈[π
+2,π),σR(˜y,˜θ)=0}
+l(2)={(˜y,˜θ)|˜θ∈(−π,−π
+2],σL(˜y,˜θ)=0}
+r(3)={(˜y,˜θ)|˜θ∈[π,3
+2π),σR(˜y,˜θ)=0}∪{(0,π)
+l(3)={(˜y,˜θ)|˜θ∈(−3
+2π,−π],σL(˜y,˜θ)=0}
+lr(1.1)={(˜y,˜θ)|˜θ∈(0,π
+2),σN(˜y,˜θ)≥0,σR(˜y,˜θ)<0}
+rl(1.1)={(˜y,˜θ)|˜θ∈(−π
+2,0),σL(˜y,˜θ)>0,σP(˜y,˜θ)≤0}
+lr(1.2)={(˜y,˜θ)|˜θ∈(−π
+2,0],σN(˜y,˜θ)≥0,σL(˜y,˜θ)<0}
+rl(1.2)={(˜y,˜θ)|˜θ∈[0,π
+2),σR(˜y,˜θ)>0,σP(˜y,˜θ)≤0}
+lr(1.3)={(˜y,˜θ)|˜θ∈[−π,−π
+2],σN(˜y,˜θ)≥0,σL(˜y,˜θ)<0}
+rl(1.3)={(˜y,˜θ)|˜θ∈[π
+2,π],σR(˜y,˜θ)>0,σP(˜y,˜θ)≤0}
+lr(2)={(˜y,˜θ)|˜θ∈(π,3
+2π),σR(˜y,˜θ)>0,σN(˜y,˜θ)<0}
+rl(2)={(˜y,˜θ)|˜θ∈(−3
+2π,−π),σP(˜y,˜θ)>0,σL(˜y,˜θ)<0}
+sr ={(˜y,˜θ)|˜y<−1,˜θ=π
+2}
+sl ={(˜y,˜θ)|˜y>+1,˜θ=−π
+2}
+lsr(1)={(˜y,˜θ)|˜θ∈[0,π
+2),σN(˜y,˜θ)<0}
+rsl(1)={(˜y,˜θ)|˜θ∈(−π
+2,0],σP(˜y,˜θ)>0}
+lsr(2)={(˜y,˜θ)|˜θ∈[−π
+2,0),σN(˜y,˜θ)<0}
+rsl(2)={(˜y,˜θ)|˜θ∈(0,π
+2],σP(˜y,˜θ)>0}
+rsr(1)={(˜y,˜θ)|˜θ∈(π
+2,π),σR(˜y,˜θ)<0}
+lsl(1)={(˜y,˜θ)|˜θ∈(−π,−π
+2),σL(˜y,˜θ)>0}
+rsr(2)={(˜y,˜θ)|˜θ∈[π,3
+2π),σR(˜y,˜θ)<0}
+lsl(2)={(˜y,˜θ)|˜θ∈(−3
+2π,−π],σL(˜y,˜θ)>0}
+Table 1: Partition Ω0∪Ω−∪Ω+of domain the D(˜y,˜θ)deﬁning the shortest path synthesis.
+the input ωappears with opposite sign with respect to mode up. Since the controller modes in (8) has been
+set assuming an upwards binormal axis then, the controller modes rightand lefthave to be switched when the
+vehicle is in mode down. Hence, for a generic feasible path Γ, the state feedback controller is deﬁned in the
+hybrid state space {up,down}×D(˜y,˜θ)by setting the controller modes as follows
+•straight :i f( bin,(˜y,˜θ))∈{up,down}×Ω0;
+•right :i f( bin,(˜y,˜θ))∈(up×Ω−)∨(bin,(˜y,˜θ))∈(down×Ω+);
+•left :i f( bin,(˜y,˜θ))∈(up×Ω+)∨(bin,(˜y,˜θ))∈(down×Ω−);(13)
+where Ω0,Ω−and Ω+are as in Table 1. The closed–loop hybrid automaton HF, obtained by applying the
+feedback (7),(13) to the vehicle hybrid automaton HΓ, is depicted in Figure 4. Since the vehicle hybrid model
+HΓhas two modes, namely {up,down}, and the controller has three modes, namely {straight ,right,left},t h e n
+the hybrid closed–loop system could have at most six di screte states. However, by carefully analyzing the
+continuous dynamics of the hybrid automaton HΓdepicted in Figures 2 and relations (8) and (13), it is easy to
+conclude that the following combinations of controller modes and vehicle modes give rise to the same closed–loop
+dynamics
+•(straight ,up)a n d( straight ,down),
+•(right,up)a n d( left,down),
+•(left,up)a n d( right,down).
+Hence, the closed–loop hybrid system HFhas a discrete state referred to as mode that assumes values in the
+setO={zero,negative ,positive }, as follows
+•mode =zero :i f( ˜y,˜θ)∈Ω0;
+•mode =negative :i f( ˜y,˜θ)∈Ω−;
+•mode =positive :i f( ˜y,˜θ)∈Ω+.(14)
+6
+˙˜y=s i n ( ˜θ)V
+R
+˙˜θ=/parenleftbigg
+−cos(˜θ)d
+1−˜yd+1/parenrightbigg
+V
+R[σr=/epsilon1∧(˜y,˜θ)∈Ω0]
+[σr=switch∧(˜y,˜θ)∈Ω0˜y:=−˜y,˜θ:=−˜θ]
+[σr=/epsilon1∧(˜y,˜θ)∈Ω−]
+[σr=switch∧(˜y,˜θ)∈Ω+˜y:=−˜y,˜θ:=−˜θ]˙˜y=s i n ( ˜θ)V
+R
+˙˜θ=−cos(˜θ)d
+1−˜ydV
+R
+[σ
+r=
+/epsilon1∧
+(˜y,˜θ)∈
+Ω+][σ
+r=
+switch
+∧
+(˜y,˜θ)∈
+Ω−
+˜y:=
+−˜y,
+˜θ:=
+−˜θ][σ
+r=
+/epsilon1∧
+(˜y,˜θ)∈
+Ω0][σ
+r=
+switch
+∧
+(˜y,˜θ)∈
+Ω0
+˜y:=
+−˜y,
+˜θ:=
+−˜θ]
+[σr=/epsilon1∧(˜y,˜θ)∈Ω+]
+[σr=switch ∧(˜y,˜θ)∈Ω−˜y:=−˜y,˜θ:=−˜θ][σr=/epsilon1∧(˜y,˜θ)∈Ω−]
+[σr=switch ∧(˜y,˜θ)∈Ω+˜y:=−˜y,˜θ:=−˜θ]zero[σr=/epsilon1∧(˜y,˜θ)∈Ω0]
+[σr=switch ∧(˜y,˜θ)∈Ω0
+˜y:=−˜y,˜θ:=−˜θ]
+[σ
+r=
+/epsilon1∧
+(˜y,˜θ)∈
+Ω−][σ
+r=
+switch
+∧
+(˜y,˜θ)∈
+Ω+˜y:=
+−˜y,
+˜θ:=
+−˜θ][σr=/epsilon1∧(˜y,˜θ)∈Ω+]
+[σr=switch∧(˜y,˜θ)∈Ω−
+˜y:=−˜y,˜θ:=−˜θ]positive negative
+˙˜y=s i n ( ˜θ)V
+R
+˙˜θ=/parenleftbigg
+−cos(˜θ)d
+1−˜yd−1/parenrightbigg
+V
+R
+Figure 4: Hybrid automaton HFmodeling the motion of the vehicle with respect to the reference path Γ under
+the proposed path–following controller.
+The initial state ( mode 0,(˜y0,˜θ0)) of the hybrid automaton HFhas to satisfy (14). Transitions between discrete
+modes are due to either a change in the controller mode (triggered by (˜ y,˜θ)∈Ω−,0,+), or a switch of the Frenet’s
+frame (modeled by σr=switch ). In the latter case, the continuous state jumps to the symmetric point with
+respect to the origin (due to the reset ˜ y:=−˜y,˜θ:=−˜θ).
+The coordinate transformation ( x, y, θ)→(s,˜y,˜θ) becomes singular when the vehicle lies on the center of the
+local osculating circle to the path Γ. That is if, at some time ¯t,˜y(¯t)|κ(s(¯t))|=1 ,o re q u i v a l e n t l y˜ y(¯t)d(¯t)=1 .
+For any initial conﬁguration ( M(x0,y0),θ0), with M(x0,y0)∈TΓas in (4), the corresponding state (˜ y0,˜θ0)
+satisﬁes ˜ y0<C−1. Further, since by (5) d≤C,t h e n˜ y0d<1 for any feasible initial condition. However, to
+ensure that
+˜yd< 1,i.e. 1 −˜yd> 0, (15)
+holds along all the evolutions of HF, the set of admissible initial vehicle conﬁgurations has to be further
+restricted. In order to guarantee (15) for all evolutions of HF, the restricted set of admissible initial vehicle
+conﬁgurations has to be contained in the set {(˜y,˜θ)|˜y<C−1}and robust invariant under the action of the
+disturbances σrandd. In particular, it has to be symmetric with respect to the origin of the continuous space
+(˜y,˜θ), to satisfy invariance under resets ˜ y:=−˜y,˜θ:=−˜θdue to switching of the Frenet’s frame.
+7
+Proposition 1 If the continuous disturbance dbelongs to the interval [0,C],w i t h
+C<√
+2−1, (16)
+then (15) is satisﬁed along all trajectories of HFprovided that the initial conﬁguration (mode 0,(˜y0,˜θ0))belongs
+to the robust invariant set O×I(˜y,˜θ),w i t h
+I(˜y,˜θ)=/braceleftBig
+(˜y,˜θ)∈D(˜y,˜θ)|σ1(˜y,˜θ)≥0andσ2(˜y,˜θ)≤0/bracerightBig
+, (17)
+where
+σ1(˜y,˜θ)=/braceleftbigg˜y+C−1ifθ∈[0,π]
+˜y−(1 +C)+C−1+( 1+ C)|cos(˜θ)|=0 i f θ∈[−π
+2,0)∪(π,3
+2π),
+σ2(˜y,˜θ)=/braceleftbigg˜y−C−1ifθ∈[−π,0]
+˜y+( 1+ C)−C−1−(1 +C)|cos(˜θ)|=0 i f θ∈(−3
+2π,−π)∪(0,π
+2].
+The proof of the above proposition is reported in the appendix.
+Figure 5 reports the boundary curves σ1(˜y,˜θ)=0a n d σ2(˜y,˜θ)=0o f I(˜y,˜θ)forC=√
+2−1a n d C=1/4.
+For any C,t h es e t I(˜y,˜θ)is symmetric with respect to the origin. Notice that the curve σ1(˜y,˜θ)=0i sc o m p o s e d
+by: an arc from ( −C−1+1+ C,−π
+2)t o(−C−1,0), a segment from ( −C−1,0) to ( −C−1,π), and an arc from
+(−C−1,π)t o(−C−1+1+C,3
+2π). While the curve σ2(˜y,˜θ) = 0 is composed by: an arc from ( C−1−1−C,−3
+2π)
+to (C−1,−π), a segment from ( C−1,−π)t o(C−1,0), and an arc from ( C−1,0) to ( C−1−1−C,π
+2). In particular,
+forC−→√
+2−1, the curve σ1(˜y,˜θ) = 0 passes through ( −1,−π
+2)a n d( −1,3
+2π), while the curve σ2(˜y,˜θ)=0
+passes through (+1 ,−3
+2π)a n d( + 1 ,π
+2).
+Initial conﬁgurations satisfying (17) correspond to initial vehicle positions M(x0,y0)∈TΓ,w i t h TΓas in (4).
+More precisely, if the vehicle orienta tion is directed towards the closest p oint on the reference path (i.e. the
+origin of the Frenet’s frame), with an angular displacement in a range of ±π
+2with respect to the normal axis
+to the path, then feasible conﬁgurations inside the set I(˜y,˜θ)in (17) correspond to lateral position errors lower
+than or equal to the minimum radius of curvature RΓof the path. Vehicle conﬁgurations with larger orientation
+e r r o r sa r ea d m i t t e di n( 1 7 )( u pt o ±π), but to guarantee invariance the larger is the orientation error the smaller
+has to be the lateral position error.
+Proposition 1 ensures that the condition (15), corresponding to the avoidance of singular conﬁgurations of
+the coordinate transformation ( x, y, θ)→(s,˜y,˜θ), is never reached during the evolution of the vehicle under
+the proposed control, provided that the reference path Γ has a minimum radius of curvature RΓgreater than
+(√
+2 + 1) the minimum turning radius Rof the vehicle and the initial vehicle conﬁguration belongs to I(˜y,˜θ)as
+in (17).
+4 Analysis of the hybrid path–following controller
+In this section, the behavior of the hybrid automaton HFis analyzed and convergence and stability results
+for the proposed path–following controller are presented. The analysis is based on the introduction of an
+equivalence relation ∼in the hybrid state space O×D(˜y,˜θ)and the computation of the corresponding quotient
+system (see [14, 15]).
+Consider the partition Π(˜y,˜θ)of the domain D(˜y,˜θ)in (6) given by the 24 subsets
+/braceleftBig
+r(1),···,rl(2)l(3),···,lsl(2),O/bracerightBig
+,
+deﬁned in the second column of Table 1, with O={(0,0)}andrl(2)l(3)=rl(2)∪l(3)replacing rl(2)andl(3).
+The cells of the partition Π(˜y,˜θ)so deﬁned cover the region D(˜y,˜θ)and do not overlap.
+Then, deﬁne in the hybrid state space O×D(˜y,˜θ)the corresponding 24 equivalence classes of type q∼
+p=
+(zero×p)∪(negative ×p)∪(positive ×p)w i t h p∈Π(˜y,˜θ).L e t∼denote the equivalence relation induced by
+the partition of the hybrid state space O×D(˜y,˜θ)in subsets q∼
+p. According to this deﬁnition, two hybrid states
+8
+−6 −4 −2 0 2 4 6−6−4−20246 6˜θ
+-
+˜y√
+2+1 4π
+2π3π
+2
+−π
+2
+−π
+−3π
+2Rσ1=0f o r C=1/4
+
+σ1=0f o r C=√
+2−1	σ2=0f o r C=1/4
+I
+σ2=0f o r C=√
+2−1
+Figure 5: Curves σ1(˜y,˜θ)=0a n d σ2(˜y,˜θ) = 0 deﬁning the domain I(˜y,˜θ),f o rC=1/4 (solid line) and C=√
+2−1
+(dotted line). Robust invariant set N(˜y,˜θ)(in grey).
+.
+(mode 1,(˜y1,˜θ1)),(mode 2,(˜y2,˜θ2))∈D(˜y,˜θ)are equivalent, i.e. ( mode 1,(˜y1,˜θ1))∼(mode 2,(˜y2,˜θ2)), iﬀ (˜ y1,˜θ1)
+and (˜y2,˜θ2) belong to the same subset p∈Π(˜y,˜θ).
+By construction, the quotient space Q∼of the equivalence relation ∼is given by the set of equivalent
+classes q∼
+p. A reachability preserving quotient system is an automaton A=(V,V0,Σ,Ψ) with state4setVand
+initialization set V0corresponding to the quotient space Q∼, event set Σ containing the event switch plus events
+triggering feasible transitions between equivalent classes in Q∼, and transition function Ψ deﬁned as follows:
+for any q∼
+p1,q∼
+p2∈Q∼, a transition from q∼
+p1toq∼
+p2exists if and only if the hybrid automaton HFadmits an arc
+of trajectory, contained in the union of the equivalent classes q∼
+p1andq∼
+p2,f r o ms o m e( mode 1,(˜y1,˜θ1))∈q∼
+p1to
+some ( mode 2,(˜y2,˜θ2))∈q∼
+p2, for some discrete disturbance σrand some continuous disturbance d.
+Let us consider ﬁrst the evolution of hybrid automaton HFsubject to the continuous disturbance donly.
+Proposition 2 Given the hybrid automaton HF, if the discrete disturbance σralways takes the value /epsilon1,t h e n ,
+for any initial hybrid state (mode,(˜y0,˜θ0))∈O× I(˜y,˜θ)as in (17), under the action of any disturbance dbounded
+as in (5) with Cas in (16), we have:
+•the quotient system obtained from the equivalence relation ∼is the automaton Adepicted in Figure 6;
+•an upper bound for the space traveled by the origin of the Frenet’s frame along the path Γ, when the hybrid
+state is in a given equivalence class is represented by the weight associated to the exiting arc;
+•the quotient system Aremains in each equivalence class a bounded amount of time, except for the equivalent
+class Owhere (˜y,˜θ)=( 0 ,0).
+The proof of the above proposition, which is based on reachability analysis, is reported in the appendix.
+If the reference path Γ has curvature always of the same sign, the convergence of Dubins’ car to the path is
+guaranteed by:
+Corollary 1 If the reference path Γhas curvature always of the same sign and minimum radius of curvature
+RΓgreater than (√
+2+1 ) R, then the hybrid feedback control (7) and (13) achieves tracking of Γfor any initial
+4States of Aare labeled with a slight abuse of notation as the equivalent classes in Q∼, i.e.r(1),···,O.
+9
+C−1
+2=m i n ( 2 ,C−1)rsr(2)r(3)lr(2)
+rsr(1)r(2)rl(1.3)
+sr
+lsr(1)lr(1.1)r(1)
+rl(1.2)rsl(2)
+O
+lsr(2)lr(1.2)
+l(1)rl(1.1)rsl(1)
+sl
+lsl(1)l(2)lr(1.3)
+rl(2)l(3)lsl(2)π
+2
+π
+21
+1π
+2
+π
+2π
+2
+π
+211
+π
+20
+π
+2
+π
+2π
+2
+π
+2C−1
+2π
+2C−1
+2
+π
+2C−1π
+2C−1 π
+2
+π
+2π
+2
+π
+2
+1
+1
+π
+2C−1
+2π
+2C−1
+2
+π
+2C−1
+0
+π
+2C−1
+2
+π
+2C−1
+2 11π
+2C−1
+π
+2C−1
+3
+2π3
+2π
+π
+2C−1
+Figure 6: Quotient system Aabstracting the behavior of the closed–loop hybrid automaton HF,w h e n σr=/epsilon1.
+For simplicity, the events triggering the transitions are not represented. Weights on the transitions representupper bounds for the space traveled by the origin of the Frenet’s frame along the path Γ.
+vehicle conﬁguration in the domain I
+(˜y,˜θ)as in (17). The origin of the Frenet’s frame covers at most a distance
+of
+
+(4 + 7 π)R+π
+2RΓ if (√
+2+1 ) R<R Γ≤6+5π
+πR
+(1 +9
+2π)R+πRΓ ifRΓ>6+5π
+πR(18)
+along the reference path Γbefore the vehicle reaches it with correct orientation.
+The proof of the above corollary is obtained by computing the longest path to the node Oon the graph of the
+automaton Adepicted in Figure 6.
+By Proposition 2, if Γ is a straight line then the closed–loop system enforces sliding motions in the space
+(˜y,˜θ) on the lines sr,sland the arcs r(1),l(1),r(3),l(3)until the origin is reached (see [25] for a tutorial on
+sliding mode control). If the reference path Γ is not a straight line, sliding motions are enforced only on the
+lines sr,sl,o nt h ea r c s r(1),r(3)and on a piece of the arc l(3). Under ideal sliding motion, in a neighborhood of
+the origin the control ωswitches at inﬁnite frequency between the values −V
+R,0a n dV
+R. The mean value of such
+control (i.e. the so called equivalent control ) is exactly the signal κ(t)Vthat makes the car follow the reference
+path Γ with velocity V. In the real implementation, smoothing techniques are applied to avoid the chattering
+of the control signal between the three values −V
+R,0a n dV
+R.
+Let us now analyze the behavior of the closed–loop system HFunder the action of both the discrete distur-
+bance σr(representing changes of the curvature sign of the reference path) and the continuous disturbance d
+(representing the local curvature amplitude).
+10
+Olr(1.1)r(1)
+lr(1.2)rl(1.2)
+l(1)rl(1.1)σr=switchσ
+r=
+switch
+σr=switch
+Figure 7: Quotient system ANabstracting the behavior of the closed–loop hybrid automaton HF, when the
+initial state belongs to O×N(˜y,˜θ)and the discrete disturbance σracts on the system.
+The following proposition identiﬁes a neighborhood N(˜y,˜θ)of the origin which is a robust invariant set.
+Proposition 3 The open neighborhood of the origin
+N(˜y,˜θ)=/braceleftbigg
+(˜y,˜θ):|˜y|<1,−arccos/parenleftbigg1
+2−˜y
+2/parenrightbigg
+<˜θ<arccos/parenleftbigg1
+2+˜y
+2/parenrightbigg/bracerightbigg
+(19)
+is a robust invariant set for the hybrid closed–loop system HFsubject to any disturbance d(t)bounded as in (5)
+and any sequence of events σr.
+The proof of the above proposition is reported in the appendix.
+The robust invariant set N(˜y,˜θ)given in (19) is depicted in Figure 5. Notice that, robust invariance of N(˜y,˜θ)
+is demonstrated for any disturbance dupper bounded by C<1, that is, for any reference path Γ with minimum
+radius of curvature RΓstrictly greater than the minimum turning radius Rof the vehicle. In fact, the more
+conservative constrai nt on the reference path RΓ>(√
+2+1 ) Rintroduced in Corollary 1 to ensure avoidance of
+singular points can be relaxed to RΓ>Rwhen the system is inside the robust invariant set N(˜y,˜θ).
+The set N(˜y,˜θ)deﬁned in (19) is such that
+N(˜y,˜θ)⊂O∪r(1)∪l(1)∪lr(1.1)∪lr(1.2)∪rl(1.1)∪rl(1.2).
+Since, by Proposition 3, N(˜y,˜θ)is a robust invariant, then, if we restrict our attention to the domain N(˜y,˜θ),
+the transitions from lr(1.2)tolsr(2)and from rl(1.1)torsl(1)in the quotient system Ashould be removed.
+Furthermore, under the action of the discrete disturbance σr=switch ,t h er e s e t˜ y:=−˜y,˜θ:=−˜θintroduces
+the mutual transitions r(1)←→l(1),lr(1.1)←→rl(1.1),a n d lr(1.2)←→rl(1.2). Hence, in presence of the discrete
+disturbance σrand for any disturbance das in (5), when the initial state of the closed–loop hybrid system
+HFbelongs to O×N(˜y,˜θ), a reachability preserving quotient system abstracting the behavior of HFis the
+automaton ANdepicted in Figure 7.
+Suﬃcient conditions for stability of the origin and convergence inside the robust invariant set N(˜y,˜θ)are
+given by the following:
+Proposition 4 If the reference path Γis such that changes in the curvature sign are at distance greater than
+(5+π
+2)Ralong it, then origin Ois a robust stable equilibrium point for the hybrid closed–loop system HFsubject
+to continuous disturbance d(t)bounded as in (5) and the discrete disturbance σr.
+Proposition 4 ensures that the hybrid feedback control ( 7), with modes chosen accord ing to (13), stabilizes the
+Dubins’ car along any reference path Γ satisfying conditions A,BandC, provided that the reference path does
+not change curvature too fast. Robust global convergence to the reference path Γ are guaranteed under the
+hypothesis of Corollary 1, if the refer ence path does not change the curvature sign before vehicle has reached
+the reference path or, more conserv atively, the Frenet’s frame has c overed a distance given by (18).
+11
+0 50 100 150 200 250 300 350050100150200250300
+6y
+-xΓ
+−3 −2 −1 0 1 2 3−5−4−3−2−10123456˜θ
+-˜y
+0 10 20 30 40 50 60−0.06−0.04−0.0200.020.040.06ω(t)
+Figure 8: Data from experiment no. 1: nominal path and trajectory reconstructed by sensors in the Cartesian
+space ( x, y); corresponding trajectory in the reduced state space (˜ x,˜y); control activity in time ω(t).
+5 Experimental Results
+Experiments were devised to assess practicality of the proposed methods against discrepancies of our models
+from real-world implementation, such as non–negligible dynamics, disturbances in state measurements, and low
+sampling and communication time. The system used for e xperiments is the same of t hat described in [22], and
+consists of a mobile robot (model LabMate of Transition Research Corporation) equipped with a laser-based
+position sensor (a SIMAN laser scanner, with internal pre-processing unit), a PC mounted on-board, and a
+ﬁxed PC communicating via a radio-modem link (4800 bps). Code concerning low-level treatment of lasermeasurement is implemented on the processor embedded i n the sensor, while the low-level feedback control
+laws are run by the on-board CPU. The code resident on the ﬁxed PC implements the high level planning and
+GUI. The latter consists of such functions as describin g the reference path, setting parameters for the sensor
+and controller, and collecting and processing experimental data for analysis and visualization. Information on
+the vehicle position and orientation is obtained by a Kalman ﬁlter processing odometric information (encodermeasurement of wheel rotations) along with angular measurements given by the ladar.
+In the ﬁrst experiment, reported in Figure 8, the reference path is a circle of radius R
+Γ= 110 cm that
+has to be tracked clockwise. The vehicle minimum turning radius is set to 60 cm and the forward velocity isﬁxed to 3 .6 cm/sec. Correspondingly, according to (3), the upper bound on the normalized curvature κ(s)i s
+R
+RΓ≡C=0.5455. Starting from an initial position external to the circle, the vehicle approaches the reference
+path by a trajectory composed of two circular arcs of opposite maximum curvature, performed with angular
+velocity ω=±0.060 rad/sec. Hence, after a transient of 30 seconds, the vehicle keeps on the path by rapidly
+switching among the rightand leftmodes, proceeding with angular velocity of mean value −3.6/110 = −0.0327
+rad/sec. Notice that, to reduce the problem of fast switching of the control signal between the values ±0.060
+rad/sec (known in the sliding mode literature as “chattering”, see [25]), we applied a smoothing technique
+(see e.g. [21]), which eﬀectively introduce thin “boundary layers” about lines of control discontinuity in statespace. More precisely, the sign function on the boundary curves of type σ(˜y,˜θ) = 0 between regions with
+ω=+V/Randω=−V/Rwas approximated by
+σ
+/epsilon1+|σ|,w i t h /epsilon1=1 0−3. Although a thorough treatment of the
+new system arising from modifying the proposed controller by introducing a further region in the state space for
+modeling the boundary layer is potentially complex, and not studied yet, it is to be expected from experiencein sliding control that a degree smoothing in the switching control law would not alter the general behavior
+and performance. Results of this experiment show that model non–idealities do not inﬂuence much the overall
+satisfactory behavior of the system.
+The desired path for the second and t he third experiment is composed of a circular arc of radius 60 cm, a
+segment of length 50 cm, and a circular arc of radius 75 cm (see Figure 9 and Figure 10). Both experimentsare performed with a minimum turning radius of 40 cm and a forward velocity of 6 .64 cm/sec. Since the upper
+bound on the normalized curvature κ(s)i sn o w C=0.667 and the vehicle forward velocity is greater, then the
+control problem is more challenging than the previous one.
+In the second experiment, depicted in Figure 9, the sign al of the laser-based position sensor is directly used
+12
+0 50 100 150 200 250 300020406080100120140160180200
+6y
+-xΓ
+−3 −2 −1 0 1 2 3−5−4−3−2−10123456˜θ
+-
+˜y
+020 40 60 80100 120 140 160 180−0.15−0.1−0.0500.050.10.15ω(t)
+Figure 9: Data from experiment no. 2: nominal path and trajectory reconstructed by sensors in the Cartesian
+space ( x, y) (vehicle moves leftward); correspondi ng trajectory in the reduced state space (˜ x,˜y); control activity
+in time ω(t).
+0 50 100 150 200 250 300020406080100120140160180200
+6y
+-xΓ
+−3 −2 −1 0 1 2 3−5−4−3−2−10123456˜θ
+-
+˜y
+0 10 20 30 40 50 60−0.15−0.1−0.0500.050.10.15ω(t)
+Figure 10: Data from experiment no. 3: nominal path (same as in experiment 2) and trajectory reconstructed
+by sensors in the Cartesian space ( x, y); corresponding trajectory in the reduced state space (˜ x,˜y); control
+activity in time ω(t).
+to obtain on–line the position and orientation error. As shown in Figure 9, the signal from the sensor is quite
+noisy. The inaccurate information of the sensor in conjunction with the eﬀects of unmodeled phenomena and
+algorithm implementation produces so me interesting behaviors. Indeed, vehicle and actuator dynamics are such
+that the actual angular velocity of the vehicle does not take the values requested by the proposed feedback
+controller. Even more important is the eﬀect of implementing the proposed control scheme, requiring very high
+control activity, on a platform with limited loop bandwidth, such as due in this case to computational and
+communication limitations. These eﬀects combined with t he inaccurate vehicle position information are such
+that the system misses hooking up to the sliding surface at ﬁrst transversal.
+Finally, in the third experiment shown in Figure 10, an extended Kalman ﬁlter is introduced to ﬁlter the
+signal produced by the laser-based position sensor. As represented in Figure 10, the noise on the position and
+orientation error is in this way signiﬁcantly reduced. The more accurate feedback signal greatly improves the
+closed–loop performance. The system reach es the origin of the reduced state space (˜ y,˜θ) by evolving in sliding
+motion without missing sliding surface.
+6 Conclusions
+In this paper, we have used modern techniques developed for hybrid systems modeling and veriﬁcation to solveand prove stability of a closed–loop control strategy a diﬃcult problem, that is route following by nonholonomicvehicles with bounds on the curvature and limited sensory information. The proposed controller is reminiscent
+of a synthesis proposed elsewhere for an optimal control problem to track straight routes, whose generalization
+13
+to generic routes turned out to be diﬃcult to analyze otherwise. We believe that this case study, besides its
+intrinsic interest in applications, also has a value in show ing the potential of hybrid systems analysis techniques
+as applied to complex control problems.
+Acknowledgements
+Support to A. Balluchi from EC grant IST 2001-33520 “CC” (Control and Computation). Support to A. Bicchi
+from EC (grant IST 2001-37170 “RECSYS”, 004536 (IP) “RUNES”) and MIUR (grants PRIN 095297 002-2002and FIRB RBAU01RY47). A. Balluchi and A. Bicchi are members of the “HyCon” Network of Excellence, EC
+grant IST-511368.
+References
+[1]E. Asarin, T. Dang, O. Maler, and O. Bournez ,Approximate reachability analysis of piecewise–
+linear dynamical systems , in Third International Workshop, HSCC2000, Hybrid Systems: Computation and
+Control, N. Lynch and B. Krogh, eds., vol. 1790 of Lecture Notes in Computer Science, Springer-Verlag,New York, U.S.A., 2000, pp. 20–31.
+[2]A. Astolfi ,Exponential stabilization of nonholonomic systems via discontinuous control ,i n4 t hI F A C
+Symposium on Nonlinear Control Design, Tahoe City USA, 1995, pp. 741–746.
+[3]A. Balluchi, L. Benvenuti, M. D. Di Benede tto, C. Pinello, and A. L. Sangiovanni-
+Vincentelli ,Automotive engine control and hybrid systems: Challenges and opportunities , Proceedings
+of the IEEE, 88, ”Special Issue on Hybrid Systems” (invited paper) (2000), pp. 888–912.
+[4]A. Balluchi, L. Benvenuti, H. Wong-Toi, T. V illa, and A. L. Sangio vanni-Vincentelli ,Con-
+troller synthesis for hybrid systems with lower bounds on event separation , in Proc. 38th IEEE Conference
+on Decision and Control, Phoenix , Arizona, USA, December 1999, pp. 3984–3989.
+[5]A. Balluchi, P. Sou `eres, and A. Bicchi ,Hybrid feedback control for path tracking by a bounded-
+curvature vehicle , in Hybrid Systems: Computation and Control, M. D. Di Benedetto and A. L.
+Sangiovanni-Vincentelli, eds., vol. 2034 of Lecture Not es in Computer Science, He idelberg, Germany, 2001,
+Springer-Verlag, pp. 133–146.
+[6]J. Boissonnat, A. Cerezo, and J. Leblong ,Shortest paths of bounded curvature in the plane ,i nP r o c .
+of the IEEE Int. Conf. on Robotics and Automation, Nice, France, 1992.
+[7]R. Brockett ,Asymptotic stability and feedback stabilization , in Diﬀerential Geometric Control Theory,
+M. Brockett and Sussmann, eds., vol. 27 of Progress in Mathematics, Birkh¨ auser, Boston, U.S., 1983,
+pp. 181–191.
+[8]C. Canudas, B. Siciliano, and G. B. (Eds.) ,Theory of Robot Control , Springer-Verlag, 1996.
+[9]C. C. de Wit, H. Khennouf, C. Samson, and O. Sordalen ,Nonlinear control design for mobile
+robots , in Recent trends in mobile robots, Y. F. Zheng, ed. , vol. 11 of World Scientiﬁc Series in Robotics
+and Automated Systems, World Scientiﬁc, Singapore, New Jersey, London, Hong-Kong, 1993, pp. 121–156.
+[10]L. E. Dubins ,On curves of minimal length with a constraint on average curvature and with prescribed
+initial and terminal positions and tangents , American Journal of Mathematics, 79 (1957), pp. 497–516.
+[11]J. L. (Ed.) ,Robot motion planning and control , Springer-Verlag, Berlin, Germany, 1998.
+[12]J. Guldner and V. Utkin ,Sliding mode control of mobile robots , in Proc. IEEE Workshop on Robust
+Control via Variable Structure and Lyapuno v Techniques, Benevento, Italy, 1994, pp. 4–11.
+[13]T. Hamel, P.Sou `eres, and D. Meizel ,Path following with a security margin for mobile robots ,I n t .
+Journal of Systems Sciences, 32 (2001), pp. 989–1002.
+14
+[14]T. A. Henzinger ,Hybrid automata with ﬁnite bisimulations , in ICALP’95: Automata, Languages, and
+Programming, Z. F¨ ul¨op and F. G´ ecseg, eds., Springer–Verlag, 1995, pp. 324–335.
+[15]T. J. Koo and S. Sastry ,Bisimulation based hierarchical system architecture for single–agent molti–
+modal systems , in Hybrid Systems: Computation and Control, C. J. Tomlin and M. R. Greenstreet, eds.,
+vol. 2289 of Lecture Notes in Computer Science, Springer-Verlag, Berlin Heidelberg New York, 2002,
+pp. 281–293.
+[16]J. Lygeros, C. Tomlin, and S. Sastry ,Controllers for reachability speciﬁcations for hybrid systems ,
+Automatica, 35 (1999).
+[17]A. Olivero, J. Sifakis, and S. Yovine ,Using abstractions for the veriﬁcation of linear hybrid systems ,i n
+Proceedings of Sixth Interna tional Conference on Com puter-Aided Veriﬁcation ( CAV-94), Springer-Verlag,
+1994, pp. 81–94. Lecture Notes in Computer Science 818.
+[18]L. Pontryagin, V. Boltianskii, R. Gamkrelidze, and E. Mishenko ,The mathematical Theory of
+Optimal Processes , Interscience Publishers, 1962.
+[19]C. Samson ,Path following and time-varing feedback stabilization of a wheeled mobile robot ,i nP r o c .o ft h e
+ICARCV92, Singapore, 1993, pp. RO–13.1.1–13.1.5.
+[20]
+ ,Control of chained systems application to path following and time–varying point–stabilization of
+mobile robots , IEEE Transaction on Automatic Control, 40 (1995), pp. 64–77.
+[21]J. Slotine and S. Sastry ,Tracking control of nonlinear systems using sliding surfaces with applications
+to robot manipulators , International Journal of Control, 38 (1983), pp. 465–492.
+[22]P. Sou `eres, A. Balluchi, and A. Bicchi ,Optimal feedback control for line tracking with a bounded-
+curvature vehicle , Int. Journal of Control, 74 (2001), pp. 1009–1019.
+[23]P. Sou `eres and J.-P. Laumond ,Shortest paths synthesis for a car-like robot , IEEE Transaction on
+Automatic Control, 41 (1996), pp. 672–688.
+[24]H. Sussmann and W. Tang ,Shortest paths for the reeds-shepp car : a worked out example of the use of
+geometric techniques in nonlinear optimal control , Tech. Rep. SYCON-91-10, Rutgers University, 1991.
+[25]V. Utkin ,Variable structure systems with sliding modes: a survey , IEEE Transations on Automatic
+Control, 22 (1977), pp. 212–222.
+[26]J. Zhang, K. Johansson, J. Lygeros, and S. Sastry ,Dynamical systems revisited: Hybrid systems
+with zeno executions , in Third International Workshop, HSCC2000, Hybrid Systems: Computation and
+Control, N. Lynch and B. Krogh, eds., vol. 1790 of Lecture Notes in Computer Science, Springer-Verlag,New York, U.S.A., 2000, pp. 451–464.
+Appendix
+P r o o fo fP r o p o s i t i o n1 . We have to show that the set I(˜y,˜θ)in (17) is a robust invariant set, under any
+action of the continuous disturbance d, bounded by Cas in (16), and any action of the discrete disturbance
+σr=switch . To prove this we will ﬁrst show that, along the trajectories of the closed–loop hybrid system
+HF,˙σ1>0 in a right neighborhood of the curve σ1(˜y,˜θ) = 0, and ˙ σ2<0 in a left neighborhood of the curve
+σ2(˜y,˜θ) = 0. The upper bound (16) for Cguarantees that there exists a right neighborhood of the curve
+σ1(˜y,˜θ) = 0 contained in the region rsr∪sr∪lsr, and there exists a left neighborhood of the curve σ2(˜y,˜θ)=0
+contained in the region rsl∪sl∪lsl. This simpliﬁes the analysis of the closed–loop system trajectories.
+By (14) and (7), the closed–loop continuous dynamics are
+˙˜y=s i n ( ˜θ)V
+R(20)
+15
+˙˜θ=
+
+−
+cos(˜θ)d
+1−˜ydV
+Rifmode =zero
+/parenleftBig
+−cos(˜θ)d
+1−˜yd−1/parenrightBig
+V
+Rifmode =negative
+/parenleftBig
+−cos(˜θ)d
+1−˜yd+1/parenrightBig
+V
+Rifmode =positive
+Hence, by (20), along the trajectorie s of the closed–loop hybrid system HFwe have
+˙σ1|(˜y,˜θ)∈rsr∪sr∪lsr=/braceleftBigg
+sin(˜θ)V
+Rifθ∈[0,π]/bracketleftBig
+1−(1 +C)sign ( cos ( ˜θ))R
+V˙θ/bracketrightBig
+sin(˜θ)V
+Rifθ∈[−π
+2,0)∪(π,3
+2π)(21)
+and
+˙σ2|(˜y,˜θ)∈rsl∪sl∪lsl=/braceleftBigg
+sin(˜θ)V
+Rifθ∈[−π,0]/bracketleftBig
+1+( 1+ C)sign ( cos ( ˜θ))R
+V˙θ/bracketrightBig
+sin(˜θ)V
+Rifθ∈[−3
+2π,−π)∪(0,π
+2)(22)
+Furthermore, for (˜ y,˜θ)∈rsr∪lsr,s i n c eb yT a b l e1 ,˜ y<−1, then by (15),1−˜yd
+d=1
+d−˜y>1
+C+1a n d
+d
+1−˜yd<C
+1+C. Hence, by (20), we have
+R
+V˙˜θ< −cos(˜θ)C
+1+C−1≤−1
+1+Cfor (˜y,˜θ)∈rsr⊂Ω−where cos( ˜θ)≤0
+R
+V˙˜θ> −cos(˜θ)C
+1+C+1≥+1
+1+Cfor (˜y,˜θ)∈lsr⊂Ω+where cos( ˜θ)≥0
+R
+V˙˜θ< −cos(˜θ)d
+1−˜yd−1≤−1f o r ( ˜ y,˜θ)∈rsl⊂Ω−where cos( ˜θ)≥0
+R
+V˙˜θ> −cos(˜θ)d
+1−˜yd+1≥+1 for (˜ y,˜θ)∈lsl⊂Ω+where cos( ˜θ)≤0
+From (21–22) and the above upper and lower bounds on˙˜θwe can conclude that in a right neighborhood of
+the curve σ1(˜y,˜θ) = 0, contained in rsr∪sr∪lsr,w eh a v e˙ σ1>0, and in a left neighborhood of the curve
+σ2(˜y,˜θ) = 0, contained in rsl∪sl∪lsl,w eh a v e˙ σ2<0. Finally, since under the action of the discrete disturbance
+σr=switch the continuous state is reset to the symmetric point with respect to the origin, at which corresponds
+a same value of functions σi(˜y,˜θ), invariance the set I(˜y,˜θ)is preserved under any switchings of the Frenet’s
+frame. Q.E.D.
+Remark. In [5], an easier proof for Proposition 1 for the case C<1
+3instead of (16) is presented.
+P r o o fo fP r o p o s i t i o n2 . In this proof we ﬁrst show that the ﬁnite state machine Adepicted in Figure 6
+is the quotient system obtained from the equivalence relation ∼applied to the closed–loop hybrid system HF,
+when there is no action of the disturbance σr, provided that Cis bounded as in (16). Then, we provide upper
+bounds for the length of the arcs spanned by the origin of the Frenet’s frame on the reference path Γ, in each
+state of Aduring the motion of the closed–loop system.
+To study reachability between the regions deﬁned in Table 1, consider the variables σP(t),σR(t),σN(t)a n d
+σL(t), deﬁned by replacing in (9–12) the continuous state trajectories (˜ y(t),˜θ(t)) obtained under feedback (13),
+along with their derivatives with respect to time:
+˙σP=˙σR=
+
+−sin(˜θ)cos(˜θ)d
+1−˜ydV
+Rin mode negative
+sin(˜θ)/bracketleftBig
+−cos(˜θ)d
+1−˜yd+2/bracketrightBig
+V
+Rin mode positive(23)
+and
+˙σN=˙σL=
+
+sin(˜θ)/bracketleftBig
+cos(˜θ)d
+1−˜yd+2/bracketrightBig
+V
+Rin mode negative
+sin(˜θ)cos(˜θ)d
+1−˜ydV
+Rin mode positive(24)
+16
+In the sequel, the behavior of the closed–loop hybrid system HFin each region of the continuous state space
+partition deﬁned in Table 1 is discussed case by case.
+Regions rsr(1)and rsr(2).T h es y s t e mm o d ei s negative . By Table 1, ˜ y<−1a n dc o s ( ˜θ)<0. Further,
+by (5),1−˜yd
+d=1
+d−˜y>2. Then, 0 ≤−cos(˜θ)d
+1−˜yd<−cos(˜θ)
+2<1
+2(where equality holds for d=0 )a n d−cos(˜θ)d
+1−˜yd−1<
+−1
+2. Hence, by (20),˙˜θ<−1
+2V
+R. Therefore, the continuous state (˜ y,˜θ)
+•cannot exit boundary ˜θ=3
+2πofrsr(2)and enter lsr(2);
+•may leave rsr(2)to enter rsr(1);
+•may leave rsr(1)to enter sr.
+Furthermore, by (23), if d=0t h e n ˙ σR= 0 and the trajectories are parallel to r. While, if d>0, then ˙ σR<0,
+for˜θ∈(π,3
+2π), and ˙ σR>0, for ˜θ∈(π
+2,π). Hence, the trajectories (˜ y(t),˜θ(t))
+•neither reach nor come from r(3)∪r(2),i fd=0 ;
+•leaves r(3)to enter rsr(2),i fd>0;
+•may leave rsr(1)to enter r(2),i fd>0.
+Regions lsr(1)and lsr(2).T h es y s t e mm o d ei s positive . By Table 1, ˜ y<−1a n dc o s ( ˜θ)≥0. Further,
+by (5),1−˜yd
+d=1
+d−˜y>2. Then, 0 ≤cos(˜θ)d
+1−˜yd<cos(˜θ)
+2<1
+2(where equality holds for d=0o r ˜θ=−π
+2)a n d
+−cos(˜θ)d
+1−˜yd+1>1
+2. Hence, by (20),˙˜θ>1
+2V
+R. Therefore, the continuous state (˜ y,˜θ)
+•cannot exit the boundary ˜θ=−π
+2oflsr(2)and enters rsr(2);
+•may leave lsr(2)to enter lsr(1);
+•may leave lsr(1)to enter sr.
+Furthermore, by (24), if d=0t h e n ˙ σN= 0 and the trajectories are parallel to curve σN(˜y,˜θ) = 0. While, if
+d>0, then ˙ σN>0, for ˜θ∈(0,π
+2), and ˙ σN<0, for ˜θ∈(−π
+2,0). Hence, the trajectories (˜ y(t),˜θ(t))
+•neither reach nor come from lr(1.2)∪lr(1.1),i fd=0 ;
+•may leave lr(1.2)to enter lsr(2),i fd>0;
+•may leave lsr(1)to enter lr(1.1),i fd>0.
+Regions rsl(1)and rsl(2).T h es y s t e mm o d ei s negative . By Table 1, cos( ˜θ)≥0. Assuming (15),cos(˜θ)d
+1−˜yd≥0
+(where equality holds for d=0o r ˜θ=π
+2)a n d −cos(˜θ)d
+1−˜yd−1≤−1. Then, by (20),˙˜θ≤−V
+R. Therefore, the
+continuous state (˜ y,˜θ)
+•cannot exit boundary ˜θ=π
+2ofrsl(2)and enter lsl(2);
+•may leave rsl(2)to enter rsl(1);
+•may leave rsl(1)to enter sl.
+Furthermore, by (23), if d=0t h e n ˙ σP= 0 and trajectories are parallel to σP(˜y,˜θ) = 0. While, if d>0, then
+˙σP<0, for ˜θ∈(0,π
+2), and ˙ σP>0, for ˜θ∈(−π
+2,0). Hence, the trajectories (˜ y(t),˜θ(t))
+•neither reach nor come from rl(1.1)∪rl(1.2),i fd=0 ;
+•may leave rsl(2)to enter rl(1.2),i fd>0;
+•may leave rl(1.1)to enter rsl(1),i fd>0.
+17
+Regions lsl(1)and lsl(2).T h es y s t e mm o d ei s positive . By Table 1, cos( ˜θ)<0. Assuming (15), −cos(˜θ)d
+1−˜yd≥0
+(where equality holds for d=0 )a n d −cos(˜θ)d
+1−˜yd+1≥1. Then, by (20),˙˜θ≥V
+R. Therefore, the continuous state
+(˜y,˜θ)
+•cannot exit boundary ˜θ=−3
+2πoflsl(2)and enter rsl(2);
+•may leave lsl(2)to enter lsl(1);
+•may leave lsl(1)to enter sl.
+Furthermore, by (24), if d=0t h e n ˙ σL= 0 and the trajectories are parallel to l. While, if d>0, then by (24),
+˙σL>0, for ˜θ∈(−π,−π
+2), and ˙ σL<0, for ˜θ∈(−3
+2π,−π). Hence, the trajectories (˜ y(t),˜θ(t))
+•neither reach nor come from l(3)∪l(2),i fd=0 ;
+•leaves l(2)to enter lsl(1),i fd>0;
+•may leave lsl(2)to enter l(3),i fd>0.
+Regions rl(1.1),r l(1.2),a n dr l(1.3).T h es y s t e mm o d ei s negative . By Table 1, σP(˜y,˜θ)≤0w h i c h ,b y( 5 ) ,
+implies ˜ y−1
+d−cos(˜θ)≤˜y−1−cos(˜θ)≤0. Then, assuming (15), one gets −cos(˜θ)d
+1−˜yd−1≤0, where equality
+holds for d=1a n d σP(˜y,˜θ) = 0. Therefore, by (20) and (16),˙˜θ<0. Furthermore, by (23), if d=0t h e n
+˙σR=˙σP= 0 and the trajectories are parallel to r. While, if d>0, then by (23), ˙ σR=˙σP>0, for ˜θ∈(π
+2,π),
+and ˙σR=˙σP<0, for ˜θ∈(0,π
+2). Finally, by (24) and (23), ˙ σL<0a n d˙ σP>0, for ˜θ∈(−π
+2,0). Hence, the
+trajectories (˜ y(t),˜θ(t))
+•originating on the boundary ˜ y∈(−2,0)∧˜θ=πofrl(1.3)enter the interior of the region rl(1.3)itself;
+•may leave rl(1.3)to enter rl(1.2),rl(1.2)to enter rl(1.1),a n d rl(1.1)and enter l(1);
+•neither reach nor come from r(2)∪r(1)∪rl(2)∪rsl(1)∪rsl(2),i fd=0 ;
+•leave r(2)to enter rl(1.3)and may leave rl(1.3)to enter rl(2)l(3),i fd>0;
+•may leave rsl(2)to enter rl(1.2)and may leave rl(1.2)to enter r(1),i fd>0;
+•may leave rl(1.1)to enter rsl(1),i fd>0.
+Regions lr(1.1),l r(1.2)and lr(1.3).The system mode is positive . By Table 1, σL(˜y,˜θ)<0w h i c h ,b y( 5 ) ,
+implies1
+d−˜y−cos(˜θ)≥1−˜y−cos(˜θ)>0. Then, assuming (15), one gets −cos(˜θ)d
+1−˜yd+1>0. Hence, by (20),
+˙˜θ>0. Furthermore, by (24), if d=0t h e n ˙ σL=˙σN= 0 and the trajectories are parallel to l. While, if d>0,
+then by (24), ˙ σL=˙σN>0, for ˜θ∈(−π,−π
+2), and ˙ σL=˙σN<0, for ˜θ∈(−π
+2,0). Finally, by (24) and (23),
+˙σL>0a n d˙ σP<0, for ˜θ∈(0,π
+2). Hence, the trajectories (˜ y(t),˜θ(t))
+•originating on the boundary ˜ y∈(0,2)∧˜θ=−πoflr(1.3)enter the interior of the region lr(1.3)itself;
+•may leave lr(1.3)to enter lr(1.2),lr(1.2)to enter lr(1.1),a n d lr(1.1)and enter r(1);
+•neither reach nor come from l(2)∪l(1)∪lr(2)∪lsr(1)∪lsr(2),i fd=0 ;
+•may leave lr(2)to enter lr(1.3)and may leave lr(1.3)to enter l(2),i fd>0;
+•leave l(1)to enter lr(1.2)and may leave lr(1.2)to enter lsr(2),i fd>0;
+•may exit lsr(1)to enter lr(1.1),i fd>0.
+Region lr(2).T h es y s t e mm o d ei s positive . By Table 1, ˜ y<0a n dc o s ( ˜θ)<0. Then, by (15), 1 −˜yd≥1
+and−cos(˜θ)d
+1−˜yd≥0 (where equality holds for d=0 )a n d−cos(˜θ)d
+1−˜yd+1≥1. Hence, by (20),˙˜θ≥V
+R.F u r t h e r m o r e ,
+ifd= 0, by (24), ˙ σN= 0 and the trajectories are parallel to σN(˜y,˜θ) = 0. While, if d>0, by (24) and (23),
+˙σR<0a n d˙ σN>0. Therefore, the continuous state (˜ y,˜θ)
+18
+•cannot exit lr(2)through the boundary ˜ y∈(−2,0)∧˜θ=π(belonging to region rl(1.3));
+•may leave lr(2)to enter r(3);
+•may leave lr(2)to enter lr(1.3),i fd>0.
+Region rl(2).The system mode is negative . By Table 1, 0 <˜y<2, sin( ˜θ)>0a n dc o s ( ˜θ)<0. Ifd=0 ,
+by (20),˙˜θ=−V
+R<0. Otherwise, if d>0, by (20), we have˙˜θ=˜yd−1−cos(˜θ)d
+1−˜ydV
+R. Introducing
+φd(˜y,˜θ)=˜yd−1−cos(˜θ)d, (25)
+under assumption (15), we have˙˜θ<0( =0 ,>0) if and only if φd(˜y,˜θ)<0( =0 ,>0, respectively). In
+particular:
+1. When d≤1
+3,w eh a v e φd(˜y,˜θ)≤˜y
+3−1−cos(˜θ)
+3<0, for all (˜ y,˜θ)i nr e g i o n rl(2)(being φd(˜y,˜θ)=0f o r
+d=3a n d( ˜ y,˜θ)→(2,−π)). Therefore,˙˜θ<0i nrl(2).
+2. When d>1
+3, consider points (˜ y,˜θ)i nrl(2)close to the boundary ˜ y∈(0,2)∧˜θ=−πbetween of rl(2)and
+lr(1.3). Recall that the boundary itself belongs to region lr(1.3). Approaching this boundary from below,
+we have
+lim
+˜θ→−π−φd(˜y,˜θ)=φd(˜y,−π)=˜yd−1+d≤0⇐⇒˙˜θ<0⇐⇒ ˜y≤1
+d−1.
+Then, points (˜ y,˜θ) close to the boundary ˜ y∈(0,2)∧˜θ=−π(i.e. for ˜θ→−π−) are steered to the interior
+ofrl(2),i f˜y∈(0,1−d
+d), while are steered to lr(1.3),i f˜y∈(1−d
+d,2).
+Hence,
+•ifd=0 ,t h e n˙˜θ=−V
+R<0 and, by (23) and (24), ˙ σP=0a n d˙ σL=2 s i n ( ˜θ)V
+R<0 . Therefore, all
+trajectories in rl(2)are parallel to the curve σP(˜y,˜θ) = 0. There are no trajectories entering rl(2)from
+rl(1.3)and all trajectories in rl(2)enter l(3);
+•ifd∈(0,1
+3], then˙˜θ<0i nrl(2)and, by (23), ˙ σP>0. Moreover, since1
+d−˜y>1t h e n2 (1
+d−˜y)+cos( ˜θ)>1
+and, by (24), ˙ σL>0. Therefore, all points (˜ y,˜θ)i nrl(2)close to
+–the boundary with lr(1.3),˜y∈(0,2)∧˜θ=−π, are steered in the interior of rl(2)(since˙˜θ<0);
+–the boundary with rl(1.3),σP(˜y,˜θ) = 0, are steered in the interior of rl(2)(since ˙ σP>0);
+–the boundary with lsl(2),σL(˜y,˜θ)=0 ,e n t e r l(3)(since ˙ σL>0).
+•ifd∈(1
+3,2
+5], then˙˜θ<0f o r˜θ→−π−if and only if ˜ y<1−d
+d.F u r t h e r , b y( 2 3 ) ,˙ σP>0. Moreover, since
+1
+d−˜y>1
+2,t h e n2 (1
+d−˜y)+c o s ( ˜θ)>0 and, by (24), ˙ σL>0. Therefore, all points (˜ y,˜θ)i nrl(2)close to
+–the segment ˜ y∈(0,1−d
+d)∧˜θ=−πof the boundary between rl(2)andlr(1.3)are steered in the interior
+ofrl(2)(since˙˜θ<0);
+–the segment ˜ y∈(1−d
+d,2)∧˜θ=−πof the boundary between rl(2)andlr(1.3)enter lr(1.3)(since˙˜θ>0);
+–the boundary with rl(1.3),σP(˜y,˜θ) = 0, are steered in the interior of rl(2)(since ˙ σP>0);
+–the boundary with lsl(2),σL(˜y,˜θ)=0 ,e n t e r l(3)(since ˙ σL>0).
+•ifd∈(2
+5,1], as above,˙˜θ<0f o r˜θ=−π,i ﬀ˜y<1−d
+d. Further, by (23), ˙ σP>0. Moreover, along the curve
+σL(˜y,˜θ) = 0, by Table 1 and (24), we have
+∀˜θ∈/parenleftbigg
+−3
+2π,−π/parenrightbigg
+, lim
+˜y→¯y−|σL(¯y,˜θ)=0˙σL>0⇐⇒cos(˜θ)d
+1−˜yd+2>0⇐⇒ ˜y∈/parenleftbigg
+0,d+2
+3d/parenrightbigg
+.
+Therefore, all points (˜ y,˜θ)i nrl(2)close to
+19
+–the segment ˜ y∈(0,1−d
+d)∧˜θ=−πof the boundary with lr(1.3)are steered in the interior of rl(2);
+–the segment ˜ y∈(1−d
+d,2)∧˜θ=−πof the boundary with lr(1.3)enter lr(1.3);
+–the boundary with rl(1.3),σP(˜y,˜θ) = 0, are steered in the interior of rl(2);
+–the arc of the boundary between rl(2)andl(3)with ˜y∈(1,d+2
+3d), leave rl(2)to enter l(3)(since
+˙σL>0);
+–the arc of the boundary between rl(2)andl(3)with ˜y∈(d+2
+3d,2), leave l(3)to enter rl(2)(since
+˙σL<0).
+Region sr. The results on region rsr(1)andlsr(1)show that ( ˜θ−π
+2)˙˜θ<−1
+2V
+R. Therefore, the half line sris
+attractive from both sides and in the closed loop system a sliding motion is enforced on sr, for any disturbance
+d(t) as in (5). By (20), ˙˜y=V
+R.
+Region sl. Assuming (15), the results on region rsl(1)andlsl(1)show that ( ˜θ+π
+2)˙˜θ<−V
+R. Therefore, the
+half-line slis attractive from both sides and in the closed loop system a sliding motion is enforced on sl,f o r
+any disturbance d(t) as in (5). By (20), ˙˜y=−V
+R.
+Region r(1).Curve r(1)belongs to the boundary of lr(1.1)andrl(1.2).I fd=0t h e n ˙ σR>0i nlr(1.1),
+and ˙σR=0i n rl(1.2). Therefore, the trajectories are convergent to r(1)from lr(1.1)and are parallel to r(1)in
+rl(1.2).O t h e r w i s e , i f d>0t h e n˙ σR>0, in lr(1.1),a n d˙ σR<0, in rl(1.2). Therefore, we have σR˙σR<0, in
+a neighborhood of r(1), and in the closed loop system a sliding motion is enforced on this arc of r(1), for any
+disturbance d(t)a si n( 5 ) .
+Region r(2).Curve r(2)belongs to the boundary of rsr(1)andrl(1.3).I fd=0 ,s i n c e˙ σR=0i n rsr(1)∪rl(1.3)
+then, the trajectories are parallel to r(2)inrsr(1)andrl(1.3).O t h e r w i s e ,i f d>0, since ˙ σR>0i nrsr(1)∪rl(1.3),
+then, the trajectories across the curve r(2)from region rsr(1)to region rl(1.3).
+Region r(3).Curve r(3)belongs to the boundary of rsr(2)andlr(2).I fd=0t h e n ˙ σR<0, in lr(2),a n d
+˙σR=0i n rsr(2). Therefore, the trajectories are convergent to r(3)from lr(2)and are parallel to r(3)inrsr(2).
+Otherwise, if d>0, since ˙ σR<0i nrsr(2)∪lr(2)then, the trajectories across the curve r(3)from region lr(2)
+to region rsr(2).
+Region l(1).Curve l(1)belongs to the boundary of lr(1.2)andrl(1.1).I fd=0t h e n ˙ σL<0i nrl(1.1),a n d
+˙σL=0i n lr(1.2). Therefore, the trajectories are convergent to l(1)from rl(1.1)and are parallel to l(1)inlr(1.2).
+Otherwise, if d>0, since ˙ σL<0i nrl(1.1)∪lr(1.2)then, the trajectories across the curve l(1)from region rl(1.1)
+to region lr(1.2).
+Region l(2).Curve l(2)belongs to the boundary of lr(1.3)andlsl(1).I fd=0 ,s i n c e ˙ σL=0i n lr(1.3)∪lsl(1)
+then, the trajectories are parallel to l(2)inlr(1.3)andlsl(1).O t h e r w i s e ,i f d>0, since ˙ σL>0i nlr(1.3)∪lsl(1),
+then, the trajectories across the curve l(2)from region lr(1.3)to region lsl(1).
+Region l(3).Curve l(3)belongs to the boundary of rl(2)andlsl.I fd=0t h e n ˙ σL>0i nrl(2),a n d ˙ σR=0
+inlsl(2). Therefore, the trajectories are convergent to l(3)from rl(2)and are parallel to l(3)inlsl(2).O t h e r w i s e ,
+ifd>0, two cases are in order, namely:
+•ifd∈(0,2
+5], trajectories leave rl(2)to enter l(3);
+•ifd∈(2
+5,1], some trajectories
+–leave rl(2)to enter l(3), crossing the boundary at some point with ˜ y∈(1,d+2
+3d);
+–leave l(3)to enter rl(2), crossing the boundary at some point with ˜ y∈(d+2
+3d,2).
+In the following, we provide upper bounds for the length of the arc covered by the origin of the Frenet’s
+frame along the reference path Γ, when the im age of the robot in the reduced state space (˜ y,˜θ)m o v e si n s i d ea
+given region of the partition Π reported in Table 1. The expression of the upper bounds are normalized withrespect to the minimum turning radius R.
+The motion of the origin of the Frenet’s frame is described by the curvilinear abscissa s(t), whose dynamics
+is ˙s=
+cos(˜θ)
+1−˜ydV
+R. Given a region S∈Π, the upper bound L(S) for the length of the arc covered by the origin
+20
+of the Frenet’s frame, while the system evolves in region S, can be obtained by solving, for all possible initial
+conditions (˜ y1,˜θ1)∈S, an optimal control problem that gives the worst disturbance d⋆for which
+/integraldisplayτ
+0cos(˜θ)
+1−˜ydV
+Rdt
+is maximized, subject to the dynamics (20), and up to a time τsuch that (˜ y(τ),˜θ(τ)) belongs to the boundary
+ofS.
+By solving this optimal control problem we obtain that
+•singular solutions correspond to trajectories belonging to either srorsl,f o rw h i c h L(sr)=L(sl)=0s i n c e
+the robot tracks a line perpendicular to the reference path Γ.
+•for no–singular trajectories, d⋆is constant.
+Furthermore, since inside any region Sof Π, ˜θ(t) is monotonic, then the maximum length traveled by the origin
+of the Frenet’s frame can be obtained integrating with respect to ˜θinstead of time. By (20), we have
+ds
+d˜θ=/bracketleftBigg
+d˜θ
+dt/bracketrightBigg−1
+˙s=Ωc os ( ˜θ)
+1−˜yd−Ωc os ( ˜θ)d
+Along trajectories (˜ y(t),˜θ(t)) obtained with dconstant, say d=D, the above expression is rewritten as:
+ds
+d˜θ=±Ωc os ( ˜θ)
+/radicalBig
+P2−D2sin(˜θ)2(26)
+where
+P2=( 1−˜y1D)[1−˜y1D−2Ωcos( ˜θ1)D]+D2>0 (27)
+is a constant parameter and (˜ y1,˜θ1) is a point which belongs to given trajectory. Integrating (26) from ˜θ1to˜θ2
+we obtain
+s(P,˜θ1,˜θ2)=
+
+/bracketleftBig
+asin/parenleftBig
+sin(˜θ2)D
+P/parenrightBig
+−asin/parenleftBig
+sin(˜θ1)D
+P/parenrightBig/bracketrightBig
+Ω
+DifD/negationslash=0
+/bracketleftBig
+sin(˜θ2)−sin(˜θ1)/bracketrightBig
+Ωi f D=0(28)
+In any interval [ kπ
+2,(k+1 )π
+2],s(P,˜θ1,˜θ2) as in (28), is monotonic with respect to both ˜θ1and˜θ2. Hence, the
+maximum of s(P,˜θ1,˜θ2)i sa c h i e v e df o r ˜θ1and˜θ2on the extreme points kπ
+2and (k+1 )π
+2. So, maximizing (28),
+we get
+s(P)=m a x
+˜θ1,˜θ2s(P,˜θ1,˜θ2)=/braceleftbigg1
+Dasin/parenleftbigD
+P/parenrightbig
+ifD/negationslash=0
+1i f D=0(29)
+where, by (27), Pc a nb ee x p r e s s e di nt e r m so fp o i n t s ˜θ1=kπ
+2and˜θ2=(k+1 )π
+2as follows
+P=/braceleftbigg
+1−(˜y+Ω )D if˜θ=0
+1−(˜y−Ω)D if˜θ∈{ −π,+π}(30)
+Regions rsr(1),r s r(2),l s r(1)and lsr(2).By (20) and (30), P=1−(˜y+1 )D.S i n c e˜ y≤−1, then ˜ y+1≤0
+and, being D≥0, then P≥1. Hence,1
+Dasin/parenleftbigD
+P/parenrightbig
+≤1
+Dasin(D)≤π
+2. Then, the maximum length of the arc
+traveled by the origin of the Frenet’s frame a long the reference path Γ is obtained with d= 1, i.e. L(rsr(1))=
+L(rsr(2))=L(lsr(1))=L(lsr(2))=π
+2.
+Regions lr(1.1),l r(1.2)and rl(1.3).By (20) and (30), P=1−(˜y+1)D. As in the case above, when ˜ y≤−1
+an upper bound for s(P)i sπ
+2. However, when −1<˜y≤1, since the excursion of ˜θis lower thanπ
+2,t h e np a t h
+traveled by the origin is smaller. Hence, L(lr(1.1))=L(lr(1.2))=L(rl(1.3))=π
+2.
+Regions rl(1.1),r l(1.2)and lr(1.3).By (20) and (30), P=1+( 1 −˜y)D. Remind that, by (15), ˜ yD < 1.
+Hence, choosing Darbitrarily close to ˜ y−1,D
+P=D
+D+(1−˜yD)goes arbitrarily close to 1. Then s(P) is upper
+21
+bounded byπ
+21
+D<π
+2˜y.F u r t h e r ,˜ yis upper bounded by both 2 (by deﬁnition of rl(1.1),rl(1.2)andlr(1.3))a n d
+C−1. Hence, L(rl(1.1))=L(rl(1.2))=L(lr(1.3))=π
+2min(2 ,C−1).
+Regions rsl(1),r s l(2),l s l(1)and lsl(2).Consider trajectories belonging to I(˜y,˜θ)(C). Then, similarly to
+above,D
+P=D
+D+(1−˜yD)may go arbitrarily close to 1, by choosing Darbitrarily close to ˜ y−1. Hence, s(P)i s
+upper bounded byπ
+21
+D<π
+2˜y≤π
+2C−1,a n d L(rsl(1))=L(rsl(2))=L(lsl(1))=L(lsl(2))=π
+2C−1.
+Regions r(1)and lr(2).In the closed loop system, a sliding motion takes place along the arc r(1). By (20)
+and (30) P=1−˜yD+D.S i n c e ˜ y≤0a n d D≥0, then P≥1. Hence,1
+Dasin/parenleftbigD
+P/parenrightbig
+≤1
+Dasin(D)≤π
+2,a n d
+L(r(1))=π
+2. The same arguments hold for region lr(2), i.e.L(lr(2))=π
+2.
+Regions r(2),r(3),l(1)and l(2).The robot moves along this boundaries only if d= 0. Hence, the upper
+bounds are L(r(2))=L(r(3))=L(l(1))=L(l(2))=1 .
+Region l(3).In the closed loop system, a sliding motion takes place along the arc l(3)for ˜y∈(0,1+2d
+3),
+or when d= 0 (the latter would give bound 1). The longest piece of sliding motion is obtained with d=1 .
+By (20) and (30), P=1−˜yD+D≥1. Hence,1
+Dasin/parenleftbigD
+P/parenrightbig
+≤1
+Dasin(D)≤π
+2,a n d L(l(3))=π
+2.
+Regions rl(2).An upper bound for L(rl(2)) can be more easily obtained in the Cartisian space. See
+Figure 11. When D>1
+2, under control Ω = −1 from an initial conﬁguration P1with lateral error ˜ y=/epsilon1and
+orientation error ˜θ=−π+,w i t h /epsilon1>0 small enough, the robot performs a rotation of πradiant, around the
+center of the reference circle, and reaches the conﬁguration P2(assuming no control switch occurs meanwhile),
+with lateral error ˜ y=2
+D−(2 +/epsilon1) and orientation error ˜θ=−π+. Then, it leaves the region rl(2)to enter
+region rl(1.3). Hence, in the worst case, the space traveled by the Frenet’s frame along the reference path is over
+bounded by L(rl(2))=π.
+P
+P21..
+Figure 11: Worst path in region rl(2).
+The upper bounds for the space traveled by the origin of the Frenet frame in each region are summarized in
+Table 2. The proof of Proposition 2 is completed by associating to all outgoing arc of each node of the graph
+regions
+ L()
+sr,sl
+ 0
+rsr(1),rsr(2),lsr(1),lsr(2),
+lr(1.1),lr(1.2),rl(1.3),lr(2)r(1),
+l(3)
+π
+2
+rl(1.1),rl(1.2),lr(1.3)
+ π
+2min(2 ,C−1)
+rsl(1),rsl(2),lsl(1),lsl(2)
+ π
+2C−1
+r(2),r(3),l(1),l(2)
+ 1
+rl(2)
+ π
+Table 2: Upper bounds for the length of the corresponding arc of the reference path Γ spanned by the origin of
+the Frenet frame.
+22
+−6 −4 −2 0 2 4 6−6−4−20246 6˜θ
+-
+˜yπ
+2π3π
+2
+−π
+2
+−π
+−3π
+2
+Figure 12: Regions inside domain D(˜y,˜θ)where ˙W>0.
+A, reported in Figure 6, a weight corresponding to the upper bounds obtained in Table 2. Q.E.D.
+Proof of Proposition 3. By applying a reachability analysis, we show that the hybrid system HFunder the
+action of the continuous disturbance d(t) and the discrete disturbance σrkeeps the trajectories originating in
+N(˜y,˜θ)inside N(˜y,˜θ).
+First of all, notice that N(˜y,˜θ)is symmetric with respect to the origin. Therefore, states in N(˜y,˜θ)remain
+inside N(˜y,˜θ)after any state reset ˜ y:=−˜yand˜θ:=−˜θdue to an event σr=switch .
+Consider a partition of the set N(˜y,˜θ)\Ointo the regions r(1)\{(−1,π
+2)},l(1)\{(1,−π
+2)},lr(1.1)∩N(˜y,˜θ),
+rl(1.1)∩N(˜y,˜θ),rl(1)∩N(˜y,˜θ),a n d lr(1.2)∩N(˜y,˜θ). By analyzing the trajectories due to the action of the disturbances
+d(t)a n d σrin each element of this partition, we show that the y exit a region only to enter another one of them,
+eventually reaching the origin O. This demonstrates the invariance of the set N(˜y,˜θ).
+Region r(1)\{(−1,π
+2)}. According to Proposition 2, the state (˜ y,˜θ) is steered to the origin Owith
+/bardbl(˜y(t),˜θ(t))/bardblmonotonicly decreasing. Under the action of an event σr=switch , the state jumps instantaneously
+to the symmetric point in l(1)\{(1,−π
+2)}.
+Region l(1)\{(1,−π
+2)}. According to Proposition 2, either the state (˜ y,˜θ) is steered to the origin if d(t)=∞
+(with /bardbl(˜y(t),˜θ(t))/bardblmonotonicly d ecreasing) or enters region lr(1.2)ifd(t)<∞at some ˜θ>−π
+2. Under the
+action of an event σr=switch , the state jumps instantaneously to the symmetric point in r(1)\{(−1,π
+2)}.
+Region lr(1.1)∩N(˜y,˜θ). The hybrid system HFis in mode mode =positive .B y( 1 ) ,˜ y<0 and therefore,
+by (5), we have 0 <1
+d(t)−˜y<1. From (20),˙˜θ>0a n d ˙˜y>0. Then, any state (˜ y,˜θ)∈lr(1.1)∩N(˜y,˜θ)is steered
+tor(1)\{(−1,π
+2)}.I fa ne v e n t σr=switch occurs, the state jumps instantaneously to the symmetric point in
+region rl(1.1)∩N(˜y,˜θ).
+Region rl(1.1)∩N(˜y,˜θ). The hybrid system HFis in mode mode =negative . By (20),˙˜θ<0a n d ˙˜y<0.
+Then, any state (˜ y,˜θ)∈lr(1.1)∩N(˜y,˜θ)is steered to l(1)\{(1,−π
+2)}.I f a n e v e n t σr=switch occurs the state
+jumps instantaneously to the symmetric point in region lr(1.1)∩N(˜y,˜θ).
+Region rl(1.2)∩N(˜y,˜θ). The hybrid system HFis in mode mode =negative . Consider the function
+σup
+N(˜y,˜θ)=−1−˜y+2c o s ( ˜θ) and observe that, within region rl(1.2),σup
+N(˜y,˜θ)>0⇔(˜y,˜θ)∈N(˜y,˜θ). By (20)
+23
+˙σup
+N=s i n ( ˜θ)/parenleftBig
+1+2cos(˜θ)
+d(t)−˜y/parenrightBig
+U
+R>0 for all states within this region, except for ˜θ= 0. Therefore, any trajectory
+originating in rl(1.2)∩N(˜y,˜θ)cannot escape the region through the upper boundary σup
+N= 0, and will either
+reach the sliding surface r(1)\{(−1,π
+2)}(for some ˜θ>0), pass to rl(1.1)∩N(˜y,˜θ)through the boundary ˜θ=0 ,
+or jump symmetrically to lr(1.2)∩N(˜y,˜θ)under the action of an event σr=switch .
+Region lr(1.2)∩N(˜y,˜θ). The hybrid system HFis in mode mode =positive . Consider the function
+σdw
+N(˜y,˜θ)=−1+˜y+2c o s ( ˜θ). Within this region, we have σdw
+N(˜y,˜θ)<1a n d σdw
+N(˜y,˜θ)>0⇔(˜y,˜θ)∈N(˜y,˜θ).
+Further, by (20), ˙ σdw
+N=−sin(˜θ)/parenleftBig
+1−2cos(˜θ)
+d(t)−˜y/parenrightBig
+U
+R. Therefore, for any ˜θ/negationslash=0 , ˙σdw
+N(˜y,˜θ)>0⇔0<σdw
+N(˜y,˜θ)<
+d(t)−1. Since σdw
+N(˜y,˜θ) always increases except for σdw
+N(˜y,˜θ)>d(t)−1, being by (5) d(t)−1 nonnegative,
+(˜y,˜θ) never crosses the boundary σdw
+N(˜y,˜θ) = 0. Then, trajectories originating in lr(1.2)∩N(˜y,˜θ)cannot leave
+this region through the boundary σdw
+N= 0. Instead, they may leave region lr(1.2)∩N(˜y,˜θ)either through the
+boundary with lr(1.1)∩N(˜y,˜θ),˜θ=0 ,w i t h˜ y>−1, or by jumping symmetrically to region rl(1.2)∩N(˜y,˜θ)for an
+event σr=switch . Q.E.D.
+Proof of Proposition 4. To analyze the convergence of the trajectories to O, introduce the function
+W(˜y,˜θ)=1
+2(˜y2+˜θ2). (31)
+W(˜y,˜θ) has the property that, if at time t=¯t,σr=switch ,t h e n W(˜y(¯t),˜θ(¯t)) = W(˜y(¯t−),˜θ(¯t−)). The
+derivative with respect to time of Wevaluates to
+˙W(˜y,˜θ)=/bracketleftBigg
+˜ysin(˜θ)−˜θcos(˜θ)d
+1−˜yd−˜θ/pi1/bracketrightBigg
+V
+R, (32)
+where /pi1=0,−1, and 1 in mode zero,negative ,a n d positive , respectively. The study of the sign of ˙W(˜y,˜θ)i s
+extended to the entire domain D(˜y,˜θ). Under assumption (15), multiplying (32) byR
+V(1−˜yd), we have
+˙W>0⇔µ(˜y,˜θ)=d/bracketleftBig
+−˜y2sin(˜θ)−˜θcos(˜θ)+/pi1˜y˜θ/bracketrightBig
++/bracketleftBig
+˜ysin(˜θ)−/pi1˜θ/bracketrightBig
+>0,
+for some disturbance dbounded as in (5). Hence, for any (˜ y,˜θ) such that η1(˜y,˜θ)=˜ysin(˜θ)−/pi1˜θ>0,there
+exists das in (5) such that µ(˜y,˜θ)>0a n d ˙W> 0. Otherwise, if (˜ y,˜θ) is such that η1(˜y,˜θ)<0, then there
+exists das in (5) such that ˙W>0 if and only if µ(˜y,˜θ) is positive for d=1 .T h a ti s ,i f
+η2(˜y,˜θ)=−sin(˜θ)˜y2+/bracketleftBig
+sin(˜θ)+/pi1˜θ/bracketrightBig
+˜y−/bracketleftBig
+˜θcos(˜θ)+/pi1˜θ/bracketrightBig
+>0.
+The regions in the domain D(˜y,˜θ)where function (31) locally increases a re reported in Figure 12. Such regions
+are delimited by the curves η1(˜y,˜θ)=0a n d η2(˜y,˜θ) = 0. By (32), the continuous disturbance dthat maximizes
+˙W(t)i s
+d⋆=/braceleftbigg1i f ˜θcos(˜θ)<0 i.e. ˜θ∈(−π
+2,0)∪(π
+2,3
+2π)
+0i f ˜θcos(˜θ)>0 i.e. ˜θ∈(−3
+2π,−π
+2)∪(0,π
+2). (33)
+Consider an initial condition (˜ y0,˜θ0) in a neighborhood of the origin contained in N(˜y,˜θ)∩rl(1.2). At the initial
+time, the hybrid model HFis in mode negative . Let us assume that σr=/epsilon1, for the moment, and let us analyze
+the evolution of the hybrid model HF(see Figure 12). Under the action of the worst disturbance (33), the
+trajectory (˜ y(t),˜θ(t)) originating from (˜ y0,˜θ0) reaches the curves r(1).F i r s t W(t) decreases (in rl(1.2)), then
+it increases (in rl(1.1)). Hence, mode switches to positive .W(t) decreases (in the ﬁrst part of lr(1.2)), and it
+increases again later on (in lr(1.2)andlr(1.1))u n t i l( ˜ y(t),˜θ(t)) reaches r(1). Finally, following a sliding motion
+along the curve r(1),( ˜y(t),˜θ(t)) reaches the origin.
+Along this trajectory W(t) assumes two local maxima, which correspond to the intersections of l(1)and
+r(1), and two local minima: the ﬁrst on the line ˜θ=0w h e n˜ y>0, and the second inside region rl(1.2).L e t
+24
+δ=/bardbl(˜y0,˜θ0)/bardbl. Since the trajectory (˜ y(t),˜θ(t)) is continuous with respect to the initial condition (˜ y0,˜θ0), then
+there exist two continuous functions ζmax,ζmin:I R→IR s u c h t h a t
+max
+dmax
+t/bardbl(˜y(t),˜θ(t))/bardbl=ζmax(δ),min
+dmin
+t/bardbl(˜y(t),˜θ(t))/bardbl=ζmin(δ). (34)
+Further, since the local maximum and minimum points tend to the origin as /bardbl(˜y0,˜θ0)/bardbltends to zero, then
+limδ→0ζmax(δ) = 0 and lim δ→0ζmin(δ)=0 .
+Suppose now that a discrete disturbance σr=switch occurs at the precise time ¯tat which (˜ y(¯t−),˜θ(¯t−))
+is opposite to (˜ y0,˜θ0) with respect to the origin. Then, the state (˜ y(¯t−),˜θ(¯t−)) is reset to (˜ y(¯t),˜θ(¯t)) =
+(−˜y(¯t−),−˜θ(¯t−))∈N(˜y,˜θ), which lies on the same line to the origin of (˜ y0,˜θ0). IfW(˜y0,˜θ0)>W(˜y(¯t),˜θ(¯t)) =
+W(−˜y(¯t−),−˜θ(¯t−)) then the convergence is preserved. But, if W(˜y0,˜θ0)<W(˜y(¯t),˜θ(¯t)) =W(−˜y(¯t−),−˜θ(¯t−))
+then, under the action of the discrete disturbance σr=switch ,t h es t a t e( ˜ y,˜θ) is reset to a point farther away
+from the origin than the initial state (˜ y0,˜θ0) and convergence can be lost.
+However, if the reference path Γ is such that changes in the curvature sign are at a distance greater than
+(5 +π
+2)Ralong it, between to successive actions of the discrete disturbance σr,t h es t a t e( ˜ y,˜θ) has enough time
+to reach the origin. In fact, assuming that, in the worst case, (˜ y(¯t),˜θ(¯t))∈N(˜y,˜θ)∩rl(1.2), an upper bound on
+the length the arc of Γ spanned by the origin of the Frenet’s frame as (˜ y(t),˜θ(t)) converges to the origin, is
+given by L(rl(1.2))+L(rl(1.1))+L(l(1))+L(lr(1.2))+L(lr(1.1))+L(r(1)) that, according to t he weights reported
+on the quotient system Adepicted in Figure 6, evaluates to (5 +π
+2)R.
+To prove the robust stabilization of the car along the reference path Γ we have to show that for any /epsilon1>0,
+there exists δ>0 such that any trajectory (˜ y(t),˜θ(t)) of the hybrid system HF, originating from any (˜ y0,˜θ0)
+with/bardbl(˜y0,˜θ0)/bardbl<δ,w eh a v e /bardbl(˜y(t),˜θ(t))/bardbl</epsilon1.
+Given any /epsilon1>0, consider any initial condition (˜ y0,˜θ0)w i t h
+/bardbl(˜y0,˜θ0)/bardbl≤δ=ζ−1
+max(ζ−1
+min(ζ−1
+max(/epsilon1))). (35)
+The trajectory (˜ y(t),˜θ(t)) evolves inside a ball of radius ζ−1
+min(ζ−1
+max(/epsilon1)). If a disturbance σr=switch occurs
+at some time ¯t, then the state is reset to (˜ y(¯t),˜θ(¯t)) = (−˜y(¯t−),−˜θ(¯t−))∈N(˜y,˜θ). In the evolution for t>¯t
+the trajectory reaches the origi n before a further discrete distu rbance occurs. Moreover, since /bardbl(˜y(¯t),˜θ(¯t)/bardbl≤
+ζ−1
+min(ζ−1
+max(/epsilon1)) then, the trajectory (˜ y(t),˜θ(t)) for t>¯tdoes not exit a ball of radius ζmax(ζ−1
+max(/epsilon1)) =/epsilon1. Then, the
+hybrid feedback control (7), with mod es chosen according to (13) robustly stabilizes the car along the reference
+path Γ. Q.E.D.
+25
+View publication stats

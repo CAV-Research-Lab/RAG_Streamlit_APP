@@ -1,0 +1,1365 @@
+=== Metadata ===
+{
+    "file_name": "Trajectory_Planning_in_Frenet_Frame_via_Multi-Obje.pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Trajectory_Planning_in_Frenet_Frame_via_Multi-Obje.pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+Date of publication xxxx 00, 0000, date of current version xxxx 00, 0000.
+Digital Object Identifier xxx
+Trajectory Planning in Frenet Frame via
+Multi-Objective Optimization
+JIANYU HUANG1, ZUGUANG HE2, YUTAKA ARAKAWA1, (Member, IEEE), AND BILLY
+DAWTON1
+1ISEE, Kyushu University, Fukuoka, 819-0395 JAPAN (e-mail: huang.jianyu.757@s.ait.kyushu-u.ac.jp, arakawa@ait.kyushu-u.ac.jp, dawton@ait.kyushu-u.ac.jp)
+2WUSIE, South China University of Technology, Guangzhou, 511442 CHINA (e-mail: zuguanghe2bling@gmail.com)
+Corresponding author: Jianyu Huang (e-mail: huang.jianyu.757@s.kyushu-u.ac.jp).
+ABSTRACT Autonomous vehicles are an essential tool for promoting the development of intelligent
+transportation systems (ITS) and can effectively reduce traffic accidents caused by human errors. As an
+important part of the automatic driving software system, path planning is responsible for generating the
+motion trajectory of the vehicle, which is the primary factor determining driving quality. However, solution
+space construction and optimization problem formulation remain challenging research areas in the field
+of path planning. In this paper, we propose a multi-objective optimization algorithm for static obstacle
+avoidance to improve the comfort, safety and anti-deviation of the planned trajectory. We decouple the
+lateral and longitudinal motion of the vehicle using the Frenet frame and discretize the driving state space
+to generate target states of the vehicle. Based on the initial and target states, we generate a set of lateral and
+longitudinal motion trajectories using quintic and quartic polynomials, respectively. In addition, we design
+a cost function that comprehensively considers the comfort, safety, and deviation distance of the road center
+line by combining acceleration check, curvature check, and collision check. As part of the cost function,
+we propose a novel method to quantify the safety of candidate trajectories considering the size of obstacles.
+The experimental results show that the proposed algorithm can quantize the safety of candidate paths and
+improve comfort 13.47%, 32.19%, 59.36% and 18.60% on the straight road, curvy road, intersection and
+U-shaped road, respectively. Furthermore, the algorithm can improve anti-deviation by 63.72%, 13.86%,
+44.36%, 45.56% on the straight road, curvy road, intersection and U-shaped road, respectively.
+INDEX TERMS Autonomous driving, intelligent transportation systems (ITS), trajectory planning, Frenet
+frame, convex optimization, cost function
+I. INTRODUCTION
+AUTONOMOUS driving is an important development
+direction in the field of intelligent transportation tech-
+nology. It can reduce traffic accidents caused by improper
+operations such as drunk driving, drowsy driving and speed-
+ing, while also relieving traffic congestion and improving
+the overall performance of a transportation system. The
+framework of autonomous driving system is a hierarchical
+structure [1], as demonstrated in Figure 1. This hierarchical
+framework typically encompasses four key modules: percep-
+tion, decision, path planning, and vehicle control [2]. The
+perception module serves as the front end of the autonomous
+driving system, utilizing sensors to gather data about the
+surrounding environment. This data is utilized to perform
+essential tasks such as localization, object detection, path
+prediction and object tracking. These tasks enable the systemto identify and comprehend diverse elements and obstacles,
+including roads, vehicles, traffic signs, precise vehicle loca-
+tions and predicted trajectories. The decision module receives
+information from the perception module, and then analyzes
+and reasons based on this information to make appropriate
+driving decisions. It considers factors such as traffic rules and
+passenger requirements and generates a behavioral strategy
+to respond to the current driving scenario. The planning
+module takes the behavioral strategy provided by the decision
+module and combines it with high-definition maps and real-
+time perception data to generate a planned path. This path
+guides the vehicle’s driving direction, lane changes, turns,
+and ensures the vehicle reaches its destination safely and ef-
+ficiently. The control module is responsible for precisely and
+smoothly tracking the planned path through actual vehicle
+operations, including acceleration, braking, steering, etc [3].
+VOLUME 4, 2016 1This article has been accepted for publication in IEEE Access. This is the author's version which has not been fully edited and 
+content may change prior to final publication. Citation information: DOI 10.1109/ACCESS.2023.3294713
+This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/
+Author et al. : Preparation of Papers for IEEE TRANSACTIONS and JOURNALS
+➢Local planning
+➢Global planningPlanning
+➢Steering
+➢Acceleration
+➢BrakingControlling
+ Perception
+➢Location
+➢Detection
+➢Prediction
+➢Tracking
+Sensors
+➢Camera
+➢LIDAR
+➢IMU
+➢GPS
+➢Overtaking
+➢Lane change
+➢StoppingDecision
+FIGURE 1. An illustration of function modules of autonomous driving system.
+The path planning module plays a pivotal role in the
+hierarchical framework, serving as a vital bridge between
+the perception module, decision-making module and vehi-
+cle control module. Its essence lies in solving optimization
+problems with constraints in a complex convex space. Addi-
+tionally, it is also involved in multi-agent clustering, obstacle
+avoidance and target tracking control, and is a key basic
+common problem. Therefore, the path planning algorithm is
+the core of autonomous driving technology. The performance
+of the algorithm directly determines the success or failure
+of autonomous driving [4], [5]. Path planning technology
+is broadly classified into two categories: the first category
+is global path planning, which aims to find the optimal or
+suboptimal path from the starting point to the destination
+point. The second category is local path planning, which
+involves obtaining environmental information through sen-
+sors in unknown or partially unknown environments, allow-
+ing autonomous driving vehicles to obtain a collision-free
+executable optimal planned path. It focuses on considering
+the current local environmental information on vehicles. A
+path with a timestamp is called a trajectory and includes
+both spatial information (location, curvature and heading)
+and temporal information (speed and acceleration).
+Despite the numerous local planning algorithms [6], [7], [8]
+have been proposed since the DARPA Grand Challenge
+(2004, 2005) and the Urban Challenge (2007), they all
+present a common limitation: the utilization of the Cartesian
+frame cannot sufficiently describe the relationship between
+the position of the vehicle and the road. Therefore, in 2010,
+Werling et al. [9] proposed the use of the Frenet frame as
+an alternative solution. This coordinate system employs the
+road center line as the horizontal axis and represents the
+vehicle’s offset from the road center line as the vertical axis.
+By adopting the Frenet frame, the relationship between the
+vehicle and the road can be intuitively described. Based on
+the Frenet frame, a complex three-dimensional motion can be
+decoupled into two independent two-dimensional motions,
+which effectively reduces the complexity of the path planning
+problem [10]. Consequently, this paper focuses on studying
+the local path planning problem under the hierarchical frame-
+work.A. RELATED WORK
+The essence of path planning is the search for an optimum
+in a non-convex space. However, it is well established that
+there is no optimal solution to the non-convex problem. Thus,
+researchers have been focusing on transforming non-convex
+problems into convex ones, formulating path planning prob-
+lems to find optimal solutions. Currently, there are two
+main independent research orientations for this including the
+learning-based orientation and algorithm-based orientation.
+Table 1 shows a summary of the main methods of these two
+orientations.
+The learning-based methodology simplify the hierarchi-
+cal structure. It straightforwardly inputs raw sensor data,
+such as camera-captured frames and radar point cloud data,
+into a multi-layer neural network for training. This process
+enables the network to output path points or even directly
+generate control commands [11], [12]. Typical approaches
+within this methodology include imitation learning meth-
+ods utilizing various network structures, as well as deep
+reinforcement learning methods employing diverse reward
+strategies [13], [14], [15], [16]. The learning-based method
+streamlines the path planning process by directly mapping
+sensor inputs to control outputs without the need for explicit
+algorithms or intermediate steps. Although it can perform
+well in specific training scenarios, it may struggle to gen-
+eralize to new or unseen situations, potentially resulting in
+poor performance or safety issues. Moreover, this approach
+demands substantial computational resources to find a feasi-
+ble plan due to extensive trial and error in the training [17].
+The algorithm-based methodology depends on the hierar-
+chical structure and takes into account the behavioral strat-
+egy provided by the decision module, high-definition maps
+and real-time perception data from perception module to
+generate a planned path. In contrast to the learning-based
+method, a notable strength of the algorithm-based method
+is its interpretability, enabling the identification of defective
+modules when malfunctions or unexpected system behavior
+occur. The main methods employed for this include artificial
+potential field-based methods, graph search-based methods,
+random sample-based methods, and discrete optimization-
+based methods [18], [19].
+2 VOLUME 4, 2016This article has been accepted for publication in IEEE Access. This is the author's version which has not been fully edited and 
+content may change prior to final publication. Citation information: DOI 10.1109/ACCESS.2023.3294713
+This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/
+Author et al. : Preparation of Papers for IEEE TRANSACTIONS and JOURNALS
+TABLE 1. Taxonomy of Motion Planning Techniques Applied in Autonomous Driving Scenarios.
+Algorithm Type Technique Description Advantages and Disadvantages Existing Implementations
+Learning-Basedrealise the mapping from
+raw data sensor to path information
+or control commands
+after trail and errorAdvantages : Simplify the mapping process
+from raw sensor data to control commands
+Disadvantages : lack of interpretability;
+weak generalization ability;
+cost substantial computational resources[13], [14],
+[15], [16]
+Artificial Potential FieldAbstract vehicle motion as
+a type of artificial
+gravitational field;
+Target point produces "gravity"
+on the vehicle and the obstacle
+produces "repulsive force"
+on the vehicleAdvantages : Simple mathematical description;
+good real-time performance
+Disadvantages : Trapped in local optimal
+solution; unable to reach destination;
+collision occurance[20], [21]
+Graph Search-BasedKnown nodes/cells search space
+with associated weights;
+Grid and node/cells weight
+computation according
+to the environmentAdvantages : High robustness (structured
+and unstructured roads)
+Disadvantages : Cannot meet
+the non-integrity constraints of the vehicle;
+large computation and time
+consuming[22], [23],
+[24]
+Random Sample-BasedRandom-tree based algorithm;
+randomly samples in state spaceAdvantages : Suitable for multi-dimensional
+space; good real-time performance;
+simple principles;
+strong applicability
+Disadvantages : high randomness; hard
+to converge; low quality
+path; processing required[25], [26], [27],
+[28], [29]
+Discrete Optimization-BasedDiscretize space;
+Formulate path optimization problemAdvantages : low computation;
+excellent real-time performance
+Disadvantages : Discretization resolution
+affects the optimization results[30], [31],
+[32]
+The artificial potential field method is a virtual force
+method proposed in [20]. It abstracts the vehicle motion as a
+type of artificial gravitational field. The target point produces
+"gravity" and the obstacle produces "repulsive force" on the
+vehicle. The algorithm of this method is concise in math-
+ematical description and has good real-time performance,
+but easily falls into the local optimal solution problem [21].
+Among the methods based on graph search, A* and D*
+algorithms are commonly used in [22], [23], [24]. Although
+these algorithms are widely used in the field of robotics,
+their planned paths fail to satisfy the non-integrity constraints
+of vehicles and are computationally intensive and time-
+consuming. The best-known random sample-based method
+is Rapidly Exploring Random Tree (RRT) [25] which can
+efficiently solve high-DOF robot motion planning with dif-
+ferential constraints. It is difficult, however, to utilize the
+domain knowledge from the structured environment for quick
+convergence, and the computed trajectory is generally low
+quality and thus cannot be used directly without a post-
+processing step [26], [27], [28]. The algorithm proposed
+in [29] can generate high-performance trajectories given
+enough planning time. The long convergence to optimal
+trajectory computation time makes it unsuitable in rapidly
+changing environments, however. The discrete optimization-
+based method discretizes the state space and utilizes math-
+ematical processes such as numerical integration and differ-entiation to generate the solution space for a limited number
+of candidate paths, before solving the optimal path by es-
+tablishing an optimization expression. This method has been
+widely used in recent years because of its low computation
+and excellent real-time performance [30], [31], [32].
+The work in [30] performs local path planning based on
+the discrete optimization-based method. The major drawback
+of this method is that, while it considers path safety, it
+ignores the effect of obstacle size on evaluating the safety
+of candidate paths. In certain scenarios, the optimal solution
+may not be unique for ensuring path safety, and the same
+obstacle avoidance action is taken regardless of the obstacle’s
+size. Furthermore, the deviation from the road center line is
+not taken into account, which means that the vehicle may not
+actively return to the center line after avoiding obstacles. This
+can trigger the lane departure warning system frequently and
+increase the risk of collision due to lane departure.
+To sum up, learning-based methods, artificial potential
+field methods, graph search-based methods, and random
+sample-based methods are prone to problems such as lacking
+interpretability, falling into a local optimum, requiring a large
+amount of calculation, being time-consuming, and having
+difficulty describing the relationship between vehicles and
+roads. However, discrete optimization-based methods have
+better real-time performance, which is why we use these
+methods in our proposed work rather than other mentioned
+VOLUME 4, 2016 3This article has been accepted for publication in IEEE Access. This is the author's version which has not been fully edited and 
+content may change prior to final publication. Citation information: DOI 10.1109/ACCESS.2023.3294713
+This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/
+Author et al. : Preparation of Papers for IEEE TRANSACTIONS and JOURNALS
+methods. Furthermore, in this paper, our study is path plan-
+ning for static obstacle avoidance based on discrete optimiza-
+tion methods which belong to algorithm-based methodology.
+Our research purpose is not to compare the learning-based
+methodology and the algorithm-based methodology to find
+their strength and weakness.
+B. CONTRIBUTIONS
+Considering the strengths and weaknesses of the above
+methods, in order to solve the trajectory planning problem
+in real time for autonomous driving, we propose a new
+multi-objective path planning algorithm for static obstacle
+avoidance based on discrete optimization methods. Our main
+contributions can be summarized as follows:
+•We propose an efficient trajectory planning algo-
+rithm framework. To describe the complicated three-
+dimensional motion of the vehicle, our approach first
+uses the Frenet frame to decouple the vehicle’s move-
+ment into two orthogonal movements: one longitudinal
+movement along the driving guideline and one lateral
+movement perpendicular to the road center line. Then,
+the state space is discretized to generate starting and
+ending position points for the path. Trajectory solution
+spaces are generated for both movements by connecting
+the sampled end conditions to the initial condition using
+quintic or quartic polynomials. The longitudinal and
+lateral trajectories are then combined to generate the
+trajectory sets. A set of driveable candidate trajectories
+are screened out through vehicle kinematics collision-
+avoidance constraints. Finally, the optimal trajectory is
+selected by minimizing a predefined cost function for-
+mulated for optimal path planning, taking into account
+comfort, safety, and road center line deviation.
+•To evaluate safety of candidate trajectories, we include
+obstacle size as a novel feature for consideration and
+calculate the safety loss of each candidate trajectory
+using the variation of Gauss-Laplace operator.
+•We demonstrate the performance of our proposed algo-
+rithm in four traffic scenarios. The experimental results
+show that the algorithm can generate optimal paths for
+straight road, curvy road, intersection and U-shaped
+road, allowing autonomous vehicles to safely and com-
+fortably avoid obstacles and complete the path planning
+from start to endpoint. On a straight road, the mean
+value of Jjerkdecreases by 13.47% and the mean value
+ofJoffset decreases by 63.72 %. On a curvy road, the
+mean value of Jjerkdecreases by 32.19% and the mean
+value of Joffset decreases by 13.86%. on intersection
+scenario, the mean value of Jjerkdecreases by 59.36%
+and the mean value of Joffset decreases by 44.36%. on
+U-shaped scenario, the mean value of Jjerkdecreases
+by 18.60% and the mean value of Joffset decreases by
+45.56%.
+The remainder of this paper is structured as follows: we
+introduce the Frenet and Cartesian frames in Section II,present and illustrate the proposed algorithm in Section III,
+show the algorithm evaluation results in Section IV, before
+finally, concluding the paper and discussing potential avenues
+for future work in Section V.
+II. FRENET AND CARTESIAN FRAMES
+A. FRENET FRAME FOR VEHICLE MOTION
+As shown in Figure 2, in the Frenet frame, the center line
+of the road is generally selected as the reference line. The
+direction along the reference line is the s-axis, and the
+direction perpendicular to the reference line is the d-axis [33],
+[34], [35], [36].
+reference linetrajectory
+o
+FIGURE 2. Vehicle motion in the Frenet and Cartesian frames
+Since the s-axis and d-axis are perpendicular to each other
+and the s-axis is parallel to the lane line, it is easier to
+describe the relationship between vehicle motion and road.
+Compared to the Cartesian frame, the Frenet frame simplifies
+the calculation of the offset distance of the vehicle from the
+road center line and the driving distance along the lane line,
+and without requiring consideration of road curvature. This
+coordinate system is widely used in path planning research
+for autonomous vehicles, robots, and unmanned aerial vehi-
+cles (UA Vs) [37], [38], [39], [40], [41].
+B. FROM FRENET FRAME TO CARTESIAN FRAME
+As shown in Figure 3, the ego vehicle often needs to adjust
+its driving trajectory due to the presence of other vehicles
+and obstacles, instead of strictly following the reference line
+(i.e., the road center line). When in the Cartesian frame,
+we can describe the current state of the ego vehicle as
+[⃗ x, θx, κx, vx, ax], where ⃗ xrepresents the vehicle’s position
+atQ(x, y), and ⃗ nxand⃗txare the unit normal and tangent
+vectors of the vehicle’s motion trajectory at Q. Additionally,
+θxdenotes the angle between ⃗ xand the x-axis, κxrepresents
+the curvature at Q,vxis the velocity of the ego vehicle, and
+axis the vehicle’s acceleration. On the other hand, in a Frenet
+frame, the point Prepresents the projection of the vehicle’s
+position point Qonto the reference line. The angle between
+⃗ rand the x-axis is denoted by θr, while ⃗ nrand⃗trdenote the
+4 VOLUME 4, 2016This article has been accepted for publication in IEEE Access. This is the author's version which has not been fully edited and 
+content may change prior to final publication. Citation information: DOI 10.1109/ACCESS.2023.3294713
+This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/
+Author et al. : Preparation of Papers for IEEE TRANSACTIONS and JOURNALS
+unit normal and tangent vectors of the reference line at point
+P. The vehicle’s status can typically be described using the
+vectorh
+s,˙s,¨s, d, ˙d,¨d, d′, d′′i
+, where the distance between P
+andQcorresponds to the transverse displacement d, and the
+curve distance from the start point of the reference line to
+Prepresents the longitudinal displacement s. Additionally,
+d′denotes the first derivative of dwith respect to s(i.e.,
+d′=dd
+ds), while d′′denotes the second derivative of dwith
+respect to s(i.e.,d′′=dd′
+ds).
+𝜃𝑟
+Ԧ𝑟𝑡
+Δ𝜃Ԧ𝑥
+𝑠𝑡
+start pointtrajectory
+road boundaryroad boundary
+oQ
+p
+ego vehicle
+other vehicles𝑛𝑟𝑛𝑥Ԧ𝑡𝑥
+reference line
+𝑑𝑡Ԧ𝑡𝑟𝜃𝑥
+FIGURE 3. Transformation from Frenet frame to Cartesian frame
+The equation of vehicle status in the Cartesian frame can
+be written as follows:
+
+
+xx= xr−dsinθr
+yx= yr+dcosθr
+θx= arctan
+d′
+1−krd
++θr∈[−π, π]
+vx=q
+[ ˙s(1−krd)]2+ ( ˙sd′)2
+ax= ¨ s1−krd
+cos ∆ θ+˙s2
+cos ∆ θ·h
+d′
+kx1−krd
+cos ∆ θ)−kr
+−(k′
+rd+krd′)i
+kx=
+(d′′+ (k′
+rd+krd′) tan ∆ θ)cos2∆θ
+1−krd+kr
+(1)
+Where ∆θ=θx−θr;κris the curvature at point P.
+III. PROPOSED ALGORITHM
+A. ALGORITHM OVERVIEW
+In a Cartesian frame, since the lateral and longitudinal mo-
+tions of the vehicle are coupled, the calculation of vehicle
+motion is complex and large. Therefore, the Frenet frame is
+utilized to decouple the lateral and longitudinal motion of the
+vehicle. Furthermore, since the vehicle driving environment
+is a non-convex problem, and an optimal solution cannot
+be obtained, the non-convex problem is converted into a
+convex problem by discretizing the motion space. Finally, the
+optimal path is calculated according to the cost function and
+related constraints.The framework of the proposed algorithm can be seen in
+Figure 4 (a). The algorithm consists of two main stages: tra-
+jectory generation in the Frenet frame and optimal trajectory
+selection.
+In the stage consisting of trajectory generation in the
+Frenet frame, the main steps are as follows:
+1) Spatial Discretization
+The road width is parameterized at ∆dintervals along the d-
+axis, the upper boundary of the road is droadwidth , and the
+lower boundary is −droadwidth .
+2) Start/End Status Initialization
+The status of the start and end trajectory points affect the
+generation of the path. Since the Frenet frame decouples
+the vehicle motion into lateral and longitudinal motion,
+the start and end statuses along the d-axis are denoted as h
+ds,˙ds,¨ds, di,˙di,¨dii
+, where dsare the coordinates of the
+start trajectory point along the d-axis, and didenotes the
+coordinates of the end trajectory point along the d-axis. In
+this paper, the speed of the vehicle is maintained in the
+forward direction, so the start and end status along the s-axis
+is[ss,˙ss,¨ss,˙si,¨si], where ssis the coordinates of the start
+trajectory point along the s-axis; seis the coordinates of the
+end trajectory point along the s-axis.
+3) Trajectory Generation
+Firstly, the d-axial and s-axial trajectory equations are solved
+by using quintic and quartic polynomials respectively. Then,
+the planning cycle Tis discretized by ∆t, and the obtained
+time series [0,∆t, ..., T ]is brought into the d-axial and s-
+axial trajectory equations, and the d-axial and s-axial coordi-
+nates of the trajectory points in each trajectory are calculated.
+Finally, the corresponding d-axial and s-axial coordinates
+are combined to obtain the planned trajectories. The further
+details are demonstrated in Section III-B and Section III-C.
+In the optimal trajectory selection stage, the main steps are
+as follows:
+4) Trajectory Point Coordinate Transformation
+According to Equation 1, the generated trajectories in the
+Frenet frame are remapped to the global Cartesian frame.
+5) Trajectory Check
+A trajectory essentially consists of several trajectory points
+containing spatial-temporal information, i.e., location, cur-
+vature, heading, speed and acceleration, etc. In this paper,
+the trajectory check only examines the collision, acceleration
+and curvature of each trajectory point on the path. Through
+Section III-A2 and Section III-A3, we obtained the trajectory
+equations and the trajectory points. In this step, a virtual
+ego vehicle is mapped at each trajectory point, and whether
+there is a collision between the boundary of the virtual ego
+VOLUME 4, 2016 5This article has been accepted for publication in IEEE Access. This is the author's version which has not been fully edited and 
+content may change prior to final publication. Citation information: DOI 10.1109/ACCESS.2023.3294713
+This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/
+Author et al. : Preparation of Papers for IEEE TRANSACTIONS and JOURNALS
+car and the boundary of the obstacle is checked, as depicted
+in Figure 4 (b). Considering the limitations of the vehicle
+kinematics and dynamics, the acceleration and curvature of
+each trajectory point on the trajectory are checked using
+hard constraints. The trajectories are filtered out if there is
+a trajectory point in the trajectory that cannot satisfy the
+collision-free, acceleration and steering constraints. Detailed
+operations and derivation processes are discussed within
+Section III-D. Through this step, the candidate trajectories
+are generated and collision-free.
+6) Optimal Trajectory Selection
+The total loss of each trajectory is calculated, and the trajec-
+tory with the minimum total loss is chosen as the optimal
+trajectory. The cost function is composed of three indica-
+tors: comfort, trajectory safety, and trajectory anti-deviation.
+These three indicators are defined in detail in Section III-E.
+7) The Start Point Status Update
+The planning frequency is denoted as 1/∆t. As the ego vehi-
+cle moves forward, its position changes continuously. Thus,
+in our trajectory planning approach, the current position of
+the vehicle is used as a reference point for generating the next
+trajectory. We designate the current position of the vehicle
+as(x0, ym0), and calculate the trajectory point (x1, ym1)
+which is ∆tseconds ahead of the current position. This point
+serves as the new starting point for the subsequent round of
+trajectory planning.
+B. LATERAL MOTION TRAJECTORY PLANNING
+Lateral motion planning involves the tasks of obstacle avoid-
+ance and lane change. As Equation 2 shows, the lateral
+motion trajectory d(t)can be modelled based on a quintic
+polynomial:
+d(t) =cd0+cd1t+cd2t2+cd3t3+cd4t4+cd5t5(2)
+where cd0,cd1,cd2,cd3,cd4andcd5are the coefficients of
+a quintic polynomial.
+Where ˙d(t)is the derivative of Equation 2:
+˙d(t) =cd1+ 2cd2t+ 3cd3t2+ 4cd4t3+ 5cd5t4(3)
+and¨d(t)is the derivative of Equation 3:
+¨d(t) = 2 cd2+ 6cd3t+ 12cd4t2+ 20cd5t3(4)
+The known status of the start point and end point at the
+time of tsandteare introduced into Equation 2 to Equation
+4:
+
+d(ts)
+˙d(ts)
+¨d(ts)
+d(te)
+˙d(te)
+¨d(te)
+=
+1tsts2ts3ts4ts5
+0 1 2 ts3ts24ts35ts4
+0 0 2 6 ts12ts220ts3
+1tete2te3te4te5
+0 1 2 te3te24te35te4
+0 0 2 6 te12te220te3
+
+cd0
+cd1
+cd2
+cd3
+cd4
+cd5
+
+(5)The following Equation 6 can be obtained by modifying
+Equation 5, and the matrix of coefficients can be calculated
+as:
+
+cd0
+cd1
+cd2
+cd3
+cd4
+cd5
+=
+1tsts2ts3ts4ts5
+0 1 2 ts3ts24ts35ts4
+0 0 2 6 ts12ts220ts3
+1tete2te3te4te5
+0 1 2 te3te24te35te4
+0 0 2 6 te12te220te3
+−1
+d(ts)
+˙d(ts)
+¨d(ts)
+d(te)
+˙d(te)
+¨d(te)
+
+(6)
+C. LONGITUDINAL MOTION TRAJECTORY PLANNING
+In this paper, when planning the longitudinal motion tra-
+jectory, we assume the vehicle’s speed remains constant
+along the reference line direction. Therefore, the position
+configuration of the endpoint can be disregarded for now,
+and the trajectory can be represented by a quartic polynomial
+equation, as shown in Equation 7.
+s(t) =cs0+cs1t+cs2t2+cs3t3+cs4t4(7)
+where cs0,cs1,cs2,cs3andcd4are the coefficients of a
+quartic polynomial, where ˙s(t)is the derivative of Equation
+7:
+˙s(t) =cs1+ 2cs2t+ 3cs3t2+ 4cs4t3(8)
+and where ¨s(t)is the derivative of Equation 8:
+¨s(t) = 2 cs2+ 6cs3t+ 12cs4t2(9)
+Equation 10 can be obtained from Equations 7-9, with the
+known configuration of the start point and the end point at
+the time of tsandte:
+
+s(ts)
+˙s(ts)
+¨s(ts)
+˙s(te)
+¨s(te)
+=
+1tsts2ts3ts4
+0 1 2 ts3ts24ts3
+0 0 2 6 ts12ts2
+1tete2te3te4
+0 1 2 te3te24te3
+0 0 2 6 te12te2
+
+cs0
+cs1
+cs2
+cs3
+cs4
+(10)
+Finally, the coefficients of the quartic polynomial can be
+obtained by transforming Equation 10:
+
+cd0
+cd1
+cd2
+cd3
+cd4
+=
+1tsts2ts3ts4
+0 1 2 ts3ts24ts3
+0 0 2 6 ts12ts2
+0 1 2 te3te24te3
+0 0 2 6 te12te2
+−1
+s(ts)
+˙s(ts)
+¨s(ts)
+˙s(te)
+¨s(te)
+
+(11)
+D. CANDIDATE PATH GENERATION
+Figure 4 shows that collisions can occur on the generated
+trajectories, and that there are limitations on the vehicle’s
+motion and dynamic characteristics. To enhance the system’s
+response time, trajectories that fail to meet the constraints can
+undergo trajectory checking. The remaining trajectories are
+then presented as candidate paths for the subsequent module
+to choose the best path. The primary components of the check
+involve collision, curvature, and acceleration checks.
+6 VOLUME 4, 2016This article has been accepted for publication in IEEE Access. This is the author's version which has not been fully edited and 
+content may change prior to final publication. Citation information: DOI 10.1109/ACCESS.2023.3294713
+This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/
+Author et al. : Preparation of Papers for IEEE TRANSACTIONS and JOURNALS
+candidate pathcollision path
+start pointtrajectory pointend point
+ static obstacle
+(a) Algorithm flowchartego vehicle
+FIGURE 4. Proposed algorithm framework. (a) the flowchart of the algorithm; (b) the illustration of the proposed algorithm in real traffic scenario.
+1) Collision Check
+Circles are used as bounding boxes for collision check. The
+conditions for passing the collision check are as follows:
+(xij−xob)2+ (yij−yob)2<(rcar+rob)2(12)
+where (xob, yob)is the coordinates of a given obstacle;
+(xij, yij)are the coordinates of the trajectory point jon
+trajectory i;rcaris the radius of the circle bounding box of
+the ego vehicle; robis the radius of the circle bounding box
+of the ego vehicle.
+2) Curvature Check
+The curvature of each point in the generated trajectories can
+be calculated using Equation 1.
+κx[ij]⩽κmax,0⩽j⩽N (13)
+where κmaxis the maximum allowed curvature, and Nis
+the number of trajectory points.
+3) Acceleration Check
+The acceleration of each point in the generated trajectories
+can also be calculated using Equation 1.
+ax[ij]⩽amax,0⩽j⩽N (14)
+where amaxis the maximum allowed acceleration.
+E. COST FUNCTION
+After the trajectory check, a set of candidate trajectories is
+generated. However, the number of candidates remains large,
+and we must choose a single trajectory to follow. To do
+so, we develop a cost function that assesses each candidatetrajectory and selects the one with the lowest cost as the most
+optimal. This paper’s cost function is designed based on three
+criteria: the trajectory’s comfort, safety, and deviation from
+the road’s center line. This cost function J[i]is defined in
+Equation 15:
+J[i] =w0Jjerk[i] +w1Jsafety[i] +w2Joffset[i] (15)
+where Jjerk,Jsafety andJoffset are the cost function of
+jerk, trajectory safety, and offset from the road center line
+respectively, and w0,w1,w2are the weights of the three cost
+functions, which determine the driving style of the vehicle.
+1) Jerk Cost Function
+Jerk is one of the most significant indicators for measuring
+the quality of planned trajectories. In general, the derivative
+of acceleration is used to assess jerk. Since the Frenet frame
+decouples transverse and longitudinal motion, the cost func-
+tion of jerk can be constructed by summing the derivatives of
+the transverse and longitudinal accelerations.
+Jjerk[i](t) =Zt1
+t0...
+d2(t)dt+Zt1
+t0...s2(t)dt (16)
+2) Trajectory Safety Cost Function
+While all candidate paths are free of collisions, their safety
+levels may still differ due to their proximity to obstacles.
+It is evident that trajectories that are further from obstacles
+are safer. The [30] proposes a method to assess the safety of
+candidate trajectories based on their distance from obstacles,
+but this approach fails to account for the impact of obstacle
+size on trajectory safety. When the distance between the
+candidate path and the center of the obstacle is the same, the
+VOLUME 4, 2016 7This article has been accepted for publication in IEEE Access. This is the author's version which has not been fully edited and 
+content may change prior to final publication. Citation information: DOI 10.1109/ACCESS.2023.3294713
+This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/
+Author et al. : Preparation of Papers for IEEE TRANSACTIONS and JOURNALS
+actual distance from the candidate trajectory to the obstacle’s
+edge varies. Therefore, the safety of the candidate trajectory
+should be higher when faced with smaller obstacles, and the
+cost of safety should be lower.
+In this paper, we draw inspiration from the Gauss-Laplace
+operator and the concept of convolution in the computer
+vision field to construct a convolution kernel, denoted as
+f(x), and perform a convolution operation on the collision
+value, colli _V, to obtain the safety cost of each trajectory.
+Jsafety[i] =f∗colli _V[i] (17)
+The definition of the convolution kernel f(x)is as follows:
+f(x) =g(x) + min( |g(x)|) (18)
+where g(x)is the variation of Gauss Laplace operator:
+g(x) =1
+2πσ·e−(x−u)2
+2σ2·σ2−x2
+σ4(19)
+andσanduare the standard deviation and mean value,
+respectively.
+Since any plane geometry can be surrounded by its cir-
+cumscribed circle, in this paper we use the circumscribed
+circle as the mathematical model to describe obstacles. The
+collision value colli _Vis represented by the size of the
+largest obstacle on the trajectory:
+colli _V[i] =(
+rob[i],collision happen
+0, collision free(20)
+where robis the radius of the obstacle circumscribed circle.
+As shown in Figure 5, the collision value reflects whether a
+collision occurs on the generated trajectories for different ob-
+stacle sizes. The safety cost of each candidate trajectory can
+be effectively calculated according to the size and distribution
+of the obstacles. The closer to a large obstacle, the higher the
+safety cost of the trajectory and the lower the safety of the
+trajectory. The closer to the dense obstacle pile, the higher
+the safety cost and the lower the trajectory safety.
+0 1 2 3 4 5 6 7 8 910 11 12 13 14 15 16 17 18 19 20
+Trajectory index0.00.51.01.52.02.53.0Value
+Jsafety
+colli_V
+FIGURE 5. Safety cost of each candidate trajectory3) Trajectory Anti-deviation Cost Function
+While driving, deviating from the center line of the road can
+result in insufficient space to maneuver around obstacles,
+requiring a large steering angle to avoid them. This driving
+behavior can cause inconvenience to other drivers and in-
+crease the risk of misjudgments, leading to traffic accidents.
+Additionally, it may frequently trigger lane departure alarms,
+leading to functional conflicts between modules in the driv-
+ing system. Therefore, when selecting the optimal trajectory,
+it is crucial to ensure that the trajectory follows the road’s
+center line as closely as possible. In this paper, we design
+a cost function that calculates the integral of the square of
+the transverse displacement, d, of the candidate trajectory to
+satisfy this requirement.
+Joffset[i] =Zs1
+s0d2(s)ds/Zt1
+t0s2(t)dt (21)
+Since the planning time has been discretized, the Equation
+21 also can be expressed as follows:
+Joffset[i] =NX
+j=0d2
+ij/NX
+j=0s2
+ij (22)
+where Nis the number of trajectory points in trajectory i.
+IV. SIMULATION AND ANALYSIS
+In the research on path planning, it is commonly assumed
+that map, localization and detection information have been
+obtained, without delving into the discussion of the imple-
+mentation of front-end module functionalities in autonomous
+driving systems. Referring to the traffic scenarios in current
+public datasets of perception field [42], [43], [44], [45] and
+the simulation environment setting in [46], [47], [48]. In
+the simulation, a straight road, a curvy road, an intersec-
+tion scenario and a "U" shaped road are built in a Python
+environment, and several static obstacles of different sizes
+are set up on the roads. The experiments in this paper are
+divided into two parts: the first part analyzes the impact
+of different cost functions on trajectory generation, and the
+second part compares the advantages and disadvantages of
+the methods proposed in this paper and that proposed in [30].
+The simulation parameters are shown in Table 2.
+A. INFLUENCE OF COST FUNCTION ON TRAJECTORY
+SELECTION
+As shown in Figure 6 (a) and (b), different cost functions
+can result in different optimal trajectories on both straight
+and curvy roads. This paper analyzes the impact of three
+different cost functions on trajectory selection. When the cost
+function only takes into account jerk, the vehicle will attempt
+to drive in its current direction without colliding. While this
+can provide a comfortable ride, it may not be safe enough
+as it can bring the vehicle too close to obstacles. The second
+cost function considers both JjerkandJsafety indicators. Since
+the safety indicator in this paper takes into account the size of
+the obstacle, it is clear that under the influence of the safety
+8 VOLUME 4, 2016This article has been accepted for publication in IEEE Access. This is the author's version which has not been fully edited and 
+content may change prior to final publication. Citation information: DOI 10.1109/ACCESS.2023.3294713
+This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/
+Author et al. : Preparation of Papers for IEEE TRANSACTIONS and JOURNALS
+TABLE 2. Experiment Parameters.
+Parameter Name Value
+rcar(m) Vehicle collision radius 1
+droadwidth (m) Road width 10
+w0 Weight of Jjerk 0.4
+w1 Weight of Jsafety 0.3
+w2 Weight of Joffset 0.3
+∆t(s) Sampling time 0.1
+∆d(m) Transverse sampling distance 0.5
+kmax(m−1) Maximum curvature 0.5
+amax(m ·s−2) Maximum acceleration 3
+Tmax(s) Maximum planning period 5
+Tmin(s) Minimum planning period 4
+Vtarget (km ·h−1) Target speed 50
+indicator, the vehicle will choose the corresponding avoid-
+ance distance based on the size of the obstacle. However, the
+resulting trajectory may still deviate from the road center line
+after obstacle avoidance. The third cost function considered
+in this paper, which takes into account jerk, safety, and offset
+from the road center line, produces a smoother trajectory that
+maintains a safe distance from obstacles and returns to the
+center line of the road after obstacle avoidance.
+B. PERFORMANCE OF PROPOSED ALGORITHM
+To gauge the feasibility and effectiveness of the proposed
+local path planning algorithm, we simulated both the algo-
+rithm proposed in this paper and the algorithm proposed
+in reference [30], and analyzed their performance on the
+following four traffic scenarios. The results of comparisons
+are summarized in Table 3.
+1) Straight road scenario
+In order to validate the ability of the algorithm to con-
+tinuously avoid obstacles, this paper builds a straight road
+scene with static obstacles. Figure 7 illustrates that both the
+method proposed in this paper and the one in reference [30]
+can successfully avoid obstacles and reach the destination
+safely. However, the global routing of the method proposed in
+reference [30] changes greatly, almost forming an ’s’ curve,
+and the trajectory cannot return to the center of the road after
+avoiding obstacles. This is because the safety cost function of
+the trajectory in reference [30] is insensitive to the size of the
+obstacle, and it measures the safety of candidate trajectories
+mechanically by the distance from the obstacle. The method
+tends to choose trajectories far away from the obstacle as
+the optimal path when avoiding obstacles, and it lacks the
+constraint of the center line index, which results in the lateral
+avoidance distance often being too large. In contrast, the
+method proposed in this paper takes into account the three
+indicators of Jjerk,Jsafety, and Joffset, which enables it to
+avoid obstacles safely and return to the road center line after
+avoiding obstacles. The global route calculated in this paper
+is relatively smoother.
+Figure 8 more clearly illustrates the deviation of the vehi-
+cle from the center line of the road. The proposed method
+/uni00000018 /uni00000014/uni00000013 /uni00000014/uni00000018 /uni00000015/uni00000013 /uni00000015/uni00000018 /uni00000016/uni00000013
+x/uni00000003/uni0000000b/uni00000050/uni0000000c/uni00000013/uni00000018/uni00000014/uni00000013/uni00000014/uni00000018/uni00000015/uni00000013/uni00000015/uni00000018y/uni00000003/uni0000000b/uni00000050/uni0000000c
+Jjerk
+Jjerk/uni0000000eJsafety
+Jjerk/uni0000000eJsafety/uni0000000eJoffset(a) On a straight road
+/uni00000018 /uni00000014/uni00000013 /uni00000014/uni00000018 /uni00000015/uni00000013 /uni00000015/uni00000018 /uni00000016/uni00000013
+x/uni00000003/uni0000000b/uni00000050/uni0000000c/uni00000018/uni00000014/uni00000013/uni00000014/uni00000018/uni00000015/uni00000013/uni00000015/uni00000018/uni00000016/uni00000013y/uni00000003/uni0000000b/uni00000050/uni0000000c
+Jjerk
+Jjerk/uni0000000eJsafety
+Jjerk/uni0000000eJsafety/uni0000000eJoffset
+(b) On a curvy road
+FIGURE 6. Influence of cost function on trajectory selection
+in this paper outperforms the method in reference [30] in
+terms of returning the vehicle to the road center line after
+avoiding obstacles, thus reducing the risks and danger caused
+by making a large detour to avoid obstacles. The mean
+value of Joffset decreases by 175.6%. Figure 9 shows that
+on a straight road, during the first 20 seconds, the algorithm
+proposed in this paper requires the consideration of the road
+center line offset, causing Jjerkto be slightly higher than
+the algorithm proposed in reference [30]. However, in the
+subsequent obstacle avoidance process, Jjerksignificantly
+improves, resulting in a 15.6% reduction in the mean value
+ofJjerkthroughout the process.
+2) Curvy Road Scenario
+To verify the effectiveness of the algorithm in continuous
+curvy road scenes, an S-shaped road scene was constructed.
+Figure 10 demonstrates the complete driving trajectory of
+VOLUME 4, 2016 9This article has been accepted for publication in IEEE Access. This is the author's version which has not been fully edited and 
+content may change prior to final publication. Citation information: DOI 10.1109/ACCESS.2023.3294713
+This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/
+Author et al. : Preparation of Papers for IEEE TRANSACTIONS and JOURNALS
+/uni00000013 /uni00000015/uni00000013 /uni00000017/uni00000013 /uni00000019/uni00000013 /uni0000001b/uni00000013 /uni00000014/uni00000013/uni00000013
+x/uni00000003/uni0000000b/uni00000050/uni0000000c/uni00000018
+/uni00000013/uni00000018/uni00000014/uni00000013/uni00000014/uni00000018/uni00000015/uni00000013/uni00000015/uni00000018/uni00000016/uni00000013y/uni00000003/uni0000000b/uni00000050/uni0000000c
+/uni00000035/uni00000048/uni00000049/uni00000048/uni00000055/uni00000048/uni00000051/uni00000046/uni00000048/uni00000003/uni0000004f/uni0000004c/uni00000051/uni00000048
+/uni0000002a/uni0000004f/uni00000052/uni00000045/uni00000044/uni0000004f/uni00000003/uni00000055/uni00000052/uni00000058/uni00000057/uni0000004c/uni00000051/uni0000004a
+/uni0000002a/uni0000004f/uni00000052/uni00000045/uni00000044/uni0000004f/uni00000003/uni00000055/uni00000052/uni00000058/uni00000057/uni0000004c/uni00000051/uni0000004a/uni0000003e/uni00000016/uni00000013/uni00000040
+FIGURE 7. Comparison of Global Routing on a Straight Road
+/uni00000013 /uni00000015/uni00000013 /uni00000017/uni00000013 /uni00000019/uni00000013 /uni0000001b/uni00000013 /uni00000014/uni00000013/uni00000013
+t/uni00000003/uni0000000b/uni00000056/uni0000000c/uni00000017
+/uni00000016
+/uni00000015
+/uni00000014
+/uni00000013/uni00000014/uni00000015/uni00000016/uni00000017d/uni00000003/uni0000000b/uni00000050/uni0000000c
+Joffset
+Joffset/uni0000003e/uni00000016/uni00000013/uni00000040
+FIGURE 8. Comparison of Road Center Line Offset on a Direct Road
+the vehicle from the starting point to the ending point on the
+"S" shaped road. The vehicle on the curvy road uses the cost
+function proposed in this paper to start obstacle avoidance
+at approximately 22 m and successfully returns to the road
+center line after avoiding the obstacle due to the influence
+ofJoffset. On the other hand, the method proposed in [30]
+starts obstacle avoidance at approximately 25 m. Although
+the longitudinal avoidance distance is shorter than that of
+the method proposed in this paper, the absence of Joffset as
+a constraint means that the vehicle does not return to the
+road center line until 60 m after avoiding the obstacle, despite
+constantly approaching the road center line.
+As demonstrated in Figure 11, from approximately 20 s
+to 40 s, the Joffset in this paper is larger, that is because our
+method starts to avoid the static obstacle at approximately
+22 m, earlier than the method proposed in [30] and returns to
+road center line in time. In terms of the entire process, the
+mean value of Joffset decreases 16.1% on a curvy road.
+Figure 12 shows a comparison of Jjerk. On a curvy road,
+theJjerkin the entire process is smaller, and the mean value of
+Jjerkdecreases by 49.1%. It indicates the algorithm proposed
+in this paper can provide better driving comfort.
+/uni00000013 /uni00000015/uni00000013 /uni00000017/uni00000013 /uni00000019/uni00000013 /uni0000001b/uni00000013 /uni00000014/uni00000013/uni00000013
+/uni00000057/uni00000003/uni0000000b/uni00000056/uni0000000c/uni00000013/uni00000011/uni00000013/uni00000013/uni00000011/uni00000018/uni00000014/uni00000011/uni00000013/uni00000014/uni00000011/uni00000018/uni00000015/uni00000011/uni00000013/uni00000015/uni00000011/uni00000018Jjerk/uni00000003/uni0000000b/uni00000050/uni00000012/uni000000563/uni0000000c2Jjerk
+Jjerk/uni0000003e/uni00000016/uni00000013/uni00000040FIGURE 9. Comparison of comfort on a Direct Road
+/uni00000014/uni00000013 /uni00000015/uni00000013 /uni00000016/uni00000013 /uni00000017/uni00000013 /uni00000018/uni00000013 /uni00000019/uni00000013
+x/uni00000003/uni0000000b/uni00000050/uni0000000c/uni00000018/uni00000014/uni00000013/uni00000014/uni00000018/uni00000015/uni00000013/uni00000015/uni00000018/uni00000016/uni00000013y/uni00000003/uni0000000b/uni00000050/uni0000000c
+/uni00000035/uni00000048/uni00000049/uni00000048/uni00000055/uni00000048/uni00000051/uni00000046/uni00000048/uni00000003/uni0000004f/uni0000004c/uni00000051/uni00000048
+/uni0000002a/uni0000004f/uni00000052/uni00000045/uni00000044/uni0000004f/uni00000003/uni00000055/uni00000052/uni00000058/uni00000057/uni0000004c/uni00000051/uni0000004a
+/uni0000002a/uni0000004f/uni00000052/uni00000045/uni00000044/uni0000004f/uni00000003/uni00000055/uni00000052/uni00000058/uni00000057/uni0000004c/uni00000051/uni0000004a/uni0000003e/uni00000016/uni00000013/uni00000040
+FIGURE 10. Comparison of Global Routing on a Curvy Road
+3) Intersection scenario
+Intersections are one of the most common traffic scenarios.
+To evaluate the performance of the algorithms, an intersec-
+tion traffic scenario is constructed.
+Figure 13 shows the complete driving trajectory of the
+vehicle during the obstacle avoidance process at the inter-
+section. Both the algorithm proposed in this paper and in ref-
+erence [30] are effective in obstacle avoidance. However, in
+this paper, the cost function considers the impact of obstacle
+size on road safety, enabling effective handling of distances
+maintained with obstacles of varying sizes. Additionally,
+considering the deviation from the road center line, the path
+actively returns to the road center line after evading obstacles.
+On the other hand, reference [30] only relies on the distance
+between obstacles to evaluate the safety value of candidate
+paths. Consequently, it tends to keep a maximum distance
+from obstacles during obstacle avoidance, resulting in less
+smooth and more variable trajectories. Furthermore, due to
+the lack of consideration for maintaining the lane center line,
+it often fails to return to the road center line after obstacle
+avoidance and continues in the current direction under the
+influence of Jjerk.
+Figure 14 illustrates the deviation from the road center line
+throughout the entire trajectory. From approximately 0 s to
+18 s, both algorithms exhibit similar deviations from the road
+10 VOLUME 4, 2016This article has been accepted for publication in IEEE Access. This is the author's version which has not been fully edited and 
+content may change prior to final publication. Citation information: DOI 10.1109/ACCESS.2023.3294713
+This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/
+Author et al. : Preparation of Papers for IEEE TRANSACTIONS and JOURNALS
+/uni00000013 /uni00000014/uni00000013 /uni00000015/uni00000013 /uni00000016/uni00000013 /uni00000017/uni00000013 /uni00000018/uni00000013 /uni00000019/uni00000013 /uni0000001a/uni00000013
+t/uni00000003/uni0000000b/uni00000056/uni0000000c/uni00000013/uni00000011/uni00000018
+/uni00000013/uni00000011/uni00000013/uni00000013/uni00000011/uni00000018/uni00000014/uni00000011/uni00000013/uni00000014/uni00000011/uni00000018/uni00000015/uni00000011/uni00000013d/uni00000003/uni0000000b/uni00000050/uni0000000cJoffset
+Joffset /uni0000003e/uni00000016/uni00000013/uni00000040
+FIGURE 11. Comparison of Road Center Line Offset on a Curvy Road
+/uni00000013 /uni00000014/uni00000013 /uni00000015/uni00000013 /uni00000016/uni00000013 /uni00000017/uni00000013 /uni00000018/uni00000013 /uni00000019/uni00000013 /uni0000001a/uni00000013
+t/uni00000003/uni0000000b/uni00000056/uni0000000c/uni00000013/uni00000011/uni00000013/uni00000013/uni00000011/uni00000018/uni00000014/uni00000011/uni00000013/uni00000014/uni00000011/uni00000018/uni00000015/uni00000011/uni00000013/uni00000015/uni00000011/uni00000018/uni00000016/uni00000011/uni00000013Jjerk/uni00000003/uni0000000b/uni00000050/uni00000012/uni000000563/uni0000000c2Jjerk
+Jjerk/uni0000003e/uni00000016/uni00000013/uni00000040
+FIGURE 12. Comparison of comfort on a Curvy Road
+center line. However, between 18 s and 35 s, the algorithm
+proposed in this paper, influenced by JjerkandJoffset, aims
+to maintain the current direction of travel while ensuring a
+safe distance from the second encountered obstacle. On the
+other hand, the algorithm in reference [30] tends to keep
+a maximum distance from obstacles, leading to a deviation
+towards the opposite side of the lane center line. Due to
+the absence of constraints on road center line deviation,
+the effect of the Jjerkresults in a slightly larger turning
+radius. Additionally, similar to other traffic scenarios, it is
+challenging for the algorithm to return to the road center line
+even on straight road segments after obstacle avoidance. In
+contrast, the trajectory planned by the algorithm in this paper
+appropriately selects a safe distance from obstacles while
+ensuring a smooth return to the road center line after obstacle
+avoidance. The mean value of Joffset decreases 79.7%.
+Figure 15 shows a comparison of Jjerkin the intersection
+scenario. It is evident that there is a significant variation in
+jerk values during obstacle avoidance. In this traffic scenario,
+the algorithm proposed in this paper maintains a good level
+of driving comfort and decreases Jjerkby 146.1% compared
+/uni00000014/uni00000013
+ /uni00000018
+ /uni00000013 /uni00000018 /uni00000014/uni00000013 /uni00000014/uni00000018 /uni00000015/uni00000013 /uni00000015/uni00000018
+x/uni00000003/uni0000000b/uni00000050/uni0000000c/uni00000015/uni00000018
+/uni00000015/uni00000013
+/uni00000014/uni00000018
+/uni00000014/uni00000013
+/uni00000018
+/uni00000013/uni00000018/uni00000014/uni00000013/uni00000014/uni00000018y/uni00000003/uni0000000b/uni00000050/uni0000000c
+/uni00000035/uni00000048/uni00000049/uni00000048/uni00000051/uni00000046/uni00000048/uni00000003/uni0000002f/uni0000004c/uni00000051/uni00000048
+/uni0000002a/uni0000004f/uni00000052/uni00000045/uni00000044/uni0000004f/uni00000003/uni00000055/uni00000052/uni00000058/uni00000057/uni0000004c/uni00000051/uni0000004a
+/uni0000002a/uni0000004f/uni00000052/uni00000045/uni00000044/uni0000004f/uni00000003/uni00000055/uni00000052/uni00000058/uni00000057/uni0000004c/uni00000051/uni0000004a/uni0000003e/uni00000016/uni00000013/uni00000040FIGURE 13. Comparison of Global Routing in Intersection Scenario
+/uni00000013 /uni00000014/uni00000013 /uni00000015/uni00000013 /uni00000016/uni00000013 /uni00000017/uni00000013 /uni00000018/uni00000013 /uni00000019/uni00000013
+t/uni00000003/uni0000000b/uni00000056/uni0000000c/uni00000013/uni00000011/uni0000001b
+/uni00000013/uni00000011/uni00000019
+/uni00000013/uni00000011/uni00000017
+/uni00000013/uni00000011/uni00000015
+/uni00000013/uni00000011/uni00000013/uni00000013/uni00000011/uni00000015/uni00000013/uni00000011/uni00000017/uni00000013/uni00000011/uni00000019/uni00000013/uni00000011/uni0000001bd/uni00000003/uni0000000b/uni00000050/uni0000000cJoffset
+Joffset /uni0000003e/uni00000016/uni00000013/uni00000040
+FIGURE 14. Comparison of Road Center Line Offset in Intersection Scenario
+to the algorithm proposed in the reference [30].
+4) U-shaped road scenario
+U-shaped roads are also a common and challenging traffic
+scene. Therefore, in this study, a U-shaped road is con-
+structed, and static obstacles of different sizes are placed at
+the turning points of the U-shaped road.
+Figure 16 depicts the entire driving routing of continu-
+ously avoiding static obstacles in the U-shaped road. Both
+algorithms can effectively avoid obstacles. However, similar
+to other simulated traffic scenarios, in reference [30] the
+evaluation of the safety values of the candidate paths is
+based solely on the distance from the obstacles. As a result,
+regardless of the size of the obstacles, the algorithm tends
+to maintain a safe distance by deviating as far as possible
+VOLUME 4, 2016 11This article has been accepted for publication in IEEE Access. This is the author's version which has not been fully edited and 
+content may change prior to final publication. Citation information: DOI 10.1109/ACCESS.2023.3294713
+This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/
+Author et al. : Preparation of Papers for IEEE TRANSACTIONS and JOURNALS
+/uni00000013 /uni00000014/uni00000013 /uni00000015/uni00000013 /uni00000016/uni00000013 /uni00000017/uni00000013 /uni00000018/uni00000013 /uni00000019/uni00000013
+t/uni00000003/uni0000000b/uni00000056/uni0000000c/uni00000013/uni00000011/uni00000013/uni00000013/uni00000011/uni00000015/uni00000013/uni00000011/uni00000017/uni00000013/uni00000011/uni00000019/uni00000013/uni00000011/uni0000001b/uni00000014/uni00000011/uni00000013/uni00000014/uni00000011/uni00000015Jjerk/uni00000003/uni0000000b/uni00000050/uni00000012/uni000000563/uni0000000c2Jjerk
+Jjerk/uni0000003e/uni00000016/uni00000013/uni00000040
+FIGURE 15. Comparison of comfort in Intersection Scenario
+/uni00000015/uni00000013
+ /uni00000014/uni00000018
+ /uni00000014/uni00000013
+ /uni00000018
+ /uni00000013 /uni00000018 /uni00000014/uni00000013 /uni00000014/uni00000018
+x/uni00000003/uni0000000b/uni00000050/uni0000000c/uni00000015/uni00000013
+/uni00000014/uni00000018
+/uni00000014/uni00000013
+/uni00000018
+/uni00000013/uni00000018/uni00000014/uni00000013/uni00000014/uni00000018/uni00000015/uni00000013y/uni00000003/uni0000000b/uni00000050/uni0000000c
+/uni00000035/uni00000048/uni00000049/uni00000048/uni00000055/uni00000048/uni00000051/uni00000046/uni00000048/uni00000003/uni0000002f/uni0000004c/uni00000051/uni00000048
+/uni0000002a/uni0000004f/uni00000052/uni00000045/uni00000044/uni0000004f/uni00000003/uni00000055/uni00000052/uni00000058/uni00000057/uni0000004c/uni00000051/uni0000004a
+/uni0000002a/uni0000004f/uni00000052/uni00000045/uni00000044/uni0000004f/uni00000003/uni00000055/uni00000052/uni00000058/uni00000057/uni0000004c/uni00000051/uni0000004a/uni0000003e/uni00000016/uni00000013/uni00000040
+FIGURE 16. Comparison of Global Routing on a U-shaped Road
+from the obstacles while ensuring comfort. This leads to a
+significant deviation from the road center line in the planned
+path, especially at the turning points of the U-shaped road. In
+contrast, this study incorporates the size of the obstacles into
+the evaluation of the safety values of the candidate paths. It
+selects an appropriate deviation distance based on the size of
+the obstacles and actively seeks to return to the road center
+line after obstacle avoidance, within the constraints of the
+offset.
+Figure 17 shows the comparison of road center line de-
+viation on the U-shaped road. It can be observed that the
+proposed method in this paper is able to maintain driving
+near the road center line under the dual challenges of obstacle
+/uni00000013 /uni00000015/uni00000013 /uni00000017/uni00000013 /uni00000019/uni00000013 /uni0000001b/uni00000013
+t/uni00000003/uni0000000b/uni00000056/uni0000000c/uni00000014/uni00000011/uni00000013
+/uni00000013/uni00000011/uni00000018
+/uni00000013/uni00000011/uni00000013/uni00000013/uni00000011/uni00000018/uni00000014/uni00000011/uni00000013/uni00000014/uni00000011/uni00000018/uni00000015/uni00000011/uni00000013d/uni00000003/uni0000000b/uni00000050/uni0000000cJoffset
+Joffset /uni0000003e/uni00000016/uni00000013/uni00000040FIGURE 17. Comparison of Road Center Line Offset on a U-shaped Road
+avoidance and turning. However, the method proposed in
+reference [30] deviates more from the center line due to the
+lack of the constraint of Joffset. The mean value of deviation
+decreases by 83.7%. The Figure is the comparison of driving
+comfort. From 0 s to 50 s, there is little difference in jerk
+values between the two algorithms. However, from 50 s to
+80 s, the proposed method in this paper shows a significant
+improvement in jerk compared to the method proposed in
+reference [30]. This is because, when facing the last obstacle,
+the algorithm in this paper chooses a path that aligns roughly
+with the original direction after the turn. In contrast, the
+method in the reference always tends to stay as far away from
+the obstacle as possible, resulting in increased Jjerkdue to
+excessive manoeuvres. The mean value of Jjerkdecreases by
+22.9%.
+/uni00000013 /uni00000015/uni00000013 /uni00000017/uni00000013 /uni00000019/uni00000013 /uni0000001b/uni00000013
+t/uni00000003/uni0000000b/uni00000056/uni0000000c/uni00000013/uni00000011/uni00000013/uni00000013/uni00000013/uni00000011/uni00000013/uni00000018/uni00000013/uni00000011/uni00000014/uni00000013/uni00000013/uni00000011/uni00000014/uni00000018/uni00000013/uni00000011/uni00000015/uni00000013/uni00000013/uni00000011/uni00000015/uni00000018/uni00000013/uni00000011/uni00000016/uni00000013Jjerk/uni00000003/uni0000000b/uni00000050/uni00000012/uni000000563/uni0000000c2Jjerk
+Jjerk/uni0000003e/uni00000016/uni00000013/uni00000040
+FIGURE 18. Comparison of comfort on a U-shaped Road
+V. CONCLUSION
+In this paper, we propose a local path planning algorithm for
+autonomous driving based on the Frenet frame. The algo-
+rithm first decouples the transverse and longitudinal motion
+12 VOLUME 4, 2016This article has been accepted for publication in IEEE Access. This is the author's version which has not been fully edited and 
+content may change prior to final publication. Citation information: DOI 10.1109/ACCESS.2023.3294713
+This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/
+Author et al. : Preparation of Papers for IEEE TRANSACTIONS and JOURNALS
+TABLE 3. Performance Comparison.
+Scenario Algorithm JoffsetDecline
+Rate(%)JjerkDecline
+Rate(%)
+Straight Roadproposed 0.8363.72%0.6313.47%[30] 2.29 0.73
+Cruvy Roadproposed 0.6913.86%0.632.19%[30] 0.8 0.9
+Intersectionproposed 0.1844.36%0.0659.36%[30] 0.33 0.16
+U-shaped Roadproposed 0.4245.56%0.0718.60%[30] 0.77 0.08
+using the Frenet frame and generates a cluster of candidate
+trajectories in the s−dcoordinate system based on the
+start and end point state information. The algorithm then
+selects the optimal trajectory based on a new cost function
+that considers the comfort, safety, and offset from the road
+center line. In the candidate trajectory selection stage, We
+propose a new cost function to select the optimal trajectory.
+This cost function is designed to comprehensively consider
+comfort, safety, and offset from the road center line. We also
+consider the size of obstacles in the cost function of trajectory
+safety, which further improves performance. By minimizing
+the cost function, the algorithm selects the optimal trajectory
+that satisfies the constraints and provides the best driving
+experience. Experimental results show that different cost
+functions will lead to different final optimal trajectories.
+Compared with the reference method proposed in [30], the
+trajectories planned on straight road, curvy road, intersection
+and U-shaped road based on the method proposed in this
+paper can safely avoid obstacles and actively return to the
+road center line. In addition, the mean value of Jjerkrespec-
+tively decreased by 13.47%, 32.19%, 59.36% and 18.60% on
+the straight road, curvy road, intersection and U-shaped road
+indicating that the trajectory planned by our method is more
+comfortable. The mean value of Joffset decreased by 63.72%,
+13.86%, 44.36%, 45.56% on the straight road, curvy road,
+intersection and U-shaped road, respectively, which shows
+that our algorithm is capable of swiftly guiding a vehicle back
+to the center line of the road after evading obstacles.
+The algorithm proposed in this paper only addresses the
+static obstacle avoidance problem in path planning and
+doesn’t account for dynamic obstacles. As a result, our fu-
+ture research will concentrate on tackling the challenge of
+avoiding dynamic obstacles.
+REFERENCES
+[1] J. Betz, H. Zheng, A. Liniger, U. Rosolia, P. Karle, M. Behl, V . Krovi,
+and R. Mangharam, “Autonomous vehicles on the edge: A survey on au-
+tonomous vehicle racing,” IEEE Open Journal of Intelligent Transportation
+Systems, vol. 3, pp. 458–488, 2022.
+[2] S. Teng, X. Hu, P. Deng, B. Li, Y . Li, Y . Ai, D. Yang, L. Li, Z. Xuanyuan,
+F. Zhu et al., “Motion planning for autonomous driving: The state of the art
+and future perspectives,” IEEE Transactions on Intelligent Vehicles, 2023.[3] S. D. Pendleton, H. Andersen, X. Du, X. Shen, M. Meghjani, Y . H. Eng,
+D. Rus, and M. H. Ang Jr, “Perception, planning, control, and coordination
+for autonomous vehicles,” Machines, vol. 5, no. 1, p. 6, 2017.
+[4] D. González, J. Pérez, V . Milanés, and F. Nashashibi, “A review of
+motion planning techniques for automated vehicles,” IEEE Transactions
+on intelligent transportation systems, vol. 17, no. 4, pp. 1135–1145, 2015.
+[5] S. Li, Z. Li, Z. Yu, B. Zhang, and N. Zhang, “Dynamic trajectory planning
+and tracking for autonomous vehicle with obstacle avoidance based on
+model predictive control,” Ieee Access, vol. 7, pp. 132 074–132 086, 2019.
+[6] V .-D. Hoang, D. C. Hernández, J. Hariyono, and K.-H. Jo, “Global path
+planning for unmanned ground vehicle based on road map images,” in
+2014 7th International Conference on Human System Interactions (HSI).
+IEEE, 2014, pp. 82–87.
+[7] B. Paden, M. ˇCáp, S. Z. Yong, D. Yershov, and E. Frazzoli, “A survey of
+motion planning and control techniques for self-driving urban vehicles,”
+IEEE Transactions on intelligent vehicles, vol. 1, no. 1, pp. 33–55, 2016.
+[8] X. Cao, X. Zou, C. Jia, M. Chen, and Z. Zeng, “Rrt-based path planning
+for an intelligent litchi-picking manipulator,” Computers and electronics
+in agriculture, vol. 156, pp. 105–118, 2019.
+[9] M. Werling, J. Ziegler, S. Kammel, and S. Thrun, “Optimal trajectory
+generation for dynamic street scenarios in a frenet frame,” in 2010 IEEE
+International Conference on Robotics and Automation. IEEE, 2010, pp.
+987–993.
+[10] B. Li, Y . Ouyang, L. Li, and Y . Zhang, “Autonomous driving on curvy
+roads without reliance on frenet frame: A cartesian-based trajectory plan-
+ning method,” IEEE Transactions on Intelligent Transportation Systems,
+vol. 23, no. 9, pp. 15 729–15 741, 2022.
+[11] F. Ye, S. Zhang, P. Wang, and C.-Y . Chan, “A survey of deep reinforcement
+learning algorithms for motion planning and control of autonomous vehi-
+cles,” in 2021 IEEE Intelligent Vehicles Symposium (IV). IEEE, 2021,
+pp. 1073–1080.
+[12] H. Zhou, J. Laval, A. Zhou, Y . Wang, W. Wu, Z. Qing, and S. Peeta,
+“Review of learning-based longitudinal motion planning for autonomous
+vehicles: research gaps between self-driving and traffic congestion,” Trans-
+portation research record, vol. 2676, no. 1, pp. 324–341, 2022.
+[13] S. Teng, L. Chen, Y . Ai, Y . Zhou, Z. Xuanyuan, and X. Hu, “Hierarchical
+interpretable imitation learning for end-to-end autonomous driving,” IEEE
+Transactions on Intelligent Vehicles, 2022.
+[14] L. Le Mero, D. Yi, M. Dianati, and A. Mouzakitis, “A survey on imitation
+learning techniques for end-to-end autonomous vehicles,” IEEE Transac-
+tions on Intelligent Transportation Systems, 2022.
+[15] Y . Du, J. Chen, C. Zhao, C. Liu, F. Liao, and C.-Y . Chan, “Comfortable
+and energy-efficient speed control of autonomous vehicles on rough pave-
+ments using deep reinforcement learning,” Transportation Research Part
+C: Emerging Technologies, vol. 134, p. 103489, 2022.
+[16] S. Aradi, “Survey of deep reinforcement learning for motion planning
+of autonomous vehicles,” IEEE Transactions on Intelligent Transportation
+Systems, vol. 23, no. 2, pp. 740–759, 2020.
+[17] Z. Ajanovi ´c, E. Regolin, B. Shyrokau, H. ´Cati´c, M. Horn, and A. Fer-
+rara, “Search-based task and motion planning for hybrid systems: Agile
+autonomous vehicles,” Engineering Applications of Artificial Intelligence,
+vol. 121, p. 105893, 2023.
+[18] L. Claussmann, M. Revilloud, D. Gruyer, and S. Glaser, “A review of
+VOLUME 4, 2016 13This article has been accepted for publication in IEEE Access. This is the author's version which has not been fully edited and 
+content may change prior to final publication. Citation information: DOI 10.1109/ACCESS.2023.3294713
+This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/
+Author et al. : Preparation of Papers for IEEE TRANSACTIONS and JOURNALS
+motion planning for highway autonomous driving,” IEEE Transactions on
+Intelligent Transportation Systems, vol. 21, no. 5, pp. 1826–1848, 2019.
+[19] Y . Huang, H. Ding, Y . Zhang, H. Wang, D. Cao, N. Xu, and C. Hu, “A
+motion planning and tracking framework for autonomous vehicles based
+on artificial potential field elaborated resistance network approach,” IEEE
+Transactions on Industrial Electronics, vol. 67, no. 2, pp. 1376–1386, 2019.
+[20] Y . Koren, J. Borenstein et al., “Potential field methods and their inherent
+limitations for mobile robot navigation.” in Icra, vol. 2, no. 1991, 1991, pp.
+1398–1404.
+[21] S. M. H. Rostami, A. K. Sangaiah, J. Wang, and X. Liu, “Obstacle avoid-
+ance of mobile robots using modified artificial potential field algorithm,”
+EURASIP Journal on Wireless Communications and Networking, vol.
+2019, no. 1, pp. 1–19, 2019.
+[22] P. E. Hart, N. J. Nilsson, and B. Raphael, “A formal basis for the heuristic
+determination of minimum cost paths,” IEEE transactions on Systems
+Science and Cybernetics, vol. 4, no. 2, pp. 100–107, 1968.
+[23] A. Stentz, “Optimal and efficient path planning for partially known envi-
+ronments,” Intelligent Unmanned Ground Vehicles: Autonomous Naviga-
+tion Research at Carnegie Mellon, pp. 203–220, 1997.
+[24] O. A. Berkhemer, P. S. Fransen, D. Beumer, L. A. Van Den Berg, H. F.
+Lingsma, A. J. Yoo, W. J. Schonewille, J. A. V os, P. J. Nederkoorn, M. J.
+Wermer et al., “A randomized trial of intraarterial treatment for acute
+ischemic stroke,” n Engl J Med, vol. 372, pp. 11–20, 2015.
+[25] J. J. Kuffner and S. M. LaValle, “Rrt-connect: An efficient approach
+to single-query path planning,” in Proceedings 2000 ICRA. Millennium
+Conference. IEEE International Conference on Robotics and Automation.
+Symposia Proceedings (Cat. No. 00CH37065), vol. 2. IEEE, 2000, pp.
+995–1001.
+[26] S. M. LaValle and J. J. Kuffner Jr, “Randomized kinodynamic planning,”
+The international journal of robotics research, vol. 20, no. 5, pp. 378–400,
+2001.
+[27] R. Chen, J. Hu, and W. Xu, “An rrt-dijkstra-based path planning strategy
+for autonomous vehicles,” Applied Sciences, vol. 12, no. 23, p. 11982,
+2022.
+[28] Y . Zhang, H. Sun, J. Zhou, J. Hu, and J. Miao, “Optimal trajectory gener-
+ation for autonomous vehicles under centripetal acceleration constraints
+for in-lane driving scenarios,” in 2019 IEEE Intelligent Transportation
+Systems Conference (ITSC). IEEE, 2019, pp. 3619–3626.
+[29] J. Hwan Jeon, S. Karaman, and E. Frazzoli, “Anytime computation of
+time-optimal off-road vehicle maneuvers using the rrt,” in 2011 50th IEEE
+Conference on Decision and Control and European Control Conference.
+IEEE, 2011, pp. 3276–3282.
+[30] M. WEI, D. TENG, and S. WU, “Trajectory planning and optimization
+algorithm for automated driving based on frenet coordinate system,”
+Control and Decision, vol. 36, no. 4, pp. 815–824, 2021.
+[31] H. Fan, F. Zhu, C. Liu, L. Zhang, L. Zhuang, D. Li, W. Zhu, J. Hu,
+H. Li, and Q. Kong, “Baidu apollo em motion planner,” arXiv preprint
+arXiv:1807.08048, 2018.
+[32] Y . Zhang, H. Sun, J. Zhou, J. Pan, J. Hu, and J. Miao, “Optimal vehicle path
+planning using quadratic optimization for baidu apollo open platform,” in
+2020 IEEE Intelligent Vehicles Symposium (IV). IEEE, 2020, pp. 978–
+984.
+[33] Y . Zhang, H. Chen, S. L. Waslander, J. Gong, G. Xiong, T. Yang, and
+K. Liu, “Hybrid trajectory planning for autonomous driving in highly
+constrained environments,” IEEE Access, vol. 6, pp. 32 800–32 819, 2018.
+[34] W. Lim, S. Lee, M. Sunwoo, and K. Jo, “Hybrid trajectory planning for
+autonomous driving in on-road dynamic scenarios,” IEEE Transactions on
+Intelligent Transportation Systems, vol. 22, no. 1, pp. 341–355, 2019.
+[35] S. Manzinger, C. Pek, and M. Althoff, “Using reachable sets for trajectory
+planning of automated vehicles,” IEEE Transactions on Intelligent Vehi-
+cles, vol. 6, no. 2, pp. 232–248, 2020.
+[36] F. Milano, G. Tzounas, I. Dassios, and T. Kerci, “Applications of the frenet
+frame to electric circuits,” IEEE Transactions on Circuits and Systems I:
+Regular Papers, vol. 69, no. 4, pp. 1668–1680, 2021.
+[37] Y . Li, “Motion planning for dynamic scenario vehicles in autonomous-
+driving simulations,” IEEE Access, vol. 11, pp. 2035–2047, 2023.
+[38] J. Chen, R. Zhang, W. Han, W. Jiang, J. Hu, X. Lu, X. Liu, and P. Zhao,
+“Path planning for autonomous vehicle based on a two-layered planning
+model in complex environment,” Journal of Advanced Transportation, vol.
+2020, pp. 1–14, 2020.
+[39] Y . Sun, D. Ren, S. Lian, S. Fu, X. Teng, and M. Fan, “Robust path planner
+for autonomous vehicles on roads with large curvature,” IEEE Robotics
+and Automation Letters, vol. 7, no. 2, pp. 2503–2510, 2022.[40] M. Moghadam and G. H. Elkaim, “An autonomous driving framework for
+long-term decision-making and short-term trajectory planning on frenet
+space,” in 2021 IEEE 17th International Conference on Automation Sci-
+ence and Engineering (CASE). IEEE, 2021, pp. 1745–1750.
+[41] B. Li and Y . Zhang, “Fast trajectory planning in cartesian rather than
+frenet frame: A precise solution for autonomous driving in complex urban
+scenarios,” IFAC-PapersOnLine, vol. 53, no. 2, pp. 17 065–17 070, 2020.
+[42] J. Bock, R. Krajewski, T. Moers, S. Runde, L. Vater, and L. Eckstein, “The
+ind dataset: A drone dataset of naturalistic road user trajectories at german
+intersections,” in 2020 IEEE Intelligent Vehicles Symposium (IV), 2020,
+pp. 1929–1934.
+[43] W. Zhan, L. Sun, D. Wang, H. Shi, A. Clausse, M. Naumann, J. Kümmerle,
+H. Königshof, C. Stiller, A. de La Fortelle, and M. Tomizuka, “IN-
+TERACTION Dataset: An INTERnational, Adversarial and Cooperative
+moTION Dataset in Interactive Driving Scenarios with Semantic Maps,”
+arXiv:1910.03088 [cs, eess], 2019.
+[44] M.-F. Chang, J. W. Lambert, P. Sangkloy, J. Singh, S. Bak, A. Hartnett,
+D. Wang, P. Carr, S. Lucey, D. Ramanan, and J. Hays, “Argoverse: 3d
+tracking and forecasting with rich maps,” in Conference on Computer
+Vision and Pattern Recognition (CVPR), 2019.
+[45] H. Caesar, V . Bankiti, A. H. Lang, S. V ora, V . E. Liong, Q. Xu, A. Krish-
+nan, Y . Pan, G. Baldan, and O. Beijbom, “nuscenes: A multimodal dataset
+for autonomous driving,” arXiv preprint arXiv:1903.11027, 2019.
+[46] T. Chen, Y . Cai, L. Chen, and X. Xu, “Trajectory and velocity plan-
+ning method of emergency rescue vehicle based on segmented three-
+dimensional quartic bezier curve,” IEEE Transactions on Intelligent Trans-
+portation Systems, 2022.
+[47] C. Ma, C. Yu, and X. Yang, “Trajectory planning for connected and
+automated vehicles at isolated signalized intersections under mixed traffic
+environment,” Transportation research part C: emerging technologies, vol.
+130, p. 103309, 2021.
+[48] W. Xu, J. Pan, J. Wei, and J. M. Dolan, “Motion planning under uncertainty
+for on-road autonomous driving,” in 2014 IEEE International Conference
+on Robotics and Automation (ICRA). IEEE, 2014, pp. 2507–2512.
+JIANYU HUANG was born in Jiangsu, China, in
+1992. He received the B.S. degree in Automotive
+Engineering from Jiangsu University, Zhenjiang,
+China, in 2015 and received the M.Sc. degree
+in Traffic and Transportation Engineering from
+Jiangsu University, Zhenjiang, China, in 2018.
+From 2018 to 2022, he worked as a senior engineer
+in automobile industry. He is currently a doctoral
+student with the Department of Information Sci-
+ence and Electrical Engineering at Kyushu Univer-
+sity, Fukuoka, Japan. His current research focuses on vehicle path planning,
+vehicle dynamics control and intelligent vehicle.
+ZUGUANG HE was in Guangdong, China, in
+2001. He is currently a undergraduate student
+with Shien-Ming Wu School of Intelligent Engi-
+neering at South China University of Technology,
+Guangzhou, China. His major is robotics engineer-
+ing and his research interests include intelligent
+robot, robot trajectory planning and control.
+14 VOLUME 4, 2016This article has been accepted for publication in IEEE Access. This is the author's version which has not been fully edited and 
+content may change prior to final publication. Citation information: DOI 10.1109/ACCESS.2023.3294713
+This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/
+Author et al. : Preparation of Papers for IEEE TRANSACTIONS and JOURNALS
+YUTAKA ARAKAWA (M’01) received the B.E.,
+M.Sc., and Ph.D. degrees from Keio Univer-
+sity,Japan, in 2001, 2003, and 2006, respectively.
+He is currently a Professor at the Graduate School
+and Faculty of Information Science and Elec-
+trical Engineering, Kyushu University. His cur-
+rent research interests include human activity
+recognition, behavior change support systems, and
+location-based information systems. He is a mem-
+ber of ACM, IPSJ, and IEICE.
+BILL Y DAWTON received the B.E. degree in
+Electrical and Electronic Engineering from The
+University of Sussex, Brighton, UK, in 2014, the
+M.Sc. degree in Wireless and Optical Commu-
+nications from University College London, Lon-
+don, UK, in 2015, and the Ph.D degree in Infor-
+mation Science and Electrical Engineering from
+Kyushu University, Japan, in 2022. He is currently
+a Specially Appointed Assistant Professor with the
+department of Information Science and Electrical
+Engineering at Kyushu University, Japan. His current research focuses on
+low-cost, low-complexity classification frameworks, and NLP-based tourist
+information recommender systems.
+VOLUME 4, 2016 15This article has been accepted for publication in IEEE Access. This is the author's version which has not been fully edited and 
+content may change prior to final publication. Citation information: DOI 10.1109/ACCESS.2023.3294713
+This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/

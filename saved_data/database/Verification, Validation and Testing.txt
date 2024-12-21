@@ -1,0 +1,152 @@
+=== Metadata ===
+{
+    "file_name": "Verification, Validation and Testing.pptx",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Verification, Validation and Testing.pptx",
+    "status": "Processed"
+}
+
+=== Content ===
+Verification, Validation, and Testing Approaches for Intelligent Vehicles
+1
+Engineering Trust for Intelligent Vehicles
+Verification, Validation and Testing
+Saber Fallah (ENGM298)
+2
+ Key Concepts Covered
+Definition of Verification, Validation, and Testing (VVT)
+
+Importance of VVT for Intelligent Vehicles
+
+Methodologies and Industry Standards
+
+Challenges and Opportunities with AI-driven Systems
+
+Standards and regulations 
+Verification, Validation and Testing
+Saber Fallah (ENGM298)
+3
+Why VVT is Critical for Intelligent Vehicles?
+
+Verification, Validation and Testing
+Saber Fallah (ENGM298)
+4
+Defining Verification, Validation, and Testing
+
+Verification, Validation and Testing
+Saber Fallah (ENGM298)
+5
+Verification in Intelligent Vehicles
+Purpose: Ensure compliance with system requirements
+
+Focus Areas: Software integrity, sensor accuracy, algorithm robustness ions 
+
+Methods:
+
+
+
+
+
+
+Model Checking
+Software in the Loop
+Formal Verification
+Verification, Validation and Testing
+Saber Fallah (ENGM298)
+6
+Validation in Intelligent Vehicles 
+Purpose: Ensure the system performs correctly in real-world environments
+
+Challenges: Unpredictable environments, dynamic human behaviour
+
+Methods:
+Hardware in the Loop
+Real-world Data Validation
+Scenario-based Validation
+Verification, Validation and Testing
+Saber Fallah (ENGM298)
+7
+ Testing Approaches for Autonomous Vehicles
+
+Verification, Validation and Testing
+Saber Fallah (ENGM298)
+8
+Simulation and Virtual Testing
+Expensive
+Time-consuming 
+Risky
+Why do we rely on simulation? 
+One of the biggest perks of simulation is scalability 
+Verification, Validation and Testing
+Saber Fallah (ENGM298)
+9
+Real-world Testing
+Unpredictability of real-life environments 
+Geographic and environmental conditions 
+Edge cases
+Regulatory requirements
+Real-world testing happens after extensive virtual testing 
+Real-world testing gives us the ultimate feedback on how an autonomous vehicle performs 
+Verification, Validation and Testing
+Saber Fallah (ENGM298)
+10
+Industry Standards and Regulatory Requirements 
+ISO 26262: Functional Safety for Road Vehicles
+SOTIF (Safety of the Intended Functionality)
+ASIL, or Automotive Safety Integrity Levels 
+Verification, Validation and Testing
+Saber Fallah (ENGM298)
+11
+Industry Standards and Regulatory Requirements 
+UNECE WP.29 for Automated and Connected Vehicles
+
+Cybersecurity
+Software updates
+Emergency braking systems 
+Individual countries often have additional local regulations too. 
+Beyond technical standards, ethical and liability concerns are also a big part of the regulatory conversation. 
+Verification, Validation and Testing
+Saber Fallah (ENGM298)
+12
+Scenario-based Testing for Autonomous Vehicles
+What is Scenario-based Testing?
+Testing under a broad range of pre-defined scenarios to cover edge cases
+
+Advantages:
+Reduces unknown risks
+Forces the system to act in extreme and rare situations (edge-cases)
+Verification, Validation and Testing
+Saber Fallah (ENGM298)
+13
+Case Study: Waymo
+Waymo’s approach to safety assurance
+Massive use of simulation testing 
+Billions of real-world miles  
+Scenario-based testing 
+Verification, Validation and Testing
+Saber Fallah (ENGM298)
+14
+Challenges and Limitations
+Complexity and unpredictability of real-world environments 
+Black-box nature of AI 
+Scalability and cost  
+Regulatory and ethical challenges 
+Learn and adapt  
+Public trust and acceptance 
+Verification, Validation and Testing
+Saber Fallah (ENGM298)
+15
+Emerging Trends in VVT for Intelligent Vehicles
+Digital Twins
+Ai-driven Testing
+Federated Learning 
+Continuous Testing and Validation 
+Synthetic Data and Scenario Generation  
+Collaborative and Standardised Testing Frameworks  
+Verification, Validation and Testing
+Saber Fallah (ENGM298)
+16
+Conclusion and Recap
+Defined verification, validation, and testing
+Looked at simulation and virtual testing
+talked about the industry standards and regulations  
+Explored emerging trends in VVT   

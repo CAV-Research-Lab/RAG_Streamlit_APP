@@ -1,0 +1,735 @@
+=== Metadata ===
+{
+    "file_name": "Autonomous Vehicles Testing Methods Review.pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Autonomous Vehicles Testing Methods Review.pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+See discussions, st ats, and author pr ofiles f or this public ation at : https://www .researchgate.ne t/public ation/311919670
+Autonomous vehicles testing methods review
+Conf erence Paper  · No vember 2016
+DOI: 10.1109/IT SC.2016.7795548
+CITATIONS
+202READS
+10,777
+4 author s, including:
+Lv Yisheng
+Chinese Ac ademy of Scienc es
+167 PUBLICA TIONS    8,016  CITATIONS    
+SEE PROFILE
+Fenghua Zhu
+Chinese Ac ademy of Scienc es
+206 PUBLICA TIONS    3,650  CITATIONS    
+SEE PROFILE
+All c ontent f ollo wing this p age was uplo aded b y Fenghua Zhu  on 06 May 2021.
+The user has r equest ed enhanc ement of the do wnlo aded file.
+  
+ 
+Abstract—Driving test is critical to the deployment of 
+autonomous vehicles . It is necessary to review the related works 
+since the methodologies summar ies are r are, which will help to 
+set up  an integrate d method for autonomous driving test in 
+different development stages , and help to provide a reliable, 
+quick, safe, low cost and reproducible method and accelerate the 
+development of autonomous vehicle.  In this pap er, we review the 
+related autonomous driving test works, including  autonomous 
+vehicle functional verification , vehicle integrated testing, system 
+validation  in different architecture s. This review work  will be  
+helpful for autonomous vehicle development . 
+I. INTRODUCTION  
+Autonomous driving systems are becoming increasingly 
+complex and must be tested effectively before deployment . 
+The assurance of autonomous driving system safety in critical 
+situations is a challenging task, and the concepts and testing 
+process h ave to be discu ssed in order to cope with this  [1~6] . 
+Currently, there are lots of related works been carried out, 
+from ADAS to automated and autonomous driving tests 
+[7~10] . However, a complete profile for autonomous vehicle 
+testing methodologies is still  highly needed during the whole 
+development process , including functional development and 
+testing, system integration and verification, test drive and 
+validation  etc. 
+The virtual or real approaches testing methods used in 
+ADAS and automated driving systems  are good reference s for 
+autonomous driving tests [11,12] . One of these approach es is 
+virtual simulation  testing , from simulated sensors, vehicle 
+dynamic model and controller, virtual driver, to simulated 
+comprehensive traffic environment. The  function mod ules are 
+tested by software in the loop (SIL), hardware in the loop 
+(HIL), vehicles in the loop (VEHIL) or mixed simulat ion 
+methods  [13,14] . Another approach  is real traffic driving tests. 
+Automated or autonomous driving systems must be secured 
+with hundre ds of th ousands of FOT kilometers  testing [15]. 
+The advantage of the simulation testing is simple, low -cost, 
+and easy to reproduce. However, the test ing results reliability 
+is highly depended on the accuracy of simulated sensors, 
+vehicle and environment mo dels. Although o n-road testing is 
+very representative,  its limited ability to test all critical 
+scenarios due to safety and costs involved is well established 
+and its low efficiency is known [16,17] . Some specific testing 
+centers, like M -City of Michigan University MTC, are ready 
+to test autonomous driving. However, they are closed, 
+simulated, with several  selected traffic scenarios and limited  
+testing vehicles. It is difficult to reproduce or simulate the real 
+complex traffic  with lots of vehicles or pedest rian interaction.  
+ 
+This work  is partly supported by N SFC91520301 , 71232006 , 61233001 , 
+61533019 ; 
+WuLing  Huang, Kunfeng Wang , Yisheng Lv  and Fenghua Zhu, are with 
+the State Key Laboratory of Management and Control for Complex Systems, 
+Chinese Academy of Sciences, Institute of Automation, Beijing, China.  
+(e-mail:  wuling.huang@ia.ac.cn ). With the  advantages of the se existing testing methods, it is 
+possible to test autonomous vehicles in dangerous situations 
+or failure modes where real traffic testing would  be hard ; and 
+also possible to test in scenarios that would be diff icult to 
+generate or rarely happened in real world;  and also some key 
+parameter spaces traversers can be used to find boundary 
+values at which certain failure occurs can be applied in the 
+testing.  
+This paper reviews the existing methods  of autonomous 
+drivi ng functional testing, verification and validation . It will 
+be helpful to set up some reliable, quick, safe, low cost and 
+reproducible testing method s, and a ccelerate the development.  
+It consists of five sections. The first section is introduction, 
+and t he second is autonomous driving  testing related methods 
+introduction . The third section is autonomous vehicle 
+functional testing. The fourth section is autonomous vehicle 
+evolutionary testing method. The last is the conclusion . 
+II. AUTONOMOUS DRIVING  TESTING  RELATED METHODS  
+Integrated tools suites and methods supported process is 
+crucial to enable cost and time efficient full  coverage 
+autonomous driving test, by an effective process with linking 
+available tools  from the Intelligent Vehicle related testing 
+technol ogies  [18]. 
+A. Software Testing  
+The million lines codes in autonomous vehicle require 
+automation functional test on source code level and also 
+require enhanced security of permanently online 
+safety -critical systems. The testing practices could be used, 
+which requires automatically created test cases, 
+hardware -in-the-loop (HIL) testing, change -based testing and 
+the mapping of tests cases to requirements, with aerospace 
+DO178C, ASIL -D level, and ISO26262, similar testing 
+specifications  with lots of available test tools, such as revision 
+of Google Test [19]. 
+B. Simulation Testing  
+High -fidelity simulation is required in autonomous vehicle 
+testing. The dedicated software containing mathematical 
+representation of the subsystems should be used in order to 
+achieve r ealistic system dynamic, which can be validated with 
+hardware -in-the-loop techniques. High  level algorithms for 
+trajectory planning, vision based processing, and 
+multi -vehicles interactions are examples of suitable fields 
+based on game engines [20~22]. 
+Amo ng the vehicle simulators, the most known is probably 
+Racer which is with a very realistic and real time vehicle 
+model, but not with complex sensor models, hard to setup 
+reference scenarios in order to evaluate and validate embedded 
+algorithms. The USARSim  high-fidelity open -source 
+simulator is fully compatible with the Player frameworks and 
+Mobility Open Architecture Simulation and Tools (MOAST) Autonomous Vehicle s Testing Method s Review  
+WuLing Huang , Kunfeng Wang , Yisheng Lv , FengHua Zhu  2016 IEEE 19th International Conference on Intelligent Transportation Systems (ITSC)
+Windsor Oceanico Hotel, Rio de Janeiro, Brazil, November 1-4, 2016
+978-1-5090-1889-5/16/$31.00 ©2016 IEEE 163
+Authorized licensed use limited to: INSTITUTE OF AUTOMATION CAS. Downloaded on May 06,2021 at 04:13:46 UTC from IEEE Xplore.  Restrictions apply. 
+  
+[23], which implements the Real -time Control System (RCS) 
+reference model architecture, mainly for software -intensive, 
+real-time control robots, hard to manipulate. The CarMaker 
+from IPG is too complex for a real time autonomous driving 
+prototyping in a complex situation with several vehicles and 
+traffic management, or the scene rendering is not realistic 
+enough.  
+The SUMO and USARSim simulators are used to simulate 
+autonomous vehicle in a traffic environment. However, this 
+software architecture is for the prototype of autonomous 
+vehicle simulation and lacks detailed testing methods 
+elements, especially in driving env ironmental perception. The 
+PreScan platform from TNO is a typical used in ADAS 
+prototyping  [24]. However, it is not enough realistic for 
+control/command applications. The SiVIC platform 
+interconnected with RTMaps platform offers an easy and 
+efficient way t o respond to the ADAS prototyping, tests and 
+evaluation and many features are still under development  
+[25,26] . 
+C X-in-the-loop Simulation Testing  
+The integrated X -in-the-loop simulation testing  tool suite 
+includes state -of-the-art simulation platforms for autonomous 
+vehicle, focusing on modelling of phenomenological sensor 
+models, the vehicle with its actuators, the definition of driving 
+scenarios, as well as autonomous driving functions, which 
+provides a novel approach and test architecture to validate the  
+perception systems, planning and control logic of such 
+autonomous vehicles using simulation and virtual techniques.  
+ 
+Figure 1.  Possible configurations for HIL and VEHIL simulations  
+Hardware -in-the-loop (HIL) testing is provided for sensor, 
+communication systems, a nd function modules. The real code 
+can then be verified with Software -in-the-loop (SIL) 
+simulations, where the remaining hardware components, 
+vehicle dynamics, and environment are simulated in real -time 
+[27]. There are d ifferent concepts of combining measu rements 
+and simulations , X-in-the-loop, as Figure 1 shown, h ardware 
+components are connected to the virtual environment , 
+measured and simulated environmental aspects are augmented 
+and aligned in order to test autonomous  vehicles  on both 
+worlds. Vehicle -in-the-loop (VEHIL) simulations provide a 
+solution for testing a full -scale autonomous vehicle in a HIL 
+environment [28,29] . 
+4) Driving Test in Real Traffic  
+Autonomous Vehicle driving tests can be carried out in 
+real, open environments.  Google driverless car s are mostly 
+tested in real traffic. T here are several autonomous vehicle 
+proving ground or testing centers, such as M -City from MTC 
+and iVPC from China  [3,30] , as Figure 2 shown, used to test new technologies in possible traffic situations and road types.  
+These proving grounds facility consist of several test 
+environments, including urban and rural area, high -speed area, 
+where scenario -based tests can be carried out in a repeatable 
+and structured manner.  
+ 
+  
+Figure 2.  M-City and iVPC Overview  
+Test drives with protot ype vehicles are always the final 
+link in the validation chain to evaluate  the system’s 
+performance in the real world environment that it will finally 
+be used in.  Google reports its driverless car testing every 
+month, which is available here [1]. All the e xisting 
+autonomous  vehicles road test ing are similar  to the way we 
+propose d in this paper  [17], test driving by a certain mileage in 
+the typical environments , assess the autonomous driving 
+quality.  
+Autonomous driving operation depends on interaction 
+with r eal world physical infrastructure. The road tests can 
+investigate how current transportation infrastructure can be 
+optimized to maximize the potential benefit of the 
+autonomous driving technologies.  
+In addition, with the practice of several years Intellig ent 
+Vehicle Future Challenge (IVFC) competition organization  
+works , we found that, a good methodology to test and validate  
+or assess automated or autonomous vehicles is using real 
+pre-crash scenarios based on experimental data  [31,32] . For 
+example, Volvo's  pedestrian detection system is evaluated 
+based on real -life accidents.  
+III. AUTONOMOUS VEHICLE FUNCTIONAL TESTING  
+A.  Autonomous Vehicle System  Architecture  
+The architecture of an autonomous vehicle is based on the 
+general driver behavior, and follows a senso r-based  and 
+actuator -based autonomous system architecture, consisting of 
+Perception, Decision and Action Layer , as Figure 3 shown 
+[33,34] . Currently, advanced and new capabilities, such as 
+adaptation and learning , the existing test/validation methods 
+are i nsufficient.  These new challenges require considering 
+established technologies like formal verification  [35,36] . 
+As Figure 3 shown, a probabilistic methodology for 
+simulating radar, Lidar or other sensors’ data is to increase the 
+simulation’s level of real ism while maintaining both 
+flexibility and adaptability of simulation -based validation 
+strategies. The probabilistic sensor models are compared with 
+real data in order to evaluate the statistical characteristics of 
+both datasets  [37,38] . 164
+Authorized licensed use limited to: INSTITUTE OF AUTOMATION CAS. Downloaded on May 06,2021 at 04:13:46 UTC from IEEE Xplore.  Restrictions apply. 
+  
+Actuator NAutonomous Vehicle System
+Real Traffic 
+Environment
+Simul Traffic 
+Environment
+ 
+Figure 3.  Generic A utonomous Vehicle S ystem Architecture  
+B. Autonomous Vehicle  Functional Testing  
+1) Perception Layer Functions Test ing 
+The Perception Layer is responsible for the acquisition of 
+all data, from vision , Lidar, or radar  based sensor s. Then they 
+are merged into a unique fusion map. By physical tests, 
+software test or HIL simulation test, both the various sensor s 
+and environment perception layer are tested. The assessment 
+criteria are obtained, including the state and errors of the 
+posture and  localization, the detected pedestrians, lane s, traffic 
+signs  and lights , other vehicle  and other related elements  
+[39,40] . 
+2) Decision Layer Functions Testing  
+The Decision Layer is fed by the Perception Layer 
+providing feedback data to further optimize th e data 
+acquisition and interprets all incoming data from it to generate 
+a reasonable output to the Action Layer. The Situational 
+Assessment provides the input evaluation for short and long 
+term planners; they should influence each other to avoid short 
+term decisions which do not accomplish the overall goal. 
+Artificial Intelligence algorithms are commonly used in the 
+Decision Layer mainly due to the highly non -linear behavior 
+of real environment such as Neural Networks, Machine 
+Learning,  etc. 
+This comprehend s the middle level supervision from 
+simple tasks such as follow a line or a path and speed control 
+to more complex tasks such as adjusting speed anticipating a 
+curve or collision avoidance. Evaluation of autonomous 
+vehicle decision making modules is done b y way of test drive 
+or simulation test . The driving system reaction characteristic 
+are used for indicators, including reaction time and operating 
+correctness etc.  
+3) Navigation Layer Functions Testing  
+The Navigation Layer functions testing are done by test  
+drive or simulation. The navigation level performs higher 
+level tasks related to driving such as controlling the global 
+objectives, trajectory planning, efficiency and commodity, 
+taking into account the driving conditions.  
+The Path planning error is used  for assessment criteria; 
+evaluate the capability of the algorithms to avoid collisions 
+with other objects, at any time.  
+4) Action Layer Functions Testing  
+Action Layer receives commands through the Decision 
+Layer into the action supervisor, which sets up t he abstract 
+decision into set points to be fed by the actuators’ controllers. The action generator denotes the system controllers and 
+performs the low -level actions in the actuators, also 
+monitoring the feedback variables to further process the new 
+actuati ng variables.  
+The control level is the lowest level, i.e. the physical 
+control of the vehicle, i.e. the sensors and actuators of the 
+driver’s model. It is evaluated by test drive or simulation ways. 
+The vehicle trajectory deviation, acceleration and jitter  are 
+used to evaluate this module.  
+C. Autonomous  Vehicle  System Validation Approach  
+Task -Specific autonomous vehicles System validation 
+approach is model ed in functional levels, avoiding the 
+complexities of tremendous algorithms evaluation, similar to 
+Grey -Box testing  [17], shown as Fig ure 4. 
+Grey-Box 
+ModelTests 
+Sets
+1
+Simulation or
+ Real EnvironmentsTest Cases
+Functions
+Testing 
+Sets
+(FTS)Sesors Acuator
+Environment PerceptionMission Planning
+Mission 
+Executive
+Motion PlanningGlobal Information
+DataDriving 
+Behaviors
+Motion 
+TargetSensor Range 
+Information
+Local 
+Information
+Control MessageEvaluation 
+Process
+Testing 
+Process Design
+Testing Record & 
+Evaluation
+Testing Tasks 
+AchievementFeedback & 
+Improvement
+……
+FTS NFTS 1
+Tests 
+Sets 
+N…
+…
+ 
+Figure 4.  Autonomous vehicle System validation model  
+By analyzing auton omous driving functions, lists of 
+simple function test cases are selected and assembled into 
+different testing processes, which  are further abstracted as 
+driving tasks sets. By analyzing specific driving tasks sets, 
+autonomous  driving functions can be evaluated. Autonomous 
+driving tasks tests are carried out under different simulation or 
+real environments. By a formal evaluation p rocess, including 
+tests design, recording and evaluation and completion 
+verification, all driving tasks completion are finally evaluated  
+with different task complexit y propert y and different 
+environment complexities.   
+T1 T2 T3 T4 T5Mission Point Moving Direction
+ 
+Figure 5.  As an ex ample, T1 (On-road Driving), T2 (Overtaking), T3(Turn 
+Left), T4 (Pedestrian Avoidance), T5 (U-TURN) are set along the 
+competition route and divided by mission points.  
+IV. AUTONOMOUS VEHICLE EVOLUTIONARY TESTING 
+METHOD  
+A. Autonomous Vehicle Evolutionary Design and Testing 
+Flow  
+Based on these autonomous driving testing practices  and 
+other related works [17], we summed up an Autonomous 
+Vehicle evolutionary  design and testing comprehensive flow, 
+as Figure 6 shown.  165
+Authorized licensed use limited to: INSTITUTE OF AUTOMATION CAS. Downloaded on May 06,2021 at 04:13:46 UTC from IEEE Xplore.  Restrictions apply. 
+  
+Functional 
+requirements   System
+Validation
+System 
+Specification
+Top-level design
+Module design 
+specifications
+Module 
+construction   System 
+Verification
+ System Integration 
+and Testing
+Module 
+verificationDesign 
+FlowValidation 
+Flow
+SIL:  Software-in-the-loop
+HIL:  Hardware-in-the-loop
+VEHIL:  Vehicle Hardware-in-the-loop
+RCP:   Rapid Control PrototypingTest drive / Simulation with VEHIL
+HIL, VEHIL
+RCP
+SIL, HILHIL
+Autonomous Vehicle 
+System Evolutionary 
+Testing1
+2
+3
+4
+ 
+Figure 6.  Autonomous Vehicle evolutionary design and testing flow  
+1) Autonomous vehicle design and system  validation  
+The autonomous vehicle development starts with a 
+definition of the functional requirements in terms of the 
+desired functions, from the basic autonomous driving 
+functional  requirements to handle short term and long term 
+planning, avoid dangerous collision and driving safety obey 
+the traffic rules, and with further constraints or requirements 
+on safety, mobility, passenger comfort, and intelligent 
+operational.  
+The autonomous  vehicle validation methods include Test 
+Drive and VEHIL simulation, and the combined evolutionary 
+testing, with feedbacks between the development and testing.  
+2) Autonomous vehicles system specification  and system 
+verification  
+Autonomous vehicles are safe ty-critical systems that 
+require a high level of dependability, a term covering 
+reliability, fail -safety, and fault -tolerance. In addition to the 
+system safety, it requires driving safety, identify the safety 
+requirements, with criteria indicators of drivi ng gaps, velocity 
+and trajectory control. At the same time, autonomous vehicles 
+should compliant with the operating efficiency, driving 
+comfort requirements, with criteria indicators of lateral and 
+longitudinal velocity, acceleration and jitter.  
+From the f unctional, safety, efficiency and comfortable 
+requirements, an autonomous vehicle system specification is 
+produced to define the precise operation of the autonomous 
+driving system. For example, according to the traffic laws and 
+regulations, as well as traf fic conditions, based on the driving 
+safety requirements to make standardized spec. A 
+Model -based testing (MBT) can be used to verify the system, 
+and Rapid Control Prototyping (RCP) method can be used to 
+make rapid prototyping system verification.  
+3) Auton omous vehicle top level  design and system 
+integration testing  
+The system specification is used as the basis for the 
+top-level design of the system architecture, followed by 
+detailed perception, planning and control modules design with 
+environment sensor, c ontroller, actuator, driver autopilot etc. 
+After implementation of the individual hardware and software 
+modules, system integration takes place by assembling the 
+complete system from its component modules.  
+In every integration phase, verification takes pl ace to 
+determine whether the output of a phase meets its specification, 
+as illustrated by the horizontal arrows in Figure 6.  4) Autonomous vehicle modules design and modules  
+verification  
+ On the modules level, every function should be tested, to 
+validate the perception systems, planning and control logic of 
+such autonomous vehicles using simulation and virtual 
+techniques and HIL etc. by different novel test approach. On 
+the sensors and perception level, this means testing the range, 
+accuracy, and tracking capabilities of the environment sensor. 
+On the control level, this means testing the vehicle stability 
+and control accuracy. On the planning level, this means the 
+trajectory evaluation against the obstacles and other vehicles.  
+The hardware controller can b e tested in a HIL simulation 
+for its real -time behavior. This limited HIL setup can 
+gradually be extended to include other modules, as the 
+integration of the vehicle progresses.  
+B. Evolutionary Autonomous vehicle system testing  methods  
+1) M ixed Reality Aut onomous Vehicle  Testing  Methods  
+The test drives method has its limited, because test results 
+are hard to reproduce and sometime inaccurate, due to hard to 
+get the ‘ground truth’ state of the obstacles, pedestrians and 
+the other vehicles involved in the tes t. And for reason of the 
+complexity of the environment, long test mileages are required 
+to form a full coverage of the scenarios [41,42] . To overcome 
+the shortcoming of this method, a solution to combine the 
+advantages of simulations with the representativ eness of test 
+drives, by extending the HIL environment from vehicle level 
+to the traffic level, is needed.  
+When simulating autonomous driving, a necessary 
+component is the simulation of sensors such as radar, lidar, 
+cameras, infrared etc. VEHIL adds value to the development 
+process of autonomous vehicles, with a number of distinct 
+advantages. Tests with VEHIL are performed in a 
+reproducible and flexible way with high accuracy, safer, allow 
+autonomous vehicles to be tested in safety -critical scenarios, 
+and a llow precise and repeatable variation of test parameters.  
+There are several s imulation and test drive mixed methods  
+for reference. The mixed reality platform is built on Marvin 
+autonomous vehicle and the Autonomous Inter section 
+Manager (AIM) simulator . By this approach, the mixed reality 
+autonomous intersection scenario is simulated and tested  [43]. 
+The Hybrid simulation tool VIVUS (Virtual Intelligent 
+Vehicle Urban Simulator) consists of both hardware in the 
+simulation loop and/or software simulation in t he hardware 
+experimental loop  [44]. 
+With these approaches, t he costs of the validation process 
+are reduced, because many tests are performed in a short time 
+frame with a high success rate. VEHIL facilitates the 
+transition from simulations to outdoor test d rives that are used 
+to evaluate the real performance and dependability on the road. 
+These test drives can be performed with a much higher 
+confidence and less risk, when the autonomous vehicle has 
+already been thoroughly tested in VEHIL model.  
+2) Using M ixed Reality Methods to Accelerate  Autonomous 
+Vehicle  Testing  
+Autonomous highest level validation is to test drive in 
+virtual or real environment for a certain mileage.  It is therefore 
+important to perform validation of the integrated system 166
+Authorized licensed use limited to: INSTITUTE OF AUTOMATION CAS. Downloaded on May 06,2021 at 04:13:46 UTC from IEEE Xplore.  Restrictions apply. 
+  
+against its requi rements.  Usually, the development process 
+involves several iterations, where the results of verification 
+and validation are used to modify the system specification and 
+design, after which another test cycle takes place , as Figure 6.  
+ 
+Figure 7.  Mixed Reality Testin g Methods  (VIVUS  architecture ) 
+Obviously, there is a need to speed up the process . Because 
+of the need for fast, flexible and reproducible test results, 
+various Mixed Reality Testing Methods  are increasingly being 
+used [44], and a new evolutional testing m ethod to accelerat e 
+the development process is clarified , as Figure 8 shown, we 
+propose an Evolutionary Autonomous vehicle system testing  
+method .  
+AV Funcs 
+Evaluation
+Validation 
+EnvironmentsReal Road Testing
+Simulation Testing
+FeedbackAV Test
+TargetsDReal Environment and Virtual 
+Environment
+Data & CalibrationRoad Testing 
+Evaluation Methods
+Simulation Testing 
+Evaluation Methods
+Evaluation Methods AV Test ContentsAV Integrated 
+Testing
+AV Verification 
+and ValidationAV Test 
+Results
+ 
+Figure 8.  Evolutionary Autonomous vehicle system testing  method  
+The simulation testing en vironments are based on real 
+traffic environment with 3D data collection and modeling , as 
+Figure 7 shown . But the simulation testing environments can 
+be modified and configured according to the actual testing 
+requirements. And the simulated vehicles are wi th accurate 
+dynamic model and various types sensor.  
+B. Static 
+Obstacles 
+Detection 
+C. Dynamic 
+Obstacles 
+DetectionA. Structural 
+On-road 
+Driving Tests
+ 
+Figure 9.  Building S imulation testing environments from real traffic  
+The validation is firstly carried out in simulation 
+environment  (built from real traffic , as Figure 9 shown ), 
+achie ved by mixed  simulation testing methods. Then carry out 
+the driving test in the correspond ing real environment. 
+Therefore, the simulation models of various components can 
+be corrected  with feedback , therefore, overcoming the 
+problem of simulation model ina ccuracy. Since the simulation 
+environment can be easily reconstructed and configuration  with scenario  auto generation tools  (as Figure 10  shown) , it is 
+a good way to solve the problem of the full coverage of traffic 
+scenarios. Furthermore, autonomous vehic le performance in 
+the traffic accident scenarios can be simulated and evaluated; 
+it is very helpful to autonomous driving development.  
+OvertakeStraight 
+RoadCurve Road Intersection
+FollowingIntersection with 
+SignalIntersection 
+without signal
+Left 
+OvertakeRight 
+OvertakeIntersection 
+Rules 1Intersection 
+Rules n
+Test 
+Case1Test 
+CaseNTest 
+CaseNTest 
+CaseNTest 
+CaseNTest 
+CaseNTest 
+CaseN...
+... ......Testing 
+EnvironmentsUrban Road 
+TestsHigh Speed 
+Road TestsRural Road 
+Tests
+Testing 
+Scenarios
+Driving 
+Behaviors
+Vehicle Velocity 
+Gap Acceleration 
+Check
+ 
+Figure 10.  Autonomous vehicle Testing Cases Generation  
+Traditional testing methods cannot keep pace wi th the 
+large number of situations required for autonomous driving 
+validation. This method is applied in simulated environments 
+and runs and evaluates thousands of simulated scenarios 
+autonomously.  Ongoing classification of the past results and 
+intelligent  search methods allow identification of new 
+candidate scenarios that are likely to lead to critical situations 
+that were not adequately covered by past tests.  Furthermore, 
+the full coverage testing rate can be proved and the accelerate d 
+testing methods can  be discussed  in this framework.  
+V. CONCLUSION  
+Autonomous vehicle  testing is critical to the deployment of 
+autonomous  vehicles. I t is necessary to integrate the existing 
+methods, bring out a set of methods for autonomous driving 
+testing for different stages o f development process, and 
+provide reliable, quick, safe, low cost and reproducible 
+testing method s to accelerate the development.  In this paper, 
+we review the current related works, and summarize  
+autonomous vehicle functional modules verification and 
+integrated testing , autonomous vehicle system validation 
+methods , and  propose an evolutionary autonomous vehicle 
+testing method , which is  still under developing . Especially, 
+the proof of full coverage test rate and the accelerate d testing 
+methods should be further discussed in our next paper s. 
+REFERENCES  
+[1] www.google.com/en//selfdrivingcar/files/reports/report -0216.pdf  
+[2] https://www.dspace.com/zh/zho/home/products/systems/ecutest/confi
+guration_examples/ecus_for_vehicle_dynamics.cfm  
+[3] http://www.mtc.umich.edu/test -facility 
+[4] https://en.wikipedia.org/wiki/Google_self -driving_car  
+[5] http://www.bitrebels.com/technology/teslas -first-autopilot -crash -happ
+ened/  
+[6] http://www.rand.org/content/dam/rand/pubs/research_reports/RR400/
+RR443 -2/RAND_RR443 -2.pdf  
+[7] M. Aeberhard, S. Rauch, M. Bahr am, G. Tanzmeister, J. Thomas, Y. 
+Pilat, F. Homm, W. Huber, and N. Kaempchen, “Experience, Results 
+and Lessons Learned from Automated Driving on Germany's 
+Highways,” IEEE Intelligent Transportation Systems Magazine, vol. 7, 
+no. 1, pp. 42 -57, 2015.  
+[8] F. Flemi sch, A. Schieben, N. Schoemig, M. Strauss, S. Lueke, and A. 
+Heyden, "Design of human computer interfaces for highly automated 
+vehicles in the eu -project HAVEit." pp. 270 -279. 167
+Authorized licensed use limited to: INSTITUTE OF AUTOMATION CAS. Downloaded on May 06,2021 at 04:13:46 UTC from IEEE Xplore.  Restrictions apply. 
+  
+[9] M. Campbell, M. Egerstedt, J. P. How, and R. M. Murray, 
+“Autonomous driving in ur ban environments: approaches, lessons and 
+challenges,” Philosophical Transactions of the Royal Society of 
+London A: Mathematical, Physical and Engineering Sciences, vol. 368, 
+no. 1928, pp. 4649 -4672, 2010.  
+[10] O. Carsten, and L. Nilsson, “Safety assessment of driver assistance 
+systems,” European Journal of Transport and Infrastructure Research, 
+vol. 1, no. 3, pp. 225 -243, 2001.  
+[11] European research project "Testing and Evaluation Methods for 
+ICT-based Safety Systems (eVALUE)", http://www.evalue -project.eu/  
+[12] M. Anwa r Taie, "New trends in automotive software design for the 
+challenges of active safety and autonomous vehicles."  
+[13] C. Gühmann, J. Riese, and K. von Rüden, “Simulation and Testing for 
+Vehicle Technology.”  
+[14] R. Schilling, and T. Schultz, "Validation of Automated Driving 
+Functions," Simulation and Testing for Vehicle Technology, pp. 
+377-381: Springer, 2016.  
+[15] M. Hjort, H. Andersson, J. Jansson, S. Mårdh, and J. Sundström, “A test 
+method for evaluating safety aspects of ESC equipped passenger cars: a 
+prototype proposa l,” 2009.  
+[16] F.-Y. Wang, X. Wang, L. Li, P. Mirchandani, and Z. Wang, "Digital 
+and construction of a digital vehicle proving ground." pp. 533 -536. 
+[17] W. Huang, D. Wen, J. Geng, and N. -N. Zheng, “Task -specific 
+performance evaluation of ugvs: Case studies at the I VFC,” IEEE 
+Transactions on Intelligent Transportation Systems, vol. 15, no. 5, pp. 
+1969 -1979, 2014.  
+[18] H.-M. Huang, K. Pavek, J. Albus, and E. Messina, "Autonomy levels 
+for unmanned systems (alfus) framework: An update." pp. 439 -448. 
+[19] M. Broy, "Challenges in a utomotive software engineering." pp. 33 -42. 
+[20] M. R. Heinen, F. S. Osório, F. J. Heinen, and C. Kelber, “SEVA3D: 
+Autonomous Vehicles Parking Simulator in a three -dimensional 
+environment,” INFOCOMP Journal of Computer Science, vol. 6, no. 2, 
+pp. 63 -70, 2007.  
+[21] M. Kuderer, S. Gulati, and W. Burgard, "Learning driving styles for 
+autonomous vehicles from demonstration." pp. 2641 -2646.  
+[22] R. Austin, Unmanned aircraft systems: UAVs design, development and 
+deployment: John Wiley & Sons, 2011.  
+[23] J. L. Pereira, and R. J. Ross etti, "An integrated architecture for 
+autonomous vehicles simulation." pp. 286 -292. 
+[24] https://www.tassinternational.com, TNO spinout TASSInternational  
+[25] D. Gruyer, S. Pechberti, and S. Glaser, "Development of full speed 
+range ACC with SiVIC, a virtual platform  for ADAS prototyping, test 
+and evaluation." pp. 100 -105. 
+[26] M. Lesemann, A. Zlocki, J. Dalmau, M. Vesco, M. Hjort, L. Isasi, H. 
+Eriksson, J. Jacobson, L. Nordström, and D. Westhoff, “A test 
+programme for active vehicle safety –detailed discussion of the 
+eVALU E testing protocols for longitudinal and stability functionality,” 
+in 22nd Enhanced Safety of Vehicles (ESV) Conf., Washington, USA, 
+2011.  
+[27] M. Buhren, and B. Yang, “Simulation of automotive radar target lists 
+using a novel approach of object representation, ” in 2006 IEEE 
+Intelligent Vehicles Symposium, 2006, pp. 314 -319. 
+[28] A. Sidhu, “Development of an Autonomous Test Driver and Strategies 
+for Vehicle Dynamics Testing and Lateral Motion Control,” The Ohio 
+State University, 2010.  
+[29] C. Miquet, "New test method for reproducible real -time tests of ADAS 
+ECUs:“Vehicle -in-the-Loop” connects real -world vehicles with the 
+virtual world." pp. 575 -589. 
+[30] http://www.js.xinhuanet.com/2015 -08/18/c_1116293050.htm  
+[31] M. Blanco, J. Atwood, S. Russell, T. Trimble, J. McClafferty, and M. 
+Perez, Automated Vehicle Crash Rate Comparison Using Naturalistic 
+Data, Virginia Tech Transportation Institute, 2016.  
+[32] O. Gietelink, D. Verburg, K. Labibes, and A. Oostendorp, "Pre -crash 
+system validation with PRESCAN and VEHIL." pp. 913 -918. 
+[33] M. Montremerlo , J. Beeker, S. Bhat, and H. Dahlkamp, “The stanford 
+entry in the urban challenge,” Journal of Field Robotics, vol. 7, no. 9, 
+pp. 468 -492, 2008.  
+[34] S. Thrun, M. Montemerlo, H. Dahlkamp, D. Stavens, A. Aron, J. Diebel, 
+P. Fong, J. Gale, M. Halpenny, and G. Hof fmann, “Stanley: The robot 
+that won the DARPA Grand Challenge,” Journal of field Robotics, vol. 
+23, no. 9, pp. 661 -692, 2006.  [35] T. J. Alberi, “A proposed standardized testing procedure for 
+autonomous ground vehicles,” Embry Riddle Aeronautical University, 
+2008. 
+[36] C. Adam, and G. Wanielik, “Map -based driving profile simulation for 
+energy consumption estimation of electric vehicles,” in 2012 15th 
+International IEEE Conference on Intelligent Transportation Systems, 
+2012, pp. 1078 -1084.  
+[37] P. Nordin, L. Andersson, and  J. Nygards, "Sensor data fusion for terrain 
+exploration by collaborating unmanned ground vehicles." pp. 1 -8. 
+[38] J. Z. Varghese, and R. G. Boone, “Overview of Autonomous Vehicle 
+Sensors and Systems.” [J]. 
+[39] C. Berger, "Automating Acceptance Tests for Sensor -and 
+Actuator -based Systems on the Example of Autonomous Vehicles. 
+Aachen," Germany: Shaker Verlag, Aachener Informatik -Berichte, 
+Software Engineering, 2010.  
+[40] A. Geiger, P. Lenz, and R. Urtasun, "Are we ready for autonomous 
+driving? the kitti vision benchmark su ite." in  2012  IEEE Conference 
+on Computer Vision and Pattern Recognition (CVPR), 2012 , pp. 
+3354 -3361.  
+[41] W. Wachenfeld, and H. Winner, "Virtual Assessment of Automation in 
+Field Operation A New Runtime Validation Method." p. 161.  
+[42] A. Christensen, A. Cunningha m, J. Engelman, C. Green, C. Kawashima, 
+S. Kiger, et al., "Key Considerations in the Development of Driving 
+Automation Systems," in 24th International Technical Conference on 
+the Enhanced Safety of Vehicles (ESV), 2015.  
+[43] M. Quinlan, T. -C. Au, J. Zhu, N. Sti urca, and P. Stone, "Bringing 
+simulation to life: A mixed reality autonomous intersection," in 
+Intelligent Robots and Systems (IROS), 2010 IEEE/RSJ International 
+Conference on, 2010, pp. 6083 -6088.  
+[44] F. Gechter, B. Dafflon, P. Gruer, and A. Koukam, "Towards a hybrid 
+real/virtual simulation of autonomous vehicles for critical scenarios," in 
+The Sixth International Conference on Advances in System Simulation 
+(SIMUL 2014), 2014.  
+ 168
+Authorized licensed use limited to: INSTITUTE OF AUTOMATION CAS. Downloaded on May 06,2021 at 04:13:46 UTC from IEEE Xplore.  Restrictions apply. View publication stats

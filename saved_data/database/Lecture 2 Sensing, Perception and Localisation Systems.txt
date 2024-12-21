@@ -1,0 +1,252 @@
+=== Metadata ===
+{
+    "file_name": "Lecture 2 Sensing, Perception and Localisation Systems.pptx",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Lecture 2 Sensing, Perception and Localisation Systems.pptx",
+    "status": "Processed"
+}
+
+=== Content ===
+Sensing Systems in Intelligent Vehicles
+1
+The Gateway to Autonomy
+Introduction to Sensing Systems
+Saber Fallah (ENGM298)
+2
+
+Anatomy of a Sensing System
+Saber Fallah (ENGM298)
+3
+
+Cameras in Sensing Systems
+In autonomous vehicles, cameras detect colour and contrast to identify and interpret traffic signs, detect lane markings, and identify obstacles such as other vehicles, pedestrians, and cyclists.
+
+One of the main advantages of cameras is their ability to capture a wide range of colour and texture information that some other sensors cannot.
+
+Cameras are susceptible to various environmental conditions. For instance, their performance can be significantly impacted by poor lighting conditions, heavy rain or fog, and direct sunlight or glare.   
+Saber Fallah (ENGM298)
+4
+
+Lidars in Sensing Systems
+Saber Fallah (ENGM298)
+5
+
+Lidar is like the 'depth perception' of our sensing ensemble, creating a 3D representation of the environment.
+
+Lidar provides high-resolution, three-dimensional information about the surrounding environment, and it's capable of functioning well in different lighting conditions, something cameras might struggle with.  
+
+Lidar sensors are often more expensive and more complex to integrate into vehicle designs compared to other sensor types. 
+
+
+Radars in Sensing Systems
+Saber Fallah (ENGM298)
+6
+
+Radar emits radio waves that bounce off objects in the environment. 
+
+Radar long-range detection capabilities and resilience in poor visibility conditions, such as rain, fog, or even through obstacles, make it a reliable sensor in the autonomous vehicle sensor suite.
+
+Radar provides less detail in its detections compared to sensors like Lidar or cameras. While it's effective at detecting the presence, distance, and speed of objects, it can struggle with accurately identifying the type of object.
+
+RTK-GPS in Sensing Systems
+Saber Fallah (ENGM298)
+7
+
+RTK-GPS acts as the 'global navigator' for our autonomous vehicles, providing precision location data.
+
+The main advantage of RTK-GPS is its impressive accuracy. 
+
+Its performance can be affected by factors such as buildings or trees blocking the signals (known as the 'urban canyon' effect), and it requires a separate correction data stream, which could be a limitation in some areas.
+
+IMUs in Sensing Systems
+Saber Fallah (ENGM298)
+8
+
+IMUs are devices that measure and report on a vehicle's velocity, orientation, and gravitational forces, using a combination of accelerometers, gyroscopes, and sometimes magnetometers. 
+
+The information provided by the IMU is crucial for many applications, including navigation, stabilising the vehicle's movements, and assisting with tasks that demand precise positioning and control. 
+
+Small errors in measurement can accumulate over time, leading to a phenomenon known as 'drift.' 
+V2X Communications in Sensing Systems
+Saber Fallah (ENGM298)
+9
+
+V2X encompasses a set of technologies that allow vehicles to communicate not only with each other (V2V or 'Vehicle-to-Vehicle') but also with infrastructure (V2I or 'Vehicle-to-Infrastructure'), pedestrians (V2P), and the network (V2N). 
+V2X Communications' main advantage lies in their ability to extend the perception of the vehicle beyond what the onboard sensors can see. 
+it requires widespread adoption and infrastructure to function optimally. Privacy and security are also major concerns, as it involves sharing location and other sensitive data.
+Summary of Sensing Systems
+Saber Fallah (ENGM298)
+10
+
+The effectiveness of an autonomous vehicle's sensing system lies not in the strengths of individual components but in their combined input, creating a comprehensive understanding of the vehicle's surroundings and enabling it to make safe and efficient decisions.
+As technology evolves, we can anticipate enhancements in sensor capabilities, improved robustness, and more integration between different types of sensors, leading to even better perception systems. 
+There's also a growing interest in leveraging Artificial Intelligence for sensor data processing, offering promise for even more accurate perception and decision-making. 
+V2X communication is set to revolutionise the landscape further, extending our vehicles' awareness beyond their immediate vicinity and opening up many possibilities for traffic management, road safety, and even autonomous vehicle swarm intelligence.
+
+
+
+Perception Systems in Intelligent Vehicles
+11
+The Brain for Autonomy
+Introduction to Perception Systems
+A perception system in an autonomous vehicle refers to the suite of processes and algorithms that interpret the raw data collected by various sensors of sensing system. 
+
+It's the bridge between the raw sensor data and the decision-making and control systems that actually drive the vehicle.
+
+The perception system is the key to transforming a vehicle from a mere machine into an intelligent entity capable of navigating the complex, dynamic world of on-road driving. 
+
+
+Saber Fallah (ENGM298)
+12
+
+The Sensing-Perception Connection
+Saber Fallah (ENGM298)
+13
+
+
+ 
+
+
+Understanding the Environment
+Saber Fallah (ENGM298)
+14
+
+The first step for a perception system is to detect these objects - to identify that there is 'something' in the environment that needs further examination.
+The system also needs to understand what these objects are - this is the classification part
+Then comes the second task - scene understanding and interpretation. 
+What are the detected and classified objects doing? 
+Are they moving or stationary? If they are moving, what is their trajectory? 
+Are there any traffic rules displayed that the vehicle needs to follow?
+. 
+Perception in Action: Dynamic Environment Modelling
+What is the difference between static and dynamic objects?  
+
+Once the perception system identifies an object as dynamic, it must then estimate that object's motion. This involves determining the object's current speed and direction.
+
+Dynamic environment modelling is about understanding the motion of objects around the vehicle and using that understanding to predict how the environment might change in the near future.  
+
+
+Saber Fallah (ENGM298)
+15
+How an intelligent vehicle handles the crucial challenge of dynamic environments? 
+Challenges in Perception Systems
+Saber Fallah (ENGM298)
+16
+
+The Future of Perception: AI and Machine Learning
+Saber Fallah (ENGM298)
+17
+
+When talking about the future of perception in autonomous vehicles, two terms take centre stage: Artificial Intelligence (AI) and Machine Learning (ML). 
+
+AI helps in improving the accuracy of detection and classification tasks. AI also plays a pivotal role in predicting the future behaviour of dynamic objects, a task with many uncertainties.
+ 
+ML algorithms can 'learn' patterns directly from the data, which can be very beneficial for perception tasks. They can learn to recognize different types of objects, understand their context, and even predict their future movements, all from raw sensor data.
+
+ 
+
+
+Perception and Decision Making
+Saber Fallah (ENGM298)
+18
+
+
+ 
+
+
+
+ 
+
+
+Example of Object Detection and Classification
+Saber Fallah (ENGM298)
+19
+
+Summary and Outlook
+Saber Fallah (ENGM298)
+20
+
+Perception systems are a fundamental component of autonomous vehicles, bridging the gap between raw sensor data and actionable insights for decision-making. 
+Sensor fusion plays an important role in providing a comprehensive picture of the surrounding environment.
+Two main tasks of perception systems are “object detection and classification” and “understanding and predicting the environment's dynamic nature”. 
+The challenges in perception are particularly the complexity and unpredictability of real-world conditions.
+AI and machine learning are propelling perception forward, enhancing accuracy, efficiency, and robustness. 
+Localisation Systems in Intelligent Vehicles
+21
+Vehicle’s Sense of Self in the World
+Introduction to Localisation Systems
+What exactly is localisation in the context of autonomous vehicles?
+Why is it so important?  
+Saber Fallah (ENGM298)
+22
+
+The Role of Localisation in the Autonomous Vehicle Stack
+Saber Fallah (ENGM298)
+23
+
+
+ 
+
+
+
+ 
+
+
+
+ 
+
+
+Decision
+defines a set of driving/decision policies and includes a mechanism to choose a policy or a combination of policies specific to each driving situation
+
+Methods of Localisation
+Saber Fallah (ENGM298)
+24
+
+GPS-based Localisation
+GPS localisation involves the use of signals from multiple satellites to determine the vehicle's position on Earth. Each GPS satellite broadcasts a signal that includes the satellite's location and the precise time the signal was transmitted. The GPS receiver in the vehicle picks up these signals, calculates the time it took for each signal to arrive, and thus determines the distance to each satellite.
+Saber Fallah (ENGM298)
+25
+
+Sensor-based Localisation
+Cameras capture visual data from the environment, which can be processed using computer vision algorithms to identify notable features or landmarks and their relative position to the vehicle. 
+Lidar systems provide high-resolution, three-dimensional information about the vehicle's surroundings.
+Radars use radio waves to detect objects and their distance and velocity.
+IMUs measure the vehicle's velocity, orientation, and gravitational forces, helping maintain a continuous estimate of the vehicle's position over time, a process known as dead reckoning.
+Ultrasonic sensors are used for close-range detection and localization, especially useful in slow-speed scenarios like parking.
+
+Saber Fallah (ENGM298)
+26
+
+Advanced Localisation Techniques
+Saber Fallah (ENGM298)
+27
+
+SLAM is a process through which a device can create a map of its environment while simultaneously tracking its position within it.
+Visual Odometry estimates the relative position and orientation of the vehicle by analysing the images from one or more cameras.
+Inertial Odometry uses data from IMUs to estimate the vehicle's motion.
+Localisation in Action
+Saber Fallah (ENGM298)
+28
+
+The Future of Localisation
+V2X systems allow vehicles to share data about their environment, position, speed, and more with other vehicles and infrastructure. 
+
+AI and machine learning will also significantly contribute to improvement of localisation systems.
+
+Multi-modal sensor fusion involves integrating data from different types of sensors to improve the performance and robustness of localisation systems.
+
+Saber Fallah (ENGM298)
+29
+
+Summary
+Learned about the importance of localisation as a functionality module in autonomous vehicles. 
+
+Discussed different methods of localisation, from the traditional GPS-based systems to more advanced sensor-based localisation techniques.
+
+Discussed the importance of sensor fusion as a key aspect of modern localisation systems.
+
+Talked about SLAM (Simultaneous Localisation and Mapping) which represent the cutting-edge of localisation technology.
+
+Saber Fallah (ENGM298)
+30
+

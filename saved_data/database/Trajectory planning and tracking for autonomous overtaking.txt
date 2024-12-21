@@ -1,0 +1,1134 @@
+=== Metadata ===
+{
+    "file_name": "Trajectory planning and tracking for autonomous overtaking.pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Trajectory planning and tracking for autonomous overtaking.pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+Annual Reviews in Control 45 (2018) 76–86 
+Contents  lists available  at ScienceDirect  
+Annual  Reviews  in Control  
+journal  homepage:  www.elsevier.com/locate/arcontrol  
+Vision  article  
+Trajectory  planning  and tracking  for autonomous  overtaking:  
+State-of-the-art  and future  prospects  
+Shilp Dixit a , ∗, Saber  Fallah  a , Umberto  Montanaro  a , Mehrdad  Dianati  b , Alan Stevens  c , 
+Francis  Mccullough  d , Alexandros  Mouzakitis  e 
+a Department  of Mechanical  Engineering  Sciences, University  of Surrey, Guildford,  Surrey GU2 7XH, United Kingdom  
+b WMG, International  Manufacturing  Centre, University  of Warwick,  Coventry CV4 7AL, United Kingdom  
+c Transportation,  TRL, Wokingham,  Berks, RG40 3GA, United Kingdom  
+d Electrical  Research Technology,  Jaguar Land Rover Limited, Coventry,  CV3 4LF, United Kingdom  
+e Electrical,  Electronics  and Software Engineering,  Research & Technology,  Jaguar Land Rover Limited, Coventry,  CV3 4LF, United Kingdom  
+a r t i c l e i n f o 
+Article history: 
+Received  4 September  2017 
+Revised 19 February  2018 
+Accepted  20 February  2018 
+Available  online 9 March 2018 
+Keywords:  
+Autonomous  vehicles 
+Overtaking  
+Trajectory  planning  
+Trajectory  tracking 
+Connected  vehicles a b s t r a c t 
+Trajectory  planning  and trajectory  tracking  constitute  two important  functions  of an autonomous  over- 
+taking system and a variety of strategies  have been proposed  in the literature  for both functionalities.  
+However,  uncertainties  in environment  perception  using the current generation  of sensors has resulted  in 
+most proposed  methods  being applicable  only during low-speed  overtaking.  In this paper, trajectory  plan- 
+ning and trajectory  tracking  approaches  for autonomous  overtaking  systems  are reviewed.  The trajectory  
+planning  techniques  are compared  based on aspects such as real-time  implementation,  computational  
+requirements,  and feasibility  in real-world  scenarios.  This review shows that two important  aspects of 
+trajectory  planning  for high-speed  overtaking  are: (i) inclusion  of vehicle dynamics  and environmental  
+constraints  and (ii) accurate  knowledge  of the environment  and surrounding  obstacles.  The review of tra- 
+jectory tracking  controllers  for high-speed  driving is based on different  categories  of control algorithms  
+where their respective  advantages  and disadvantages  are analysed.  This study shows that while advanced  
+control methods  improve  tracking  performance,  in most cases the results are valid only within well- 
+regulated  conditions.  Therefore,  existing  autonomous  overtaking  solutions  assume precise knowledge  of 
+surrounding  environment  which is not representative  of real-world  driving.  The paper also discusses  how 
+in a connected  driving environment,  vehicles  can access additional  information  that can expand their 
+perception.  Hence, the potential  of cooperative  information  sharing for aiding autonomous  high-speed  
+overtaking  manoeuvre  is identiﬁed  as a possible  solution.  
+© 2018 Elsevier Ltd. All rights reserved.  
+Contents  
+1. Introduction  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 77 
+2. System  architecture  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 78 
+3. Trajectory  planning  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 79 
+4. Trajectory  tracking  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 81 
+4.1. Tracking  controllers  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 82 
+5. Conclusion.  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 84 
+Acknowledgement  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 84 
+References  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 84 
+∗Corresponding  author. 
+E-mail addresses:  s.dixit@surrey.ac.uk  (S. Dixit), s.fallah@surrey.ac.uk  (S. Fallah), u.montanaro@surrey.ac.uk  (U. Montanaro),  m.dianati@warwick.ac.uk  (M. Dianati), 
+astevens@trl.co.uk  (A. Stevens), fmccull2@jaguarlandrover.com  (F. Mccullough), amouzak1@jaguarlandrover.com  (A. Mouzakitis).  
+https://doi.org/10.1016/j.arcontrol.2018.02.001  
+1367-5788/© 2018 Elsevier Ltd. All rights reserved.  
+S. Dixit et al. / Annual Reviews in Control 45 (2018) 76–86 77 
+1. Introduction  
+Modern  cars are equipped  with various  sensors  and electronic  
+systems  to reduce the workload  of a driver by providing  emer- 
+gency assistance  (e.g., ABS, traction  control,  stability  control,  etc.), 
+ADAS (e.g., cruise control,  lane keeping,  crosswind  assistance,  blind 
+spot detection,  etc.), and navigational  assistance  (e.g., trip planning,  
+route selection,  regular  traﬃc update,  etc.). However,  the next gen- 
+eration  of intelligent  vehicles  are expected  to have increased  ca- 
+pabilities  which allow automated  manoeuvring  in various  driving  
+scenarios  ( Eskandarian,  2012; Gordon  & Lidberg,  2015 ). Overtaking  
+is one of the most common  driving  manoeuvre  and any vehicle  ca- 
+pable of end-to-end  autonomy  must have the ability to determine  
+if, when, and how to perform  this driving  task. 
+Overtaking  is a complex  driving  task as it involves  both lateral 
+and longitudinal  motions  of an overtaking  vehicle  (subject  vehi- 
+cle) while avoiding  collisions  with a slower moving  vehicle  (lead 
+vehicle)  ( Milanés  et al., 2012 ). Additional  complexity  arises due 
+to different  environmental  conditions  (e.g., road legislations,  vis- 
+ibility, weather,  etc.) and diversity  of road-users  (e.g., small cars, 
+buses, trucks, etc.) ( Vanholme,  Gruyer,  Lusetti,  Glaser, & Mammar,  
+2013 ). Typically,  an overtaking  manoeuvre  is considered  success-  
+ful on proper completion  of three sub-manoeuvres  namely,  (i) lane 
+change  to overtaking  lane, (ii) pass lead vehicle(s),  and (iii) lane 
+change  back to original  lane ( Petrov & Nashashibi,  2014 ). The lane 
+change  sub-manoeuvre  which indicates  the start and the end of 
+an overtake  can be classiﬁed  under two categories;  (i) Discre-  
+tionary  Lane Change  (DLC) and (ii) Mandatory  Lane Change  (MLC) 
+( Moridpour,  Rose, & Sarvi, 2010 ). A DLC sub-manoeuvre  is per- 
+formed  when the immediate  traﬃc situation  in the faster lane 
+is deemed  to be better than the current  lane and thus, the lane 
+change  is performed  in anticipation  of an improvement  in the 
+immediate  driving  conditions.  On the other hand, an MLC sub- 
+manoeuvre  is performed  due to compulsion  arising from traﬃc 
+rules (e.g., stalled vehicle,  need to follow desired  route, etc.). More- 
+over, the lane change  to return back to the original  lane can also be 
+either DLC or MLC based on traﬃc conditions  in each lane, legisla-  
+tion, etc. thus, transforming  an overtaking  manoeuvre  into a com- 
+plex task of dynamically  choosing  the best driving  lane based on 
+(i) legislation,  (ii) driving  intentions,  and (iii) instantaneous  traﬃc 
+situation.  This inference  that the choice of lane is affected  by both; 
+(i) driving  intention,  and (ii) neighbourhood  traﬃc conditions  was 
+veriﬁed  in Toledo,  Koutsopoulos,  and Ben-Akiva  (2003) using an 
+integrated  model (combining  MLC and DLC) for lane changing  be- 
+haviour  based on gap acceptance  (lead and lag gap). Therefore,  it is 
+noted that due to the dynamic  nature of driving  environments  (i.e., 
+traﬃc conditions  in original  and fast lane, speed limits, road con- 
+ditions,  etc.) overtaking  is not standardised  manoeuvre  and thus, 
+each overtaking  manoeuvre  in real-world  scenarios  is unique.  This 
+uniqueness  arises from variations  in number  of overtaken  vehi- 
+cles, duration  of overtake,  relative  velocity  between  concerned  ve- 
+hicles, distance  between  concerned  vehicles,  etc ( Baber, Kolodko,  
+Noel, Parent,  & Vlacic, 2005; Hegeman,  Brookhuis,  & Hoogendoorn,  
+2005; Kesting,  Treiber,  & Helbing,  2007; Motro et al., 2016; Shamir,  
+2004; Thiemann,  Treiber,  & Kesting,  2008; Vlahogianni,  2013; Web- 
+ster, Suzuki,  Chung,  & Kuwahara,  2007 ). For an autonomous  vehi- 
+cle, feasibility  of an overtaking  manoeuvre  is evaluated  on the ba- 
+sis of safety based on subject  vehicle’s  states as well as surround-  
+ing information  leading  to a discrete  outcome  for making  tactical  
+decisions  (i.e., either perform  lane-change  or do not perform  lane 
+change)  which form a part of planning  and decision  making  pro- 
+cess. A variety  of techniques  for decision  making  are available  in 
+literature  with (i) multi-level  decision  trees ( Claussmann,  Carvalho,  
+& Schildbach,  2015 ), (ii) probabilistic  weighted  comparison  of con- 
+current  goals ( Ardelt, Coester,  & Kaempchen,  2012 ), and (iii) higher award seeking  Markovian  Decision  Process  algorithms  ( Ulbrich  & 
+Maurer,  2015 ) being among  the prominent  methods.  
+A schematic  representation  of an overtaking  manoeuvre  is 
+shown in Fig. 1 with each sub-manoeuvre  labelled  with roman 
+numerals.  As discussed  above, the lane change  back to the origi- 
+nal lane depends  on the traﬃc conditions  and thus both possibil-  
+ities are depicted  in the schematic.  Despite  the innumerable  vari- 
+ations present  due to the factors discussed  above, overtaking  ma- 
+noeuvres  can be classiﬁed  under the four categories  listed below 
+( Hegeman  et al., 2005 ): 
+• Normal:  The subject  vehicle  approaches  the lead vehicle  and 
+waits for a suitable  opportunity  to perform  the manoeuvre.  
+• Flying: The subject  vehicle  does not adjust its longitudinal  ve- 
+locity and is directly  able to overtake  the lead vehicle.  
+• Piggy backing:  The subject  vehicle  follows  a preceding  vehicle  
+as they both overtake  the lead vehicle.  
+• 2 + : The subject  vehicle  overtakes  two or more lead vehicles  in 
+a single manoeuvre.  
+For the aforementioned  scenarios,  the duration  of a completed  
+overtake  has been found to be in the range of 5.4 to 12.5 s (subject  
+to dynamic  nature of the surrounding  traﬃc and environment)  us- 
+ing recording  the trajectories  of vehicles  on typical European  high- 
+ways ( Jong, Park, Chao, & Yen, 2016; Kanaris,  Kosmatopoulos,  & 
+Ioannou,  2001; Khodayari,  Ghaffari,  Ameli, & Flahatgar,  2010; Mi- 
+lanés et al., 2012; Valldorf  & Gessner,  2005; Vlahogianni,  2013; 
+Wan, Raksincharoensak,  Maeda,  & Nagai, 2011 ). Performing  an au- 
+tonomous  overtaking  manoeuvre  based on any of scenarios  men- 
+tioned above within a given time range requires  accurate  infor- 
+mation  of surrounding  environment,  traﬃc, and weather  condi- 
+tions along with sophisticated  sensing  and perception,  planning,  
+and control  systems  ( Chu, Lee, & Sunwoo,  2012 ). The surrounding  
+environment  of a vehicle  is populated  by different  f eatures;  (i) per- 
+manent  (road and lane limits),  (ii) slowly changing  (e.g., temporary  
+speed limits, road works, traﬃc density,  etc.), and (iii) fast chang-  
+ing (surrounding  vehicle  velocity,  position,  heading,  etc.). A mod- 
+ern day vehicle  uses a host of on-board  sensors  to discern  the en- 
+vironment  and the placement  of an on-board  sensor suite used to 
+perform  this task can be seen in Fig. 2 . The information  from these 
+sensors  is combined  and used for tasks such as; (i) classify  objects,  
+(ii) track stationary  and moving  obstacles,  (iii) identify  safe driv- 
+ing zones, etc. Currently,  there are some production  vehicles  that 
+utilise vehicle-to-everything  (V2X) information  to provide  updates  
+on permanent  (e.g., road and lane limits, road inclination,  etc.) or 
+slowly changing  features  (e.g., temporary  speed limits, road works, 
+traﬃc updates,  etc.) of surrounding  environment  via a combination  
+of cellular  data and Local Dynamic  Map (LDM) updates.  However,  
+despite  an elaborate  sensor suite and ﬁrst generation  V2X commu-  
+nication  systems  the capabilities  of the contemporary  autonomous  
+vehicles  is limited  to low-speed  overtaking.  This is due to limita- 
+tions such as; (i) range of sensors,  (ii) blind spots, (iii) small time- 
+scales for predicting  motion  of traﬃc participants,  (iv) sensor im- 
+perfections,  and (v) possible  V2X network  outages.  The combina-  
+tion of one or more of these limitations  result in signiﬁcant  uncer- 
+tainty while planning  complex  highway  manoeuvres  (e.g., overtak-  
+ing) which span several  seconds  at high-speeds  ( Aeberhard  et al., 
+2015; Son, Kim, Lee, & Chung,  2015 ). Moreover,  unless all the traﬃc 
+participants  are connected  and autonomous  the uncertainty  arising 
+from predicting  the motion  of traﬃc vehicles  cannot be brought  
+down to negligible  levels even with the advent of perfect  on-board  
+sensors  and/or V2X communication  network.  Thus, predicting  the 
+motion  of traﬃc participants  for risk assessment  forms a vital part 
+of manoeuvre  planning  and this domain  has witnessed  a lot of 
+research  and a large number  of techniques  are present  in liter- 
+ature. The different  methods  for motion  planning  for intelligent  
+78 S. Dixit et al. / Annual Reviews in Control 45 (2018) 76–86 
+SV LV
+safe approaching distancesafe lateral distanceDirection of Travel
+(i)(ii)
+(iii.a)(iii.b)
+Traﬃc
+safe merging distance
+Fig. 1. Basic schematic  of an overtaking  manoeuvre.  Note: Different  sub-manoeuvres  are ( i ) lane-change;  ( ii ) pass lead vehicle; ( iii.a ) merge back into original lane; ( iii.b ) 
+continue  in faster lane to pass traﬃc. 
+Fig. 2. Visibility  of an autonomous  vehicle. Note: SV: Subject Vehicle, TV: Traﬃc Vehicle. Sensor performance  speciﬁcations  are based on Radar, 2018 . 
+autonomous  vehicles  based on abstraction  levels of traﬃc motion  
+are classiﬁed  as; (i) Physics-based  ( Schubert  et al., 2011; Schubert,  
+Richter,  & Wanielik,  2008; Schubert,  Schulze,  & Wanielik,  2010 ), (ii) 
+Manoeuvre-based  ( Eggert,  Klingelschmitt,  & Damerow,  2015 ), and 
+(iii) Interaction-aware  ( Bahram,  Hubmann,  Lawitzky,  Aeberhard,  & 
+Wollherr,  2016; Lawitzky  et al., 2013 ). A comprehensive  survey dis- 
+cussing  the advantages  and limitations  of each of these techniques  
+is presented  in Lefèvre,  Vasquez,  and Laugier  (2014) and an inter- 
+ested reader is directed  towards  it. 
+Recent research  has highlighted  the potential  use of off-board  
+information  via V2X communications  in expanding  the sensory  
+and perception  horizon  of a vehicle  through  the communication  
+systems  ( Andrews,  2012; Guzzella,  2009; Luo, Xiang, Cao, & Li, 
+2016 ). In the context  of autonomous  overtaking,  initial research  
+has been largely focused  on the integration  of V2X information  
+to: (i) manoeuvre  feasibility  check, and (ii) decision  making  stages 
+( Hegeman  et al., 2005; Luo et al., 2016; Motro et al., 2016 ). How- 
+ever, the potential  enhancements  that can be achieved  in trajec- 
+tory planning  and trajectory  tracking  of an overtaking  manoeuvre  
+by exploiting  V2X information  are yet to be studied.  In this pa- 
+per, a review of various  techniques  for trajectory  planning  and tra- 
+jectory  tracking  for autonomous  overtaking  systems  is presented.  
+The aim of this paper is twofold:  (i) to gain insight  on techniques  
+suitable  for autonomous  overtaking  systems,  and (ii) to investigate  
+how V2X information  can enhance  both trajectory  planning  and 
+tracking  techniques  of an autonomous  overtaking  system.  
+The paper is structured  as follows:  Section  2 introduces  the sys- 
+tem overview  of an autonomous  driving  system  and discusses  how 
+a 2-tier control  architecture  can be used to perform  autonomous  
+overtaking.  In Section  3 , an extensive  literature  review of trajec- 
+tory planning  methods  used for generating  overtaking  trajectories  
+is presented.  Comparison  of key aspects  pertaining  to vehicle  mod- 
+els and a review of different  control  strategies  for trajectory  track- 
+ing applications  is performed  in Section  4 . Finally,  the concluding  
+remarks  are presented  in Section  5 . 2. System  architecture  
+An autonomous  overtaking  manoeuvre  requires  consideration  of 
+a variety  of factors such as subject  vehicle  states and constraints,  
+lead vehicle  states, environment  limits, safety, and comfort.  An 
+overview  of an intelligent  autonomous  driving  system  capable  of 
+performing  autonomous  overtaking  is shown in Fig. 3 . For an au- 
+tonomous  vehicle  to successfully  perform  different  tasks (e.g., lane 
+change,  pass lead vehicle,  and merge)  pertaining  to overtaking,  it 
+is expected  that the vehicle  can carry out each sub-task  within the 
+sensing  and perception,  planning,  and control  blocks.  Sensing  and 
+perception  includes  gathering  information  about the driving  con- 
+ditions  to determine  if and when the conditions  are favourable  to 
+perform  the overtaking  ( Kanaris  et al., 2001 ). An autonomous  vehi- 
+cle utilises  information  from on-board  sensors  (Radar,  LiDAR, cam- 
+era, etc.) and/or off-board  information  via V2X communications  to 
+generate  a real-time  environmental  representation  ( Kim, Kim, Park, 
+Jung, & Yi, 2016 ), see Fig. 3 . The main objectives  of the sensing  
+and perception  system  are lane-level  localisation,  neighbouring  ve- 
+hicle detection,  static obstacle/constraint  detection  and safe driv- 
+able area representation  ( Kim et al., 2016 ). 
+The planning  module  utilises  the perception  information  along 
+with the subject  vehicle  states and dynamic  constraints  to compute  
+safe collision  free local trajectory  for the subject  vehicle  at each 
+time instant  ( Katrakazas,  Quddus,  Chen, & Deka, 2015 ). To plan an 
+overtaking  manoeuvre  the vehicle  uses perception  data (position  
+and velocity  estimates  of neighbouring  vehicles,  infrastructure  lim- 
+its, road geometry,  headway  time) and subject  vehicle  data (cur- 
+rent state, lateral and longitudinal  dynamics)  to check feasibility  of 
+the manoeuvre  and design a collision  free and safe local reference  
+trajectory  for an overtaking  manoeuvre  ( Carvalho,  Lefévre,  Schild-  
+bach, Kong, & Borrelli,  2015; Glaser, Vanholme,  Mammar,  Gruyer,  & 
+Nouvelière,  2010; Kala & Warwick,  2013; Kitazawa,  2016; Milanés  
+et al., 2012; Saengpredeekorn  & Srinonchat,  2009; Shamir,  2004 ). 
+The local trajectory  generated  via the planning  module  is used 
+as a reference  trajectory  to be tracked  while performing  an over- 
+S. Dixit et al. / Annual Reviews in Control 45 (2018) 76–86 79 
+Data Processing Send/Receive SensorsSensing and Perception
+Planning/Decision
+ControlCollision Free TrajectoryVehicle DynamicsV2X
+Environment
+Representation
+Local Reference Trajectory
+Trajectory Tracking Controller
+ActuatorsActuator InputsPath PlannerOﬀ-board information
+Fig. 3. Overview  of an autonomous  driving system. 
+VehicleTrajectory tracking control
+Inner-loop Control
+Estimationτref
+δrefTrajectory planning control
+Trajectory Update
+Localization LDM
+GPSV2Xvref
+Xref,Yreflongitudinal speed
+& Actuation
+e.g., yaw-rate, acceleration, velocity, etc. e.g., heading angle, position, etc.reference ( vx,des)
+Fig. 4. General control architecture  for an autonomous  vehicle ( Gao et al., 2012; Kim et al., 2016; Kitazawa,  2016; Naranjo et al., 2008; Nilsson et al., 2014 ). (V2X block with 
+dot–dash  boundary:  optional functionality).  
+take (e.g., lane change,  pass lead vehicle,  lane-merge),  and a 
+closed-loop  control  system  is designed  to track it by controlled  
+manipulation  of steering,  throttle  and/or brake ( Carvalho,  Gao, 
+Gray, Tseng, & Borrelli,  2013; Gao, Gray, Tseng, & Borrelli,  2014; 
+Kala & Warwick,  2013; Kitazawa,  2016; Milanés  et al., 2012; Mur- 
+govski & Sjöberg,  2015; Petrov & Nashashibi,  2014; Saengpre-  
+deekorn  & Srinonchat,  2009; Schildbach  & Borrelli,  2015; Shamir,  
+2004 ). 
+To preserve  the modular  nature of the architecture  presented  
+in the section  above, the different  driving  tasks can be trans- 
+lated to a control  architecture  for an autonomous  vehicle  as shown 
+in Fig. 4 , i.e. trajectory  planning  controller  and trajectory  track- 
+ing controller  ( Gao et al., 2012; Kim et al., 2016; Kitazawa,  2016; 
+Naranjo,  González,  García, & De Pedro, 2008; Nilsson,  Gao, Car- 
+valho, & Borrelli,  2014 ). The objective  of the trajectory  planning  
+controller  is to perceive  the environment,  monitor  vehicle  states 
+(longitudinal  and lateral positions,  longitudinal  and lateral veloci- 
+ties, longitudinal  and lateral accelerations,  and heading)  and com- 
+pute safe trajectories  (e.g., X ref , Y ref , and v ref ) for the vehicle  to 
+track ( Glaser et al., 2010 ). The trajectory  tracking  controller  then 
+computes,  via feedback  algorithms  based on the tracking  error, the 
+necessary  torque ( τref ) and steering  inputs ( δref ) required  to track 
+the reference,  despite  possible  measurement  noise, un-modelled  dynamics,  parametric  uncertainties  which may or may not be ac- 
+counted  for by the trajectory  planning  controller.  
+3. Trajectory  planning  
+An autonomous  vehicle  relies on real-time  vehicle  state and en- 
+vironment  information  (e.g., surrounding  vehicles,  road conditions)  
+to derive a local trajectory  that ensures  a safe passage  while min- 
+imising  the deviation  from the overall journey  trajectory  (global  
+trajectory).  Local trajectory  planning  can be deﬁned  as –real-time  
+planning  of the vehicle’s  transition  from one feasible  state to the next 
+while satisfying  the vehicle’s  kinematic  limits based on vehicle dynam-  
+ics and constrained  by occupant  comfort,  lane boundaries  and traﬃc 
+rules, while, at the same time, avoiding  obstacles  ( Katrakazas  et al., 
+2015 ). Technical  literature  shows that the vast majority  of trajec- 
+tory planning  methods  for an overtaking  application  employ  one 
+of the four well known  techniques  i.e., potential  ﬁelds, cell de- 
+composition,  interdisciplinary  methods  and optimal  control.  In this 
+section,  these techniques  are reviewed  to gain insight  into their 
+performance  for different  speciﬁcations  such as computational  re- 
+quirements,  safety, feasibility  in high-speed  overtaking  and real- 
+time implementation.  
+80 S. Dixit et al. / Annual Reviews in Control 45 (2018) 76–86 
+Fig. 5. Trajectory  planning  via (a) potential  ﬁelds ( Kitazawa,  2016 ); (b) RRT ( Khaksar, Sahari, & Hong, 2016 ); (c) virtual reference  tracking ( Petrov & Nashashibi,  2014 ); (d) 
+Model Predictive  Control ( Carvalho  et al., 2013 ). 
+Potential  ﬁeld algorithms  assign repulsive  ﬁelds to obstacles  
+and attractive  ﬁelds to safe zones of the vehicle  and then use an 
+algorithm  to compute  trajectories  along the steepest  potential  gra- 
+dient in the resulting  ﬁeld ( Glaser et al., 2010; Kitazawa,  2016 ), see 
+Fig. 5 (a). The computed  path is guaranteed  to follow the lowest 
+potential  (i.e., ﬁnd collision  free trajectory)  in a given space but its 
+safety and accuracy  depends  heavily  on the accuracy  of the gen- 
+erated potential  ﬁeld (i.e., deﬁnite  knowledge  of position  of sta- 
+tionary  and moving  obstacles).  However,  due to the high compu-  
+tation costs and need for very accurate  surrounding  environment  
+information,  the method  has only been experimentally  veriﬁed  for 
+low speed (i.e., urban) manoeuvres  ( Kitazawa,  2016 ). Additionally,  
+it is seen that the algorithm  cannot handle  vehicle  kinematic  con- 
+straints  which may cause safety issues in high-speed  driving  sce- 
+narios ( Glaser et al., 2010; Shim, Adireddy,  & Yuan, 2012 ). 
+Cell decomposition  algorithms  such as Rapidly-exploring  Ran- 
+dom Tree (RRT) is a method  used for collision  free path planning  
+( Kuwata,  Fiore, Teo, Frazzoli,  & How, 2008; Ma et al., 2014 ), see 
+Fig. 5 (b). These algorithms  can be modiﬁed  to incorporate  the vehi- 
+cle constraints  but they also suffer from computational  and mem- 
+ory costs ( Glaser et al., 2010; Kuwata  et al., 2008; Ma et al., 2014 ). 
+The computational  complexity  of such algorithms  increases  with 
+increasing  traﬃc density  and frequency  of road curvature  thus 
+jeopardising  the on-board  computation  of an autonomous  vehicle  
+on busy roads ( Ma et al., 2014 ). Furthermore,  the paths created  by 
+RRT’s are jerky and tracking  such a trajectory  will have an adverse  
+effect on the comfort  of the occupants  ( Katrakazas  et al., 2015 ). 
+Inter-disciplinary  techniques  inspired  by robotics  and missile  
+guidance  systems  ( Ghumman,  Kunwar,  & Benhabib,  2008; Petrov 
+& Nashashibi,  2014; Usman  & Kunwar,  2009 ) for vehicle  path- 
+planning  are also reported  in literature.  One of the novel ap- 
+proaches  proposed  was to use motion  primitives  (combination  
+of steady-state  equilibrium  trajectories  and pre-speciﬁed  manoeu-  
+vres) ( Gray et al., 2012 ). The experimental  results demonstrated  
+that collision  free and feasible  trajectories  can be generated  in real- 
+time using this approach  ( Gray et al., 2012 ). Ghumman  et al. de- 
+signed a trajectory  planning  method  based on Rendezvous  Guid- 
+ance technique  (passing  vehicle  is guided  in real-time  to match the 
+position  and velocity  of a shadow  target during an overtaking  ma- 
+noeuvre)  inspired  from missile  guidance  systems  ( Ghumman  et al., 
+2008; Usman  & Kunwar,  2009 ), see Fig. 5 (c). Similarly,  an approach  
+for overtaking  manoeuvre  consisting  of consecutive  tracking  of vir- tual reference  points positioned  a priori at known  distances  from 
+the lead vehicle  is proposed  in Petrov and Nashashibi  (2014) . Sim- 
+ulation  results of both these approaches  demonstrated  acceptable  
+real-time  capabilities  for generating  feasible  trajectories  but track- 
+ing performance  was validated  using low order models  in com- 
+puter simulations.  Thus, in the absence  of experimental  valida-  
+tion it is diﬃcult  to form conclusions  on the eﬃcacy  of such ap- 
+proaches.  
+Optimal  control  methods  minimise  a performance  index (e.g., 
+change  in kinetic energy,  Shamir,  2004 ; jerk, Chu et al., 2012; Shim 
+et al., 2012 ; lateral acceleration,  Shim et al., 2012 ) under a set of 
+constraints  (e.g., vehicle  lateral and longitudinal  limits, environ-  
+ment constraints,  neighbouring  vehicles)  to obtain a trajectory  for 
+a safe overtaking  manoeuvre.  The results from literature  demon-  
+strate that the method  is successful  in generating  collision  free 
+trajectories  without  high computational  requirements  ( Chu et al., 
+2012; Shamir,  2004; Shim et al., 2012 ). The autonomous  vehicle  
+Junior developed  by Stanford  University  has successfully  demon-  
+strated  the effectiveness  of optimal  control  based trajectory  plan- 
+ning techniques  at the DARPA Urban Challenge  ( Werling,  Ziegler,  
+Kammel,  & Thrun, 2010 ). In this control  framework,  the researchers  
+design two sets of trajectories,  one for lateral motion  and an- 
+other for longitudinal  motion  each optimised  for safety and oc- 
+cupant  comfort.  A set of combined  lateral and longitudinal  mo- 
+tion is obtained  by combining  these two sets. The ﬁnal trajectory  
+that is provided  to the trajectory  tracking  controller  is computed  
+by following  the steps; (i) ﬁlter out trajectories  that breach safety 
+and comfort  limits to create a subset of applicable  trajectories,  (ii) 
+use this subset of applicable  trajectories  to identify  ideal trajectory  
+that minimises  deviation  from the road centre. However,  most of 
+these techniques  do not take into account  the non-linearities  in 
+the vehicle  and tire dynamics  resulting  in unfeasible  trajectories  
+under high-speeds  and/or low road friction  conditions  which pose 
+a safety risk for autonomous  vehicles  ( Gao et al., 2012 ). Addition-  
+ally, trajectories  obtained  by such open-loop  single stage optimi-  
+sation do not account  for uncertainties  in a dynamic  environment  
+and therefore  these trajectory  planning  methods  have limited  po- 
+tential unless used in either extremely  controlled  or structured  en- 
+vironments.  
+Recently,  Model Predictive  Control  (MPC) methodology  has also 
+been used by researchers  for local trajectory  planning,  due to 
+its ability to better handle  system  constraints  and nonlinearities,  
+S. Dixit et al. / Annual Reviews in Control 45 (2018) 76–86 81 
+see Fig. 5 (d). The approach  involves  solving  a constrained  ﬁnite- 
+time optimal  control  problem  to determine  a sequence  of con- 
+trol inputs that minimise  a performance  index (cost function)  and 
+applying  the optimal  inputs (e.g., steering  wheel angle, throttle,  
+and brake) using a receding  horizon  principle  ( Carvalho  et al., 
+2013 ). However,  the presence  of (i) nonlinear  vehicle  dynamics,  
+and (ii) time-varying  state and input constraints  while navigat-  
+ing in a dynamic  environment,  leads to a nontrivial  control  prob- 
+lem thus presenting  a computational  burden  to solve the opti- 
+misation  problem  in real-time  ( Carvalho  et al., 2013 ). Researchers  
+have attempted  to reduce the computational  complexity  arising 
+due to the nonlinear  vehicle  dynamics  by using (i) point mass ve- 
+hicle model ( Kim et al., 2016; Murgovski  & Sjöberg,  2015; Nils- 
+son et al., 2014 ), (ii) linear kinematic  bicycle  vehicle  model ( Gao 
+et al., 2012; Gao et al., 2014; Schildbach  & Borrelli,  2015 ) and (iii) 
+iterative  linearisation  of nonlinear  vehicle  model ( Carvalho  et al., 
+2013 ), in the prediction  model. It is noted that the collision  avoid- 
+ance constraints  are non-convex  in nature which means that the 
+feasibility  and uniqueness  of the optimisation  cannot be guar- 
+anteed.  Researchers  have proposed  different  techniques  (translat-  
+ing problem  from time-dependent  system  to position-dependent  
+system  ( Gao et al., 2012; Karlsson,  Murgovski,  & Sjöberg,  2016; 
+Kim et al., 2016; Murgovski  & Sjöberg,  2015 ), relaxing  collision  
+avoidance  constraints  ( Nilsson  et al., 2014 ), approximate  lineari-  
+sation ( Carvalho  et al., 2013 ) to guarantee  uniqueness  of solution  
+and reduce the computing  and memory  requirements  of the con- 
+troller. The experimental  results demonstrate  the ability of these 
+approaches  to generate  safe collision  free trajectories  around  static 
+or moving  obstacles  (i.e. overtaking  manoeuvre)  but it should be 
+noted that these path-planner  methods  required  exact knowledge  
+of the states, the obstacles  (stationary,  moving)  and/or a high per- 
+formance  computing  platform  (desktop  class computer)  to calcu- 
+late safe collision  free trajectories  ( Carvalho  et al., 2013; Gao et al., 
+2012, 2014; Kim et al., 2016; Murgovski  & Sjöberg,  2015; Nils- 
+son et al., 2014; Schildbach  & Borrelli,  2015 ). It is noteworthy  
+that recent publications  have demonstrated  that computing  con- 
+straints  may soon become  an issue of the past as highly eﬃcient  
+algorithms  for implementing  MPC controllers  on real-time  pro- 
+totyping  systems  and vehicle  electronic  control  units have been 
+developed  and a few successful  implementations  are discussed  
+in Cesari, Schildbach,  Carvalho,  and Borrelli  (2017) , Kong, Pfeif- 
+fer, Schildbach,  and Borrelli  (2015) , Schildbach  and Gmbh (2016) . 
+Among  the reviewed  approaches,  MPC provides  a promising  ap- 
+proach  for trajectory  planning  due to its ability to: (i) include  sys- 
+tem dynamics  and constraints,  and (ii) perform  receding  horizon  
+control  which allows it to plan feasible  trajectories  over a larger 
+operating  range. 
+It is noteworthy  that all methods  discussed  above operate  un- 
+der the assumption  that accurate  knowledge  of the environment  
+and lead vehicle  states are available  on-demand  to the trajectory  
+planning  system.  The advantages  and disadvantages  of the various  
+trajectory  planning  methods  discussed  above are summarised  in 
+Table 1 . However,  due to limitations  of on-board  sensing  systems,  
+the following  situations  may arise. First, the measurements  of the 
+lead vehicle  states (e.g., position,  velocity,  and heading)  might have 
+errors, missing  information,  low accuracy,  etc. resulting  in inac- 
+curate environmental  representation.  Second,  variations  in exter- 
+nal conditions  (e.g., road legislation,  road surface  condition,  road 
+width, weather,  etc.) which are not captured  might impact  the sub- 
+ject vehicle  dynamic  limits (e.g., lateral acceleration,  longitudinal  
+speed, lateral acceleration,  etc.). Trajectory  planning  methods  that 
+are not robust to environmental  variations  and sensor inaccura-  
+cies might lead to unfeasible  and/or unsafe reference  trajectories,  
+posing a major safety risk especially  during high-speed  driving.  
+The various  trajectory  planning  techniques  discussed  above pro- 
+pose different  ways for dealing  with the uncertainty  in current  environment  perception  and limited  future prediction  capabilities.  
+Potential  ﬁeld and cell decomposition  based methods  assign ad- 
+ditional  buffer zones (based on headway  time, instantaneous  rel- 
+ative velocity,  etc.) around  each obstacle  and thus the search for 
+feasible  trajectories  is performed  in a constrained  search space 
+( Wolf & Burdick,  2008 ). Similarly,  the trajectory  planning  tech- 
+niques in Petrov and Nashashibi  (2014) , Usman  and Kunwar  (2009) , 
+Ghumman  et al. (2008) also compute  virtual target points conser-  
+vatively  by expanding  the margins  of the virtual reference  points in 
+accordance  with the relative  velocities  of the subject  and lead ve- 
+hicle. On the other hand, a type of MPC control  technique  known  
+as Scenario-Based  MPC (SCMPC)  has been proposed  in literature  
+to mitigate  the uncertainty  arising due to traﬃc interactions  in a 
+systematic  manner  ( Carvalho,  Gao, Lefevre,  & Borrelli,  2014; Cesari 
+et al., 2017; Schildbach  & Borrelli,  2015; Schildbach,  Fagiano,  Frei, 
+& Morari,  2014 ). In this approach  either an interaction-aware  traﬃc 
+prediction  model ( Schildbach  & Borrelli,  2015 ) or manoeuvre  based 
+traﬃc prediction  model ( Cesari et al., 2017 ) is incorporated  within 
+the MPC framework  to simulate  traﬃc scenarios  as a probability  
+distribution  and a ﬁnite horizon  optimal  control  problem  is solved 
+to generate  a trajectory  that is safe, feasible,  and admissible  un- 
+der a selected  set of traﬃc scenarios.  The eﬃcacy  of the SCMPC  
+trajectory  planning  technique  for generating  safe lane change  ma- 
+noeuvres  has been demonstrated  numerically  and its real-time  ca- 
+pability  has been experimentally  validated  ( Carvalho  et al., 2014; 
+Cesari et al., 2017; Schildbach  & Borrelli,  2015; Schildbach  et al., 
+2014 ). However,  the effectiveness  of this method  has a dependence  
+on the accuracy  of the modelled  traﬃc scenarios  which makes ob- 
+taining  large quantity  of actual traﬃc data a necessity.  Recently,  
+it has been proposed  by researchers  that a V2X communication  
+system  can augment  a vehicles  sensing  and perception  capabili-  
+ties to potentially  mitigate  the issues discussed  above ( Damerow,  
+Flade, & Eggert,  2016; Hegeman  et al., 2005; Luo et al., 2016; Motro 
+et al., 2016; Ohara, Slot, Monteil,  Cahill, & Bouroche,  2015; Schild-  
+bach & Borrelli,  2015 ). Initial studies  for trajectory  planning  us- 
+ing the information  obtained  through  V2X systems,  suggest  that 
+the safety and feasibility  of a manoeuvre  can be enhanced  by in- 
+corporating  off-board  information  ( Huang,  Wu, Ma, & Fan, 2015; 
+Pérez, Milanés,  Onieva,  Godoy,  & Alonso,  2011; You et al., 2015 ). 
+Nonetheless,  tangible  beneﬁts  of using off-board  information  (e.g., 
+lead vehicle  states, road conditions,  etc.) in trajectory  planning  
+methods  are not very clearly understood  and thus such studies  
+are open to further  research.  Nonetheless,  how a V2X system  ca- 
+pable of providing  accurate  surrounding  (e.g., lead vehicle  states, 
+road conditions,  etc.) information  in real-time  can improve  trajec- 
+tory planning  methods  needs to be understood  and is a question  
+open to further  research.  Moreover,  a wireless  information  shar- 
+ing system  induces  additional  dynamics  related  to communication  
+delays, packet losses, and connection  drop-outs  which adds to the 
+complexity  of a control  system  ( Wymeersch,  De Campos,  Falcone,  
+Svensson,  & Ström, 2015 ). Therefore,  meticulous  studies  are re- 
+quired to ensure that the trajectory  planning  methods  are robust 
+and fault-tolerant  against  such network  imperfections  ( Houben  & 
+Houben,  2015 ). 
+4. Trajectory  tracking  
+Vehicle  trajectory  tracking  (lateral-longitudinal  control)  is a ma- 
+ture scientiﬁc  ﬁeld with a plethora  of control  methodologies  avail- 
+able in literature  dating all the way back to the middle  of the 20th 
+century.  Some useful properties  for assessing  tracking  controllers  
+for autonomous  vehicle  applications  are listed below ( Watzenig  & 
+Brandstätter,  2017 ). 
+82 S. Dixit et al. / Annual Reviews in Control 45 (2018) 76–86 
+Table 1 
+Summary  of techniques  for trajectory  planning  to avoid a moving obstacle.  
+Control strategy Strength(s)  Weakness  
+Potential  ﬁelds • Optimality  of searched  path guaranteed  
+• Collision  free path guaranteed  • High computation  cost 
+• Inability to handle system constraints  
+• No systematic  procedure  to consider environmental  
+uncertainties  
+Cell decomposition  • Guaranteed  collision free trajectories  • Computation  requirements  sensitive  to traﬃc density 
+• Computed  paths are jerky 
+• No systematic  procedure  to consider environmental  
+uncertainties  
+Interdisciplinary  techniques  • Reduced  complexity  of collision avoidance  as trajectory  
+planning  converted  to reference  tracking problem 
+• Real-time  capable • Experimentally  unproven  
+• No systematic  design procedure  
+• Do not consider uncertainties  in environment  perception  
+while generating  reference  points 
+Optimal control • Generate  collision free trajectories  
+• Ability to include kinematic  constraints  • Unsuitable  for high-speed  driving manoeuvres  with large 
+angles of tire slip 
+• Inability to consider tire dynamics  
+Model Predictive  Control (MPC) • Include vehicle and tire dynamics  
+• Systematic  handling  of constraints  and traﬃc 
+uncertainties  
+• Computational  requirements  independent  of environment  • Optimisation  sensitive  to number of constraints  
+• Computation  complexity  scales quickly with high-order  
+system models, non-linearity,  and non-convexity  of 
+constraints  
+• Real-time  capability:  The control  law needs to be imple- 
+mentable  on a vehicles  Electronic  Control  Unit (ECU) and func- 
+tion within the calculation  time 
+• Robustness:  The designed  controller  should be robust against  
+system  nonlinearities,  model parameter  variations,  and external  
+disturbances  
+• Operating  Range:  The tracking  controller  should ideally work 
+across the entire range of vehicle  speeds (0–120  km/h) 
+• Controller  parameter  tuning:  A systematic  tuning procedure  for 
+the controller  parameters  allows for a structured  controller  de- 
+sign procedure  
+The performance  of closed-loop  tracking  controllers  depends  on 
+the accuracy  of the modelled  system  dynamics.  Vehicle  models  
+used for capturing  the dynamics  should provide  a trade-off be-  
+tween model accuracy  and ﬁdelity.  In literature  a variety  of vehicle  
+models  (ranging  from low dimension  point mass-models  to high- 
+ﬁdelity  multi-body  models)  are presented.  Different  vehicle  mod- 
+els that have been developed  over the years to capture  the lon- 
+gitudinal,  lateral and yaw dynamics  of a vehicle  have been doc- 
+umented  in Rajamani  (2011) . Out of the wide variety  of vehicle  
+models  available  in literature  a kinematic  bicycle  model and dy- 
+namic bicycle  model have been found to provide  a good compro-  
+mise between  model complexity  and accuracy  for controller  design 
+related  to highway  driving  applications  ( Kang, Lee, & Chung,  2014; 
+Kong et al., 2015 ). A comprehensive  review of trajectory  tracking  
+control  on the aspects  of choice of vehicle  model, control  strate- 
+gies, and controller  performance  criteria  has been performed  in 
+Haﬁzah,  Hairi, Hudha,  and Abdul (2016) . The review demonstrated  
+that geometric  models  based on Ackermann  steering  are not suit- 
+able for high-speed  trajectory  tracking  due to their inability  to in- 
+clude vehicle  dynamics  (e.g., acceleration  and velocity).  Addition-  
+ally, it is highlighted  that kinematic  models  (bicycle,  four-wheel)  
+are also unsuitable  for high-speed  trajectory  tracking  as they are 
+inaccurate  in regions  of tire force saturation.  Both linear and non- 
+linear dynamic  vehicle  models  (full vehicle  model, half vehicle  
+model, and bicycle  model)  were found to mitigate  these limitations  
+and furthermore  providing  a more accurate  representation  of a ve- 
+hicle during high-speed  driving  ( Haﬁzah  et al., 2016 ). However,  it 
+was also shown that a dynamic  bicycle  model (linear)  was suitable  
+for driving  tasks (lane-change  manoeuvre,  overtaking  manoeuvre,  
+highway  driving)  with small lateral acceleration  ( ≤0.5 g) and low 
+vehicle  side-slip  angle (5 °) ( Haﬁzah  et al., 2016; Kim, Kim, & Lee, 
+2015 ). Most of the papers in literature  have used a single-track  ve- hicle model (bicycle  model)  for developing  a tracking  controller  for 
+performing  overtaking  manoeuvres  since an overtaking  manoeuvre  
+is performed  well within the dynamic  limits of the vehicle  (i.e., lat- 
+eral acceleration,  vehicle  side-slip,  and yaw-rate)  where both the 
+vehicle  as well as tire dynamics  can be approximated  by linear 
+models.  However,  at high-speeds  and/or under low road friction  
+overtaking  scenarios,  it is quite possible  that the system  (i.e., ve- 
+hicle, and tires) may exhibit  signiﬁcant  non-linear  behaviour  and 
+therefore  for appropriate  scenarios  either nonlinear  models,  linear 
+parameter  varying  (LPV) models  or multiple  models  can be used 
+to capture  the relevant  dynamic  behaviour  of the system  ( Filev, 
+Lu, & Hrovat,  2013; Kim et al., 2015 ). For a detailed  review of dif- 
+ferent vehicle  models  the reader is directed  towards  the work by 
+Haﬁzah  et al. (2016) , Snider (2009) , Sorniotti,  Barber,  and Pinto 
+(2017) , Rupp and Stolz (2017) . 
+4.1. Tracking  controllers  
+A comparison  of different  tracking  controllers  for autonomous  
+vehicles  was performed  in Haﬁzah  et al. (2016) , Snider (2009) , 
+Sorniotti  et al. (2017) , Rupp and Stolz (2017) . Some relevant  obser- 
+vations  of these comparisons  along with other examples  of track- 
+ing controllers  for autonomous  overtaking  are discussed  below. 
+Geometric  controllers  are designed  using geometric  vehicle  
+models  ( Haﬁzah  et al., 2016; Rupp & Stolz, 2017; Snider, 2009; 
+Sorniotti  et al., 2017 ). Pure-pursuit  and Stanley  method  are two 
+prevalent  geometric  controllers  ( Haﬁzah  et al., 2016; Rupp & Stolz, 
+2017; Snider, 2009; Sorniotti  et al., 2017 ). Pure-pursuit  is a tech- 
+nique where the vehicle  is in constant  pursuit  of a virtual moving  
+point in front of the vehicle  and ‘Stanley’  controller  is based on 
+non-linear  geometric  controller  which considers  heading  and lat- 
+eral error to compute  steering  angle corrections  ( Haﬁzah  et al., 
+2016 ). These type of controllers  (pure pursuit,  Stanley,  etc.) are 
+easy to implement  but are suitable  only for applications  that do 
+not need to consider  vehicle  dynamics.  Furthermore,  since this 
+approach  does not follow a systematic  control  parameter  tuning 
+method,  it is diﬃcult  to achieve  a trade-off between  stability  and 
+tracking  performance  ( Rupp & Stolz, 2017; Snider, 2009; Sorniotti  
+et al., 2017 ). It is observed  that over-tuning  of both pure-pursuit  
+and Stanley  controllers  leads to poor tracking  performance  dur- 
+ing cornering  ( Snider, 2009 ). Kinematic  controllers  are alterna-  
+tive control  techniques  for trajectory  tracking.  They are feedback  
+controllers  which are designed  considering  the vehicle  kinemat-  
+ics (e.g., longitudinal  velocity,  lateral velocity,  yaw-rate,  etc.). Kine- 
+S. Dixit et al. / Annual Reviews in Control 45 (2018) 76–86 83 
+Table 2 
+Summary  of control strategies  for vehicle trajectory  tracking ( Haﬁzah et al., 2016; Snider, 2009; Sorniotti  et al., 2017; Tagne et al., 2016; Watzenig  & Brandstätter,  2017 ). 
+Control strategy Strength(s)  Weakness  
+Geomteric  and kinematic  • Adequate  performance  (experimentally  validated)  in 
+conditions  without disturbances  (e.g., wind, road banking)  
+• Good tracking performance  and robustness  at moderate  
+speeds (e.g., kinematic)  • Do not consider vehicle dynamics  
+• Steady-state  error increases  for high-speed  driving (e.g., 
+geometric)  
+• Unsuitable  for high-speed  driving as dynamics  are 
+neglected  (e.g., kinematic)  
+• Requires  smooth and continuous  reference  trajectories  
+Classical • Established  method with good performance  for 
+non-linear  systems 
+• Robust closed-loop  performance  against uncertainties  and 
+noise (e.g., SMC) • Tuning of controller  parameters  is tricky (e.g., PID) 
+• Robust performance  only in limited scenarios  (e.g., SMC) 
+• Control law is sensitive  to path curvature  variations  (e.g., 
+SMC) 
+Dynamic  state feedback  • Consider  vehicle dynamics  in calculating  control law 
+• Optimisation  shifted oﬄine resulting  in simple 
+implementation  of control law • Obtaining  vehicle states (e.g., wheel forces, slip angles, 
+torques etc.) is non-trivial  
+• Control law is sensitive  to path curvature  variations  (e.g., 
+LQR) 
+Neural network • Suﬃcient  training can make the behaviour  very 
+human-like  to make the automated  car feel natural • Controller  tuning requires simulation  with large amounts  
+of real world (training)  data 
+• No failure explanations  possible 
+Fuzzy logic • Closed-loop  system acts similar to a human-driver  
+(because  of human-like  rules) • Controller  tuning is not systematic  with no formal 
+stability analysis 
+• Rules can become unmanageable  if number of variables  
+is large 
+Model Predictive  Control (MPC) • Systematic  design procedure  
+• Ability to include system and actuator constraints  in 
+design procedure  
+• Inclusion  of vehicle and tire dynamics  in control problem • Non-linear  MPCs with have high computing  requirements  
+making them unsuitable  for high-speed  driving 
+environments  
+• The tracking performance  is sensitive  to the accuracy  of 
+prediction  model 
+• Larger tuning parameter  set compared  to industry 
+standard  PID 
+matic controllers  have been shown to improve  the tracking  perfor-  
+mance provided  by geometric  controllers  but the gains over a ge- 
+ometric  controllers  are not high enough  to justify the additional  
+effort involved  in designing  and tuning the controller  ( Haﬁzah  
+et al., 2016; Snider, 2009; Sorniotti  et al., 2017 ). Moreover,  since 
+these methods  ignore vehicle  dynamics,  their applicability  in crit- 
+ical driving  environments  (e.g., high-speed  driving,  extreme  path 
+curvature,  etc.) cannot be assured.  
+Examples  of classical  control  algorithms  (e.g., PID, sliding mode 
+controller)  are also found in literature.  Tracking  controllers  using 
+classical  techniques  (PID) are shown to have good tracking  per- 
+formance  but tuning of the parameters  was found to be major 
+challenge  due to the presence  of vehicle  and tire non-linearities.  
+Sliding  Mode Control  (SMC), a well-established  classical  non-linear  
+state-feedback  controller  has also been used to design vehicle  tra- 
+jectory  tracking  controllers  and shows good tracking  accuracy  due 
+to the non-linear  control  law ( Haﬁzah  et al., 2016; Tagne, Talj, & 
+Charara,  2016 ). However,  it suffers from a few drawbacks  namely:  
+(i) performance  is sensitive  to the sampling  rate of the controller  
+(ii) chattering  problems,  (iii) robustness  only on the sliding sur- 
+face, and (iv) needs prior knowledge  of disturbance  and uncer- 
+tainty bounds  ( Haﬁzah  et al., 2016; Rupp & Stolz, 2017; Tagne et al., 
+2016 ). 
+Dynamic  state feedback  (linear and nonlinear)  based control  
+methods  demonstrate  better performance  that geometric  and kine- 
+matic controllers  as they consider  the dynamics  of the vehicle  and 
+tires while computing  the control  law. Linear Quadratic  Regula-  
+tor (LQR) based control  law is easy to design but while tracking  
+trajectories  with varying  curvature  feedforward  control  is required  
+to achieve  error-free  tracking.  However,  adding  feedforward  con- 
+trol makes the tracking  controller  sensitive  to discontinuities  in the 
+reference  trajectory  which requires  additional  tuning to attenuate  
+( Snider, 2009 ). On the other hand, optimal  control  based methods  
+can provide  accurate  trajectory  tracking  even at high-speeds  but 
+this is achieved  only when certain  assumptions  (e.g., velocity  of 
+the subject  vehicle  remains  constant  during the optimisation  hori- 
+zon) are fulﬁlled.  Recently,  nonlinear  adaptive  control  techniques  such as Inversion  & Immersion  (I&I) have also been used for vehi- 
+cle trajectory  tracking  controllers.  Initial studies  demonstrate  that 
+this method  provides  robust closed-loop  tracking  performance  but 
+the controller  is sensitive  to parameter  uncertainties  ( Tagne et al., 
+2016 ). In the same body of work, an adaptive  Proportional-Integral  
+(PI) with non-linear  gains controller  for trajectory  tracking  was 
+also proposed  ( Tagne et al., 2016 ). Simulation  results indicate  that 
+the controller  provides  tracking  performance  at par with an SMC 
+and I&I controller  with added advantage  in the form of insensitiv-  
+ity to parameter  uncertainties.  However,  in presence  of large cur- 
+vature variations  or when operated  in non-linear  region of vehi- 
+cle dynamics,  the controller  gains have a tendency  to become  high 
+which may have a detrimental  effect on the actuators.  
+There are also examples  of advanced  model based control  tech- 
+niques such as MPC being used for vehicle  trajectory  tracking  
+( Carvalho  et al., 2013; Gao et al., 2012; Gao et al., 2014; Gray et al., 
+2012; Kim et al., 2016; Murgovski  & Sjöberg,  2015; Nilsson  et al., 
+2014 ). Nonlinear  MPC was found to provide  very accurate  tracking  
+performance  but at the same time suffer due to computational  re- 
+quirements  of online optimisation  ( Besselmann  & Morari,  2009 ). To 
+reduce the computational  burden  researchers  use a linear vehicle  
+model but such controllers  are applicable  only in linear region of 
+vehicle  and tire behaviour  ( Gao et al., 2014; Schildbach  & Borrelli,  
+2015 ). Designing  a MPC framework  based on iterative  linearisation  
+of a non-linear  model has been proposed  as a way to expand  the 
+working  range of linear MPC controllers  for trajectory  tracking  and 
+has been experimentally  validated  ( Carvalho  et al., 2013 ). This ap- 
+proach  helps in meeting  the compromise  between  computational  
+requirements  and modelling  errors. 
+Neural network  and fuzzy logic based approaches  have also 
+been proposed  in literature  and demonstrate  tracking  performance  
+similar  to LQR controllers.  However,  in the absence  of formal sta- 
+bility proofs and exception  handling,  such approaches  cannot be 
+suggested  for real-world  implementation  ( Chaib, Netto, & Mam- 
+mar, 2004; Sorniotti  et al., 2017 ). The advantages  and disadvan-  
+tages of the different  controllers  discussed  above are summarised  
+in Table 2 . Since, an overtaking  manoeuvre  is not standardised  
+84 S. Dixit et al. / Annual Reviews in Control 45 (2018) 76–86 
+and every researcher  demonstrates  their tracking  controller  under 
+a unique  setting,  it is diﬃcult  to perform  a direct comparison  be- 
+tween the different  controllers  proposed  in literature.  However,  in 
+Rupp and Stolz (2017) , ﬁve different  trajectory  tracking  controllers  
+(Stanley,  LQR, SMC, Fuzzy, and MPC) were designed  to simulate  
+an overtaking  manoeuvre  performed  at 120 km/h. This setup pro- 
+vides a basis for direct comparison  of different  control  algorithms  
+since they were applied  on an identical  system.  The tracking  per- 
+formance  was assessed  by comparing  lateral errors and angular  er- 
+rors. Additionally,  the actuation  effort was compared  using steering  
+angle induced  during the manoeuvre.  The results from this prelim-  
+inary comparison  (i.e., trajectory  tracking,  and actuation)  demon-  
+strated  that MPC resulted  in the smallest  tracking  errors (i.e., lat- 
+eral position  and heading  angle) with smooth  actuation  of the 
+steering  angle. 
+All the controllers  discussed  above are validated  in well con- 
+trolled environments  where parameter  variations  (e.g., vehicle  
+mass, moment  of inertia,  road friction,  etc.) and environmental  un- 
+certainties  (e.g., headwind,  tailwind,  etc.) are kept to a minimum.  
+While such practices  allow researchers  in benchmarking  different  
+controllers,  most of the proposed  controllers  are operational  in a 
+narrow  operating  window  which is not a realistic  representation  
+of real-world  driving.  The operating  window  of a controller  sub- 
+ject to large variations  in system  dynamics  can be increased  in the 
+following  three ways: (i) control  robustness  against  all uncertain-  
+ties, (ii) design a ‘bank’ of controllers  to cover possible  different  
+operational  regimes,  or (iii) update  parameters  in real-time  to pre- 
+vent performance  drop-off.  However,  the order of a controller  rises 
+with the number  robustness  criteria  that are incorporated  and the 
+number  of controllers  in a ‘bank’ scales exponentially  with the 
+number  of varying  parameters  making  both these approaches  un- 
+viable for practical  application  ( Haﬁzah  et al., 2016 ). On the other 
+hand using a V2X system  to update  required  parameters  based on 
+the surrounding  conditions  can potentially  provide  a practical  so- 
+lution. Some attempts  to use V2X to update  control  parameters  
+for improving  tracking  performance  have been presented  in lit- 
+erature.  For instance,  in Jong et al. (2016) , an automated  emer- 
+gency braking  (AEB) system  that exploits  V2X communication  to 
+update  the road friction  co-eﬃcient  parameter  in the control  sys- 
+tem model has been proposed.  This allows for modiﬁcation  in real- 
+time key constraints  such as minimum  braking  distance  and time- 
+to-collision  (TTC) making  the system  suitable  for use under a wider 
+range of conditions.  Using a similar  strategy,  a communication  sys- 
+tem that updates  the vehicle  model parameters  (e.g., road-friction,  
+Jalalmaab,  Pirani, Fidan, & Jeon, 2016 , mass, etc.) and system  con- 
+straints  (e.g., road width, speed limit, cross-wind,  traﬃc state and 
+future trajectory)  can enhance  the usability  of model based track- 
+ing controller  in diverse  driving  conditions.  Hence, V2X commu-  
+nication  systems  can update  relevant  parameters  of a controller  
+with accurate  and real-time  information  thus preventing  the ap- 
+plicability  of a designed  tracking  controller  to be limited  to certain  
+pre-set  conditions  and scenarios.  However,  the range of beneﬁts  
+(e.g., tracking  performance,  safety improvements,  etc.) that can be 
+gained by such a system  needs further  investigation  resulting  in an 
+open research  question.  
+5. Conclusion  
+This paper reviewed  different  approaches  towards  trajectory  
+planning  tracking  for autonomous  overtaking.  The review of tra- 
+jectory  planning  methods  brings forth the following  important  as- 
+pects. First, vehicle  dynamics,  constraints  and surrounding  environ-  
+ment information  needs to be considered  while designing  a tra- 
+jectory  for an overtaking  manoeuvre  and methods  that incorpo-  
+rate these requirements  within their framework  are suitable  can- 
+didates  for real-world  applications.  Second,  the trajectory  planning  techniques  depend  on accurate  surrounding  environment  informa-  
+tion, and off-board  information  via V2X communication  can aid in 
+expanding  the accuracy  and perception  horizon  thereby  reducing  
+safety concerns  that might arise due to diverse  driving  conditions.  
+For tracking  controllers,  the review showed  that: (i) control  algo- 
+rithms that considered  vehicle  and tire dynamics  over large speed 
+ranges provided  accurate  tracking  even at high-speeds  and/or large 
+trajectory  variations,  and (ii) the effectiveness  of such controllers  
+hinges on the accuracy  of the modelled  system  dynamics  which 
+has diﬃculty  in capturing  the large variations  encountered  typi- 
+cally in daily driving  with one low order system.  Examples  from 
+literature  showed  that off-board  information  via V2X systems  can 
+be used to update  controller  parameters  in real-time  which can 
+prevent  drop-off in  tracking  performance  when operated  in condi- 
+tions with variations  in system  dynamics.  However,  integration  of 
+off-board  information  into a multi-tier  control  architecture  needs 
+to be seamless  as well as capable  of graceful  degradation  on occa- 
+sions of wireless  communication  failure.  This added complexity  in 
+control  design can pose signiﬁcant  challenges  that will need to be 
+addressed  to develop  a safe, dependable,  and robust control  sys- 
+tem. 
+It is noteworthy  that the study of potential  beneﬁts  that can be 
+achieved  by leveraging  off-board  information  via V2X communica-  
+tion systems  for autonomous  trajectory  planning  and tracking  is in 
+a nascent  stage and marks a new chapter  of study in the ﬁeld of 
+autonomous  vehicles.  
+Acknowledgement  
+This work was supported  by Jaguar Land Rover and the UK- 
+EPSRC grant EP/N01300X/1  as part of the jointly funded  Towards  
+Autonomy:  Smart and Connected  Control  (TASCC)  Programme.  
+References  
+Aeberhard,  M. , Rauch, S. , Bahram, M. , Tanzmeister,  G. , Thomas, J. , Pilat, Y. , 
+et al. (2015). Experience,  results and lessons learned from automated  driving 
+on Germany’s  highways.  IEEE Intelligent  Transportation  Systems Magazine,  7 (1), 
+42–57 . 
+Andrews,  S. (2012). Vehicle-to-vehicle  (V2V) and vehicle-to-infrastructure  (V2I) 
+communications  and cooperative  driving. In Handbook  of intelligent  vehicles 
+(pp. 1121–1144).  Springer . 
+Ardelt, M. , Coester, C. , & Kaempchen,  N. (2012). Highly automated  driving on free- 
+ways in real traﬃc using a probabilistic  framework.  IEEE Transactions  on Intelli- 
+gent Transportation  Systems, 13 (4), 1576–1585  . 
+Baber, J. , Kolodko,  J. , Noel, T. , Parent, M. , & Vlacic, L. (2005). Cooperative  autonomous  
+driving: Intelligent  vehicles sharing city roads. IEEE Robotics & Automation  Mag- 
+azine, 12 (1), 44–49 . 
+Bahram, M. , Hubmann,  C. , Lawitzky,  A. , Aeberhard,  M. , & Wollherr,  D. (2016). A 
+combined  model-and  learning-based  framework  for interaction-aware  maneu- 
+ver prediction.  IEEE Transactions  on Intelligent  Transportation  Systems, 17 (6), 
+1538–1550  . 
+Besselmann,  T. , & Morari, M. (2009). Autonomous  vehicle steering using ex- 
+plicit LPV-MPC.  In Proceedings  of the 2009 European  control conference  
+(pp. 2628–2633)  . 1. 
+Carvalho,  A. , Gao, Y. , Gray, A. , Tseng, H. E. , & Borrelli, F. (2013). Predictive  control of 
+an autonomous  ground vehicle using an iterative linearization  approach.  In Pro- 
+ceedings of the sixteenth  international  ieee conference  on intelligent  transportation  
+systems (ITSC 2013) ITSC (pp. 2335–2340)  . 
+Carvalho,  A. , Gao, Y. , Lefevre, S. , & Borrelli, F. (2014). Stochastic  predictive  control 
+of autonomous  vehicles in uncertain  environments.  In Proceedings  of the twelfth 
+international  symposium  on advanced  vehicle control . November  2016. 
+Carvalho,  A. , Lefévre, S. , Schildbach,  G. , Kong, J. , & Borrelli, F. (2015). Automated  
+driving: The role of forecasts  and uncertainty  –A control perspective.  European  
+Journal of Control, 24 , 14–32 . 
+Cesari, G. , Schildbach,  G. , Carvalho,  A. , & Borrelli, F. (2017). Scenario model predic- 
+tive control for lane change assistance  and autonomous  driving on highways.  
+IEEE Intelligent  Transportation  Systems Magazine,  9 (3), 23–35 . 
+Chaib, S. , Netto, M. S. , & Mammar,  S. (2004). Hinf, adaptive,  PID and fuzzy control: 
+A comparison  of controllers  for vehicle lane keeping. In Proceedings  of the 2004 
+IEEE intelligent  vehicles symposium  (pp. 139–144)  . 
+Chu, K. , Lee, M. , & Sunwoo, M. (2012). Local path planning  for off-road autonomous  
+driving with avoidance  of static obstacles.  IEEE Transactions  on Intelligent  Trans- 
+portation  Systems, 13 (4), 1599–1616  . 
+Claussmann,  L. , Carvalho,  A. , & Schildbach,  G. (2015). A path planner for autonomous  
+driving on highways  using a human mimicry approach  with binary decision 
+S. Dixit et al. / Annual Reviews in Control 45 (2018) 76–86 85 
+diagrams.  In Proceedings  of the 2015 European  control conference,  ECC 2015 
+(pp. 2976–2982)  . 
+Damerow,  F. , Flade, B. , & Eggert, J. (2016). Extensions  for the foresighted  driver 
+model: Tactical lane change, overtaking  and continuous  lateral control. In Pro- 
+ceedings of the 2016 IEEE intelligent  vehicles symposium  (IV) (pp. 186–193)  . 
+Eggert, J. , Klingelschmitt,  S. , & Damerow,  F. (2015). The foresighted  driver: Future 
+ADAS based on generalized  predictive  risk estimation.  In Proceedings  of the 
+fast-zero 2015 symposium  (pp. 93–100) . 
+Eskandarian,  A. (2012). Handbook  of intelligent  vehicles : 2 . Springer . 
+Filev, D. , Lu, J. , & Hrovat, D. (2013). Future mobility:  Integrating  vehicle control with 
+cloud computing.  Davor Mechanical  Engineering,  135 (3), 18–24 . 
+Gao, Y. , Gray, A. , Frasch, J. V. , Lin, T. , Tseng, E. , Hedrick, J. K. , et al. (2012). Spatial 
+predictive  control for agile semi-autonomous  ground vehicles.  In Proceedings  of 
+the eleventh international  symposium  on advanced  vehicle control VD11 (pp. 1–6) . 
+Gao, Y. , Gray, A. , Tseng, H. E. , & Borrelli, F. (2014). A tube-based  robust nonlinear  
+predictive  control approach  to semiautonomous  ground vehicles.  Vehicle System 
+Dynamics,  52 (6), 802–823  . 
+Ghumman,  U. , Kunwar, F. , & Benhabib,  B. (2008). Guidance-based  on-line motion 
+planning  for autonomous  highway  overtaking.  International  Journal on Smart 
+Sensing and Intelligent  Systems, 1 (2), 549–571  . 
+Glaser, S. , Vanholme,  B. , Mammar,  S. , Gruyer, D. , & Nouvelière,  L. (2010). Maneu- 
+ver-based  trajectory  planning  for highly autonomous  vehicles on real road with 
+traﬃc and driver interaction.  IEEE Transactions  on Intelligent  Transportation  Sys- 
+tems, 11 (3), 589–606  . 
+Gordon, T. , & Lidberg, M. (2015). Automated  driving and autonomous  functions  on 
+road vehicles.  Vehicle System Dynamics,  53 (7), 958–994  . 
+Gray, A. , Gao, Y. , Lin, T. , Hedrick, J. K. , Tseng, H. E. , & Borrelli, F. (2012). Predictive  
+control for agile semi-autonomous  ground vehicles using motion primitives.  In 
+Proceedings  of the 2012 American  control conference  (ACC) (pp. 4239–4244)  . 
+Guzzella,  L. (2009). Automobiles  of the future and the role of automatic  control in 
+those systems. Annual Reviews in Control, 33 (1), 1–10 . 
+Haﬁzah, N. , Hairi, A. , Hudha, K. , & Abdul, Z. (2016). Modelling  and control strategies  
+in path tracking control for autonomous  ground vehicles : A review of state of 
+the art and challenges.  Journal of Intelligent  & Robotic Systems, 86 (2), 225–254  . 
+Hegeman,  G. , Brookhuis,  K. , & Hoogendoorn,  S. (2005). Opportunities of  advanced  
+driver assistance  systems towards overtaking.  EJTIR, 5 (4), 281–296  . 
+Houben, C. , & Houben, S. (2015). Endowing  advanced  driver assistance  systems with 
+fault tolerance.  Annual Reviews in Control, 39 , 58–67 . 
+Huang, Z. , Wu, Q. , Ma, J. , & Fan, S. (2015). An APF and MPC combined  collaborative  
+driving controller  using vehicular  communication  technologies.  Chaos, Solitons 
+and Fractals, 89 , 232–242  . 
+Jalalmaab,  M. , Pirani, M. , Fidan, B. , & Jeon, S. (2016). Cooperative  road condition  
+estimation  for an adaptive model predictive  collision avoidance  control strat- 
+egy. In Proceedings  of the 2016 IEEE Intelligent  Vehicles Symposium  2016-Augus(Iv  
+(pp. 1072–1077)  . 
+Jong, J. J. , Park, H. , Chao, H.-c. , & Yen, N. Y. (2016). Advanced  multimedia  and ubiqui- 
+tous engineering:  Future information  technology  : 2. Springer . 
+Kala, R. , & Warwick,  K. (2013). Motion planning  of autonomous  vehicles in a 
+non-autonomous  vehicle environment  without speed lanes. Engineering  Appli- 
+cations of Artiﬁcial Intelligence,  26 (5–6), 1588–1601  . 
+Kanaris, A. , Kosmatopoulos,  E. B. , & Ioannou,  P. A. (2001). Strategies  and spacing 
+requirements  for lane changing  and merging in automated  highway  systems. 
+IEEE Transactions  on Vehicular  Technology,  50 (6), 1568–1581  . 
+Kang, C. M. , Lee, S. H. , & Chung, C. C. (2014). Comparative  evaluation  of dynamic  and 
+kinematic  vehicle models. In Proceedings  of the ﬁfty-third  IEEE annual conference  
+on decision and control (CDC) (pp. 648–653)  . 
+Karlsson,  J. , Murgovski,  N. , & Sjöberg, J. (2016). Temporal  vs. spatial formulation  of 
+autonomous  overtaking  algorithms.  In Proceedings  of the nineteenth  IEEE inter- 
+national conference  on intelligent  transportation  systems (ITSC) (pp. 1029–1034)  . 
+Katrakazas,  C. , Quddus, M. , Chen, W.-H. , & Deka, L. (2015). Real-time  motion plan- 
+ning methods  for autonomous  on-road driving: State-of-the-art  and future 
+research directions.  Transportation  Research Part C: Emerging  Technologies,  60 , 
+416–442  . 
+Kesting, A. , Treiber, M. , & Helbing, D. (2007). General lane-changing  model MOBIL 
+for car-following  models. Transportation  Research Record: Journal of Transporta-  
+tion Research Board, 1999 (1), 86–94 . 
+Khaksar, W. , Sahari, K. S. M. , & Hong, T. S. (2016). Application  of sampling-based  
+motion planning  algorithms  in autonomous  vehicle navigation.  Autonomous  Ve- 
+hicle chapter 02 . 
+Khodayari,  A. , Ghaffari,  A. , Ameli, S. , & Flahatgar,  J. (2010). A historical  review on 
+lateral and longitudinal  control of autonomous  vehicle motions.  In Proceedings  
+of the 2010 international  conference  on mechanical  and electrical  technology,  ICMET 
+2010 (pp. 421–429)  . 
+Kim, B. , Kim, D. , Park, S. , Jung, Y. , & Yi, K. (2016). Automated  complex urban driving 
+based on enhanced  environment  representation  with GPS/map,  radar, lidar and 
+vision. IFAC-PapersOnLine,  49 (11), 190–195 . 
+Kim, C.-i. , Kim, M.-s. , & Lee, K.-s. (2015). Development  of a full speed range 
+path-following  system for the autonomous  vehicle. In Proceedings  of the 2015 
+international  conference  on control, automation  and systems (ICCAS 2015) 15 
+(pp. 710–715)  . 
+Kitazawa,  S. (2016). Control target algorithm  for direction  control of autonomous  
+vehicles in consideration  of mutual accordance  in mixed traﬃc conditions.  In 
+Proceedings  of the 2016 international  symposium  on advanced  vehicle control . 
+Kong, J. , Pfeiffer, M. , Schildbach,  G. , & Borrelli, F. (2015). Kinematic  and dynamic  
+vehicle models for autonomous  driving control design. In Proceedings  of the 2015 
+IEEE intelligent  vehicles symposium  (IV) (pp. 1094–1099)  . Kuwata, Y. , Fiore, G. A. , Teo, J. , Frazzoli, E. , & How, J. P. (2008). Motion planning  for 
+urban driving using RRT. In Proceedings  of the 2008 IEEE/RSJ international  confer- 
+ence on intelligent  robots and systems, IROS (pp. 1681–1686)  . 
+Lawitzky,  A. , Althoff, D. , Passenberg,  C. F. , Tanzmeister,  G. , Wollherr,  D. , & 
+Buss, M. (2013). Interactive  scene prediction  for automotive  applications.  In Pro- 
+ceedings of the 2013 IEEE intelligent  vehicles symposium  (IV) (pp. 1028–1033)  . 
+Lefèvre, S. , Vasquez,  D. , & Laugier, C. (2014). A survey on motion prediction  and risk 
+assessment  for intelligent  vehicles.  ROBOMECH  Journal, 1 (1) . 
+Luo, Y. , Xiang, Y. , Cao, K. , & Li, K. (2016). A dynamic  automated  lane change maneu- 
+ver based on vehicle-to-vehicle  communication.  Transportation  Research Part C: 
+Emerging  Technologies,  62 , 87–102 . 
+Ma, L. , Xue, J. , Kawabata,  K. , Zhu, J. , Ma, C. , & Zheng, N. (2014). A fast RRT algorithm  
+for motion planning  of autonomous  road vehicles.  In Proceedings  of the sev- 
+enteenth IEEE international  conference  on intelligent  transportation  systems, ITSC 
+2014 (pp. 1033–1038)  . 
+Milanés, V. , Llorca, D. F. , Villagrá, J. , Pérez, J. , Fernández,  C. , Parra, I. , et al. (2012). In- 
+telligent automatic  overtaking  system using vision for vehicle detection.  Expert 
+Systems with Applications,  39 (3), 3362–3373  . 
+Moridpour,  S. , Rose, G. , & Sarvi, M. (2010). Effect of surrounding  traﬃc character-  
+istics on lane changing  behavior.  Journal of Transportation  Engineering,  136 (11), 
+973–985  . 
+Motro, M. , Chu, A. , Choi, J. , Lavieri, P. S. , Pinjari, A. R. , Bhat, C. R. , et al. (2016). Ve- 
+hicular ad-hoc network simulations  of overtaking  maneuvers  on two-lane  rural 
+highways.  Transportation  Research Part C: Emerging  Technologies,  72 , 60–76 . 
+Murgovski,  N. , & Sjöberg, J. (2015). Predictive  cruise control with autonomous  over- 
+taking. In Proceedings  of the IEEE ﬁfty-fourth  annual conference  on decision and 
+control (CDC) (pp. 644–649)  . 
+Naranjo, J. E. , González,  C. , García, R. , & De Pedro, T. (2008). Lane-change  fuzzy con- 
+trol in autonomous  vehicles for the overtaking  maneuver.  IEEE Transactions  on 
+Intelligent  Transportation  Systems, 9 (3), 438–450  . 
+Nilsson, J. , Gao, Y. , Carvalho,  A. , & Borrelli, F. (2014). Manoeuvre  generation  and con- 
+trol for automated  highway  driving. IFAC Proceedings  Volumes, 19 , 6301–6306  . 
+IFAC. 
+Ohara, N. , Slot, M. , Monteil, J. , Cahill, V. , & Bouroche,  M. (2015). Towards evaluating  
+the beneﬁts of inter-vehicle  coordination.  In Proceedings  of the 2015 IEEE confer- 
+ence on intelligent  transportation  systems, ITSC (pp. 24 4 4–2450) . 
+Pérez, J. , Milanés, V. , Onieva, E. , Godoy, J. , & Alonso, J. (2011). Longitudinal  fuzzy 
+control for autonomous  overtaking.  In Proceedings  of the 2011 IEEE international  
+conference  on mechatronics,  ICM 2011 (pp. 188–193)  . 
+Petrov, P. , & Nashashibi,  F. (2014). Modeling and  nonlinear adaptive  control for au- 
+tonomous  vehicle overtaking.  IEEE Transactions  on Intelligent  Transportation  Sys- 
+tems, 15 (4), 1643–1656  . 
+Radar, 2018. Vehicle Sensor Suite. [Online; accessed  28-February-2018]  
+http://images.caricos.com/m/mercedes-benz/2018  _ mercedes-benz  _ s-class/ 
+images/160  0x120 0/2018 _ mercedes-benz  _ s-class _ 41 _ 160 0x120 0.jpg . 
+Rajamani,  R. (2011). Vehicle dynamics  and control . Springer Science \ Business  Media . 
+Rupp, A. , & Stolz, M. (2017). Survey on control schemes  for automated  driving on 
+highways.  In Automated  driving (pp. 43–69). Springer . 
+Saengpredeekorn,  P. , & Srinonchat,  J. (2009). A new technique  to deﬁne the over- 
+take distance using image processing.  In Proceedings  of the sixth international  
+conference  on electrical  engineering/electronics,  computer,  telecommunications  and 
+information  technology:  02 (pp. 1142–1145)  . 
+Schildbach,  G. , & Borrelli, F. (2015). Scenario model predictive  control for lane 
+change assistance  on highways.  In Proceedings  of the 2015 IEEE intelligent  ve- 
+hicles symposium  (pp. 611–616)  . 
+Schildbach,  G. , Fagiano, L. , Frei, C. , & Morari, M. (2014). The scenario approach  for 
+stochastic  model predictive  control with bounds on closed-loop  constraint  vio- 
+lations. Automatica,  50 (12), 3009–3018  . 
+Schildbach,  G. , & Gmbh, E. F. (2016). A new nonlinear  model predictive  control al- 
+gorithm for vehicle path tracking.  In Proceedings  of the 2016 International  sym- 
+posium on advanced  vehicle control . 
+Schubert,  R. , Adam, C. , Obst, M. , Mattern,  N. , Leonhardt,  V. , & Wanielik,  G. (2011). 
+Empirical  evaluation  of vehicular  models for ego motion estimation.  In Proceed- 
+ings of the 2011 IEEE Intelligent  Vehicles Symposium  IV (pp. 534–539)  . 
+Schubert,  R. , Richter, E. , & Wanielik,  G. (2008). Comparison  and evaluation  of ad- 
+vanced motion models for vehicle tracking.  In Proceedings  of the eleventh inter- 
+national conference  on information  fusion (pp. 1–6) . 1. 
+Schubert,  R. , Schulze, K. , & Wanielik,  G. (2010). Situation  assessment  for automatic  
+lane-change  maneuvers.  IEEE Transactions  on Intelligent  Transportation  Systems, 
+11 (3), 607–616 . 
+Shamir, T. (2004). How should an autonomous  vehicle overtake  a slower moving 
+vehicle: Design and analysis of an optimal trajectory.  IEEE Transactions  on Auto- 
+matic Control, 49 (4), 607–610 . 
+Shim, T. , Adireddy,  G. , & Yuan, H. (2012). Autonomous  vehicle collision avoidance  
+system using path planning  and model-predictive-control-based  active front 
+steering and wheel torque control. Proceedings  of the Institution  of Mechanical  
+Engineers,  Part D: Journal of Automobile  Engineering,  226 (6), 767–778  . 
+Snider, J. M. (2009). Automatic  steering methods  for autonomous  automobile  path 
+tracking.  Technical  report CMU-RITR-09-08  . Pittsburgh,  PA: Robotics Institute . 
+Son, Y. S. , Kim, W. , Lee, S. H. , & Chung, C. C. (2015). Robust multirate  control scheme 
+with predictive  virtual lanes for lane-keeping  system of autonomous  highway  
+driving. IEEE Transactions  on Vehicular  Technology,  64 (8), 3378–3391  . 
+Sorniotti,  A. , Barber, P. , & Pinto, S. D. (2017). Path tracking for automated  driving: 
+A tutorial on control system formulations  and ongoing research.  In Automated  
+driving: Safer and more eﬃcient future driving (pp. 71–140).  Springer . 
+Tagne, G. , Talj, R. , & Charara, A. (2016). Design and comparison of  robust nonlinear  
+86 S. Dixit et al. / Annual Reviews in Control 45 (2018) 76–86 
+controllers  for the lateral dynamics  of intelligent  vehicles.  IEEE Transactions  on 
+Intelligent  Transportation  Systems, 17 (3), 796–809  . 
+Thiemann,  C. , Treiber, M. , & Kesting, A. (2008). Estimating  acceleration  and 
+lane-changing  dynamics  based on NGSIM trajectory  data. Transportation  Re- 
+search Record: Journal of the Transportation  Research Board, 2088 , 90–101 . 
+Toledo, T. , Koutsopoulos,  H. , & Ben-Akiva,  M. (2003). Modeling  integrated  
+lane-changing  behavior.  Transportation  Research Record: Journal of the Trans- 
+portation  Research Board, 1857 (03), 30–38 . 
+Ulbrich, S. , & Maurer, M. (2015). Towards tactical lane change behavior  planning  for 
+automated  vehicles.  In Proceedings  of the eighteenth  IEEE international  conference  
+on intelligent  transportation  systems (ITSC) (pp. 989–995)  . 
+Usman, G. , & Kunwar, F. (2009). Autonomous  vehicle overtaking  –a n online solu-  
+tion. In Proceedings  of the 2009 IEEE international  conference  on automation  and 
+logistics, ICAL 2009 (pp. 596–601)  . 
+Valldorf, J. , & Gessner, W. (2005). Advanced  microsystems  for automotive  applications  . 
+Springer . 
+Vanholme,  B. , Gruyer, D. , Lusetti, B. , Glaser, S. , & Mammar,  S. (2013). Highly auto- 
+mated driving on highways  based on legal safety. IEEE Transactions  on Intelligent  
+Transportation  Systems, 14 (1), 333–347  . 
+Vlahogianni,  E. I. (2013). Modeling  duration  of overtaking  in two lane highways.  
+Transportation  Research Part F: Traﬃc Psychology  and Behaviour,  20 , 135–146 . 
+Wan, L. , Raksincharoensak,  P. , Maeda, K. , & Nagai, M. (2011). Lane change behavior  
+modeling  for autonomous  vehicles based on surroundings  recognition.  Interna- 
+tional Journal of Automotive  Engineering,  2 , 7–12 . 
+Watzenig,  D. , & Brandstätter,  B. (2017). Comprehensive  energy management:  Eco rout- 
+ing & velocity proﬁles . Springer . Webster,  N. A. , Suzuki, T. , Chung, E. , & Kuwahara,  M. (2007). Tactical driver lane 
+change model using forward search. In Proceedings  of the eighty-sixth  annual 
+meeting on transportation  research board (pp. 07–0378)  . 
+Werling, M. , Ziegler, J. , Kammel,  S. , & Thrun, S. (2010). Optimal trajectory  generation  
+for dynamic  street scenarios  in a frenét frame. In Proceedings  of the 2010 IEEE 
+international  conference  on robotics and automation  (ICRA) (pp. 987–993)  . 
+Wolf, M. T. , & Burdick, J. W. (2008). Artiﬁcial  potential  functions  for highway  driving 
+with collision avoidance.  In Proceedings  of the IEEE international  conference  on 
+robotics and automation  (pp. 3731–3736)  . 
+Wymeersch,  H. , De Campos, G. R. , Falcone, P. , Svensson,  L. , & Ström, E. G. (2015). 
+Challenges  for cooperative  ITS: Improving  road safety through the integration  
+of wireless communications,  control, and positioning.  In Proceedings  of the 2015 
+international  conference  on computing,  networking  and communications  (ICNC) 
+(pp. 573–578)  . 
+You, F. , Zhang, R. , Lie, G. , Wang, H. , Wen, H. , & Xu, J. (2015). Trajectory  planning  
+and tracking control for autonomous  lane change maneuver  based on the co- 
+operative  vehicle infrastructure  system. Expert Systems with Applications,  42 (14), 
+5932–5946  . 

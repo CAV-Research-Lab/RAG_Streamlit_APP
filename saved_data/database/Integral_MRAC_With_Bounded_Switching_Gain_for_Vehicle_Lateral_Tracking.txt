@@ -1,0 +1,1496 @@
+=== Metadata ===
+{
+    "file_name": "Integral_MRAC_With_Bounded_Switching_Gain_for_Vehicle_Lateral_Tracking.pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Integral_MRAC_With_Bounded_Switching_Gain_for_Vehicle_Lateral_Tracking.pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+1936 IEEE TRANSACTIONS ON CONTROL SYSTEMS TECHNOLOGY, VOL. 29, NO. 5, SEPTEMBER 2021
+Integral MRAC With Bounded Switching Gain for
+Vehicle Lateral Tracking
+Shilp Dixit , Umberto Montanaro , Mehrdad Dianati ,Senior Member, IEEE ,
+Alexandros Mouzakitis, and Saber Fallah
+Abstract — In this article, an enhanced model reference adap-
+tive control (EMRAC) algorithm is used to design a genericlateral-tracking controller for a vehicle. This EMRAC is differentfrom the EMRAC in the literature as it adopts a σ-modiﬁcation
+approach to bind the adaptive gain of the switching action.Moreover, an extended Lyapunov theory for discontinuous sys-tems is used to analytically prove the ultimate boundedness ofthe closed-loop control system when the adaptive gain of theswitching action is bounded with a σ-modiﬁcation strategy. The
+control algorithm is applied to a vehicle path-tracking problemand its tracking performance is investigated under conditionsof: 1) external disturbances such as crosswind; 2) road surfacechanges; 3) modeling errors; and 4) parameter missmatches in aco-simulation environment based on IPG Carmaker/MATLAB.The simulation studies show that the controller is effectiveat tracking a given reference path for performing differentautonomous highway driving maneuvers while ensuring theboundedness of all closed-loop signals even when the system issubjected to the conditions mentioned above.
+Index Terms — Adaptive control, autonomous driving, path
+tracking, vehicle lateral control.
+I. I NTRODUCTION
+THE mainstreaming of autonomous vehicles is happening
+at an increasingly rapid pace in the current decade. The
+recent push toward autonomous driving has resulted in an
+ever-increased focus of researchers to propose improvements
+and devise enhancements for the th ree architectural layers that
+are typically present in every self-driving platform [1].
+1)Scanning and Perception: Responsible for gathering
+information about the driving conditions in the neigh-
+borhood of the autonomous vehicle.
+2)Planning: Utilize input from the perception layer to
+compute a safe and feasible driving trajectory for thevehicle.
+Manuscript received February 29, 2020; accepted September 7, 2020. Date
+of publication October 1, 2020; date of current version August 5, 2021.
+Manuscript received in ﬁnal form September 14, 2020. This work wassupported in part by Jaguar Land Rover and in part by the United Kingdom-Engineering and Physical Sciences Research Council (UK-EPSRC) Grant
+as part of the jointly funded Towards Autonomy: Smart and Connected
+Control (TASCC) Programme under Grant EP/N01300X/1. Recommended byAssociate Editor S. Galeani. (Corresponding author: Shilp Dixit.)
+Shilp Dixit, Umberto Montanaro, and Saber Fallah are with the Department
+of Mechanical Engineering, University of Surrey, Guildford GU2 7XH, U.K.(e-mail: s.dixit,u.montanaro@surrey.ac.uk; s.fallah@surrey.ac.uk).
+Mehrdad Dianati is with the War wick Manufacturing Group (WMG),
+International Manufacturing Centre, University of Warwick, Coventry CV4
+7AL, U.K. (e-mail: m.dianati@warwick.ac.uk).
+Alexandros Mouzakitis is with Jaguar Land Rover Ltd., Coventry CV3 4LF,
+U.K. (e-mail: amouzak1@ jaguarlandrover.com).
+Color versions of one or more of the ﬁgures in this article are available
+online at https://ieeexplore.ieee.org.
+Digital Object Identiﬁer 10.1109/TCST.2020.30245863)Control: Use the planned trajectory from the planning
+layer and a reference to com pute steering, acceleration,
+and brake input to make the autonomous vehicle follow
+the reference trajectory a s closely as possible while
+ensuring the safety and comfort of the occupants.
+While the ﬁrst two layers are relative newcomers to the ﬁeld
+of automotive engineering, the control layer, which includes
+lateral/path-tracking control systems, has been a topic of
+intense research over the past few decades and comprehensive
+reviews on this topic are available in [2] and [3]. These reviewsdemonstrate that control of lateral dynamics of a vehicle
+poses a formidable challenge for control engineering due to
+a combination of reasons such as: 1) signiﬁcant dependenceof lateral dynamics on the longitudinal velocity of a vehicle;
+2) nonlinear tire dynamics; 3) dif ﬁculties in estimation of
+system parameters such as road surface coefﬁcient, vehicle
+mass distribution; and 4) nonlinearities of road/path curvature.
+The typical control techniques for path-tracking in technical
+literature are aimed at reducing the lateral position error of the
+vehicle with respect to the path while ensuring lateral and yaw
+stability. Researchers have proposed a variety of control tech-niques to achieve desirable pat h-tracking performance for an
+autonomous vehicle [1]–[3]. There are control strategies based
+on geometric constraints such as: 1) follow the carrot [2];
+2) Stanley controller [4]; and 3) pure pursuit [2] which have
+demonstrated their effectivenes s in various experimental tests
+[3], [5]–[7]. Although these control techniques are relatively
+easy to implement on real-time hardware and provide desired
+tracking performance around the nominal operational condi-tion, their performance rapidl y declines when they operate in
+different driving conditions [8]. Consequently, other control
+strategies such as PID, LQR, and sliding mode controllers with
+feedforward action have been proposed as alternate schemes
+for lateral control of a vehicle [9], [10]. In these controllers,the feedback controller is designed to reduce the tracking
+error whereas the feedforward action is developed to counter
+path curvature. However, LQR controllers might not be robustwith respect to parameter uncertainties, where even small
+changes in the plant paramet ers could lead to closed-loop
+instability [11]. Tuning of PID controllers is not a trivial
+task making these control strategies difﬁcult to apply over a
+wide range of path-tracking situations [1]–[3], [5]. Classicalsliding-mode controllers suffer from chattering phenomenon.
+However, this limitation can be overcome with the use of
+higher order techniques [12], [13] but at the cost of a morecomplicated design and closed-loop analysis [14]. With an
+1063-6536 © 2020 I EEE. Personal u se is perm itted, but republication/redistri bution requires IEEE permission.
+See https://www.ieee.org/publications/rights/index.html for more information.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:33:11 UTC from IEEE Xplore.  Restrictions apply. 
+DIXIT et al. : INTEGRAL MRAC WITH BOUNDED SWITCHING GAIN FOR VEHICLE LATERAL TRACKING 1937
+increase in available computational resources and develop-
+ment of efﬁcient optimization solvers, advanced model-based
+control techniques [e.g., model predictive control (MPC)]
+are also employed for lateral control of a vehicle [15]–[17].MPC controllers ranging from standard linear MPC, linear
+time-varying (LTV) MPC, and highly complex controllers
+based on nonlinear vehicle and tire models are available in lit-erature [18], [19]. These advanced control techniques improve
+tracking performance but their tracking performance is highly
+sensitive to the accuracy of the system model and hence makes
+them unsuitable in all driving conditions. The issue of model
+error is mitigated by nonlinear MPC’s but these controllersrequire large computing resources which makes them imprac-
+tical for most of the automotive platforms. Recently, active
+research to augment the abovementioned control techniqueswith advancements such as neur al network, fuzzy logic, etc.
+to further enhance their applicability and performance has
+gained great momentum [20]–[24]. However, these techniques
+rely heavily on readily available training data which is not
+easily obtainable in the automotive industry. Nevertheless, thedifﬁculties in estimation of system parameters and presence
+of rapidly changi ng dynamics due to nonlinearities such as
+tire dynamics, longitudinal velocity, external disturbances, etc.make vehicle lateral control very challenging problem.
+The theoretical framework for adaptive control was
+formulated over seven decades ago and since then it has been
+a topic of active research especially for systems that have
+large dynamic variations and parameter uncertainties [25].Model reference adaptive control (MRAC) is a well-known
+adaptive control design method and is based on the objective
+of ensuring that the controlled variables of a plant track agiven reference model. This control technique is backed by
+an established theoretical framework and has proven to be a
+viable control technique especia lly for systems where real-time
+model parameters are unknown [25]. To improve the tracking
+of the reference model despite un-modeled system dynamics,system nonlinearities, and rapid varying disturbances, in [26],
+an adaptive integral control action and an adaptive switching
+control action were added to the standard feedback andfeedforward MRAC strategy. The augmented MRAC, also
+known in the literature as Enhanced MRAC (EMRAC) [27]
+(see Fig. 1 for a representation of EMRAC closed-loop
+control scheme) has shown to be effective at imposing
+dynamics of the reference model to plants of engineeringinterest affected by model uncertainties and disturbances such
+as electronic throttle body [26], common rail systems [28],
+thermo-hygrometric control [29]. Despite MRAC strategiesbeing effective solutions to impose the required reference
+dynamics with a limited knowledge of the plant parameters,
+external disturbances may occasionally induce a drift of theadaptive gains, which can eventu ally lead to degraded tracking
+performance and/or loss of closed-loop stability [25]. In [30],
+two different methods namely: 1) parameter-projection and
+2)σ-modiﬁcation were suggested to prevent unbounded
+drift of the feedback, feedforward, and integral controlgains for systems. The paramet er-projection-based scheme
+demonstrated its capability to provide asymptotic zero-tracking
+error and boundedness of adaptive gains even when subjectedFig. 1. EMRAC control scheme [27], [29].
+to transient distu rbances. Moreover, when the system
+encounters time-bounded disturbances, the σ-modiﬁcation
+scheme guarantees ultimate boundedness of the closed-loop
+system when subjected to persistent disturbances. However,
+only heuristic solutions (saturations) have been suggested to
+bind the adaptive gain of the switching action [31].
+Notwithstanding its ability to handle parameter variations,
+system nonlinearities, and general control ﬂexibility, MRAC
+schemes for lateral control of a vehicle are marginally studied
+in literature [32]–[34]. One of the reasons is the concern of
+unbounded drift of the controller g ains leading to instability
+[35]. To prevent unbounded evolution of adaptive controller
+gains, barrier Lyapunov functions and constraints on estimated
+adaptive gains in [36] and a set- theoretic approach have been
+presented in [37]. In this article, the σ-modiﬁcation framework
+to guarantee bounds on the adaptive control gains discussed
+above is extended to systematically bind the possible drift of
+the adaptive gain of the switching action of the EMRAC.
+The closed-loop system is a piecewise smooth system andthe uniform ultimate boundedness of all the closed-loop sig-
+nals including adaptive gains is proven using the extended
+Lyapunov theory for nonsmooth systems [38]. Moreover,the ultimate bound is computed using the above-mentioned
+extended Lyapunov theory [39], [40]. Finally, the adaptive
+control design is applied to the vehicle path-tracking/lateral
+control problem. The closed-loop system is implemented on
+an IPG Carmaker-Simulink co-simulation environment and itsbehavior in different driving conditions is investigated. The
+reference model for the lateral-tracking problem is based on
+a path-tracking bicycle model from literature [41], [42]. Thestates of this system capture the dynamics of both, lateral-yaw
+motion of the vehicle as well as the path deviation errors.
+A stable reference model is obtained by designing a feedbackcontroller using pole placement for stability along with a
+feedforward action based on re quired steady-state cornering
+behavior of the vehicle to counter the reference path curva-
+ture. This reference model describes the preferred dynamical
+behavior of the system for achieving stable cornering whileaccurately tracking any given ref erence path curvature that
+the vehicle might encounter during normal highway driving
+scenarios.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:33:11 UTC from IEEE Xplore.  Restrictions apply. 
+1938 IEEE TRANSACTIONS ON CONTROL SYSTEMS TECHNOLOGY, VOL. 29, NO. 5, SEPTEMBER 2021
+This article is structured as follows. Section II introduces the
+basic symbols and mathematical deﬁnitions used in this article.
+Section III lays out the mathematical control formulation for
+the adaptive control scheme together with the analytical proofof the ultimate boundedness of the closed-loop system. The
+path following system model for the vehicle and the steering
+system dynamics are discussed in Section IV. The design ofthe path-tracking controller using the EMRAC is presented
+in Section V. In Section VI, the numerical validation of
+the closed-loop system is carried out in a MATLAB-IPG
+CarMaker co-simulation environment. Finally, the conclud-
+ing remarks and future research directions are laid out inSection VII.
+II. M
+ATHEMATICAL NOTATIONS AND DEFINITIONS
+The signum function of a real number xis deﬁned as
+sgn(x)=(d/dx)|x|,x/negationslash=0. For a symmetric matrix M
+and vector x,/bardblx/bardblMdenotes the weighted norm given by
+/bardblx/bardblM=(xTMx)1/2,/bardblx/bardbldenotes the 2-norm of a vector,
+andλmin(M)andλmax(M)are the minimum and maximum
+eigenvalue of M, respectively. The matrix On,m∈Rn×m
+denotes a matrix of zeros, and matrix In∈Rn×ndenotes the
+identity matrix in Rn. For a given vector x,d i a g(x)represents
+a diagonal matrix with xas its diagonal. L∞is the set of
+bounded scalar function. Given a nonsmooth time-varying
+system of the form
+˙˜x=F(t,˜x) (1)
+where ˜x∈Rnis the state of system and F:R×Rn→Rnis
+the discontinuous vector ﬁeld. F ilippov solutions and the con-
+cept of differential inclusions allow solutions to be deﬁned atpoints of discontinuities in the vector ﬁeld F(t,˜x). According
+to [38] and [43], a vector function ˜x(·)is a Filippov solution
+of the system (1) for t∈[t
+0,t1]if: 1) ˜x(·)is absolutely
+continuous and 2) for almost all t∈[t0,t1]
+˙˜x∈K[F](t,˜x) (2)
+with K[F](t,˜x)being the Filippov set valued map deﬁned as
+K[F](˜x)/defines/intersectiondisplay
+υ>0/intersectiondisplay
+π(S)=0
+co{F(B(˜x,υ)\S)},˜x∈Rn(3)
+where/intersectiontext
+π(S)=0denotes the intersection of all sets Sof
+Lebesgue measure zero, B(˜x,υ) is the open ball centered
+at˜xwith radius υ> 0, and
+ co denotes the convex closure.
+Moreover, systems of type (1) with discontinuous right-hand
+sides also result in nonsmooth Lyapunov functions which hin-ders the use of standard stability theory proofs [38]. Clarke’s
+generalized gradient presented in detail in [44] is a powerful
+tool that can be used to streamline proofs for nonsmoothanalysis. For a globally Lipschitz function V:R
+n×R→R,
+the generalized gradient of Vat(˜x,t)is given by
+∂V(˜x,t)=
+co{lim∇V(˜x,t)|(˜xi,ti)→(˜x,t),(˜xi,ti)/∈/Xi1V}
+(4)
+where /Xi1Vis the set of measure zero where the gradient of
+Vis not deﬁned [38]. It is noteworthy that Lipschitz means
+Lipschitz in (˜x,t)and discontinuities in tare not allowed.Furthermore, if V(˜x,t)has no explicit dependence on t,
+the last component of ∂Vcan be dropped as it is zero. The
+generalized directional derivative of Vis deﬁned in [38] as
+V◦(˜x;γ)=lim
+˜y→˜x,sup
+t↓0V(˜y+tγ)−V(˜y)
+t(5)
+and if Vis Lipschitz near ˜x,t h e n
+V◦(˜x;γ)=max{ξTγ|ξ∈∂V(˜x)}. (6)
+Thus, using the deﬁnitions in (5), (6), a function Vis called
+a regular function if the following two conditions are ful-ﬁlled [38].
+1)∀γ, the one-sided directional derivative of V
+/prime(˜x;γ)
+exists.
+2)∀γ,V/prime(˜x;γ)=V◦(˜x;γ).
+According to [38, Th. 2.2] if ˜x(·)is a solution to (1) and
+V(˜x,t)is a regular function, then (d/dt)V(˜x,t)exists almost
+everywhere and it can be computed as
+d
+dtV(˜x,t)∈a.e˙˜V(˜x,t) (7)
+where
+˙˜V=/intersectiondisplay
+ξ∈∂V(˜x,t)ξT/parenleftbiggK[F](t,˜x)
+1/parenrightbigg
+. (8)
+The solutions of the system in the form (1) are said to
+be uniformly ultimately bounded [45] if there exists a timeinterval T[dependent on ˜x(t
+0)]a n da KL−class function
+/Psi1:R+×R+→R+such that
+/bardbl˜x(t)/bardbl≤/Psi1(/bardbl˜x(t0)/bardbl,t−t0)∀t∈[t0,t0+T] (9a)
+and:
+/bardbl˜x/bardbl≤/epsilon1∀t∈[t0+T,+∞[ and/epsilon1>0. (9b)
+The aforementioned deﬁnitions and theorems have been
+recently used in [46] to formulate the conditions that guar-
+antee the ultimate boundedness of the discontinuous system
+described in (1) and the main theorem is reported below.
+Theorem 1: Assume that for any initial condition, the dif-
+ferential inclusion (2) for system (1) is well-posed in the
+sense of Filippov solutions, and there exists a positive globallyLipschitz continuous function V:R
+n×R+→R, two positive
+functions W1,W2∈K∞,a n d W3∈Ksuch that
+W1(˜x)≤V(˜x,t)≤W2(˜x) (10a)
+∃μ> 0
+s.t.˙˜V(˜x,t)≤− W3(˜x),when /bardbl˜x/bardbl≥μ (10b)
+with˙˜V(˜x,t)being the generalized gradient of V, then the
+nonsmooth system in (1) is gl obally uniformly ultimately
+bounded and the ultimate bound is given by W−1
+1(W2(μ)).
+It is noteworthy that Theorem 1 is a special case of [46, Th.3.1] by assuming: 1) zero time delays; 2) the solution of the
+differential inclusion (2) exists for any initial condition; and
+3)V(˜x,t)is deﬁned over the entire R
+n.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:33:11 UTC from IEEE Xplore.  Restrictions apply. 
+DIXIT et al. : INTEGRAL MRAC WITH BOUNDED SWITCHING GAIN FOR VEHICLE LATERAL TRACKING 1939
+III. C ONTROL FORMULATION
+Consider a plant modeled in the form
+˙x=Ax+B1u+B2r+d (11)
+where x∈Rn,u∈R,r∈R,a n d d∈Rnare the state,
+actuated input, un-actuated input, and the disturbance of the
+system, respectively. The dis turbance acting on the plant is
+assumed to belong to L∞, thus there exists /Delta1∞such that
+/bardbld/bardbl</Delta1 ∞. The structure of the system matrices A∈Rn×n,
+B1∈Rn,a n d B2∈Rnare assumed to be known and
+constructed from the nominal parameters of the given system.
+The control objective is to steer the dynamics of the system
+(11) toward those of an asymptotically stable linear time-invariant (LTI) reference system of the form
+˙x
+m=Amxm+Bmr (12)
+where xm∈Rnis the reference model state, and Am∈
+Rn×n,Bm∈Rnare the reference model system matrices
+with Ambeing Hurwitz. By assuming that there exist two
+constant matrices K∗
+Xand K∗
+Rsuch that the following matching
+conditions are satisﬁed :
+Am=A+B1K∗
+X (13a)
+Bm=B1K∗
+R+B2 (13b)
+the aforementioned model reference control problem is solved
+by the EMRAC control action
+u(t)=KX(t)x(t)+KR(t)r(t)+KI(t)eI(t)
++KN(t)sgn(ye(t)) (14)
+where the state tracking error is deﬁned as
+e=xm−x (15)
+and eIis the integral of the state tracking error e. The output
+error yeis deﬁned as
+ye=Cee,with Ce=BT
+1Pand PA m+AT
+mP=− Q (16)
+with Qbeing a positive deﬁnite matrix and Pthe solution of
+the Lyapunov equation (16) which exists as Amis Hurwitz.
+The adaptive control gains KX,KR,a n d KIare computed as
+in [30]. Differing from the solutions available in literature,in this work K
+Nis bounded by including the σ-modiﬁcation
+strategy into the adaptive law of KN, thus avoiding the use
+of heuristic solutions (saturations of the gain). A solution tobound positive increasing adaptive gains via σ-modiﬁcation
+has been also proposed in [47]. Hence, K
+Nis adapted as
+KN=φNand˙φN=αN|ye|+ fN (17)
+where αNis a positive constant, αN|ye|is the adaptive law for
+φNin [29], and fNis the σ-modiﬁcation term deﬁned as
+fN=−ρN·σφN(/bardblφN/bardbl)·φN (18a)
+σφN(/bardblφN/bardbl)=⎧
+⎪⎪⎪⎪⎪⎪⎨
+⎪⎪⎪⎪⎪⎪⎩0,if/bardblφ
+N/bardbl≤ˆMφN
+ηφN/parenleftBigg
+/bardblφN/bardbl
+ˆMφN−1/parenrightBigg
+ifˆMφN</bardblφN/bardbl≤2ˆMφN
+ηφN,if/bardblφN/bardbl>2ˆMφN(18b)where ˆMφN,ηφN,a n dρNare positive constants and
+ηφN>3
+4·α−1
+N·ρN·λmin(Q). (19)
+Theorem 2: Consider system (11) with r,d∈L∞and the
+reference model (12). Let the adaptive control action be given
+by (14), with the adaptive gain for the discontinuous action
+computed as in (17). Then all resultant closed-loop signals are
+bounded and the state of the closed-loop system is globallyuniformly ultimately bounded.
+Before providing the proof for Theorem 2, the following
+lemma is given.
+Lemma 3: Similar to [30, Lemma 2], an additional set of
+guarantees given below can be derived
+φ
+Neα−1
+NfN≥0∀φN∈R (20a)
+φNeα−1
+NfN>0∀φN:/bardblφN/bardbl≥ˆMφN (20b)
+φNeα−1
+NfN>ηφN
+2φT
+Neα−1
+NρNφNe∀φN:/bardblφN/bardbl>2ˆMφN
+(20c)
+where φNe=φ∗
+N−φNandφ∗
+N=0.
+A. Proof of Lemma 3:
+From (18a), one can state the following :
+φNeα−1
+NfN=φNeα−1
+N[−ρN·σφN(/bardblφN/bardbl)·φN] (21a)
+=−ρN·σφN(/bardblφN/bardbl)·φNe·α−1
+N·φN.(21b)
+The deﬁnition of σφNin (18b) shows that σφN=0f o r/bardblφN/bardbl<
+ˆMφNand thus the Lemma is satisﬁed. As φNe=(φ∗
+N−φN),
+the equation above can be expressed as
+φNeα−1
+NfN=ρN·σφN(/bardblφN/bardbl)·φN·α−1
+Ne·φNe (22)
+where once again the deﬁnition of σφNin (18b) shows that
+when /bardblφN/bardbl≥ˆMφN
+φNeα−1
+NfN=ρN·ηφN/parenleftBigg
+/bardblφN/bardbl
+ˆMφN−1/parenrightBigg
+φNe·α−1
+N·φNe>0
+(23)
+when /bardblφN/bardbl>2ˆMφN
+φNeα−1
+NfN=ρNηφNφNeα−1
+NφNe
+>ηφN
+2φT
+Neα−1
+NρNφNe (24)
+and hence (20) is veriﬁed.
+B. Proof of Theorem 2
+The proof of the theorem above is based on two steps:
+1) recast the closed-loop system as a Filippov system and
+2) prove the existence of a positive deﬁnite function Vthat
+satisﬁes Theorem 1.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:33:11 UTC from IEEE Xplore.  Restrictions apply. 
+1940 IEEE TRANSACTIONS ON CONTROL SYSTEMS TECHNOLOGY, VOL. 29, NO. 5, SEPTEMBER 2021
+1) Closed-Loop Dynamics: By considering the plant in
+(11), the reference model in (12) , the control action in (14),
+and the matching condition in (13), after some algebraic
+manipulations, the closed-loop dynamics can be expressed as
+˙e=Ame+B1[φT
+ew−yewT/Gamma1βw+φNesgn(ye)]−d
+(25a)
+˙φe=− ye/Gamma1αw−f (25b)
+˙φNe=−αN|ye|− fN
+with
+wT=[xT,r,eT
+I],w∈R2n+1(25c)
+andφebeing the vector collecting the mismatches between the
+plant parameters and the integ ral parts of the adaptive gains
+KX,KR,a n d KI(see [30] for its mathematical deﬁnition),
+/Gamma1αand/Gamma1β∈R(2n+1)×(2n+1)are the positive matrices rep-
+resenting the adaptive weights for the integral part and theproportional part of K
+X,KR,a n d KI, repectively, and fis
+theσ-modiﬁcation limiting the evolution of their integral part
+(see [30] for its mathematical deﬁnition). It is noteworthy
+that due to the discontinuities arising from the switching
+action of the controller, the vector ﬁeld in (25) expressed asF:R×R
+3n+2→R3n+2is a piecewise system. Thus, using
+the mathematical formulation in (1) and (2), the closed-loop
+system in (25) can be described by the differential inclusion
+˙˜x∈K[F](˜x) (26)
+where K[F](˜x)represents the Filippov set-valued map of the
+piecewise system and ˜xT=[eT,φT
+e,φNe].
+2) Existence of Candidate Lyapunov Function V : The can-
+didate Lyapunov function is
+V(˜x)=˜xT˜P˜x (27)
+where ˜P=diag(P,/Gamma1−1
+α,α−1
+N), with Pbeing the solution of
+the Lyapunov equation in (16). It is noteworthy that (27) can
+be bounded as [30], [45]
+W1(˜x)≤V(˜x)≤W2(˜x) (28)
+where W1(˜x)=λmin(˜P)/bardbl˜x/bardbl2and W2(˜x)=λmax(˜P)/bardbl˜x/bardbl2.
+AsVis a smooth function and by extension a regular function
+[38], [45], [46], (d/dt)V(˜x)exists and can be computed as
+in (7). Therefore, using (26) the derivative of (27) along theclosed-loop trajectories (25) can be expressed as
+d
+dtV(˜x)∈a.e˙˜V(˜x)=/intersectiondisplay
+ξ∈∂V(˜x)ξTK[F](˜x). (29)
+According to [38], since V(˜x)is a smooth function
+˙˜V(˜x)=∇ VT·K[F](˜x)=2˜xT˜PK[F](˜x) (30)the differential inclusion K[F](˜x)in (26) can be expanded as
+K[F]=K⎡
+⎣Ame+B1[φT
+ew−yewT/Gamma1βw+φNesgn(ye)]−d
+−ye/Gamma1αw−f
+−αN|ye|− fN⎤
+⎦
+(31a)
+=⎡
+⎣Ame+B1[φT
+ew−yewT/Gamma1βw+φNeK[sgn(ye)]]−d
+−ye/Gamma1αw−f
+−αN|ye|− fN⎤
+⎦.
+(31b)
+After some algebraic manipulations, using the Lyapunov equa-
+tion in (16), and the differential inclusion in (31) the right-hand
+side of (30) is
+˙˜V(˜x)=− eTQe−2y2
+ewT/Gamma1βw+2yeφNeK[sgn(ye)]
+−2eTPd−2φT
+e/Gamma1−1
+αf−2φNe|ye|−2φNeα−1
+NfN.
+(32)
+It is noted that K[sgn(ye)]is a set-valued map that is computed
+as
+K[sgn(ye)]=⎧
+⎪⎨
+⎪⎩−1, ye<0
+[−1,1],ye=0
+1, ye>0.(33)
+Since, the set-valued map is used to deal with the discontinu-
+ities arising due to the sgn function the entire segment [−1,1]
+is considered for the condition when ye=0. After some
+further algebraic manipulation, (32) can be upper bounded as
+˙˜V(˜x)≤− eTQe−2eTPd−2φT
+e/Gamma1−1
+αf−2φNeα−1
+NfN.(34)
+It is noted that, to obtain (34), the term 2 yeφNeK[sgn(ye)]is
+canceled by −2φNe|ye|when ye/negationslash=0 and both terms are zero
+when ye=0. The ﬁrst three terms on the right-hand side of
+(34) have been considered in [30] and the equation above can
+be further manipulated as in [30, Proof of Theorem 2] using
+the same steps. Thus,˙˜Vcan be further upper-bounded as
+˙˜V(˜x)≤−3
+4λmin(Q)/bardble/bardbl2+4/bardblP/bardbl2
+λmin(Q)/bardbld/bardbl2
+−2φT
+e/Gamma1−1
+αf−2φNeα−1
+NfN.(35)
+By deﬁning
+˜/Gamma1−1
+α=diag/parenleftbig
+/Gamma1−1
+αα−1
+N/parenrightbig˜f=/bracketleftbiggf
+fN/bracketrightbigg
+,˜φe=/bracketleftbiggφe
+φNe/bracketrightbigg
+(36)
+the expression in (35) becomes the following :
+˙˜V(˜x)≤−3
+4λmin(Q)/bardble/bardbl2+4/bardblP/bardbl2
+λmin(Q)/bardbld/bardbl2−2˜φT
+e˜/Gamma1−1
+α˜f.
+(37)
+It is noted that˙˜Vis then upper-bounded as in [30, Proof of
+Theorem 2] and it can be further manipulated using the same
+steps in [30], thus
+˙˜V(˜x)≤− W3(˜x),where /bardbl˜x/bardbl≥μ (38)
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:33:11 UTC from IEEE Xplore.  Restrictions apply. 
+DIXIT et al. : INTEGRAL MRAC WITH BOUNDED SWITCHING GAIN FOR VEHICLE LATERAL TRACKING 1941
+Fig. 2. Overview of path-tracking model. Note: reference path (black dashed
+line).
+where W3(˜x)is deﬁned as
+W3(˜x)=θα/bardbl˜x/bardbl2,where /bardbl˜x/bardbl≥μ;α, θ∈(0,1) (39a)
+μ=/radicalbigg
+μ2
+μ1(1−θ)(39b)
+μ1=3
+4λmin(Q) (39c)
+μ2=3/bardblP/bardbl2
+μ1/Delta12
+∞+μ1(2ˆMφ+/bardblφ∗/bardbl+2ˆMφN)2(39d)
+andˆMφandφ∗are the threshold and the ideal control gains
+deﬁned in [30], respectively. Consequently, by considering
+(28) and (38), the closed-loop dynamics (25) satisfy all the
+conditions in Theorem 1. Thus, the closed-loop system isultimately bounded with the ultimate bound given as
+W
+−1
+1(W2(μ))=/radicalBigg
+λmax(˜P)
+λmin(˜P)μ. (40)
+IV . S YSTEM MODEL
+A. Path-Tracking Model
+The primary objective of a path-tracking controller is to
+accurately follow the reference path under a wide range of
+operating conditions. Path tracking for autonomous vehicles
+is a particularly challenging task as the dynamics of a vehiclechange signiﬁcantly with changes in longitudinal velocity, road
+surface, and external disturbances such as wind, challenging
+maneuvers, etc. The initial generation of path-tracking con-
+trollers were based on geometric controllers (e.g., Stanley,
+follow the carrot, etc.) and were shown to provide suitableperformance under nominal cond itions both in simulation and
+real-world experiments. However, their performance suffers
+when the system deviates far from nominal conditions andthus prompted researchers to d evelop more advanced control
+algorithms (e.g., sliding mode control, robust control, adaptive
+control, MPC, etc.) that were suitable for the complex nature ofthe problem. In this section, the path-following system model
+is presented for application of the control law in (14) to a
+vehicle’s lateral control problem is discussed. To apply the
+control law in (14), the relevant vehicle and error states of
+the system need to be expressed in the format given in (11).To capture the lateral and yaw dynamics of the autonomous
+vehicle, the single-track dynamic bicycle model of the vehicle
+is utilized (see Fig. 2). The vehicle’s lateral velocity v
+yandyaw rate rzare used to get a representation of the vehicle’s
+dynamics. Additional states tha t are augmented to this model
+are, the lateral position error deﬁned as the lateral distance
+error from the Center of Gravity (CG) of the vehicle fromthe desired path η
+e, measured perpendicularly to the vehicle’s
+orientation and the heading angle error ψe, deﬁned as the dif-
+ference between the orientation of the vehicle and the desiredyaw angle. The equations that describe the evolution of the
+four states have been presented in [41] and [48] and have also
+been used by researchers to devel op their lateral-yaw tracking
+controller for autonomous vehicles [41]. Hence, by deﬁning
+x
+T
+path=[vy,rz,ηe,ψe], the vehicle dynamics are
+˙xpath=Apathxpath+B1,pathδf+B2,pathκ (41)
+where δfis the actual front wheel steering angle, r=κis the
+desired path curvature and represents the unactuated input to
+the system, while the system matrices are
+Apath=⎡
+⎢⎢⎢⎢⎢⎢⎣C
+f+Cr
+MvxlfCf+lrCr
+Mvx−vx00
+lfCf−lrCr
+vxIzl2
+fCf+l2
+rCr
+vxIz00
+−10 0 vx
+0 −10 0⎤
+⎥⎥⎥⎥⎥⎥⎦
+(42a)
+B
+T
+1,path=/bracketleftbigg
+−Cf
+M−lfCf
+Iz00/bracketrightbigg
+(42b)
+BT
+2,path=[000 vx] (42c)
+where vxis the longitudinal vehicle speed, Mis the mass of
+the vehicle, Izis the yaw mass moment of inertia, and Cfand
+Crare the front and rear cornering stiffness, respectively.
+B. Steering Actuator Dynamics
+Path-tracking controllers are generally designed under the
+assumption that the desired front wheel steering angle com-
+puted by the controller is immediately applied on the vehicle.In human-driven vehicles, the d esired steering wheel angle is
+provided by the driver which is then transmitted to the front
+wheels using mechanical linka ges and gears. On the other
+hand, in vehicles equipped with a steering actuator, the desired
+steering wheel angle is applied by means of a motor and
+transmission to actuate the front wheel angle. Consequently,
+this actuator (steering system) has its own dynamics and
+might lead to reduced closed-l oop tracking performance if
+not incorporated within the control design. It is common
+practice to represent the actuator dynamics by approximating
+them as low-order transfer functions (e.g., ﬁrst/second orderlow-pass ﬁlters) [49] but for the test vehicle used in this article,
+simulation and experimental tests in the past have shown that
+the dynamics of its steering system can be approximated as a
+pure delay modeled as
+δ
+f(t)=δf,des(t−τsa) (43)
+where τsais the actuator time-delay and δf,desis the desired
+front steering angle. A schematic representation of such a
+steering actuator system is given in Fig. 3. For the control
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:33:11 UTC from IEEE Xplore.  Restrictions apply. 
+1942 IEEE TRANSACTIONS ON CONTROL SYSTEMS TECHNOLOGY, VOL. 29, NO. 5, SEPTEMBER 2021
+Fig. 3. Schematic of a steering actuator system illustrating the input and
+output interfaces.
+design the time delay of the steering system (43) is approx-
+imated via a ﬁrst-order Padé approximation which provided
+a good compromise between si mplicity and accuracy for
+steering commands up to 10 rad s−1. Hence, by denoting the
+transfer function from δf,destoδfasGsa(s)=e−τsas,t h e
+approximation
+Gsa(s)/approxorequal2−τsas
+2+τsas(44)
+is utilized for control design. Furthermore, for a given nominal
+delay that is, τsa=¯τsa, the transfer function in (44) can be
+represented in a state-space domain as
+˙xsa=Asaxsa+Bsausa (45a)
+ysa=Csaxsa+Dsausa (45b)
+where xsa∈Ris an internal state for the actuator dynamics,
+the desired front steering angle usa=δf,des∈Ris the control
+input of the system, the actual front steering angle ysa=δf∈
+Ris the output of the system, and (Asa,Bsa,Csa,Dsa)are the
+state-space matrices of appropriate dimensions.
+C. Augmented System
+The steering actuator model in (45) is coupled with the
+path-tracking model in (41) to obtain an integrated model of
+the overall system. By denoting x=[xT
+path,xT
+sa]T∈R5as the
+state vector of the system, and u=δf,des∈Ras the input to
+the system, the resulting coupled model is
+˙x=Ax+B1u+B2κ (46)
+where the system matrices of the augmented model are
+A=/bracketleftbiggApath B1,path·Csa
+On,1 Asa/bracketrightbigg
+(47a)
+BT
+1=[(B1,path·Dsa)TBsa] (47b)
+BT
+2=/bracketleftbigBT
+2,pathO1,1/bracketrightbig. (47c)
+For normal road-going vehicle, the system matrix Ain (46)
+has three poles in the left-half plane (steering actuator state
+and stable lateral dynamics of understeered vehicle) and twopoles in the origin (i.e., because of error states), resulting in
+an unstable system.
+It is noteworthy that the dynamics of system (46) depend
+on the longitudinal velocity and the vehicle parameters (mass,
+weight distribution, moment of inertia, tire cornering stiffness,etc.) and generally nominal values of these parameters are
+used to create the system model. Moreover, coupling the
+approximate steering actuator dynamics introduces additionalmodeling uncertainties to the stat e-space model. Therefore, the
+coupled system dynamics are represented more realistically by
+˙x=Ax+B
+1u+B2κ+d (48)
+where d∈Ris a bounded disturbance acting upon the
+system and contains the deviation between a nominal system
+model and the actual system due to modeling mismatch,
+parameter variation, external disturbances, degradation, etc.Hence, system (48) matches the structure in (11). Moreover,
+if˜A,˜B
+1,a n d ˜B2represent the system model matrices when
+the system parameters deviate from their nominal values, theexpression for disturbance dis
+d=A
+δx+B1,δu+B2,δκ (49)
+where Aδ=(˜A−A),Bi,δ=(˜Bi−Bi)where i=1,2.
+Hence, the disturbance dis a function of the states, input,
+and parameter variation can be expressed as d=d(x,u,κ,p)
+where pis the vector of system parameters (e.g., Cf,Cr,lf,
+lr, etc.). While the nominal valu es of these parameters can be
+chosen during the design of the nominal model, estimating
+these parameters accurately in real-world conditions is not
+a trivial task. However, the bounds on the variation in each
+parameter can be obtained based on the operating regimes thatthe vehicle is expected to be subjected to. The bounds can then
+be used to derive the bounds of the disturbance /Delta1
+∞.
+V. P ATH-TRACKING CONTROLLER DESIGN
+The design of path-tracking controller starts with the selec-
+tion of a reference model which can be represented as in (12).
+To this aim, the closed-loop dynamics of the nominal system(46) under a linear control action are exploited. In accordance
+to [41], the linear control action can be expressed as
+u=K
+X(vx)x+KR(vx,κ)κ. (50)
+The application of the control law (50) for a given set of
+nominal vehicle parameters a nd a given longitudinal speed
+results in the following closed-loop dynamics of the system
+in (41)
+˙x=/parenleftbig
+A+B1K∗
+X/parenrightbig
+x+/parenleftbig
+B1K∗
+R+B2/parenrightbig
+κ (51)
+where K∗
+Xand K∗
+Rrepresent the nominal feedback and feed-
+forward control gains, respectiv ely, based on default vehicle
+parameters. Consequently, the system matrices in (12) areselected as A
+m=A+B1K∗
+Xand Bm=B1K∗
+R+B2and
+r=κ. Details about the selection of K∗
+Rand K∗
+Xare reported
+in Appendix C.
+It is noted that, in the case of absence of disturbances (such
+as wind gusts) and perfect knowledge of the vehicle parame-
+ters, the linear control actions of the form (50) provide accu-rate path tracking. The feedback control is used to stabilize the
+system and achieve desired pat h-tracking pe rformance, while
+the feedforward action is utilized to counter the road curvature
+which act as an unactuated control input and theoretically
+achieve zero steady-state lateral position error also when κis
+very large (representing tight highway turns/curves). Further-
+more, successful implementation of the resultant closed-loop
+system in experimental tests have demonstrated their ability at
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:33:11 UTC from IEEE Xplore.  Restrictions apply. 
+DIXIT et al. : INTEGRAL MRAC WITH BOUNDED SWITCHING GAIN FOR VEHICLE LATERAL TRACKING 1943
+Fig. 4. Closed-loop control structure : combined local path planning and
+tracking.
+tracking the curvature of tight highway corners under medium
+to high-speed driving (70–120 km h−1)scenarios. However,
+due to the controlled nature of the testing environments,it is yet to be seen how they cope with variations such as
+rapidly changing road friction, wind gusts, vehicle parameter
+variations, etc. which are possible scenarios an autonomous
+vehicle will face during its operation beyond controlled test
+environments. It is noteworthy, that from an occupant accep-tance point of view, it will be advantageous to have a system
+that can provide uniformity in its behavior despite changes in
+system parameters or external perturbations, that is, the vehicleshould perform a given maneuver in a uniform manner under
+different internal and/or external perturbations.
+To achieve the performance objectives mentioned above,
+an EMRAC-based control formulation presented in Section III
+is designed. For a system model described as (48), the controllaw in (14)–(18) is developed to compute control inputs for
+accurate path tracking. Within this framework, the bounded-
+ness of the adaptive gains is ensured using the σ-modiﬁcation
+technique which means that the inputs and states will not
+need to be artiﬁcially saturated like previous implementations
+of MRAC in autonomous vehicles [32]–[34]. The resultant
+closed-loop path-tracking control structure is illustrated in
+Fig. 4, where the block Reference Curvature Generator is used
+to create the reference curvature to the reference model (51).
+Details about the technique adopted for generating the local
+reference curvature κ
+refare given in Appendix A. Moreover,
+as the proposed controller is designed for steering control, it is
+assumed that a separate longitudinal tracking controller (such
+as a vehicle’s adaptive cruise control) system is utilized for
+velocity tracking.
+Some important features of the closed-loop architecture in
+Fig. 4 and EMRAC controller design are listed below.
+Remarks:
+1) The lateral distance error required to compute the refer-
+ence road curvature is computed based on a look-ahead
+policy and details on the selection of the look-aheaddistance are given in Appendix B.
+2) The presence of the discontinuous switching action
+in (14) can introduce chattering phenomena (high-frequency switching of the control action). To miti-
+gate this undesirable behavior, the discontinuous control
+action u
+Nis smoothed as in [26]
+uN(t)=KN(t)ye(t)
+|ye(t)|+/epsilon1(52)
+where /epsilon1is a sufﬁciently small positive constant.3) The thresholds for the activation of the σ-modiﬁcations
+chosen to achieve a suitable compromise between track-
+ing performance and controller aggressiveness when
+the norms of the adaptive control gains are within thelocking region that activates the σ-modiﬁcation.
+4) In accordance with [29], [30], the adaptive weights are
+selected as a tradeoff between convergence time andreactivity of the control action.
+VI. N
+UMERICAL VALIDATION
+In this section, the ability of the proposed architecture
+(local reference generation and tracking controller) in Fig. 4 to
+accurately track a desired path/c urvature around the test-track
+is discussed. The validation of the control law in (14)–(18) to impose the desired vehicle lateral and yaw dynamics
+while following a desired path is done in a MATLAB-IPG
+CarMaker co-simulation environment. The path chosen is partof a test-track that consists of corners of different curvatures
+interspersed with straights. The (x,y)coordinates of the center
+of the track are known and act as the reference path for the
+vehicle to follow. These coordinates can be used to compute
+the desired path curvature as a function of distance traveledalong path using the equation from [50] given below
+κ
+des=ξ/primeη/prime/prime−η/primeξ/prime/prime
+[(ξ/prime)2+(η/prime)2]3
+2(53)
+where ξis the x-coordinate in inertial frame, ηis the
+y-coordinate in inertial frame, and (·)/primerepresents the derivative
+with respect to path length. The resultant desired path cur-
+vature for the test-track obtained using the equation above isshown in Fig. 5(a). The resultant path and environment are cre-
+ated in the high-ﬁdelity IPG CarMaker platform. Moreover, the
+desired velocity proﬁle of the vehicle is known [see Fig. 5(b)]
+and provided to the default IPG CarMaker’s Adaptive Cruise
+Controller (ACC) system.
+The simpliﬁed system model in (41) is created using the
+nominal vehicle parameters obtained from the IPG vehicle
+model. A reference model of the form (51) is created in twosteps namely: 1) the feedback controller is designed using the
+pole placement method by introducing two stable poles for the
+error states while keeping the stable poles of v
+y,rzintact and
+2) computing a reference feedforward based on the method
+described from [48], see Appendix C-A. The EMRAC is thendesigned using the techniques discussed in Section III and
+the resultant control law is connected in closed-loop with the
+high-ﬁdelity vehicle and system model from IPG CarMaker.This resultant closed-loop architecture is illustrated in Fig. 4
+and thus can be used for numerical validation of the proposed
+lateral-tracking controller. The controller is designed usingthe parameters in Table I with the goal of driving along the
+center of the track as closely as possible despite variations
+in the vehicle’s velocity and other system uncertainties. It is
+noteworthy that the nominal controllers for reference model
+of the EMRAC are designed using the procedure described inAppendixes B and C.
+Moreover, since the eventual goal is to test and validate the
+control scheme on an experimental vehicle, the high-ﬁdelity
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:33:11 UTC from IEEE Xplore.  Restrictions apply. 
+1944 IEEE TRANSACTIONS ON CONTROL SYSTEMS TECHNOLOGY, VOL. 29, NO. 5, SEPTEMBER 2021
+Fig. 5. Desired lateral and longitudinal s ignals for Gaydon test-track. (a) Path
+curvature κdes. (b) Longitudinal velocity vdes.
+environment is set-up to mimic the sampling times of the con-
+troller area network (CAN) bus and the vehicle actuators. As a
+result the co-simulation environment is discretised at 1000 Hz
+whereas the EMRAC controller is discretised at 50 Hz.
+A. Case I: Desired Path Tracking
+In this section, the ability of the proposed architecture
+(local reference generation and tracking controller) in Fig. 4
+to accurately track a desired path /curvature around a test-track
+is discussed. Fig. 5(a) shows that the test-track consists ofthree corners with different cur vatures interlaced with straight
+driving sections. Moreover, the desired longitudinal velocity
+v
+desshown in Fig. 5(b) is varying which means that the
+lateral-yaw dynamics of the vehicle are different for each
+corner and the controller autom atically adapt its gains to
+accommodate such variations. At each point on the track, the
+reference curvature κrefis computed based on Appendix A
+and provided to the EMRAC later al-tracking controller which
+calculates the appropriate front steering angle δf,desfor the
+vehicle. This desired front steer angle is the input for the
+steering actuator and based on its dynamics, the actual frontsteering angle δ
+fis applied to the vehicle.
+The evolution of the internal states of the EMRAC controller
+is shown in Fig. 6 and some key takeaways are as follows. The
+plots show that while cornering there is some error between the
+states of the vehicle and ref erence model within the MRAC,
+this error is the largest during the ﬁrst corner but then as the
+controller gains adapt [see also Fig. 8(b) and (c)] it reduces
+over the rest of the simulation despite the last corner beingthe tightest. During the ﬁrst corner, the lateral velocity of
+the vehicle v
+ydoes not match the reference model and this
+can be traced as the cause for the additional initial lateral
+error ηe, see Fig. 6(a) and (c). However, the plots show
+thatηedoes not grow beyond 0.1 m and also progressively
+reduces as the simulation goes on. While navigating the ﬁrst
+corner, the vehicle is traveling at very close to the nominal
+longitudinal velocity [see Fig. 5(b)] and as a result the yaw-rateFig. 6. Evolution of the EMRAC states a nd errors for driving on test-track.
+(a) Lateral velocity vy. (b) Yaw-rate rz. (c) Lateral error ηe. (d) Heading
+errorψe. (e) steering actuator state xsa. Note: reference model (red line),
+system states (blue line), error between reference model and system (orangeline).
+of the vehicle matches the reference model in Fig. 6(b).
+For the remaining two corners, the longitudinal velocity islower and as a result the vehicle’s yaw-rate is lower when
+compared to the reference mode l. Moreover, Fig. 6(d) shows
+that there exists a constant mismatch between the heading
+angle error of the vehicle and the reference model. However,
+some of these discrepancies can be contributed to the twoassumptions made within the path-tracking model namely:
+1) the tires do not generate any lateral-slip and 2) no side-slip
+of the vehicle body. From Fig. 6(e) it is observed that thediscrepancy between the reference model and the actual state
+is the least among all states in case of the internal steering
+actuator state. This is expected as the steering actuator state isgenerated using (45) which exactly matches the model within
+the EMRAC controller. The closed-loop tracking performance
+of the EMRAC states in Fig. 6 shows that the vehicle is able to
+closely follow the reference model despite the simpliﬁcations
+and assumptions made while modeling path-tracking dynamicsas well as the steering actuator dynamics and thus demonstrate
+that the EMRAC design procedure is ﬂexible and can be
+used when steering actuator dynamics are incorporated intocontroller design for lateral-tracking controllers.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:33:11 UTC from IEEE Xplore.  Restrictions apply. 
+DIXIT et al. : INTEGRAL MRAC WITH BOUNDED SWITCHING GAIN FOR VEHICLE LATERAL TRACKING 1945
+TABLE I
+DESIGN PARAMETERS
+Fig. 7. Simulation results. (a) Path coordinates p. (b) Curvature κas a
+function of distance traveled al ong path. (c) Longitudinal velocity vover
+time.
+The discussion above shows that the EMRAC controller per-
+forms satisfactorily after being modiﬁed with steering actuatordynamics. Moreover, the overall path-tracking performance of
+the closed-loop architecture from Fig. 4 (EMRAC controller
+when coupled with a local path/trajectory re-planning) isillustrated in Fig. 7. The plot of the coordinates of the path
+and the center of gravity of the vehicle in Fig. 7(a) shows
+that the vehicle can follow a gi ven desired path accurately.
+The plot inset which depicts a closer view of the tightest
+ﬁnal corner also illustrates that the coordinates of the pathand vehicle are indistinguishable at these scales. The desired
+path curvature κ
+des, the reference curvature κrefgenerated as in
+Appendix A, and the curvature followed by vehicle ( κ≈rz/v)
+in Fig. 7(b) shows that the refere nce curvature generated from
+circular arcs is a very close match to the desired path curvature.
+Moreover, the vehicle is able to track the reference curvature
+very accurately all along the test-track, thus demonstrating theability of the proposed closed-loop architecture as a capable
+path-tracking solution. The plot inset in Fig. 7(b) provides a
+closer look at the ability of the closed-loop control system inpreventing the vehicle from deviating far from the desired path.
+The usage of a look-ahead-point for generating a reference
+path/curvature also results in a vehicle cutting corners and
+this phenomenon is also clearly visible in the inset where the
+reference curvature and vehicle’s curvature signal clearly cutthe peak of the desired curvature signal. Finally, the variation
+of the longitudinal velocity vof the vehicle is depicted in
+Fig. 7(c). The tracking performance of the longitudinal veloc-ity controller is sufﬁcient for the purposes of this study and a
+detailed discussion on it is beyond the scope of this article.
+The control action δ
+f,descomputed using the EMRAC
+algorithm is given in Fig. 8(a). The presence of some oscil-
+lations can be observed during the ﬁrst corner but theyare quickly attenuated as the gains of the controller adapt
+[see Fig. 8(b) and (c)]. Consequently, the steering action in
+the remaining part of the simulation is devoid of anyhigh-frequency oscillatory beha vior that would have a detri-
+mental effect on the occupant comfort and lateral-yaw stability
+of the vehicle. Furthermore, the plot shows that the control
+action for transitioning from straight driving to cornering gets
+increasingly smoother with each corner despite the reference
+curvature being the largest (s mallest cornering radius) for
+the ﬁnal corner. The evolution of the adaptive gains for the
+continuous part of the control action (i.e., K
+X,KR,a n d KI)a r e
+shown in Fig. 8(b). These plots demonstrate how the control
+action varies throughout the test t o accurately track paths of
+different curvatures. Moreover, the large rise in the gain KR
+and KItoward the end is to counter the tightest curve of the
+track but the plots also show the adaptive gains decreasing atthe very end once the corner has been completed. The bounded
+evolution of the norm of the gain for switching control action
+φ
+Nis shown in Fig. 8(c) which also conﬁrms the effectiveness
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:33:11 UTC from IEEE Xplore.  Restrictions apply. 
+1946 IEEE TRANSACTIONS ON CONTROL SYSTEMS TECHNOLOGY, VOL. 29, NO. 5, SEPTEMBER 2021
+Fig. 8. Simulation results for tracking desired path. (a) Front wheel steering
+angleδf. (b) Adaptive control gains KX,KR,a n d KI. (c) Norm of switching
+action /bardblφN/bardbland the thresholds of the σ-modiﬁcation (red lines).
+of the σ-modiﬁcation strategy to prevents the drift of such a
+gain when it is activated.
+B. Case II: Robustness to Actuator Dynamics
+To demonstrate the robustness of the proposed
+lateral-tracking controller to deviation of steering actuator
+dynamics from nominal conditions, the simulation with thesame controller is repeated twice with: 1) no steering actuator
+dynamics, that is, δ
+f,des(τsa=0) is applied directly to the
+vehicle and 2) the delay of the st eering actuator is larger than
+modeled delay by 25% ( τsa=1.25¯τsa). The comparison of the
+simulation results between the nominal case in Section VI-Aand the two cases mentioned above provide insight on the
+performance of the proposed controller to variations in
+steering actuator dynamics. It is noteworthy that for each ofthe runs, the adaptive gains of the controller are initialized to
+the default value at the start of the simulation.
+The plot of the respective cross-track error η
+xt(see Fig. 13
+for deﬁnition of cross-track error) from each simulation is
+plotted in Fig. 9(a) and can be used to compare the closed-loop
+performance. Firstly, the plot shows that ηxtis virtually
+identical for the three scenarios which shows that the proposed
+control algorithm is robust to variations in time-delay ofthe steering actuator system and the magnitude of η
+xtin
+all the three simulations is within the acceptable range for
+path-following techniques for autonomous vehicle. Secondly,Fig. 9. Comparison of simulation resu lts for tracking desired coordinates
+with variation in delay of steering actuator system ¯τsa. (a) Cross-track error
+ηxt. (b) Front wheel steering angle δf.
+the phenomenon of cutting the corners (due to look-ahead
+point) which was discussed above in Fig. 7(b) is more clearlyevident in the plot of the cross-track error. The cutting of
+corners is evident at the start and end of each corner (e.g.,
+t≈{10,40,70,100,120,220,270}s) of Fig. 9(a). As the
+vehicle is turning right, cutting the corner at the start of the
+curve results in positive error contribution to η
+xtand a negative
+contribution to ηxtat the end of the corner. The steering
+actuation computed by controller for the three simulation
+runs is illustrated in Fig. 9(b). The three signals are virtuallyindistinguishable from each ot her with the only perceptible
+difference being at the start of the ﬁrst corner where the
+control action for the largest delay in the steering actuator sys-
+tem shows some high-frequency oscillations. However, these
+oscillations are quickly terminated and the signal demonstratessmooth evolution for the remaining duration of the test. Since
+the control action changes slightly even when the delay within
+the steering system varies, it is safe to infer that the othersignals such as the states of the EMRAC controller, gains
+of the controller, etc. also evolve just like the nominal case.
+This is conﬁrmed by the simulations, but the evolution of
+such signals are not reported here for the sake of brevity.
+Therefore, these results help in highlighting the robustnessof the proposed lateral-tracking controller to variations in the
+dynamics of the steering actuator system.
+C. Case III: Robustness to Uncertainties and Disturbances
+The results discussed in this section so far demonstrate the
+ability of the proposed control architecture to successfully
+perform a path-tracking under nominal conditions or slow
+variations in system parameters. However, in real world sce-
+narios an autonomous vehicle might enc ounter conditions that
+have not (or cannot) be considered for controller development.As a result, it is important to study the robustness of the
+closed-loop system when subjected to un-modeled environ-
+mental disturbances. The conditions are modiﬁed as follows:
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:33:11 UTC from IEEE Xplore.  Restrictions apply. 
+DIXIT et al. : INTEGRAL MRAC WITH BOUNDED SWITCHING GAIN FOR VEHICLE LATERAL TRACKING 1947
+Fig. 10. Snapshot of simulation showing double split- μconditions around
+the desired path of the test-track.
+Fig. 11. Duration and position on track of the different wind-gust events.
+TABLE II
+DESCRIPTION OF LOCATION AND NATURE OF SIDE-WIND
+1) a strip of region (roughly 0 .3 m) around the desired path
+is assumed to be icy with μroad=0.3; 2) the region around
+this icy strip is surrounded by a region simulating wet roads
+withμroad=0.5.; 3) at some locations along the track
+cross-winds in the range of [15.27,22.22]ms−1simulating
+sudden wind gusts are blowing perpendicular to the given
+path; and 4) two additional passengers are added to the rear
+seats of the vehicle. A screen-shot of the road conditions areillustrated in Fig. 10 and the location of the wind-gusts are
+shown in Fig. 11. From Fig. 11 it is evident that the wind
+gusts are experienced when the v ehicle is in four different
+stages of driving: 1) E1—mid-corner; 2) E2—corner exit; 3)
+E3—straight driving; and 4) E4—corner entry. Moreover, the
+description of the side-wind events mentioned in Fig. 10 are
+provided in Table II. The resultant environment thus creates a
+scenario when the each tire of the vehicle keeps transitioningbetween nominal, wet, and icy road (thereby changing their
+lateral stiffness coefﬁcient), the additional passengers alter the
+mass and moment of inertia of the vehicle from the nominalvalues, and the sudden wind gust can potentially veer the
+vehicle of the desired path causing a safety breach if not
+countered by the controller. This scenario is simulated with the
+controller unchanged (including the tuning and initialization
+parameters for adaptive gains) and the results obtained fromthe closed-loop simulation are discussed below.
+The plot of the cross-track error in Fig. 12(a) illustrates the
+difference in the performance of the closed-loop system duringFig. 12. Comparison of simulation resu lts for tracking desired coordinates
+with system uncertainties and sudden d isturbances. (a) Cross-track error ηxt.
+(b) Norm of switching action /bardblφN/bardbl. (c) Front wheel steering angle δf.
+nominal conditions in Section VI-A and the one described
+above with split- μand wind-gusts. The plot shows that the
+tracking performance is nearly identical for most of the test-
+run. The only visual differences present represent the slight
+deviation in the path of the vehicle when subjected to wind
+gusts. On the other hand despite the split- μconditions the
+tracking error remains identical during the different corners
+demonstrating the ability of the proposed controller against
+variations in tire lateral stiffness.
+The evolution of the norm of the adaptive gain for the
+switching action /bardblφN/bardblover the course of the simulation
+shown in Fig. 12(b) clearly demonstrates the impact of the
+σ-modiﬁcation at changing the way to controller adapts over
+time. Compared to the nominal conditions, the evolutionof/bardblφ
+N/bardblfor the split- μ+wind-gust condition differs slightly
+mainly at instances where the wind gust strikes the vehicle
+and sudden control actions is necessary to: 1) stabilize thevehicle and 2) maintain clos ed-loop tracking performance.
+Additionally, due to the leakag e-effect introduced via the
+σ-modiﬁcation [see (18b)] the value of /bardblφ
+N/bardblquickly restores
+back to the same value as it was during the nominal test-run.
+This demonstrates that the proposed control architecture canadapt the controller gains to counter rapid disturbances but the
+σ-modiﬁcation technique ensures that the control reverts back
+to the nominal behavior once the disturbance has ended.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:33:11 UTC from IEEE Xplore.  Restrictions apply. 
+1948 IEEE TRANSACTIONS ON CONTROL SYSTEMS TECHNOLOGY, VOL. 29, NO. 5, SEPTEMBER 2021
+Finally, Fig. 12(c) shows the front wheel angle (mean of
+front-left and front-right) applied on the vehicle to track the
+desired path. The plot shows that the front wheel angle during
+the split- μ+wind gust conditions very closely matches the
+nominal situation. The main differences lie in: 1) slightly
+increased front wheel angle needed during steady-state corner-
+ing which is due to the larger slip angle necessary to generatethe required lateral force in the tires to follow the given road
+curvature and 2) changes in front wheel angle to prevent the
+vehicle veering of the desired path during wind gusts. The
+zoomed in plot inset further illustrates that the control action
+is not very aggressive and the oscillation reduce rapidly oncethe disturbance has been countered.
+The simulation results discussed in this section demonstrate
+the efﬁcacy of lateral-tracking control architecture illustratedin Fig. 4. In addition to the closed-loop performance which
+has already been discussed some additional key takeaways are
+as follows: 1) the EMRAC generic lateral-tracking controller
+can be augmented with steering actuator dynamics such
+that the control law considers these additional dynamicswhile computing appropriate steering action; 2) the
+EMRAC controller can be successfully coupled with a
+local trajectory/curvature replanning method and thusincorporated within a larger autonomous vehicle driving
+architecture; and 3) the EMRA C scheme with the switching
+action containing σ-modiﬁcation is a viable strategy for
+vehicle lateral tracking that can prevent loss of closed-loop
+performance in a diverse set of operating regimes.
+VII. C
+ONCLUSION
+Lateral tracking of an autonomous vehicle for following
+a given reference path is a challenging task due to inherentaspects of the system such as external disturbances, system
+nonlinearities, rapidly changing dynamics, etc. arising due to
+tire dynamics, wind gusts, road surface changes, modelingmiss-matches, steering actuator dynamics, etc. In this arti-
+cle, a generic lateral-trackin g controller has been designed
+using an EMRAC strategy due to its ability to maintain
+closed-loop performance even for systems that are affected by
+the phenomenon mentioned above. Furthermore, a systematictechnique of binding the gain of the switching control action
+of the EMRAC controller using σ-modiﬁcation strategy has
+been presented. The ultimate boundedness of the resultingclosed-loop system is proven using an extended Lyapunov
+theory for discontinuous systems. The effectiveness of the
+EMRAC control framework with bounded adaptive gains
+is numerically evaluated by des igning a lateral controller
+for a vehicle and investigating the closed-loop performanceunder different scenarios in an IPG CarMaker-Simulink co-
+simulation environment. The evaluation performed under dif-
+ferent driving conditions showed that the proposed controllercan track the reference path ev en when the system is subjected
+to large external disturbances, modeling errors, etc. while
+ensuring bounded evolution of adaptive control gain of the
+switching control action thus providing numeric validation of
+the proposed method to conﬁne its dynamics. As part of futurework, the lateral-tracking controller investigated in this article
+will be tested under a larger set of maneuvers and drivingFig. 13. Geometric representation of reference curvature generation from
+given desired path (gray line).
+conditions where the full state of the plant is not available, thus
+requiring some of the adaptive control gains being excluded
+from the computation of the control action as in [26], leadingto further experimental validation.
+A
+PPENDIX A
+LOCAL REFERENCE CURV ATURE GENERATION
+The lateral-tracking controller proposed in this article uses
+the reference path curvature t o calculate the required front
+wheel steering angle that is applied to follow a given path.
+A computationally efﬁcient technique for estimating the refer-
+ence curvature that a vehicle should follow to track a desiredpath is shown to be effective in experimental tests in [41].
+This procedure which is brieﬂy discussed below is utilized to
+generate the local reference curvature that can act as referencesignal for the EMRAC lateral-tracking controller. This method
+relies on two phenomena observed for a vehicle in steady-state
+cornering conditions at low later al accelerations namely: 1) in
+steady-state conditions the later al motion of a vehicle follows
+circular arcs and 2) the center of rotation of front-wheel steeredvehicles using Ackermann geometry lies on a virtual line
+passing through the rear-axle of the vehicle [42]. Therefore,
+the lateral error at a look-ahead distance can be reduced to zeroif the vehicle travels along a circular arc of a certain radius,
+see Fig. 13 for a geometrical interpretation of the concept.
+By assigning lateral error at the look-ahead point η
+e,laas the
+sagitta of the circular arc (starting from rear-axle) and utilizing
+the net look-ahead distance from the rear axle as dla=lr+ξla,
+the reference curvature of the arc κrefcan be estimated as
+κref=2ηe,la
+d2
+la,when ηe,la/lessmuchRref (54)
+where Rrefis the radius of the circular arc. Thus, the
+path-following problem is transformed into a curvature follow-
+ing problem which is suitable for the lateral-tracking controllerproposed in this article.
+Remarks:
+1) The cross-track error η
+xtis deﬁned as the distance of the
+center of gravity of the vehicle from the desired path (ofthe test-track). This distance is measured perpendicular
+to the vehicle’s longitudinal axis.
+2) The lateral position error η
+e(/negationslash=ηxt)deﬁned in
+Section IV-A is the lateral distance error from the CG
+of the vehicle to the referen ce path and is also measured
+perpendicular to the vehicle’s longitudinal axis.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:33:11 UTC from IEEE Xplore.  Restrictions apply. 
+DIXIT et al. : INTEGRAL MRAC WITH BOUNDED SWITCHING GAIN FOR VEHICLE LATERAL TRACKING 1949
+Fig. 14. Look-ahead distance ξlaand lateral error ηe,laat look-ahead point.
+APPENDIX B
+DETERMINATION OF LOOK -AHEAD DISTANCE
+The rationale behind the determination the look-ahead dis-
+tanceξlais discussed below. For the augmented path-tracking
+model described in (46) if the heading angle error ψeis
+assumed to be small, the chord lengths can be approximated
+as the arc length [42], see also Fig. 14. This assumption canbe used to deﬁne the lateral error at the look ahead point η
+e,la
+as
+ηe,la=ηe+ξlaψe. (55)
+Thus, from the output deﬁnition in (55) and the system
+dynamics in (46) a transfer function Gyu(s)from input u=
+δf,desto the output y=ηe,lais deﬁned.
+A. Medium-Speed Driving
+The poles and zeros of Gyu(s)for different values of
+look-ahead distance ξlaare illustrated in Fig. 15. The model
+has been generated using 15 .27 m s−1as the longitudinal
+velocity. The plot shows that while the poles of the system are
+unaffected by the value of ξla, the damping for the conjugate
+zeros increases as ξlaincreases. Moreover, the nonminimum
+phase zero which introduced in the system as a result of the
+pure-time delay in the steerin g actuator and is not affected
+byξlaeither. Thus, to prevent unwanted oscillations from
+entering the system, a look-ahead distance ξla>0 is chosen
+for computing the reference curvature for the path-trackingproblem presented in Section V. The ﬁnal value of the
+look-ahead distance ξ
+lais obtained by tuning to achieve a suit-
+able compromise between tracking accuracy (corner cutting)and smoothness of control action.
+A
+PPENDIX C
+DESIGN OF CONTROLLERS FOR REFERENCE MODEL
+This section outlines the steps that are carried out to com-
+pute the nominal controllers for the reference model withinthe EMRAC framework. The nominal controllers consist of a
+feedback controller K
+∗
+Xand a feedforward controller K∗
+Rthat
+are used to steer the dynamics of a system (46) toward thereference system (51). The control law used to achieve this is
+u(t)=K
+∗
+Xx(t)+K∗
+Rκ(t). (56)
+A. Design of Reference Feedforward Controller: K∗
+R
+The feedforward term K∗
+Ris computed using the technique
+presented in [42] and it summarized below. The dynamics ofthe system (46) under state feedback K
+∗
+Xis given by
+˙x=/parenleftbigA+B1K∗
+X/parenrightbigx+B2κ (57)Fig. 15. Poles and zeros of the system Gyu(s)withvx,nom=15.27 m s−1
+for different look-ahead distances.
+which can be further simpliﬁed by deﬁning the matrix Am=
+(A+B1K∗
+X)resulting in the expression given below
+˙x=Amx+B2κ. (58)
+It is noteworthy that due to the presence of the term B2κ
+while traveling on a curve, the error states will not converge
+to zero even though Amis Hurwitz. This necessitates the need
+of a feedforward term uff(in addition to the feedback) to
+compensate for curved paths. The addition of uffto the control
+action results in the closed-loop dynamics given below
+˙x=Amx+B1uff+B2κ. (59)
+By following steps similar to the ones presented in [42, Ch.
+3], a feedforward action can be computed that results in
+zero steady-state error for the lateral position ηe,ssbut cannot
+inﬂuence the steady-state e rror for the heading angle error
+ψe,ss=0. This resultant uffobtained using the Symbolic
+Toolbox in MATLAB is a function of the model parameters
+in the matrices (A,B1,B2), elements of the feedback control
+matrix K∗
+X, and the curvature κ. The expression of the function
+is lengthy but it can be expressed in the compact uff=K∗
+Rκ,
+with K∗
+Rbeing the feedforward gain.
+B. Design of Reference Feedback Controller: K∗
+X
+In (56), the feedback controller is a full state feedback law.
+The only prior condition for the design of the feedback lawis that the resultant closed-loop system dynamics need to be
+stable (i.e., (A+B
+1K∗
+X)is Hurwitz). For this body of work, the
+feedback controller is designed using the procedure presentedbelow.
+For a given stabilizing feedback controller K
+X, a feedfor-
+ward controller KRcan be designed based on Section C-A.
+For the resultant closed-loop system given as
+˙x=/parenleftbigA+B1K∗
+X/parenrightbigx+/parenleftbigB1K∗
+R+B2/parenrightbigκ (60)
+the output equation is deﬁned as y=Ix,w h e r e Iis an
+identity matrix of appropriate dimensions. The deﬁnition of
+the output vector is used to create transfer functions Gj1(s)
+from input κto the jth output where j∈{1,..., 5}.
+For the closed-loop system (60), it is desirable to minimizethe steady-state gain of the error outputs (i.e., η
+eandψe)
+and have favorable phase characteristics in high-frequency
+regions. Moreover, since the steering dynamics are modeled as
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:33:11 UTC from IEEE Xplore.  Restrictions apply. 
+1950 IEEE TRANSACTIONS ON CONTROL SYSTEMS TECHNOLOGY, VOL. 29, NO. 5, SEPTEMBER 2021
+Padé approximations, there is also some nonminimum phase
+behavior introduced into dynamics of lateral velocity vyand
+yaw-rate rz. As a result, to reduce the negative effect due to
+zeros in the positive half of the complex plane it is necessaryto push them as far as possible from the origin. The gain K
+∗
+Xis
+chosen as the solution of the following optimization problem
+min Vctrl(KX) (61a)
+Vctrl(KX)=ζ12/summationdisplay
+j=11
+(Re(z+
+Gj1))2+ζ24/summationdisplay
+k=3(Gk1(0))2
+(61b)
++ζ3(/negationslash
+(G31(∞)))2(61c)
+s.t. (61d)
+Re(λi)<0,i=0,1,..., 5 (61e)
+KFB,4
+KFB,3∈[ξla,min,ξla,max] (61f)
+where Re (z+
+Gj1)represents the real part of the nonminimum
+phase zeros of the Gj1(s)transfer function, G·1(0)represents
+the steady-state gain of the transfer function, /negationslash
+(G·1(∞))repre-
+sents the phase of the tranfer function as s→∞ ,λirepresents
+the ith eigenvalue of the closed-loop matrix A+B1KX,
+{ζ1,ζ2,ζ3}are the weighting scalars, and [ξla,min,ξla,max]rep-
+resents the suitable range of look-ahead distances which are
+obtained from Section B. The optimization routine in (61) is
+solved using the MATLAB function fmincon .
+REFERENCES
+[1] S. Dixit et al. , “Trajectory planning and tracking for autonomous
+overtaking: State-of-the-art and future prospects,” Annu. Rev. Control ,
+vol. 45, pp. 76–86, Jan. 2018.
+[2] N. H. Amer, H. Zamzuri, K. Hudha, and Z. A. Kadir, “Modelling
+and control strategies in path tracking control for autonomous ground
+vehicles: A review of state of the art and challenges,” J. Intell. Robotic
+Syst. , vol. 86, no. 2, pp. 225–254, May 2017.
+[3] A. Sorniotti, P. Barber, and S. D. Pinto, “Path tracking for auto-
+mated driving: A tutorial on contro l system formulations and ongoing
+research,” in Automated Driving: Safer More Efﬁcient Future Driving .
+Cham, Switzerland: Springer, 2017, pp. 71–140.
+[4] S. Thrun et al. , “Stanley: The robot that won the DARPA grand
+challenge,” J. Field Robot. , vol. 23, no. 9, pp. 661–692, 2006.
+[5] J. M. Snider, “Automatic steering methods for autonomous
+automobile path tracking,” Robot. Inst., Pittsburgh, PA, USA,
+Tech. Rep. CMU-RITR-09-08, 2009.
+[6] V . Cerone, M. Milanese, and D. Regr uto, “Combined automatic lane-
+keeping and Driver’s steering through a 2-DOF control strategy,” IEEE
+Trans. Control Syst. Technol. , vol. 17, no. 1, pp. 135–142, Jan. 2009.
+[7] M. Aeberhard et al. , “Experience, results and lessons learned from
+automated driving on Germany’s highways,” IEEE Intell. Transp. Syst.
+Mag. , vol. 7, no. 1, pp. 42–57, Jan. 2015.
+[8] A. Rupp and M. Stolz, “Survey on control schemes for automated
+driving on highways,” in Automated Driving . Cham, Switzerland:
+Springer, 2017, pp. 43–69.
+[ 9 ] G .T a g n e ,R .T a l j ,a n dA .C h a r a r a , “Design and comparison of robust
+nonlinear controllers for the lateral dynamics of intelligent vehicles,”
+IEEE Trans. Intell. Transp. Syst. , vol. 17, no. 3, pp. 796–809, Mar. 2016.
+[10] Z. Lu, B. Shyrokau, B. Boulkroune, S. van Aalst, and R. Happee,
+“Performance benchmark of state-of-the-art lateral path-following con-
+trollers,” in Proc. IEEE 15th Int. Workshop Adv. Motion Control (AMC) ,
+Mar. 2018, pp. 541–546.
+[11] E. Soroka and U. Shaked, “On the robustness of LQ regulators,” IEEE
+Trans. Autom. Control , vol. 29, no. 7, pp. 664–665, Jul. 1984.
+[12] A. Levant, “Higher-order slidin g modes, differentiation and output-
+feedback control,” Int. J. Control , vol. 76, nos. 9–10, pp. 924–941,
+Jan. 2003.
+[13] W. Perruquetti and J. P. Barbot, Sliding Mode Control in Engineering .
+New York, NY , USA: Marcel Dekker, 2002, ch. 3.[14] J. Rivera, L. Garcia, C. Mora, J. J. Raygoza, and S. Ortega, Super-
+Twisting Sliding Mode in Motion Control Systems . Rijeka, Croatia:
+IntechOpen, 2011, ch. 13.
+[15] T. Keviczky, P. Falcone, F. Borrelli, J. Asgari, and D. Hrovat, “Predictive
+control approach to autonomous vehicle steering,” in Proc. Amer. Control
+Conf. , 2006, pp. 4670–4675.
+[16] Y . Cao, F. Yu, and Z. Luo, “Generalized predictive control based on
+vehicle path following strategy by using active steering system,” in Proc.
+Int. Symp. Adv. Vehicle Control , 2016, p. 61.
+[17] H. Yu, J. Duan, S. Taheri, H. Che ng, and Z. Qi, “A model predictive
+control approach combined unscented Kalman ﬁlter vehicle state estima-tion in intelligent vehicle trajectory tracking,” Adv. Mech. Eng. ,v o l .7 ,
+no. 5, pp. 1–14, 2015.
+[18] P. Falcone, F. Borrelli, H. E. Tseng, J. Asgari, and D. Hrovat, “Linear
+time-varying model predictive control and its application to active
+steering systems: Stability analysis and experimental validation,” Int.
+J. Robust Nonlinear Control , vol. 18, no. 8, pp. 862–875, May 2008.
+[19] R. C. Rafaila, G. Livint, and F. A. Rusu, “Multivariate nonlinear
+predictive control of autonomous vehicle dynamics,” in Proc. Int. Conf.
+Develop. Appl. Syst. (DAS) , May 2016, pp. 97–102.
+[20] J. E. Naranjo, C. Gonzalez, R. Ga rcia, and T. de Pedro, “Lane-change
+fuzzy control in autonomous vehicles for the overtaking maneuver,”IEEE Trans. Intell. Transp. Syst. , vol. 9, no. 3, pp. 438–450, Sep. 2008.
+[21] T. Luettel, M. Himmelsbach, and H. J. Wuensche, “Autonomous ground
+vehicles—Concepts and a path to the future,” in Proc. IEEE Special
+Centennial Issue , vol. 100, Apr. 2012, pp. 1831–1839.
+[22] M. Bojarski et al. , “End to end learning for self-driving cars,” 2016,
+arXiv:1604.07316 . [Online]. Available: http://arxiv.org/abs/1604.07316
+[23] S. Du, H. Guo, and A. Simpson, “Self-driving car steering angle
+prediction based on image recognition,” Dept. Comput. Sci., Stanford
+Univ., Tech. Rep. CS231-626, 2017.
+[24] U. Muller, J. Ben, E. Cosatto, B. Flepp, and Y . L. Cun, “Off-road
+obstacle avoidance through end-to-end learning,” in Proc. Adv. Neural
+Inf. Process. Syst. , 2006, pp. 739–746.
+[25] G. Tao, Adaptive Control Design and Analysis . Hoboken, NJ, USA:
+Wiley, 2003.
+[26] M. di Bernardo, A. di Gaeta, U. M ontanaro, and S. Santini, “Synthesis
+and experimental validation of the novel LQ-NEMCSI adaptive strategyon an electronic throttle valve,” IEEE Trans. Control Syst. Technol. ,
+vol. 18, no. 6, pp. 1325–1337, Nov. 2010.
+[27] A. Buonomano, U. Montanaro, A. Palombo, and S. Santini, “Building
+temperature control using an enhanced MRAC approach,” in Proc. Eur.
+Control Conf. (ECC) , Jul. 2015, pp. 3629–3634.
+[28] U. Montanaro, A. di Gaeta, and V . Giglio, “An MRAC approach for
+tracking and ripple attenuation of the common rail pressure for GDI
+engines,” IFAC Proc. Volumes , vol. 44, no. 1, pp. 4173–4180, Jan. 2011.
+[29] A. Buonomano, U. Montanaro, A. Palombo, and S. Santini, “Dynamic
+building energy performance analysis: A new adaptive control strategy
+for stringent thermohygromet ric indoor air requirements,” Appl. Energy ,
+vol. 163, pp. 361–386, Feb. 2016.
+[30] U. Montanaro and J. M. Olm, “Integral MRAC with minimal con-
+troller synthesis and bounded adaptive g ains: The continuous-time case,”
+J. Franklin Inst. , vol. 353, no. 18, pp. 5040–5067, Dec. 2016.
+[31] A. Buonomano, U. Montanaro, A. Palombo, and S. Santini, “Temper-
+ature and humidity adaptive control in multi-enclosed thermal zones
+under unexpected external disturbances,” Energy Buildings , vol. 135,
+pp. 263–285, Jan. 2017.
+[32] R. H. Byrne and C. T. Abdallah, “Design of a model reference adaptive
+controller for vehicle road following,” Math. Comput. Model. , vol. 22,
+nos. 4–7, pp. 343–354, Aug. 1995.
+[33] T. Fukao, S. Miyasaka, K. Mor i, N. Adachi, and K. Osuka, “Active
+steering systems based on model reference adaptive nonlinear control,”inProc. IEEE Intell. Transp. Syst. (ITSC) , Dec. 2001, pp. 502–507.
+[34] T. Fukao, S. Miyasaka, K. Mor i, N. Adachi, and K. Osuka, “Active
+steering systems based on model reference adaptive nonlinear control,”
+Vehicle Syst. Dyn. , vol. 42, no. 5, pp. 301–318, Dec. 2004.
+[35] Z. T. Dydek, A. M. Annaswamy, and E. Lavretsky, “Adaptive control
+and the NASA X-15-3 ﬂight revisited,” IEEE Control Syst. , vol. 30,
+no. 3, pp. 32–48, Jun. 2010.
+[36] A. L’Afﬂitto, “Barrier Lyapuno v functions and constrained model
+reference adaptive control,” IEEE Control Syst. Lett. , vol. 2, no. 3,
+pp. 441–446, Jul. 2018.
+[37] E. Arabi, B. C. Gruenwald, T. Yucelen, and N. T. Nguyen, “A set-
+theoretic model reference adaptive c ontrol architecture for disturbance
+rejection and uncertainty suppressi on with strict performance guaran-
+tees,” Int. J. Control , vol. 91, no. 5, pp. 1195–1208, May 2018.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:33:11 UTC from IEEE Xplore.  Restrictions apply. 
+DIXIT et al. : INTEGRAL MRAC WITH BOUNDED SWITCHING GAIN FOR VEHICLE LATERAL TRACKING 1951
+[38] D. Shevitz and B. Paden, “Lyapunov stability theory of nonsmooth
+systems,” IEEE Trans. Autom. Control , vol. 39, no. 9, pp. 1910–1914,
+Sep. 1994.
+[39] N. Fischer, R. Kamalapurkar, an d W. E. Dixon, “LaSalle-yoshizawa
+corollaries for nonsmooth systems,” IEEE Trans. Autom. Control ,
+vol. 58, no. 9, pp. 2333–2338, Sep. 2013.
+[40] J. Corts, “Discontinuous dynamical systems: A tutorial on solutions,
+nonsmooth analysis, and stability,” IEEE Control Syst. Mag. , vol. 28,
+no. 3, pp. 36–73, May 2008.
+[41] A. Schmeitz, J. Zegers, J. Ploeg, and M. Alirezaei, “Towards a generic
+lateral control concept for cooperative automated driving theoretical and
+experimental evaluation,” in Proc. 5th IEEE Int. Conf. Models Technol.
+Intell. Transp. Syst. (MT-ITS) , Jun. 2017, pp. 134–139.
+[42] R. Rajamani, “Lateral vehicle dynamics,” in Vehicle Dynamics and
+control , 2012, ch. 2, pp. 15–46.
+[43] J. Cortes, “Discontinuous dynamical systems,” IEEE Control Syst. Mag. ,
+vol. 28, no. 3, pp. 36–73, Jun. 2008.
+[44] F. H. Clarke, Optimization and Nonsmooth Analysis , vol. 5. Philadelphia,
+PA, USA: SIAM, 1990.
+[45] H. K. Khalil and J. Grizzle, Nonlinear Systems , 2nd ed.
+Upper Saddle River, NJ, USA: Prentice-Hall, 2002.
+[46] X.-W. Mu, Z.-S. Ding, and G.-F. Cheng, “Uniformly ultimate bound-
+edness for discontinuous systems with time-delay,” Appl. Math. Mech. ,
+vol. 32, no. 9, pp. 1187–1196, Sep. 2011.
+[47] U. Montanaro, S. Fallah, M. Dian ati, D. Oxtoby, T. Mizutani, and
+A. Mouzakitis, “On a fully self-organ izing vehicle platooning supported
+by cloud computing,” in Proc. 5th Int. Conf. Internet Things, Syst.,
+Manage. Secur. , Oct. 2018, pp. 295–302.
+[48] R. Rajamani, Vehicle Dynamics and Control . New York, NY , USA:
+Springer, 2006.
+[49] E. Kim, J. Kim, and M. Sunwoo, “M odel predictive control strategy
+for smooth path tracking of autonomous vehicles with steering actuator
+dynamics,” Int. J. Automot. Technol. , vol. 15, no. 7, pp. 1155–1164,
+Dec. 2014.
+[50] A. M. Lekkas, A. R. Dahl, M. Bre ivik, and T. I. Fossen, “Continuous-
+curvature path generation using Fermat’s spiral,” Model., Identiﬁcat.
+Control, A Norwegian Res. Bull. , vol. 34, no. 4, pp. 183–198, 2013.
+Shilp Dixit received the M.Sc. degree (Great
+Appreciation) in automotive technology from the
+Eindhoven University of Technology, Eindhoven,The Netherlands, in 2015, and the Ph.D. degreein automotive engineering from the University of
+Surrey, Guildford, U.K., in 2019.
+He worked in the ﬁeld of technology consult-
+ing at Deloitte Consulting LLP., Mumbai, India,
+from 2010 to 2012, before making the switch to
+Vehicle Dynamics & Control in 2012. He has alsoworked as a Researcher with Tata Motors Ltd., Pune,
+India, and Flanders Make, Lommel, Belgium. He is currently a Vehicle
+Dynamics Engineer with Arrival Ltd ., London, U.K. His research interests
+are control of mechatronics systems, ve hicle dynamics and control, trajectory
+planning and tracking for autonomous vehicles, and intelligent vehicles.
+Umberto Montanaro received the Laurea degree
+(M.Sc.) in computer science engineering (Hons.)
+(cum laude) from the University of Naples Federico
+II, Naples, Italy, in 2005, and the Ph.D. degree incontrol engineering and the Ph.D. degree in mechan-
+ical engineering from the University of Naples Fed-
+erico II in 2009 and 2016, respectively.
+He is currently a Lecturer in control engineer-
+ing and autonomous systems with the Department
+of Mechanical Engineering Sciences, University ofSurrey, Guildford, U.K. The results of his research
+activity have been presented in more than 60 scientiﬁc articles published in
+peer-reviewed international scientiﬁc journals and conferences. His research
+interests range from control theory t o applications and include adaptive
+control, with special care to the theory and application of the enhanced modelreference adaptive control (EMRAC) with more than ten years of experience;
+control of piecewise-afﬁne systems; control of mechatronic systems; and
+automotive systems and connected autonomous vehicles.
+Mehrdad Dianati (Senior Member, IEEE) was a
+Professor with the 5G Innovation Centre (5GIC),University of Surrey, Guildford, U.K., where he is
+currently a Visiting Professor. He is also a Professor
+of autonomous and connected vehicles with theWarwick Manufacturing Group (WMG), Universityof Warwick, Coventry, U.K. He has been involved
+in a number of national and international projects
+as the project leader and work-package leader inrecent years. Prior to his academic endeavor, he have
+worked in the industry for more than nine years
+as a senior software/hardware developer and the Director of research anddevelopment.
+Prof. Dianati frequently provides voluntary services to the research com-
+munity in various editorial roles. He has served as an Associate Editor for
+the IEEE T
+RANSACTIONS ON VEHICULAR TECHNOLOGY ,IET Communi-
+cations ,a n d Wireless Communications and Mobile Computing (Wiley).
+Alexandros Mouzakitis has over 15 years of tech-
+nological and managerial experience, especially in
+the area of automotive embedded systems. In his
+previous position within JLR, he was the Head ofthe Model-based Product E ngineering Department,
+where he was responsible for model-based develop-
+ment and automated testing standards and processes.
+He is currently the Head of the Electrical, Electron-ics and Software Engineering Research Department,
+Jaguar Land Rover, Coventry, U.K. In his current
+role, he is responsible for leading a multidiscipli-
+nary research and technology departme nt dedicated to deliver a portfolio
+of advanced research projects in the areas of human–machine interface,
+digital transformation, self-learning vehicle, smart/connected systems, and
+onboard/off-board data platforms.
+Saber Fallah is a Senior Lecturer (Associate Pro-
+fessor) in vehicle and mechatronic systems with theUniversity of Surrey, Guildford, U.K., and the Direc-tor of Connected Autonomous Vehicle Lab within
+the Centre for Automotive Engineering, where he
+leads several research activities funded by the U.K.and European governments (e.g., EPSRC, Innovate
+UK, H2020) in collaboration with major compa-
+nies active in autonomous vehicle technologies. Hisresearch interests include reinforced deep learning,advanced control, optimization and estimation and
+their applications to connected autonomous vehicles.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:33:11 UTC from IEEE Xplore.  Restrictions apply. 

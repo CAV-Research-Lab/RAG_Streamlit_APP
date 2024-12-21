@@ -1,0 +1,299 @@
+=== Metadata ===
+{
+    "file_name": "Lecture 5 Motion Planning.pptx",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Lecture 5 Motion Planning.pptx",
+    "status": "Processed"
+}
+
+=== Content ===
+Motion Planning in Intelligent Vehicles
+1
+Vehicle’s Navigation Intelligence
+Motion Planning
+Saber Fallah (ENGM298)
+2
+Introduction
+Definition of the motion planning problem and classification of planning approaches
+
+Review of A*
+
+Hybrid A*
+
+Continuity, optimisation and constraints
+
+Sampling-based polynomial trajectory generation  
+Motion Planning
+Saber Fallah (ENGM298)
+3
+The motion planning problem
+Motion Planning
+Saber Fallah (ENGM298)
+4
+Motion planning algorithms properties
+Completeness:
+If a solution exists, planner always finds a solution 
+If no solution exists, terminates and reports failure 
+
+Optimality:
+Given a cost function for evaluating a sequence of actions, planner always returns a feasible sequence of actions with minimal cost. 
+No solution
+Motion Planning
+Saber Fallah (ENGM298)
+5
+Types of motion planning algorithms
+Combinatorial methods:
+Consist in dividing the free space into small pieces and first solving the motion planning problem by connecting these atomic elements.  
+They usually do not scale well for large environments.
+Potential fields:
+Each obstacle creates a sort of anti-gravity field which makes it harder for the vehicle to come close to it. 
+They sometimes push the solution into local minima which can prevent the algorithm from finding a solution. 
+Optimal control:
+Finds an optimal trajectory using a dynamic model of the vehicle, the start configuration and the end configuration.
+It gets complicated and computationally inefficient when the number of constraints due to other road users increases.
+
+
+
+Motion Planning
+Discrete methods:
+Discretisation of configuration space and input space   
+Deterministic graph search algorithms: A*, D*, D*-lite, etc.
+
+
+
+Probabilistic methods:
+Random exploration of the configuration and input spaces. 
+Probabilistic graph search algorithms: RRT, RRT*, PRM, etc. 
+
+
+Saber Fallah (ENGM298)
+6
+Sampling based methods
+Motion Planning
+A* algorithm:
+One problem with regular (non-hybrid) A* is that the resulting discrete plan cannot be executed by a vehicle, simply because the world is continuous, whereas A* states are discrete 
+
+When dealing with vehicles, we need a planning algorithm that can handle both discrete decisions and continuous actions. 
+
+Hybrid A* algorithm:
+The word “hybrid” here indicates a mix of both continuous and discrete elements.
+Continuous aspects
+Discrete aspects 
+
+Saber Fallah (ENGM298)
+7
+Hybrid A* algorithm
+Motion Planning
+Saber Fallah (ENGM298)
+8
+How hybrid A* works?
+Saber Fallah (ENGM298)
+9
+Advantages of hybrid A* algorithm
+Motion Planning
+Hybrid A* combines the strengths of discrete search algorithms with the realities of continuous vehicle dynamics, making it suitable for real-world motion planning tasks.
+While the classic A* algorithm gives us a foundation, Hybrid A* bridges the gap between idealised grid-world planning and the complexities of real-world vehicle movement. 
+Saber Fallah (ENGM298)
+10
+Hybrid A* trade-off
+Motion Planning
+Check all true statements about Hybrid A*.
+Saber Fallah (ENGM298)
+11
+Hybrid A* in practice
+Motion Planning
+
+
+Saber Fallah (ENGM298)
+12
+Hybrid A* in practice
+Motion Planning
+
+
+
+
+
+
+✓
+✓
+
+
+
+
+
+
+
+
+
+✓
+✓
+✓
+✓
+✓
+Motion Planning in Intelligent Vehicles
+13
+Trajectory Planning
+Trajectory Planning
+Saber Fallah (ENGM298)
+14
+Environment Classification 
+UNSTERUCTURED:
+     EX: Parking lot (maze)
+Less specific rules and lower speed
+No obvious reference path or trajectory
+STERUCTURED:
+     EX: Highway, Street driving
+Predefined rules regarding how to move on the road
+Direction of traffic
+Lane boundaries
+Speed limits
+Road structure can be used as a reference  
+Trajectory Planning
+Saber Fallah (ENGM298)
+15
+Frenet coordinate
+Trajectory Planning
+Saber Fallah (ENGM298)
+16
+The need for time
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Problems with s and d (and no t):
+Doesn’t tell the full story
+Need to incorporate t
+3 Dimensions: s, d and  t (driving in traffic is a 3 dimensional problem)
+You would have the same with x and y
+
+Trajectory Planning
+Saber Fallah (ENGM298)
+17
+s, d, and t
+WHAT ABOUT TIME
+Path planning
+
+
+
+Prediction?
+
+
+
+
+
+
+Motion Planning
+Saber Fallah (ENGM298)
+18
+s, d, and t
+
+
+
+Motion Planning
+Saber Fallah (ENGM298)
+19
+s, d, and t
+
+
+
+Trajectory Planning
+Saber Fallah (ENGM298)
+20
+Structured trajectory generation overview
+Boundary conditions
+Jerk minimisation
+Polynomial trajectories 
+Driving coefficients
+Example: highway driving
+Evaluating feasibility and cost
+Trajectory generation algorithm.
+
+
+Trajectory Planning
+Saber Fallah (ENGM298)
+21
+Trajectories with Boundary Conditions
+
+
+Trajectory Planning
+Saber Fallah (ENGM298)
+22
+Trajectories with Boundary Conditions
+Need position continuity 
+Need velocity continuity
+
+Position  Velocity  Acceleration  Jerk  Snap  Crackle  Pop 
+
+
+Humans feel comfort when _____  is high
+ 
+Velocity? No
+Acceleration? No 
+Jerk? Yes
+
+Trajectory Planning
+Saber Fallah (ENGM298)
+23
+Jerk minimising trajectories
+
+Trajectory Planning
+Saber Fallah (ENGM298)
+24
+Jerk minimising trajectories
+6 Coefficients  6 Tunable parameters  6 Boundary conditions 
+Trajectory Planning
+Saber Fallah (ENGM298)
+25
+Derivation Overviews
+Trajectory Planning
+Saber Fallah (ENGM298)
+26
+Derivation Overviews
+Known
+
+Unknown
+Trajectory Planning
+Saber Fallah (ENGM298)
+27
+Polynomial trajectory generation
+Polynomial Solver
+HOW POLYNOMIAL TRAJECTORY GENERATION WORKS
+
+Motion Planning
+Saber Fallah (ENGM298)
+28
+Polynomial trajectory generation
+Polynomial Solver
+Motion Planning
+Saber Fallah (ENGM298)
+29
+Polynomial trajectory generation 
+HOW POLYNOMIAL TRAJECTORY GENERATION WORKS
+
+Trajectory Planning
+Saber Fallah (ENGM298)
+30
+What should be checked?
+Trajectory Planning
+Saber Fallah (ENGM298)
+31
+Implementation Feasibility Check
+Trajectory Planning
+Saber Fallah (ENGM298)
+32
+Summary
+None of the discussed methods is the best for every situation that a self-driving car will encounter. 
+
+A car may use hybrid A* in parking lots, polynomial trajectory generation on low traffic highways, and maybe several others for situations like intersections, high traffic, etc.
+
+
+

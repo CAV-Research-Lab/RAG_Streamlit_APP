@@ -1,0 +1,1067 @@
+=== Metadata ===
+{
+    "file_name": "Cooperative_Perception_for_3D_Object_Detection_in_Driving_Scenarios_Using_Infrastructure_Sensors.pdf",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Cooperative_Perception_for_3D_Object_Detection_in_Driving_Scenarios_Using_Infrastructure_Sensors.pdf",
+    "status": "Processed"
+}
+
+=== Content ===
+1852 IEEE TRANSACTIONS ON INTELLIGENT TRANSPORTATION S YSTEMS, VOL. 23, NO. 3, MARCH 2022
+Cooperative Perception for 3D Object Detection in
+Driving Scenarios Using Infrastructure Sensors
+Eduardo Arnold , Mehrdad Dianati ,Senior Member, IEEE , Robert de Temple , and Saber Fallah
+Abstract — 3D object detection is a common function within
+the perception system of an autonomous vehicle and outputs alist of 3D bounding boxes around objects of interest. Various3D object detection methods have relied on fusion of differentsensor modalities to overcome limitations of individual sensors.However, occlusion, limited ﬁeld-of-view and low-point density ofthe sensor data cannot be reliably and cost-effectively addressedby multi-modal sensing from a single point of view. Alternatively,cooperative perception incorporates information from spatiallydiverse sensors distributed around the environment as a wayto mitigate these limitations. This article proposes two schemesfor cooperative 3D object detection using single modality sensors.The early fusion scheme combines point clouds from multiple spa-tially diverse sensing points of view before detection. In contrast,the late fusion scheme fuses the independently detected boundingboxes from multiple spatially diverse sensors. We evaluate theperformance of both schemes, and their hybrid combination,using a synthetic cooperative dataset created in two complexdriving scenarios, a T-junction and a roundabout. The evaluationshows that the early fusion approach outperforms late fusionby a signiﬁcant margin at the cost of higher communicationbandwidth. The results demonstrate that cooperative perceptioncan recall more than 95% of the objects as opposed to 30% forsingle-point sensing in the most challenging scenario. To providepractical insights into the deployment of such system, we reporthow the number of sensors and their conﬁguration impact thedetection performance of the system.
+Index Terms — Object detection, cooperative perception,
+autonomous vehicles, ADAS, deep learning.
+I. I NTRODUCTION
+CREATING an accurate representation of the driving
+environment is the core function of the perception system
+of an autonomous vehicle and is crucial for safe operation of
+autonomous vehicles in complex environments [1]. Failure todo so could result in tragic acci dents as shown by some of the
+recent incidents. For example i n two widely reported incidents
+by Tesla [2] and Uber [3] autonomous vehicles, where the
+Manuscript received December 18, 2019; revised June 17, 2020; accepted
+September 16, 2020. Date of publica tion October 16, 2020; date of current
+version March 9, 2022. This work was supported in part by the Jaguar Land
+Rover and in part by the U.K.-the Engin eering and Physical Sciences Research
+Council (EPSRC) as part of the jointly funded Towards Autonomy: Smart
+and Connected Control (TASCC) Pr ogram under Grant EP/N01300X/1. The
+Associate Editor for this article was C. G. Claudel. (Corresponding author:
+Eduardo Arnold.)
+Eduardo Arnold and Mehrdad Dianati are with the Warwick Manufac-
+turing Group, University of Warwick, Coventry CV4 7AL, U.K. (e-mail:
+e.arnold@warwick.ac.uk).
+Robert de Temple is with Jaguar Land Rover Ltd., Coventry CV4 7HS,
+U.K.
+Saber Fallah is with the Connected and Autonomous Vehicles Laboratory
+(CA V-Lab), University of Surrey, Guildford GU2 7XH, U.K.
+Digital Object Identiﬁer 10.1109/TITS.2020.3028424perception system of the subject vehicles failed to detect and
+classify important objects on their path in a timely manner.
+3D object detection is the core function of the perception
+system which estimates 3D bounding boxes specifying the
+size, 3D pose (position and orientation) and class of the
+objects in the environment. In the context of autonomousdriving systems, 3D object detection is usually performed
+using machine learning techniques and benchmarked on estab-
+lished datasets such as KITTI [4], which provides frontal
+camera images, lidar point clouds and ground-truth in the form
+of 3D boxes annotation. While cameras provide rich textureinformation that is crucial for object classiﬁcation, lidars and
+depth cameras produce depth information that can be used
+to estimate the pose of objects [5]. Majority of the existingmethods rely on data fusion from d ifferent sensor modalities to
+overcome the limitations of single sensor types and to increase
+detection performance [6]–[8].
+However, multimodal sensor data fusion from a single point
+of view is inherently vulnerable to a major category of sensorimpairments that can indiscriminately affect various modes
+of sensing. These limitations include occlusion, restricted
+perception horizon due to limited ﬁeld-of-view and low-pointdensity at distant regions. To this end, cooperation among
+various agents appears to be a promising remedy for such
+problems. While some previous studies have demonstrated
+limited realisations of this concept for applications such as
+lane selection [9], maneuver coordination [10] and automatedintersection crossing [11], this article tackles the challenge
+of using the concept for cooperative perception in the form
+of 3D object detection, extending our previous work in [12].For this purpose, information from single modality, spatially
+diverse sensors distributed around the environment is fused
+as a remedy to spatial sensor imp airments as alluded above.
+The beneﬁts are many-fold: for example, observations of
+the environment from diverse poses increase the perception
+horizon, increase the density of point clouds, and hence reduce
+the adverse impacts of sensing noise.
+Cooperative perception for 3D object detection can be
+realised in two distinct schemes, late or early fusion, depend-
+ing on whether the fusion happens after or before the object
+detection stage. In late fusion, each sensor observation is
+processed independently and the results in the form of detected
+3D boxes from multiple sensors are fused as an end product.In contrast, early fusion aggregates raw sensor data and
+fuses it before the detection stage. For this reason the late
+fusion scheme is an example of high level fusion (objectlevel), while early fusion is an example of low level fusion
+1558-0016 © 2020 I EEE. Personal u se is perm itted, but republication/redistri bution requires IEEE permission.
+See https://www.ieee.org/publications/rights/index.html for more information.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:29:25 UTC from IEEE Xplore.  Restrictions apply. 
+ARNOLD et al. : COOPERATIVE PERCEPTION FOR 3D OBJECT DETECTION IN DRIVING SCENARIOS 1853
+(signal level) [13]. Both schemes can extend the perception
+horizon and ﬁeld-of-view of the sensing system, however only
+the early fusion scheme can most effectively exploit compli-
+mentary information obtained from raw sensor observations.A simple illustrative example is when a vehicle is partially
+occluded when observed from two different sensing poses. In
+such case, each sensor observes a different occlusion pattern,resulting in unsuccessful detection from both observations.
+In contrast, when fused, these occluded observations can
+provide sufﬁcient information to successfully detect the subject
+vehicle.
+Building on our previous work [12], where we proposed
+the preliminary concept of cooperative perception, this article
+applies the concept for cooperative 3D object detection with
+two distinct fusion schemes, namely late and early fusion ,
+and a hybrid of the two, the so called hybrid fusion scheme.
+We propose a system that produces a highly accurate and
+reliable perception of complex road segments, such as complex
+T-junctions and roundabouts, using a network of road-side
+infrastructure sensors with ﬁxed positions. This perception
+information then can be disseminated in the form of periodic
+cooperative perception broadcast messages to the areas of
+interest in real time to assist safe autonomous driving insuch areas. In addition to the aforementioned beneﬁts of
+such system in terms of accura cy and detection performance,
+we believe that the proposed approach is a cost effective
+way of enabling safe autonomous driving systems in complex
+road segments. The main contributions of this article can besummarised as follows :
+•Two novel cooperative 3D object detection schemes are
+proposed, each of them employing a distinct fusion mech-
+anism, a bespoke deep neural network based detectionand customized training procedure.
+•A new dataset is synthesised for cooperative perceptionusing up to eight infrastructure sensors that can be usedfor multi-view simultaneous 3D object detection.
+•Comprehensive evaluations of both early and late fusionschemes, as well as their hybrid combination, are carried
+out in terms of detection perfo rmance and communication
+costs required for the operation of the system.
+•The impacts of sensors and system conﬁgurations are
+analysed in order to provide insights into practical deploy-
+ment of such systems.
+The rest of this article is structured as follows. In Section II
+we review the related work in the literature and explain how
+our contributions differ from those. The proposed cooperative
+detection system model and the fusion schemes are explained
+in Section III. The synthesized dataset and the training process
+are described in Section IV and V, respectively. The systemevaluations are presented and discussed in Section VI. Finally,
+Section VII summarises the key conclusions of this article.
+II. R
+ELATED WORKS
+This section presents works related to 3D object detection
+for driving applications and data fusion schemes. The ﬁrstsubsection reviews detection models, which are designed and
+generally used for single sensor systems. The following sub-
+section discusses the existing cooperative 3D object detectionschemes in the literature, and explains how our work differs
+from those. Finally, last subsection discusses how our proposed
+fusion schemes ﬁt into a taxonomy of data fusion schemes.
+A. 3D Object Detection Models
+These models can be categorized according to the input data
+modality: a) colour images from monocular cameras, b) point
+clouds from lidar or depth cameras, or c) the combination of
+both. Monocular cameras do not provide depth cues, unless
+using structure from motion approaches [14], which require a
+moving camera. Our review in this subsection will focus oncategories (b) and (c) for the reason that monocular images
+lack depth information and, thus, cannot be used to accurately
+localise objects. In contrast, point clouds can be used toestimate objects’ pose with signi ﬁcantly higher accuracy than
+monocular images [5]. A dedicated comprehensive review
+of 3D object detection techniques, covering all categories, can
+be found in [5], [15].
+Models in category (b) usually project the input point
+cloud into a Bird-Eye-View (BEV) [16] or cylindrical coor-
+dinates [17] to obtain a structured, ﬁxed-size representation
+that can be fed to convolutional neural networks for objectdetection. After the projection and representation of the points
+into a ﬁxed size input tensor, convolutional layers are applied
+to generate the ﬁnal 3D bounding boxes on a single forward
+pass [18]. Both projection techniques can result in loss of
+information due to space quantization and the representationchoice. In contrast to projection techniques, V oxelnet [19]
+learns a representation from the raw 3D points to obtain
+a structured input; PointRCNN [20] and STD [21] are twostage detectors that use PointNet [22] as a backbone to obtain
+point-wise 3D proposals, then reﬁne the proposals using a
+specialised network. In the case of [20] the reﬁnement network
+takes into account semantic features and local spatial features,
+while as in [21] the reﬁnement is guided by local spatialfeatures and an IOU estimation branch.
+Category (c) models such as Multi-View 3D (MV3D) [6]
+use the BEV projection of the point cloud to produce objectproposals and later fuse the lidar front-view projection as
+well as the colour image features. Another example is the
+Aggregate View Object Detection (A VOD) model [7] that uses
+both the colour image and the BEV projection to generate
+object proposals and then ﬁne-tunes them to obtain the ﬁnaldetection boxes. Different from [6], [7], authors in [8] use
+another fusion strategy: they ﬁrstly detect the objects on
+the image plane (2D bounding boxes), then extend each 2Ddetection into a 3D frustum and select the lidar points within
+the frustum as input to a PointNet model [22] which segments
+background points and regresses a 3D bounding box to ﬁt thesegmented points.
+Building on the previous works on 3D object detection from
+a single point of view summarised in this subsection, this
+article focuses on cooperative object detection. We particularly
+use the V oxelnet object detection model [19] due to itsgeneralisation capacity and det ection performance. Since this
+model operates exclusively on point clouds, it enables us to
+reduce the required bandwidth for data transmission from
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:29:25 UTC from IEEE Xplore.  Restrictions apply. 
+1854 IEEE TRANSACTIONS ON INTELLIGENT TRANSPORTATION S YSTEMS, VOL. 23, NO. 3, MARCH 2022
+sensor nodes to the fusion system and avoid potential privacy
+issues that arise with colour images.
+B. Cooperative 3D Object Detection Schemes
+Chen et al. propose to fuse raw point clouds and introduce a
+neural network architecture for object detection in sparse point
+clouds. Their study [23] consider communication costs, robust-
+ness to localisation error and show that cooperative perception
+can enhance the performance of object detection in terms ofthe number of detected objects. An extended study in [24]
+propose feature-level fusion schemes and analyse the trade-
+off between processing time, bandwidth usage and detectionperformance. Both works [23], [24] used the KITTI dataset [4],
+merging two sequential frames to simulate a cooperative
+dataset, and their own dataset obtained with two vehicles
+on a parking lot. Hurl et al. study the problem of trust in
+cooperative 3D object detection and propose TruPercept [25]to prevent malicious attacks against cooperative perception
+systems. They evaluate their scheme using a cooperative
+synthetic dataset generated by a game engine in general urbanscenarios.
+Our study differs from the aforementioned works in three
+main aspects. Firstly, while [23] and [25] share on-board infor-
+mation peer-to-peer (V2V) and fuse data locally, we propose
+a central system that fuses data from multiple infrastructuresensors which allows to amortize both sensor and process-
+ing costs through shared resources. Secondly, unlike [23]
+and [24] where the authors evaluated their system on a fewscenes from the KITTI dataset and a parking lot scenario,
+we tackle two complex urban scenarios, a T-junction and
+a roundabout, where occlusion is most severe. Thirdly, our
+study addresses evaluations of practical aspects of sensor
+conﬁgurations such as the number of sensors, their pose andﬁeld-of-view overlapping, which have been overlooked by the
+aforementioned works and provide important practical insights
+into the deployment of such systems.
+C. Data Fusion Schemes
+Castanedo [13] presents a taxonomy for different data fusion
+schemes and reviews the most common techniques within
+three categories: data association, state estimation and decision
+function. Regarding the relationship between data sources the
+presented taxonomy allows to classify both our early and latefusion schemes as complementary, when the sensors provide
+exclusive ﬁeld-of-views, and as redundant, when using sensors
+with overlapping ﬁeld-of-views.
+Ghamisi et al. [26] reviews three categories of point cloud
+fusion for remote sensing: point cloud level, where more points
+or features are added to the initial point cloud; voxel levelwhere point clouds are fused in a voxel representation; and
+feature level, where features are fused on the object level.
+Our early fusion scheme is within the ﬁrst category, where
+an existing point cloud is extended with points from spatial
+diverse sensors of the same modality. However our late fusionscheme does not ﬁt any of the categories since it fuses the
+detected bounding boxes themselves, rather than points, voxels
+or point cloud features.Fig. 1. Cooperative 3D Object Detec tion System Model. The data provided
+by sensors is fused at the central fusion system resulting in a list of objectswhich is then shared with all nearby vehicles.
+III. S YSTEM MODEL AND FUSION SCHEMES
+We ﬁrstly describe our system model for all fusion schemes
+in Section III-A. Section III-B presents the data preprocessingstage, while the proposed early, late and hybrid fusion
+schemes for cooperative 3D obj ect detection are described
+in Sections III-C, III-D and III-E, respectively. Finally,
+Section III-F introduces the 3D object detection model used
+in our system.
+A. System Model
+As shown in Figure 1, our proposed system model considers
+ninfrastructure sensors, each capable of depth sensing, e.g.
+lidar or depth camera, and equipped with a local processor.
+These infrastructure sensors are linked to a central fusion
+subsystem through wired or wireless data links. The sensors
+are assumed to be accurately calibrated, i.e.their absolute
+pose, including position and orientation, is known to the
+central system. The central fusion subsystem is equipped with
+a fairly powerful processor to fuse data from sensors and awireless broadcast system to periodically disseminate cooper-
+ative perception messages to the vehicles in the proximity.
+To beneﬁt from the cooperative perception messages, eachvehicle will need to be equipped with a wireless reception
+system. Autonomous vehicles also are assumed to have their
+own onboard processing system to handle the local process-
+ing of either Advanced Driver Assistance Systems (ADAS)
+or autonomous driving functions, including perception andcontrol ( e.g. path/trajectory planning). It shall be noted that
+the central fusion subsystem is not responsible for the control
+of the vehicles. Each autonomous vehicle will therefore useon and off-board (broadcast by the central fusion subsystem)
+information to make their own control decisions. Hence, in our
+system model, the role of the central fusion system is only to
+assist the vehicles in making safer control decisions. We would
+like to note that the network delay and communication lossesare not considered in this article and will be taken into account
+in future studies.
+B. Data Preprocessing
+The detection model considered in this article requires point
+cloud data, such as that provided by lidars or depth cameras.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:29:25 UTC from IEEE Xplore.  Restrictions apply. 
+ARNOLD et al. : COOPERATIVE PERCEPTION FOR 3D OBJECT DETECTION IN DRIVING SCENARIOS 1855
+Fig. 2. Logical illustration of Early (a) and Late (b) schemes for Cooperative 3D Object Detection.
+While lidars can produce point clouds as a standard output,
+the depth images produced by de pth cameras can be processed
+(details in Section IV) to generate point clouds. Each sensorin a physical conﬁguration provides points relative to its own
+coordinate system, thus they need to be transformed to a global
+coordinate system before being processed. This transformationconsists of a rotation and a translation operation that maps
+points from the sensor coordinate system to a global coordinate
+system and is speciﬁed by the inverse of the extrinsic matrix
+of each sensor. Given the coordinates (x,y,z)of a point in
+the coordinate system of sensor i, we can obtain the global
+reference point (x
+g,yg,zg)using:
+⎡
+⎢⎢⎣xg
+yg
+zg
+1⎤
+⎥⎥⎦=M−1
+i⎡
+⎢⎢⎣x
+y
+z
+1⎤
+⎥⎥⎦=[Ri|ti]⎡
+⎢⎢⎣x
+y
+z
+1⎤
+⎥⎥⎦, (1)
+where Miis the extrinsic matrix of sensor i, which can be
+decomposed into a rotation matrix Riand translation vector ti.
+The extrinsic matrix Mof a sensor, and hence Rand t,
+must be obtained through a calibration process. This can be
+challenging in practice for the reason that Mdepends on
+the position and orientation of sensors; hence, the result can
+only be as accurate as the measur ements of these variables.
+Realistically, if these sensors are mounted on mobile nodes
+(e.g. onboard of a vehicle) any error in the localisation of
+the mobile node will result in alignment errors in the fusedpoint cloud which could result in false positives and missed
+detections. In our system model the sensors are ﬁxed at the
+road side; therefore, the calibration process can be carried out
+very accurately in practice [27], [28].
+Once the point cloud from each sensor is transformed
+into the global coordinate system, all the points outside the
+speciﬁed detection area (deﬁned in Section IV) and above 4m
+height are removed since such points do not carry relevantinformation.
+C. Early Fusion Scheme
+This scheme, as illustrated in Figure 2a, is based on the
+fusion of point clouds generated by nsensors, as depicted
+in Figure 1. This allows aggregation of complementary infor-
+mation from distinct parts of the objects in the detection areathrough spatially diverse observations, which increases the
+likelihood of a successful detec tion, particularly for objects
+that are occluded or have low visibility. The processingpipeline for this scheme incorporates the preprocessing stage
+carried out onboard of each sensor, which results in npoint
+clouds in the global coordinate system. Each respective pointcloud is transmitted to the central fusion system where they
+are concatenated into a single point cloud and then fed to the
+3D object detection model. The results of the object detection
+model in the central fusion system consists of a list of objects,
+i.e.3D bounding boxes, which is then disseminated to the
+vehicles in the vicinity, as depicted in Figure 1.
+D. Late Fusion Scheme
+This scheme, as illustrated in Figure 2b, fuses the output of
+the 3D object detection model (a list of 3D bounding boxes)
+obtained locally at each sensor node. Thus, if an object is not
+detected in at least one of the observed point clouds, e.g.due
+to occlusion or low point density, it cannot be detected by the
+overall system. First, each point cloud is preprocessed and fedinto the detection model onboard each sensor, which generates
+a list of objects represented by their 3D bounding boxes. The
+list of detected objects from the nsensors are then transmitted
+to the central fusion system, where they are fused into a single
+list. Considering that some objects may be in the ﬁeld-of-
+view of multiple sensors, the aggregated list may have multiple
+detections for a single object. In order to mitigate this effect,
+we use a post-processing algorithm known as Non-MaximumSuppression (NMS) [29]. This algorithm identiﬁes the overlap
+of the detected boxes, measured by the Intersection Over
+Union (IOU) metric (described in Section VI). If the overlapbetween any two detected boxes exceeds a speciﬁed threshold,
+the box with lowest conﬁdence score is removed. The conﬁ-
+dence score of a detected box indicates the conﬁdence of thepresence of an object within the box, and is obtained by the 3D
+object detection model (detailed in Section III-F). Figure 2b
+illustrates an example case where S2 and Sn observations
+resulted in two detections of a single object, thus, during the
+fusion stage the box detected by Sn is omitted. A number ofdetected boxes that overlap could be potentially combined to
+create a new detection box with higher conﬁdence, however
+this would require a new model specifying the box fusion
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:29:25 UTC from IEEE Xplore.  Restrictions apply. 
+1856 IEEE TRANSACTIONS ON INTELLIGENT TRANSPORTATION S YSTEMS, VOL. 23, NO. 3, MARCH 2022
+process. The conducted experiments showed that NMS was
+successful in eliminating the overlapping detected boxes and
+thus we opted to use this algorithm for simplicity. Once the
+fusion and post-processing are completed, the resulting objectlist is broadcast to all vehicles in the vicinity, similar to the
+previous scheme.
+E. Hybrid Fusion Scheme
+The early fusion scheme can increase the likelihood of
+detecting objects compared to late fusion due to the aggregated
+information prior to the detection stage but requires raw sensor
+data sharing, which increases the communication cost. As anintermediate solution, the hybrid fusion scheme uses both of
+the previous schemes to increase the likelihood of a detection
+without a drastic increase in the communication cost. The key
+concept is to share high level information (late fusion) where
+the sensor has high visibility and share low level information(early fusion) where the visibility is poor. Objects close to a
+sensor will have a high density of points and thus are more
+likely to be detected using a single sensor’s observation. Thuspoints in the close vicinity of a sensor need not be transmitted
+to the central fusion system, which allows to reduce the
+communication bandwidth. First, the late fusion scheme is
+employed in each sensor node and the detected boxes are
+shared to the central fusion system. Next, each sensor nodeselects all points from its point cloud whose projection in the
+horizontal plane are outside a circle of radius Rand share them
+with the central fusion system. The radius Rmodulates the
+trade-off between early and late fusion – as Rdecreases more
+raw data is shared with the central fusion system. The central
+fusion system then uses early fusion on the received point
+clouds and fuses the detected bounding boxes with the late
+fusion results from each sensor node. The bounding box fusionfollows the same NMS procedure deﬁned in Section III-D.
+F . 3D Object Detection Model
+The object detection model adopted in this article for all
+fusion schemes is based on V oxelnet [19]. This model consistsof three main functional blocks: a feature learning network,
+multiple convolutional middle layers and a Region Proposal
+Network (RPN). Each block is described below.
+The feature learning network converts the 3D point cloud
+data into a ﬁxed sized representation that can be processed bythe convolutional layers. Originally, the V oxelnet architecture
+used the laser reﬂection intensity channel as well as the 3D
+spatial coordinates (x,y,z). In our implementation, we use the
+spatial coordinates alone, which enables the model to gener-
+alise to point clouds obtained from depth cameras. The input
+point cloud is grouped into voxels of equal size ( v
+x,vy,vz),
+representing the width, length and height, respectively. For
+each voxel, a set of tpoints within its boundaries is selected
+to create a voxel-wise feature vector. If tis greater than T
+(threshold on the maximum number of points per voxel),
+a random sample of Tpoints is selected, which reduces
+the computational load and the imbalance of the number of
+points between different voxels. These points’ coordinates are
+fed into a chain of V oxel Feature Encoding (VFE) layers.Each VFE layer in the chain consists of fully connected
+layers, local aggregations and max-pooling operations that
+allow concentration of information from all voxel points into
+a single voxel-wi se feature vector. The output of this networkis a 4D tensor, indexed by the voxel feature dimension, height,
+length and width.
+The convolutional middle layers in the processing pipeline
+apply three stages of 3D convolutions to the 4D voxel ten-
+sor obtained previously. These stages incorporate information
+from neighbouring voxels, adding spatial context to the feature
+map.
+The resulting tensor from the convolutional middle layers
+is then fed into the Region Proposal Network. This network is
+composed of three stages of convolutional layers, followed by
+three stages of transposed convolutional layers which create ahigh resolution feature map. This feature map is then used to
+generate two output branches: a conﬁdence score indicating
+the probability of presence of an object and a regression
+map indicating the relative size, position, and orientation of a
+bounding box with respect to an anchor. Each element of theoutput branch is mapped to an anchor in a uniformly arranged
+grid, whose density is controlled by the anchor stride hyper-
+parameter. Anchors are used since the regression of detectionboxes relative to an anchor gives more accurate results than
+regression without any prior information [30].
+IV . D
+ATASET
+To the best of our knowledge there is no publicly available
+dataset that can be readily used for cooperative 3D object
+detection in the literature. We would like to note that authorsin [23] and [24] simulate an environment where two vehicles
+share their sensors’ information by using point clouds from
+the KITTI dataset [4] generated by the same vehicle at two
+time instants. However, their approach is limited to a small
+number of scenes where all objects remain static, except forthe ego vehicle, which also restrict the number and pose of
+sensors that can be used. Hence, it falls short of providing
+a comprehensive dataset to investigate dynamic and complexdriving scenarios where multiple objects are moving and/or are
+occluded. To this end, we generate a novel cooperative dataset
+for driving scenarios using multiple infrastructure sensors as
+described in the following.
+Our dataset was created using the CARLA simulation
+tool [31], which allowed simulation of complex driving scenar-
+ios as well as obtaining accurate ground-truth data for training
+and evaluation. This dataset is used in our paper to establishthe underlying concepts of our cooperative 3D object detection
+schemes and gauge the potential beneﬁts. In the next phase of
+our research, we plan to use realistic datasets generated fromour outdoor track which is currently under development as
+part of the Midlands Future Mobility testbed [32].
+Our dataset is generated in a T-junction and a roundabout
+scenario using ﬁxed road-side cameras, which provide RGB
+and depth images with resolution of 400 x 300 pixels and hor-izontal ﬁeld-of-view of 90 degrees. The resolution and ﬁeld-
+of-view are conservative estim ates of new generation solid
+state lidars, whose speciﬁcations are not yet available [33].
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:29:25 UTC from IEEE Xplore.  Restrictions apply. 
+ARNOLD et al. : COOPERATIVE PERCEPTION FOR 3D OBJECT DETECTION IN DRIVING SCENARIOS 1857
+Fig. 3. V oxelnet 3D object detection m odel architecture. Image from [19].
+The T-junction scenario uses si x infrastructure cameras
+mounted on 5.2m high posts. Three of these cameras point
+towards the incoming roads and the remaining three to theopposite direction of the junction. The roundabout scenario
+uses eight cameras at 8m mounting posts placed at the
+intersections, four of them facing the oncoming lanes to theroundabout and the other four facing outwards the roundabout.
+The sensors’ height was chosen according to the typical light
+poles height already available in the simulation scenarios
+and to conform to local UK standards [34]. Both sensor
+conﬁgurations were experimentally positioned to fully coverthe roundabout and junction, as illustrated in Figure 4.
+The proposed dataset consists of four independent collec-
+tions: two for the T-junction, containing 4000 training and1000 test frames respectively, and two for the roundabout,
+with an equal number of training and test frames. A frame is
+deﬁned as the set of depth and RGB images from all cameras
+corresponding to a single instant in time. Each frame also
+contains an object list describ ing the ground-truth position,
+orientation, size and class of all objects in the scene.
+The objects represented in the dataset can be vehicles,
+cyclists/motorcyclists or pedestrians. Note that we do notdistinguish between cyclists and motorcyclists in this article.
+During the generation of the dataset, the maximum number of
+objects at any given time was set to 30, which was observed
+as a threshold above which severe trafﬁc congestion happens.
+The probabilities of spawning cars, cyclists and pedestriansis equal to 0.6, 0.2 and 0.2, respectively, which guarantees a
+higher number of cars but still allows a representative sample
+of cyclists and pedestrians. During the simulation, each objecthas a life span of four frames, which forces new objects to be
+spawned periodically and increase the diversity of objects and
+poses. The motion of the objects in the simulation is governed
+by trafﬁc rules and internal collision avoidance mechanisms
+of the simulator. All object models available in CARLA areused during the simulation – twenty for cars (sport, vans and
+SUVs), six for cyclists and fourteen for pedestrians.We deﬁne the detection areas as a rectangle of 80 ×40m
+for the T-junction scenario and a square of 96m centred at the
+roundabout, illustrated by the blue rectangles in Figure 4a, 4c.
+The areas of interest for object detection are chosen to cover
+all the junction/roundabout area and some extent of the roads
+leading to it in order to increase the perception horizon of thesystem, while taking in account the constraints in the process-
+ing system memory. The T-junction and roundabout scenarios
+detection areas cover 3200 m
+2and 9216 m2, respectively.
+In our approach, we use only the depth images, also known
+as depth maps. These images represent the distance fromthe camera to the surface of objects in the camera ﬁeld-of-
+view. More accurately, each pixel in a depth image speciﬁes
+the distance of the projection (into the camera’s Z axis) ofthe vector from the camera to a surface point. Each depth
+image is used to reconstruct a point cloud, where each pixel
+is transformed into a 3D point in the camera coordinate system
+using the pinhole camera model [35], described by :
+⎡
+⎣x
+y
+z⎤
+⎦=⎡
+⎢⎢⎢⎣(u−C
+u)d
+f
+(v−Cv)d
+f
+d⎤
+⎥⎥⎥⎦, (2)
+where (x,y,z)are the coordinates of the 3D point correspond-
+ing to pixel coordinates (u,v)in the depth image, C
+u,Cv,f
+are the camera focal centre and length (given by the intrinsic
+camera matrix), and dis the respective depth value of pixel
+with coordinates (u,v). The point cloud produced by com-
+bining the 3D points from all cameras should have a similar
+size as one produced by a standard lidar, around 200 thousandpoints, for processing time constraints. To this end, the depth
+image resolution is downsampled in half to 200 x 150 pixels,
+which yields 30000 3D points per camera, and approximately
+200 thousand points when combining points from six or eight
+cameras.
+We introduce a surface agnostic Additive White Gaussian
+Noise (AWGN) model with mean μ=0m and standard
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:29:25 UTC from IEEE Xplore.  Restrictions apply. 
+1858 IEEE TRANSACTIONS ON INTELLIGENT TRANSPORTATION S YSTEMS, VOL. 23, NO. 3, MARCH 2022
+Fig. 4. Bird Eye View of the T-junction and Roundabout scenarios. (a) and (c ) show the sensors conﬁguration, where each sensor is indicated by its ID
+number and green lines representing the ﬁeld-of-view; the blue rectangles i ndicate the detection areas of each scenario. (b) and (d) show the fused po int
+clouds, where each colour represents a sensor and the 3D bounding boxes repres ent the labelled data, with colour indication of the class (red for cars, green
+for cyclists and blue for pedestrians). Note that this sensor conﬁguration f ully covers the detection areas and provide overlapping ﬁeld-of-views ( indicated by
+areas with multiple colours).
+deviation σ=0.015m to the depth image, following the
+speciﬁcation and mathematical model of a lidar sensor in [36].It must be noted that, in contrast to lidar sensors, the depth
+estimation error of stereo-matc hing-based cameras increases
+exponentially with the distance between the camera and theobject [37].
+V. T
+RAINING PROCESS
+The model described in Section III-F is trained using the
+procedure presented below. We train one instance of the 3D
+object detection model for each scenario using fused point
+clouds from multiple sensors. The models are trained with
+Stochastic Gradient Descent (SGD) optimisation for 30 epochs
+with learning rate of 10−3and momentum of 0 .9, as proposed
+in [19]. The loss function is adopted from [19], and penalises
+the regression of position, size and yaw angle relative to a ﬁxed
+anchor. We opt for the hyper-parameters suggested in [19]: asingle anchor of size (3.9,1.6,1.56)m with two orientations
+(0 and 90 degrees) and maximum number of points per voxel
+T=35.
+The voxel size (vx,vy,vz)and the anchor stride along
+the X and Y dimensions for the T-junction model is setto(0.2,0.2,0.4)ma n d0 .4m, respectively, identical to those
+in [19]. Using these same hyper-parameters in the round-
+about model is unfeasible since the roundabout scenario hasapproximately thrice the area of the T-junction scenario,
+which would result in feature maps that do not ﬁt in the
+GPU memory. Hence, we reduce the spatial resolution of
+the X and Y axis in half by adopting a voxel size of
+(0.4,0.4,0.4)m and anchor stride 0 .8m for the roundabout
+model.
+The object detection models are trained to detect vehicles
+only. The samples of pedestrians and cyclists are present in thedataset to avoid over-ﬁtting as they force the model to learn
+distinct features for vehicles.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:29:25 UTC from IEEE Xplore.  Restrictions apply. 
+ARNOLD et al. : COOPERATIVE PERCEPTION FOR 3D OBJECT DETECTION IN DRIVING SCENARIOS 1859
+During the training stage , each ground-truth bounding box
+is rotated by a random angle with a uniform distribution in the
+range of [−18,18]degrees, similar to previous studies in [19],
+[38], to increase the generalisation of angle estimation. Wealso consider rotating the whole point cloud to avoid model
+over-ﬁtting to the buildings an d ﬁxed objects surrounding the
+junction, however this operation did not result in a signiﬁcantperformance gain.
+VI. P
+ERFORMANCE EVA L UAT I O N
+We evaluate the performance of the proposed cooperative
+perception system for 3D object detection through a series ofexperiments in two scenarios, a T-junction and a roundabout.
+The performance evaluation is carried out on an independent
+test dataset for each scenario using the metrics describedin Section VI-A. First, we compare the fusion schemes
+in terms of their detection performance, computation time
+and communication costs for data sharing in Section VI-B.
+Secondly, we evaluate the impact of the number of
+infrastructure sensors and their pose on the detectionperformance in Section VI-C. Then, the beneﬁts of fusing
+information from multiple sensors with overlapping ﬁeld-of-
+view in early fusion scheme are evaluated in Section VI-D.Additionally, it is evaluated how the number of infrastructure
+sensors relates to the quality of the information acquired from
+the objects (in terms of the density of points in the point cloud
+data), and, in turn, how this num ber relates with the accuracy
+of the detected boxes in Section VI-E. Finally, we compare oursystem performance to existin g benchmarks in Section VI-F.
+A. Evaluation Metrics
+Four evaluation metrics related to object detection are
+used in this article, namely, Intersection Over Union (IOU),
+precision, recall and average precision, which is derived from
+the previous two. Additionally, the communication cost metric
+is deﬁned as the average data volume exchanged between
+a sensor and the central fusion system in kilobits (kbit) per
+frame , where a frame is deﬁned as a single operation of the
+whole processing chain in this article.
+The IOU measures the spatial similarity of a pair of bound-
+ing boxes, one normally chosen from the set of estimated
+bounding boxes and the other from the ground-truth set, given
+by
+IOU(B
+gt,Be)=volume (Bgt∩Be)
+volume (Bgt∪Be), (3)
+where BgtandBerepresent the ground-truth and the estimated
+bounding boxes, respectively. The set of estimated bounding
+boxes includes all positive boxes, i.e., those identiﬁed by the
+3D object detection model in Section III-F with conﬁdence
+scores greater than a threshold, denoted by τin this article.
+The IOU simultaneously takes into account the location, size,
+and orientation (yaw angle) of both bounding boxes. Its value
+ranges from 0 (when the bounding boxes do not intersect) to1 (when the location, size, and orientation of both bounding
+boxes are equal). Normally, when the IOU metric for a pair
+(B
+gt,Be)is above a certain threshold, denoted by κ,Becan beregarded as the matching estimation of Bgt. The IOU threshold
+κis typically set to 0.5 or 0.7 [4], here we opt for 0.7 unless
+stated otherwise.
+The precision metric is deﬁned as the ratio of the number
+of matched estimated boxes, according to the above deﬁnition,
+to the total number of bounding boxes in the estimated set.
+Similarly, the recall metric is deﬁned as the ratio of thenumber of matched estimated boxes to the total number of
+bounding boxes in the ground-truth set. It shall be noted that
+the precision and recall m etrics are functions of κandτ. And,
+there is an inherent trade off between the precision and recall
+metrics, described in the literature by the Precision-Recall (PR)curve [39].
+The Average Precision (AP), denoted as AP
+3D, is a single
+scalar value, computer by taking the average of the precisionforMrecall levels [39], [40]:
+AP=M−1
+n=0(rn+1−rn)pinterp(rn+1), (4)
+where
+pinterp(r)=max
+˜r:˜r≥rp(˜r). (5)
+Here Mis the number of estimated bounding boxes, p(r)is
+the precision as the function of recall r,a n d pinterp(r)is a
+smoothed version of the precision curve p(r)[39]. The recall
+value ri∈{r1,..., rM}in Equation 4 is obtained considering
+the conﬁdence threshold τequal to the conﬁdence score of
+thei-th bounding box within the set of estimated bounding
+boxes when sorted by the conﬁdence score in descending
+order. Throughout this article we will use AP 3Dfor varying
+levels of κ, denoting it by AP 3D@I O U κ.
+B. Comparative Evaluation of Fusion Schemes
+The purpose of this experiment is to compare the perfor-
+mance of early, late and hybrid fusion schemes in terms of
+their detection performances , communication cost and com-
+putation time. The detection p erformance of each scheme is
+quantiﬁed by the AP 3Dmetric for κ∈{0.7,0.8,0.9}.T h e
+performance evaluation was carried out in both T-junction and
+roundabout scenarios in this experiment. For the late fusion
+scheme, the NMS algorithm uses an IOU threshold of 0.1,
+which was experimentally determined to remove multipledetections of a single object. For the hybrid fusion scheme,
+the radius Rof the circle limiting the area for low level
+data sharing was experimentally determined for best trade-offbetween communication cost and detection performance to be
+20m and 12m for the T-junction and roundabout scenarios,
+respectively.
+Table I summarises the results of this experiment in terms of
+the AP
+3D, communication cost metrics and computation time
+for both scenarios. These resu lts show that the early fusion
+scheme outperforms hybrid fusion, which in turn outperforms
+late fusion. More speciﬁcally, the early fusion scheme outper-forms late fusion scheme up to 20% in terms of detection per-
+formance in the T-junction scenario and 18% in the roundabout
+scenario measured by the AP
+3Dmetric with IOU threshold
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:29:25 UTC from IEEE Xplore.  Restrictions apply. 
+1860 IEEE TRANSACTIONS ON INTELLIGENT TRANSPORTATION S YSTEMS, VOL. 23, NO. 3, MARCH 2022
+TABLE I
+COMPARATIVE EVA L UAT I O N O F EARLY FUSION (EF), H YBRID FUSION
+(HF) AND LATE FUSION (LF) S CHEMES
+of 0.7. The early fusion scheme demonstrates a signiﬁcantly
+better detection performance co mpared to the other schemes
+when considering higher values of κ,s u c ha s0 . 8a n d0 . 9 .
+It can also be seen that for a given value of κ, the detection
+performance in the T-junction scenario is consistently superior
+to the detection performance in the roundabout scenario. Thisarises from the larger voxel sizes that had to be adopted in the
+latter scenario, for the reasons described in Section V, which
+reduces the spatial resolution of the system and results in less
+accurate bounding box regression.
+The results in Table I show that the superiority of the
+detection performance of the early fusion scheme comes at
+a higher communication cost. This is due to the larger data
+volume required to transmit raw point clouds in early fusioncompared to the transmission of the estimated objects in late
+fusion from the sensors to the central system. Furthermore,
+the hybrid fusion outperforms late fusion with a signiﬁcantly
+lower communication cost than that of early fusion, however
+underperforms early fusion due to the loss in the omittedpoints. It should be noted that the actual required link capacity
+from a sensor node to the central fusion system will depend
+on the processing frame rates. For example, using early fusionin the proposed T-junction scenario with a processing frame
+rate of 10 frames per second, common for lidars, will require
+a communication link with the capacity of 5.16 Mbps (516 kb
+per frame times 10 frames per second) from each infrastructure
+sensor to the central fusion system. Such rates can be easilysupported by the commercial wired as well as wireless Local
+Area Network (LAN) technologies that may be needed to
+implement the proposed system model in Figure 1. Althoughwe have not considered network delay in this study, our
+insight is that it could constitute a signiﬁcant problem to
+the fusion system by preventing successful detections due to
+missing frames or by generating false positives due temporal
+misalignment of incoming frames. The likelihood of such missdetections depends on the comm unication channel properties
+and should be rigorously investigated in future studies.
+The computation time required to compute each frame
+increases in early fusion because the fused point cloud has
+more points than the individual point clouds processed sep-
+arately in the late fusion scheme. Note that the computation
+times are hardware dependent and in this case were obtained
+using a Nvidia Quadro M4000 GPU.
+C. Impact of Sensors Pose and Number on Detection
+Performance
+This experiment focuses on the evaluation of the impact
+of the pose (position and orientation) and number of sensorsTABLE II
+DETECTION PERFORMANCE OF EARLY FUSION (EF) AND LATE FUSION
+(LF) FOR VARIOUS SENSOR COMBINATIONS
+on the object detection perfo rmance. The performance is
+evaluated for early and late fusion schemes on both scenarios
+considering all objects within the detection area, deﬁned in
+Section IV. The evaluation is carried out for all possible sensor
+sets, where the number of sensors in a set ranges from one
+to six in the T-junction and one to eight in the roundaboutscenario. The NMS algorithm and threshold are the same as
+the previous experiment for consistency of the results.
+Table II reports the top-3 performing sensor sets for each
+number of sensors in both scenarios in terms of AP
+3Dmetric
+(κ=0.7). The results show that th e detection performance
+increases as the number of engaged sensors is increased. In
+particular, there is a steep performance increase of more than
+50% when using two sensors instead of one in both scenarios.However, the performance gain saturates as the number of
+sensors increases. Also, it can be seen that as the detection area
+increases, more sensors are need ed to maintain the detection
+performance. For example, in the roundabout scenario, eight
+sensors need to be engaged to achieve a performance level
+equal to that of six engaged sensors in the T-junction scenario,
+which has smaller detection area. Furthermore, the early fusion
+scheme consistently outperforms late fusion with respect tothe detection performance. Th eir disparity becomes more
+signiﬁcant as the number of sensors grow since the early
+fusion scheme can exploit more information at detection timecompared to late fusion.
+Figure 5 presents the PR curves of the best sensor sets
+(rows with a bold font in Table II) for both scenarios using theearly fusion scheme. The curves show that the maximum recall
+of detected objects increases si gniﬁcantly for both scenarios
+when the number of engaged sen sors increase. Speciﬁcally,
+a single sensor can detect only 30% of all the vehicles in
+the T-junction scenario and slightly more than 30% of all thevehicles in the roundabout scenario. However, when all sensors
+(six for the T-junction and eight for the roundabout) are
+engaged, both scenarios show similar performance and detect
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:29:25 UTC from IEEE Xplore.  Restrictions apply. 
+ARNOLD et al. : COOPERATIVE PERCEPTION FOR 3D OBJECT DETECTION IN DRIVING SCENARIOS 1861
+Fig. 5. Precision-Recall curves of early fusion with different number of s ensors for (a) T-junction and (b) roundabout scenarios. The curves are prod uced
+for the sensor sets highlighted in bold in Table II. AP 3Dvalues are calculated for κ=0.7.
+more than 95% of the ground-truth objects with precision
+above 95%.
+As one could anticipate, the results show that the number
+and pose of sensors have direct impact on the performance
+of the system. The results also demonstrate the impact of
+spatial diversity in terms of the improved quality of the
+input information to the object detection model. For example,the sensor set (0,2,5) achieve the best performance for three
+sensors in the T-junction scenario. Adding sensor 1 to the
+aforementioned set does not increase the ﬁeld-of-view ofthe system, as observed in Figure 4a, however the results
+in Table II show that this addition has a notable impact on
+detection performance (20% increase in AP
+3D). The impact of
+spatial diversity on detection performance is further explored
+in the next experiment.
+D. Spatial Diversity Gain of Cooperative Perception
+The enhanced detection performance in cooperative per-
+ception seen in the previous experiments can be associatedwith two factors: 1) the increased ﬁeld-of-view; 2) the spatial
+diversity gain, which manifests itself in point clouds with
+higher point density in areas that are covered by multiple
+sensors. This experiment intends to shed light into the latter
+factor.
+In this experiment, we focus on objects within a deﬁned
+Region of Interest (ROI), where all objects are within the
+ﬁeld-of-view of two speciﬁc sensors. For example, the ROIfor the sensor set (2,4) in the T-junction scenario is limited
+to road to the left of the junction (ﬁlled with green and
+brown points in Figure 4b), and the ROI for the sensorset (3,5) for the roundabout is limited to the upper right
+quadrant of the roundabout (ﬁlled with yellow and light purple
+points in Figure 4d). For each of these ROIs, the detection
+performance of the early fusion scheme using the speciﬁed
+sensor sets is compared to that of a single sensor coveringthe same ROI. The detection performance is quantiﬁed by the
+AP
+3Dmetric restricted to objects within the speciﬁed ROI.
+For each scenario we considered the two sensors sets withTABLE III
+IMPACT OF SPATIAL DIVERSITY ON DETECTION PERFORMANCE
+highest ﬁeld-of-view overlap: (1,5) and (2,4) for the T-junction
+scenario and (1,7),(3,5) for the roundabout scenario.
+The impact of spatial diversity on the detection performance
+of early fusion scheme is visualised in Figure 6. As it can
+be seen in the snapshots in Fig 6c, when a single sensor
+is engaged most objects fail t o be detected or are detected
+with poor accuracy ( i.e.incorrect size or yaw angle). However,
+upon increasing the point density by combining multiple point
+clouds with early fusion, it is possible reduce the number of
+false negatives and increase the quality of estimated bounding
+boxes, as illustrated in Figure 6d.
+The results of this experiment, summarised in Table III,
+show that the early fusion scheme using only two sensors
+outperforms the best single sensor by 20% and 85% in the
+T-junction scenario. However, t he detection performance gain
+when using two sensors in the roundabout is marginal. This isdue to the fact that the ﬁelds-of-view of the speciﬁc sensor
+set used has minimal overlap in this particular roundabout
+scenario. The results presente d indicate that early fusion can:
+a) reduce the number of false negatives caused by occlusion
+and low point density; b) improve the quality of estimated
+boxes when the sensors have signiﬁcant overlapping coverage.
+E. Impact of Point Density on Estimated Bounding
+Boxes Accuracy
+One can intuitively stipulate that a denser point cloud
+will provide additional information about the objects in the
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:29:25 UTC from IEEE Xplore.  Restrictions apply. 
+1862 IEEE TRANSACTIONS ON INTELLIGENT TRANSPORTATION S YSTEMS, VOL. 23, NO. 3, MARCH 2022
+Fig. 6. Illustration of the impact of spatial diversity on the performance of the early fusion scheme for various sensor conﬁgurations (green boxes re present
+the ground-truth objects and red boxes represent estimated objects).
+scene, as has been the case for Airborne lidar scanners and
+object classiﬁcation in context of remote sensing [41]. Thisexperiment analyses how the number of sensors affects the
+density of points in the point cl oud and, in turn, the accuracy
+of the boxes estimated by the object detection model in a
+driving context. We deﬁne the point density of an object as
+the number of points within the boundaries of its ground-truthbounding box. The point density of an object is a discrete
+random variable that is a random function of the number and
+pose of sensors that observe the object.
+Figure 7a shows the Cumulative Distribution Function
+(CDF) of objects’ point density for the best sensor sets in
+the T-junction scenario from Table II (highlighted in bold
+font). Given a point (d,F(d))where Frepresents one of
+the CDF curves, the vertical coordinate F(d)represents the
+ratio of objects whose point density is smaller or equal to
+the horizontal coordinate d. The intersections with the vertical
+axis shows that using Sensors 4 and the sensor set (3,4) aloneresults in more than 60% and 30% of the objects having
+zero point density, respectively. Similarly, one can compute
+the ratio of objects whose point density is within an interval
+[d
+1,d2]by computing F(d2)−F(d1). Thus, using the sensor
+set (0,2,5) guarantees that all ground-truth objects have non-zero point density but results in 90% of the objects having
+point density below 300 points. When the number of engaged
+sensors is increased, the number of objects with point densityin the range of [250,1000]points increases signiﬁcantly, but
+saturates for point de nsities above 1750 points.
+Next, we investigate how object point density relates to the
+accuracy of the estimated bounding box, measured by the IOU
+metric. For this purpose, we split the objects into 200 uniform-sized bins according to point de nsity. The IOU value for a bin
+is computed by averaging the individual IOU values among all
+objects in the bin. Figure 7b shows the scatter plot of the IOUvalue per point density bin and a log curve interpolation. The
+accuracy of objects with point dens ity below 70 points is poor,
+but increases signiﬁcantly when the point density surpasses100 points. The outliers observed in the range of [1800,3400]
+are caused by objects that are close to a sensor, thus have
+a high number of points concentrated on a small surface but
+few points elsewhere, resulting in a poorly estimated bounding
+box. In conclusion, the point density of an object can providea useful prediction of the accuracy of the estimated bounding
+box. Thus, given the accuracy requirement for the estimatedTABLE IV
+COMPARISON WITHEXISTING BENCHMARKS
+bounding boxes, it is possible to ﬁnd the minimum required
+point density and the number of sensors required for a speciﬁcscenario.
+F . Comparison With Existing Benchmarks
+The direct comparison of our fusion schemes with other
+approaches [19], [24] may not be meaningful due to its unique
+sensing strategy. However, we opt to compare (a) the AP
+3D
+results obtained using a single sensor to the reported results
+produced by V oxelnet [19]; (b) the AP 3Dresults using two
+sensors in the T-junction scenario from Section VI-D to the
+reported results produced by Cooper [23] and F-Cooper [24]in a road intersection scenario in Table IV.
+Firstly, we compare results produced by V oxelnet [19]
+using the KITTI dataset [4]. The results reported for AP
+3D
+in three complexity categories, easy, moderate and hard, are81.97%, 65.46% and 62.85%, respectively. Our results fromSection VI-C using a single sensor achieve much lower AP
+3D,
+around 28% for both scenarios. This signiﬁcant performance
+gap emerges due to our evaluation considering all theground-truth objects within the detection area, while V oxelnet
+and other studies using the KITTI benchmark consider only
+the objects within the sensor’s ﬁ eld-of-view. The performance
+gap highlights the complexity of detecting objects in both
+scenarios using a single sensor, since its ﬁeld-of-view cannotcover all the detection area and is susceptible to occlusion
+caused by buildings and other objects. As discussed in
+Section VI-C, increasing the number of sensors used is highlybeneﬁcial to the detection performance in the proposed system.
+Secondly, we compare our early fusion scheme results with
+the ones produced in F-Cooper [24]. For a fair comparison,
+we consider our system using two engaged sensors in the
+T-junction scenario to the “road intersections” scenario
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:29:25 UTC from IEEE Xplore.  Restrictions apply. 
+ARNOLD et al. : COOPERATIVE PERCEPTION FOR 3D OBJECT DETECTION IN DRIVING SCENARIOS 1863
+Fig. 7. Analysis of the point density and the IOU metri c over estimated boxes in the T-junction test dataset.
+reported in [24]. In [24], the authors report results in two
+categories, “near and far”, acco rding to the distance from
+the object to the sensor. The “n ear” category shows marginal
+improvement, hence we focus the comparison on the “far”
+category. The AP 3Dresults in [24] for a single sensor and
+fusion of two sensors are 19.60% and 72.37%, respectively.
+Our results in Section VI-D under similar scenario for asingle sensor and early fusion of two sensors are 47.17%
+and 87.22%, respectively. Although the direct comparison of
+these values is not meaningful given the dataset differencesand sensing strategy, it is possible to see that both approaches
+show a comparable performance gain when considering more
+than a single sensor.
+VII. C
+ONCLUSION
+This article proposed a cooperative perception system for
+3D object detection using two fusion schemes: early and late
+fusion. The proposed system model contains ninfrastructure
+sensors that share data with a central fusion system, where
+information is fused and the resulting detections (3D bounding
+boxes) are disseminated to all the vehicles in the vicinity. A
+novel cooperative dataset contai ning depth maps from multiple
+infrastructure sensors in a T-junction and a roundabout sce-nario was used for the evaluation of the proposed system. The
+evaluation indicated that incr easing the number of sensors in
+the proposed system is highly beneﬁcial in complex scenarios,which allowed to overcome occlusion and restricted ﬁeld-of-
+view. Furthermore, the proposed system was able to increase
+the density of the fused point cloud by exploiting spatiallydiverse observations with overlapping ﬁelds-of-view, which
+reduced false negative detections and allowed more accurate
+estimation of bounding boxes. Finally, the results suggested
+that the system can be realised with current communications
+technologies and can reduce the costs of individual vehiclesthrough shared infrastructure resources.
+Future research opportunities i nclude the investigation of
+cooperative perception using vehicles’ sensor data, wherelocalisation estimation as well as bandwidth requirements can
+be more challenging. We also envisage more efﬁcient datafusion schemes, where the transferred data volume can be
+reduced while maintaining the 3D object detection perfor-
+mance levels.
+R
+EFERENCES
+[1] J. Van Brummelen, M. O’Brie n, D. Gruyer, and H. Najjaran,
+“Autonomous vehicle perception: Th e technology of today and tomor-
+row,” Transp. Res. C, Emerg. Technol. , vol. 89, pp. 384–406, Apr. 2018.
+[Online]. Available: http://www.scien cedirect.com/science/article/pii/
+S0968090X18302134
+[2] U.S. Department of Transportation, “Technical report, Tesla crash,”
+Nat. Highway Trafﬁc Safety Admin., U.S. Dept. Transp., Washington,DC, USA, Tech. Rep. PE 16-007, Jan. 2017. [Online]. Available:https://static.nhtsa.gov/odi/inv/2016/INCLA-PE16007-7876.PDF
+[3] U.S. National Transportation Safety Board, “Preliminary report,
+Highway HWY18MH010,” Nat. Transp. Saf. Board, U.S. Gov-ernment, Washington, DC, USA, Tech. Rep. HWY18MH010,
+May 2018. [Online]. Available: https://www.ntsb.gov/investigations/
+AccidentReports/Reports/HAR1903.pdf
+[4] A. Geiger, P. Lenz, and R. Urtasun, “Are we ready for autonomous
+driving? The KITTI vision benchmark suite,” in Proc. IEEE Conf.
+Comput. Vis. Pattern Recognit. , Jun. 2012, pp. 3354–3361.
+[5] E. Arnold, O. Y . Al-Jarrah, M. Dianati, S. Fallah, D. Oxtoby,
+and A. Mouzakitis, “A survey on 3D object detection methods for
+autonomous driving applications,” IEEE Trans. Intell. Transp. Syst. ,
+vol. 20, no. 10, pp. 3782–3795, Oct. 2019.
+[6] X. Chen, H. Ma, J. Wan, B. Li, and T. Xia, “Multi-view 3D object detec-
+tion network for autonomous driving,” in Proc. IEEE Conf. Comput. Vis.
+Pattern Recognit. (CVPR) , Jul. 2017, pp. 1907–1915.
+[7] J. Ku, M. Moziﬁan, J. Lee, A. Ha rakeh, and S. L. Waslander, “Joint
+3D proposal generation and object det ection from view aggregation,”
+inProc. IEEE/RSJ Int . Conf. Intell. Robots Syst. (IROS) , Oct. 2018,
+pp. 1–8.
+[ 8 ] C .R .Q i ,W .L i u ,C .W u ,H .S u ,a n dL .J .G u i b a s ,“ F r u s t u mP o i n t N e t s
+for 3D object detection from RGB-D data,” in Proc. IEEE/CVF Conf.
+Comput. Vis. Pattern Recognit. , Jun. 2018, pp. 918–927.
+[9] D. Tian, G. Wu, P. Hao, K. Boriboonsomsin, and M. J. Barth, “Con-
+nected vehicle-based lane selection assistance application,” IEEE Trans.
+Intell. Transp. Syst. , vol. 20, no. 7, pp. 2630–2643, Jul. 2019.
+[10] A. Correa et al. , “Infrastructure support for cooperative maneuvers in
+connected and automated driving,” in Proc. IEEE Intell. Vehicles Symp.
+(IV), Jun. 2019, pp. 20–25.
+[11] S. Zhang, J. Chen, F. Lyu, N. Cheng, W. Shi, and X. Shen, “Vehicular
+communication networks in the automated driving era,” IEEE Commun.
+Mag. , vol. 56, no. 9, pp. 26–32, Sep. 2018.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:29:25 UTC from IEEE Xplore.  Restrictions apply. 
+1864 IEEE TRANSACTIONS ON INTELLIGENT TRANSPORTATION S YSTEMS, VOL. 23, NO. 3, MARCH 2022
+[12] E. Arnold, O. Y . Al-Jarrah, M. Dianati, S. Fallah, D. Oxtoby, and
+A. Mouzakitis, “Cooperative object cl assiﬁcation for driving appli-
+cations,” in Proc. IEEE Intell. Vehicles Symp. (IV) , Jun. 2019,
+pp. 2484–2489.
+[13] F. Castanedo, “A review of data fusion techniques,” Sci. World J. ,
+vol. 2013, pp. 1–19, 2013.
+[14] R. Roberts, S. N. Sinha, R. Szelis ki, and D. Steedly, “Structure from
+motion for scenes with large duplicate structures,” in Proc. CVPR ,
+Jun. 2011, pp. 3137–3144.
+[15] D. Feng et al. , “Deep multi-modal object detection and semantic
+segmentation for autonomous driving: Datasets, methods, and chal-
+lenges,” 2019, arXiv:1902.07830 . [Online]. Available: http://arxiv.org/
+abs/1902.07830
+[16] J. Beltran, C. Guindel, F. M. Mo reno, D. Cruzado, F. Garcia, and
+A. De La Escalera, “BirdNet: A 3D object detection framework from
+LiDAR information,” in Proc. 21st Int. Conf. Intell. Transp. Syst. (ITSC) ,
+Nov. 2018, pp. 3517–3523.
+[17] B. Li, T. Zhang, and T. Xia, “Vehicle detection from 3D lidar using
+fully convolutional network,” in Proc. Robot., Sci. Syst. , Ann Arbor,
+MI, USA, Jun. 2016, doi: 10.15607/RSS.2016.XII.042.
+[18] M. Simony, S. Milzy, K. Amendey, and H.-M. Gross, “Complex-yolo:
+An euler-region-proposal for real- time 3D object detection on point
+clouds,” in Proc. Eur. Conf. Comput. Vis. (ECCV) Workshops , Sep. 2018,
+pp. 197–209.
+[19] Y . Zhou and O. Tuzel, “V oxelNet: End-to-end learning for point cloud
+based 3D object detection,” in Proc. IEEE/CVF Conf. Comput. Vis.
+Pattern Recognit. , Jun. 2018, pp. 4490–4499.
+[20] S. Shi, X. Wang, and H. Li, “Poi ntRCNN: 3D object proposal generation
+and detection from point cloud,” in Proc. IEEE/CVF Conf. Comput. Vis.
+Pattern Recognit. (CVPR) , Jun. 2019, pp. 770–779.
+[21] Z. Yang, Y . Sun, S. Liu, X. Shen, and J. Jia, “STD: Sparse-to-dense 3D
+object detector for point cloud,” in Proc. IEEE/CVF Int. Conf. Comput.
+Vis. (ICCV) , Oct. 2019, pp. 1951–1960.
+[22] R. Q. Charles, H. Su, M. Kaic hun, and L. J. Guibas, “PointNet:
+Deep learning on point sets for 3D classiﬁcation and segmentation,”
+inProc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR) , Jul. 2017,
+pp. 652–660.
+[23] Q. Chen, S. Tang, Q. Yang, and S. Fu, “Cooper: Cooperative perception
+for connected autonomous vehicles based on 3D point clouds,” in
+Proc. IEEE 39th Int. Conf. Distrib. Comput. Syst. (ICDCS) , Jul. 2019,
+pp. 514–524.
+[24] Q. Chen, X. Ma, S. Tang, J. Guo, Q. Yang, and S. Fu, “F-cooper: Feature
+based cooperative perception for autonomous vehicle edge computing
+system using 3D point clouds,” in Proc. 4th ACM/IEEE Symp. Edge
+Comput. , Nov. 2019, pp. 88–100.
+[25] B. Hurl, R. Cohen, K. Czarnecki, and S. Waslander, “TruPercept:
+Trust modelling for autonomous vehicle cooperative perception from
+synthetic data,” Sep. 2019, arXiv:1909.07867 . [Online]. Available:
+https://arxiv.org/abs/1909.07867
+[26] P. Ghamisi et al. , “Multisource and multitemporal data fusion in remote
+sensing: A comprehensive review of the state of the art,” IEEE Geosci.
+Remote Sens. Mag. , vol. 7, no. 1, pp. 6–39, Mar. 2019.
+[27] R. Yue, H. Xu, J. Wu, R. Sun, and C. Yuan, “Data registration with
+ground points for roadside LiDAR sensors,” Remote Sens. , vol. 11,
+no. 11, p. 1354, Jun. 2019.
+[28] M. Knorr, W. Niehsen, and C. Stiller, “Online extrinsic multi-camera
+calibration using ground plane induced homographies,” in Proc. IEEE
+Intell. Vehicles Symp. (IV) , Jun. 2013, pp. 236–241.
+[29] P. F. Felzenszwalb, R. B. Girsh ick, D. McAllester, and D. Ramanan,
+“Object detection with discriminatively trained part-based models,”
+IEEE Trans. Pattern Anal. Mach. Intell. , vol. 32, no. 9, pp. 1627–1645,
+Sep. 2010.
+[30] S. Ren, K. He, R. Girshick, and J. Sun, “Faster R-CNN: Towards real-
+time object detection with region proposal networks,” in Adv. Neural
+Inf. Process. Syst. , 2015, pp. 91–99.
+[31] A. Dosovitskiy, G. Ros, F. Codevilla, A. Lopez, and V . Koltun,
+“CARLA: An open urban driving simulator,” in Proc. 1st Annu. Conf.
+Robot Learn. , 2017, pp. 1–16.
+[32] Midlands Future Mobility . Accessed: Aug. 24, 2019. [Online]. Available:
+https://midlandsfuturemobility.co.uk/
+[33] Velodyne Velarray Announcement . Accessed: Aug. 5, 2019. [Online].
+Available: https://velodynelidar.com/newsroom/velodyne-displays-solid-
+state-highes%t-performing-lidar-for-adas/
+[34] T. Collins, “Street lighting installations: For lighting on new residential
+roads and industrial estates,” Durham County Council Neighbourhood
+Services, Durham, U.K., Tech. Rep ., Dec. 2014. [Online]. Available:
+https://www.durham.gov.uk/media/ 3075/Street-Lighting-Speciﬁcation/
+pdf/StreetLightingSpeciﬁcation.pdf?m=636736461026070000[35] R. Hartley and A. Zisserman, Multiple View Geometry in Computer
+Vision , 2nd ed. Cambridge, U.K.: Cambridge Univ. Press, 2004.
+[36] C. Glennie and D. D. Lichti, “Static calibration and analysis of the
+velodyne HDL-64E s2 for high accuracy mobile scanning,” Remote
+Sens. , vol. 2, no. 6, pp. 1610–1624, Jun. 2010.
+[37] L. E. Ortiz, E. V . Cabrera, and L. M. Gonçalves, “Depth data error mod-
+eling of the zed 3d vision sensor from stereolabs,” ELCVIA: Electron.
+Lett. Comput. Vis. Image Anal. , vol. 17, no. 1, 2018, Art. no. 0001–15.
+[38] Y . Yan, Y . Mao, and B. Li, “SECOND: Sparsely embedded convolutional
+detection,” Sensors , vol. 18, no. 10, p. 3337, Oct. 2018. [Online].
+Available: https://www.m dpi.com/1424-8220/18/10/3337
+[39] M. Everingham, L. Van Gool, C. K. I. Williams, J. Winn, and A. Zisser-
+man, “The Pascal visual object classes (VOC) challenge,” Int. J. Comput.
+Vis., vol. 88, no. 2, pp. 303–338, Jun. 2010.
+[40] M. Everingham, S. M. A. Eslami, L. Van Gool, C. K. I. Williams,
+J. Winn, and A. Zisserman, “The Pascal visual object classes challenge:A retrospective,” Int. J. Comput. Vis. , vol. 111, no. 1, pp. 98–136,
+Jan. 2015.
+[41] I. Tomljenovic and A. Rousell, “Inﬂuence of point cloud density on
+the results of automated object-based building extraction from als data,”inProc. Int. Conf. Geograph. Inf. Sci. (AGILE) , Castellón de la Plana,
+Spain, Jun. 2014.
+Eduardo Arnold received the B.S. degree in electri-
+cal engineering from the Federal University of SantaCatarina (UFSC), Brazil, in 2017. He is currently
+pursuing the Ph.D. degree with the Warwick Man-
+ufacturing Group (WMG), University of Warwick,U.K. He was also an Exchange Student with the Uni-
+versity of Surrey through the Science without Bor-
+ders program in 2014. His research interests includemachine learning, computer vision, connected, andautonomous vehicles. He is currently working on
+perception for autonomous driving applications with
+the Intelligent Vehicles Group within WMG.
+Mehrdad Dianati (Senior Member, IEEE) is cur-
+rently a Professor of autonomous and connected
+vehicles with the Warwick Manufacturing Group(WMG), University of Warwick, and a Visiting
+Professor with the 5G Innovation Centre (5GIC),
+University of Surrey, where he was previously aProfessor. He has been involved in a number ofnational and internationa l projects as the project
+leader and the work-package leader in recent years.
+Prior to his academic endeavour, he has worked inthe industry for more than nine years as a Senior
+Software/Hardware Developer and the Director of Research and Development.
+He frequently provide voluntary servi ces to the research community in various
+editorial roles; for example, he has served as an Associate Editor for the IEEE
+T
+RANSACTIONS ON VEHICULAR TECHNOLOGY ,IET Communications ,a n d
+Journal of Wireless Communications and Mobile .
+Robert de Temple is currently a Research and
+Development Manager and a Technical Lead for
+ADAS at Jaguar Land Rover. He was ﬁrst an ADAS
+Algorithms Developer, then a Technical Lead Engi-neer for machine learning and deep learning. Heis currently the research and development manager
+with a strong background in autonomous driving and
+deep learning. His research interests include core AItechnology and algorithms as a whole.
+Saber Fallah is currently a Senior Lecturer (Asso-
+ciate Professor) with the University of Surrey, a pastResearch Associate and a Post-Doctoral ResearchFellow with the Waterloo Centre for Automotive
+Research (WatCar), University of Waterloo, Canada,
+and a past Research Assistant with the ConcordiaCentre for Advanced Vehicle Engineering (CON-
+CA VE), Concordia University, Montreal, Canada. He
+is the Director of the Connected Autonomous Vehi-cles (CA V) Laboratory and leading and contributingto several CA V research activities funded by the
+U.K. and European governments (e.g., EPSRC, Innovate U.K., H2020) in
+collaboration with companies active in this domain. His research has con-tributed signiﬁcantly to the state-of-the-art research in the areas of connected
+autonomous vehicles and advanced driver assistance systems.
+Authorized licensed use limited to: University of Surrey. Downloaded on December 14,2024 at 02:29:25 UTC from IEEE Xplore.  Restrictions apply. 

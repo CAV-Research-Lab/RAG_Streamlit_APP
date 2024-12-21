@@ -1,0 +1,256 @@
+=== Metadata ===
+{
+    "file_name": "Lecture 3  Mission Planning.pptx",
+    "file_path": "/Users/mf0016/Desktop/soe_RAG/resources/Lecture 3  Mission Planning.pptx",
+    "status": "Processed"
+}
+
+=== Content ===
+Mission Planning in Intelligent Vehicles
+1
+Navigating the Future
+Decision-Making in Autonomous Driving: An Overview 
+Saber Fallah (ENGM298)
+2
+
+Introduction to Mission Planning
+Saber Fallah (ENGM298)
+3
+
+Components of Mission Planning
+Saber Fallah (ENGM298)
+4
+
+
+ 
+
+
+
+
+
+
+ 
+
+
+Understanding the Objectives
+Considering Environmental Variables
+Creating a Dynamic Multi-step Itinerary
+
+Importance of Mission Planning in Intelligent Vehicles 
+Saber Fallah (ENGM298)
+5
+
+Introduction to Search Algorithms in Mission Planning
+Search algorithms are systematic methods used to explore and analyse data. 
+They help the system navigate through a vast array of possibilities to find the most optimal solution. 
+In the context of mission planning, they help the intelligent vehicle find the best route from Point A to Point B.
+They analyse data from various sources, such as maps, traffic data, and sensor data, to identify the best route for the vehicle to follow.
+
+
+Saber Fallah (ENGM298)
+6
+
+Types of Search Algorithms
+Uninformed search algorithms systematically explore all possibilities until they find a solution. 
+
+
+
+
+Informed search algorithms have access to extra information or 'heuristics' about the problem, which helps guide the search process towards a solution. 
+Saber Fallah (ENGM298)
+7
+
+Key Differences Between Search Algorithms
+Uninformed search algorithms are like explorers navigating uncharted territories, while informed search algorithms are like guided tourists, leveraging knowledge of the area to find their way efficiently.
+
+Uninformed search algorithms are useful when there is little to no additional information about the problem while informed search algorithms shine when there is extra information that can guide the search process. 
+
+In the context of mission planning for autonomous vehicles, informed search algorithms might leverage data such as real-time traffic information, weather conditions, and road quality to optimise the route planning.
+Saber Fallah (ENGM298)
+8
+
+Summary
+Saber Fallah (ENGM298)
+9
+
+Mission Planning in Intelligent Vehicles
+10
+Navigating in Future
+Problem-Solving Intelligent Vehicle 
+In the context of intelligent vehicles:
+
+	States: can be defined as a specific condition or circumstance in which the vehicle finds itself at a particular moment. 
+
+	Actions: refer to the operations or manoeuvres that an autonomous vehicle can undertake to transition from one state to another.
+Saber Fallah (ENGM298)
+11
+Actions and states
+Understanding the concept of states and actions is fundamental to comprehending the decision-making process of intelligent vehicles 
+Problem-Solving Intelligent Vehicle 
+Saber Fallah (ENGM298)
+12
+Problem solving process
+Arad-Bucharest
+???
+A simplified road map of part of Romania, with road distances in miles. 
+Problem-Solving Intelligent Vehicle 
+An intelligent vehicle needs to have several pieces of information:
+
+The initial state is the starting point, or where the vehicle currently is. 
+The state space is the set of all states reachable from the initial state by any sequence of actions.
+The possible actions are the various manoeuvres the vehicle can make to transition from one state to another.
+The goal test is a method that allows the vehicle to ascertain whether a state is a goal state. For instance, in our example, reaching Bucharest would satisfy the goal test.
+The path cost function is a function that assigns a cost to a path. In all cases we will consider, the cost of a path is the sum of the costs of the individual actions along the path. 
+The solution is the output of a search algorithm that is, a path from the initial state to a state that satisfies the goal test 
+Saber Fallah (ENGM298)
+13
+Formulating search problem
+Search Algorithms
+Saber Fallah (ENGM298)
+14
+Choosing states and actions
+Our initial state is 'in Arad,' and the goal test asks: 'Are we in Bucharest?’
+
+The operators, or actions available, correspond to the various routes between cities. 
+
+To determine the optimal solution, we need a path cost function.
+
+How do we decide what to include in our state and operator descriptions? 
+Search Algorithms
+Saber Fallah (ENGM298)
+15
+Best-first search
+Search Algorithms
+A node as a data structure encompassing five components:
+
+The corresponding state in the state space.
+The parent node in the search tree that generated this node.
+The operator applied to generate this node.
+The node's depth, which is the number of nodes from the root to this node.
+The path cost from the initial state to this node.
+Saber Fallah (ENGM298)
+16
+Data structure for search trees
+Performance of Search Algorithms
+We assess these strategies using four key criteria: 
+
+Completeness: Does the strategy always find a solution when one exists?
+Time Complexity: How much time is required to find a solution?
+Space Complexity: What is the memory requirement to execute the search?
+Optimality: Does the strategy find the highest-quality solution when multiple solutions exist?"
+Saber Fallah (ENGM298)
+17
+Measuring performance of search algorithms
+Performance of Search Algorithms
+Saber Fallah (ENGM298)
+18
+Complexity analysis and O() notation
+Summary
+The concept of a search algorithm, which involves exploring a state space to identify a sequence of actions leading from an initial state to a goal state. 
+The importance of nodes and states in the search process, elaborating that nodes are the bookkeeping data structures for the search tree, while states represent world configurations. 
+The performance measurement of search algorithms 
+The idea of asymptotic analysis for complexity analysis of search algorithms, using O( ) notation.
+
+Saber Fallah (ENGM298)
+19
+
+Mission Planning in Intelligent Vehicles
+20
+Uninformed Search Algorithms
+Uninformed Search Algorithms
+Uninformed Search Algorithms:
+
+Breadth­-first search 
+Uniform cost search 
+Depth­-first search 
+Depth­-limited search 
+Iterative deepening search 
+Bidirectional search 
+Saber Fallah (ENGM298)
+21
+Introduction
+Uninformed Search Algorithms
+Saber Fallah (ENGM298)
+22
+Breadth-first search
+Uninformed Search Algorithms
+When actions have different costs, an obvious choice is to use uniform-cost search where the evaluation function is the cost of the path from the root to the current node. 
+Saber Fallah (ENGM298)
+23
+Uniform-cost search
+Uniform-cost search is complete and is cost-optimal 
+Uninformed Search Algorithms
+Saber Fallah (ENGM298)
+24
+Depth-first search
+Uninformed Search Algorithms
+Saber Fallah (ENGM298)
+25
+Depth-limited search
+Uninformed Search Algorithms
+Saber Fallah (ENGM298)
+26
+Iterative deepening search
+Uninformed Search Algorithms
+Saber Fallah (ENGM298)
+27
+Bidirectional search
+Uninformed Search Algorithms
+Saber Fallah (ENGM298)
+28
+Summary
+Mission Planning in Intelligent Vehicles
+29
+Informed Search Algorithms
+Informed Search Algorithms
+Saber Fallah (ENGM298)
+30
+Introduction
+Informed Search Algorithms
+Saber Fallah (ENGM298)
+31
+Best-first search
+Informed Search Algorithms
+Saber Fallah (ENGM298)
+32
+Greedy best-first search
+Informed Search Algorithms
+ 
+
+Saber Fallah (ENGM298)
+33
+Greedy best-first search
+Informed Search Algorithms
+Saber Fallah (ENGM298)
+34
+A* search
+Informed Search Algorithms
+Saber Fallah (ENGM298)
+35
+A* search
+
+
+
+
+
+Informed Search Algorithms
+Saber Fallah (ENGM298)
+36
+Search contours
+Informed Search Algorithms
+Saber Fallah (ENGM298)
+37
+Pruning
+Pruning: means eliminating possibilities from consideration without having to examine them. 
+
+A* search is complete, cost-optimal and optimally efficient among all such algorithms is rather satisfying. 
+
+
+Informed Search Algorithms
+Saber Fallah (ENGM298)
+38
+Weighted A* search
+Informed Search Algorithms
+Saber Fallah (ENGM298)
+39
+Weighted A* search
