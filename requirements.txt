@@ -1,4 +1,4 @@
 streamlit
-os
-chromadb
+langchain
 openai
+pandas
